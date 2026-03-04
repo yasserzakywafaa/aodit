@@ -1,0 +1,53 @@
+/**
+* My Profile Page
+*/
+.my-profile-page {
+  .wordpress-integration-form {
+    margin-top: 0.25rem;
+    align-items: center;
+    .form-item {
+      width: 100%;
+    }
+  }
+
+  .stat-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .view-project-container {
+    position: relative;
+  }
+
+  // Tabs styling
+  .MuiTabs-root {
+    margin-bottom: 1rem;
+  }
+
+  .MuiTab-root {
+    text-transform: none;
+    font-weight: 500;
+    min-height: 48px;
+  }
+
+  // Tab panel content spacing
+  [role="tabpanel"] {
+    min-height: 400px;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .my-profile-page {
+    .stat-card {
+      margin-bottom: 1rem;
+    }
+
+    // Full width tabs on mobile
+    .MuiTabs-root {
+      .MuiTabs-flexContainer {
+        justify-content: space-between;
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+// MAIN
+@import "../assets/scss/grid.scss";
+
+:root {
+  --metriz-primary: #76d6b6ff;
+  --metriz-secondary: #ffffff;
+}
+
+#root {
+  scroll-behavior: smooth;
+  .ellipsis {
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden; /* Hides the overflow text */
+    text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
+  }
+}
+
+.section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem 2rem;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-padding-top: 64px; // Header Height in  "<ApplicationBar />" component
+}
+
+img {
+  pointer-events: none;
+  max-width: 300px;
+  margin: auto;
+}
+
+.direction-rtl {
+  direction: rtl;
+}
+
+hr {
+  margin: 2rem 0;
+}
+
+.text-underline {
+  text-decoration: underline solid var(--metriz-primary);
+}
+.text-underline-secondary {
+  text-decoration: underline solid var(--metriz-secondary);
+}
+
+.dark {
+  a:not(.MuiButtonBase-root) {
+    color: var(--metriz-primary);
+    font-weight: 400;
+    text-decoration: underline solid var(--metriz-secondary) !important;
+    &:visited {
+      color: var(--metriz-primary);
+    }
+  }
+}
+
+.light {
+  a:not(.MuiButtonBase-root) {
+    color: var(--metriz-primary);
+    font-weight: 400;
+    text-decoration: underline solid var(--metriz-secondary) !important;
+    &:visited {
+      color: var(--metriz-primary);
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  img {
+    max-width: 200px;
+  }
+}

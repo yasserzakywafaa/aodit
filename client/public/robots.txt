@@ -1,0 +1,15 @@
+# https://www.robotstxt.org/robotstxt.html
+
+# Sitemap location
+Sitemap: https://www.metriz.ai/sitemap.xml
+
+# Block specific robots from accessing certain parts
+User-agent: BadBot
+Disallow: /
+
+User-agent: *
+Disallow: /dashboard/
+Allow: /
+Allow: /contact/
+Allow: /privacy-policy/
+Allow: /terms-and-conditions/

@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "LexendDeca";
+  src: url("../fonts/LexendDeca/LexendDeca-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "LexendDeca-Bold";
+  src: url("../fonts/LexendDeca/LexendDeca-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+$font-family-base: "LexendDeca", sans-serif;
+$font-family-bold: "LexendDeca-Bold", sans-serif;
+
+body {
+  font-family: $font-family-base;
+}
+
+.bold {
+  font-family: $font-family-bold;
+  font-weight: 600 !important;
+}
+
+.italics {
+  font-style: italic;
+}

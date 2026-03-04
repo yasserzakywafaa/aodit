@@ -1,0 +1,100 @@
+{
+  "name": "Metriz",
+  "short_name": "Metriz",
+  "description": "Scale your agency's content production with Metriz's automated bulk project generation. Create projects for multiple clients with automation, and enterprise-grade features!",
+  "scope": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "lang": "en",
+  "dir": "ltr",
+  "id": "metriz_v1.0.0",
+  "display_override": ["window-controls-overlay"],
+  "launch_handler": {
+    "client_mode": ["focus-existing", "auto"]
+  },
+  "iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e9",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "Create Projects",
+      "url": "/create",
+      "description": "Generate AI-powered Projects"
+    }
+  ],
+  "categories": ["retail", "marketing"],
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+print",
+      "url": "/%s"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon_48x48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon_72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon_96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon_144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon_192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/favicon_16x16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/favicon_32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/mstile_150x150.png",
+      "sizes": "150x150",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

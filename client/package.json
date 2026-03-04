@@ -1,0 +1,76 @@
+{
+  "name": "@yasserzakywafaa/metriz",
+  "version": "1.0.0",
+  "description": "A PWA, powered by AI",
+  "private": true,
+  "author": "Yasser Zaky",
+  "homepage": "/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/yasserzakywafaa/metriz.git"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start:windows": "set REACT_APP_ENV=local&& react-scripts start",
+    "start:dev": "REACT_APP_ENV=development react-scripts start",
+    "start:prod": "serve -l 5000 -s build",
+    "prebuild": "node public/scripts/update-sw-version.js",
+    "build": "rimraf build && react-scripts build",
+    "postbuild": "node public/scripts/generate-nonce.js",
+    "test": "react-scripts test",
+    "test-watch": "react-scripts test --watch",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
+    "@mui/icons-material": "latest",
+    "@mui/material": "latest",
+    "@mui/styles": "latest",
+    "@mui/x-data-grid": "^8.4.0",
+    "@react-oauth/google": "^0.12.1",
+    "@react-pdf/renderer": "^4.1.6",
+    "@stripe/react-stripe-js": "^2.8.0",
+    "@stripe/stripe-js": "^4.5.0",
+    "@types/pouchdb": "6.4.0",
+    "@types/react": "18.2.25",
+    "@types/react-dom": "18.2.25",
+    "@types/react-router-dom": "5.3.3",
+    "axios": "1.6.8",
+    "classnames": "2.5.1",
+    "html-to-text": "^9.0.5",
+    "marked": "^15.0.6",
+    "mui-tel-input": "^9.0.1",
+    "raw-loader": "4.0.2",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "react-markdown": "9.0.1",
+    "react-pdf": "^9.2.1",
+    "react-router-dom": "6.22.3",
+    "react-scripts": "5.0.1",
+    "react-syntax-highlighter": "15.6.6",
+    "react-toastify": "10.0.5",
+    "rimraf": "^6.1.2"
+  },
+  "devDependencies": {
+    "@types/html-to-text": "^9.0.4",
+    "@types/node": "latest",
+    "@types/react-syntax-highlighter": "^15.5.6",
+    "sass": "1.75.0",
+    "serve": "14.2.1",
+    "typescript": "5.4.5"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "browserslist": [
+    "last 1 chrome version",
+    "last 1 ChromeAndroid version",
+    "last 1 firefox version",
+    "last 1 FirefoxAndroid version",
+    "last 1 safari version",
+    "last 1 edge version"
+  ]
+}

@@ -1,0 +1,23 @@
+/**
+* Payment Success Page
+*/
+.payment-status-page {
+  &.payment-success {
+    .payment-success-confetti-image {
+      position: fixed;
+      left: 0;
+      right: 0;
+      margin: auto;
+      object-fit: cover;
+      opacity: 0.5;
+      z-index: -1;
+      max-width: unset;
+    }
+    .payment-success-character-image {
+      max-width: 300px;
+    }
+  }
+}
+
+@media screen and (max-width: 820px) {
+}

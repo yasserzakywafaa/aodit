@@ -1,4 +1,4 @@
-import { AppBar, Container, Theme, Toolbar } from "@mui/material";
+import { AppBar, Container, Toolbar } from "@mui/material";
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
 
 import ApplicationBarDesktopView from "./features/ApplicationBarDesktopView";
@@ -12,7 +12,6 @@ import { routes } from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
@@ -34,12 +33,11 @@ const ApplicationBar = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isDesktop } = useDeviceSize();
   const { isScrolledFromTop } = useDetectScroll();
 
   const {
     store: {
-      state: { themeMode, auth },
+      state: { auth },
     },
   } = useApplicationContext();
 
@@ -71,6 +69,16 @@ const ApplicationBar = () => {
       case "features":
         navigate(routes.features);
         break;
+      case "ratings":
+      case "methodology":
+      case "about":
+      case "subscribe":
+        if (location.pathname === routes.features) {
+          scrollToSection(sectionId);
+        } else {
+          navigate(`${routes.features}#${sectionId}`);
+        }
+        break;
       case "pricing":
         navigate(routes.pricing);
         break;
@@ -84,6 +92,9 @@ const ApplicationBar = () => {
         auth.user &&
           navigate(routes.dashboard.projects.projectsByUserId(auth.user._id));
         return;
+      case "create":
+        navigate(routes.dashboard.projects.create);
+        break;
       default:
         scrollToSection(sectionId);
     }
@@ -97,12 +108,17 @@ const ApplicationBar = () => {
           position="fixed"
           sx={{
             boxShadow: 0,
-            bgcolor: "transparent",
+            bgcolor: "rgba(10,10,10,0.92)",
             backgroundImage: "none",
-            mt: 1,
+            borderBottom: "1px solid var(--border, rgba(180,174,162,0.25))",
+            backdropFilter: "blur(12px)",
           }}
         >
-          <Container maxWidth="lg" className="application-bar-container">
+          <Container
+            maxWidth={false}
+            className="application-bar-container"
+            sx={{ px: { xs: 3, sm: 6 } }}
+          >
             <Toolbar
               variant="regular"
               sx={{
@@ -110,15 +126,8 @@ const ApplicationBar = () => {
                 alignItems: "center",
                 justifyContent: "space-between",
                 flexShrink: 0,
-                backdropFilter: "blur(24px)",
-                maxHeight: 40,
-                borderColor: "divider",
-                boxShadow: isDesktop
-                  ? (theme: Theme) =>
-                      themeMode === "light"
-                        ? `0 0 1px ${theme.palette.primary.light}`
-                        : `0 0 1px ${theme.palette.primary.dark}`
-                  : undefined,
+                minHeight: { xs: 56, md: 64 },
+                py: 1,
               }}
             >
               <ApplicationBarDesktopView

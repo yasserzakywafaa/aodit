@@ -1,7 +1,7 @@
 import "./Page.scss";
 
 import { CSSProperties, useEffect } from "react";
-import { Container, ContainerTypeMap, Divider } from "@mui/material";
+import { Container, ContainerTypeMap } from "@mui/material";
 import {
   black,
   darkTheme,
@@ -172,7 +172,6 @@ const Page = (params: PageProps) => {
 
         {isPageLoading && <LoaderSpinner position="fixed" />}
 
-        <Divider sx={{ my: 4 }} />
         <Footer />
       </Container>
     </>

@@ -9,6 +9,10 @@ import {
 } from "src/shared/utils/schemaOrg";
 
 import Hero from "./features/Hero";
+import RatingsSection from "./features/RatingsSection";
+import MethodologySection from "./features/MethodologySection";
+import AboutSection from "./features/AboutSection";
+import SubscribeSection from "./features/SubscribeSection";
 import Page from "src/components/shared/Page/Page";
 import { Testimonial } from "src/shared/types/types";
 import { routes } from "src/application/routes";
@@ -74,11 +78,15 @@ const FeaturesPage = () => {
 
   return (
     <Page
-      title="Aodit: Smart Tendering & BOQ"
+      title="SWISSLII — Swiss Lab for Intelligence International"
       className="features-page"
       isLoading={isFetching}
     >
       <Hero />
+      <RatingsSection />
+      <MethodologySection />
+      <AboutSection />
+      <SubscribeSection />
     </Page>
   );
 };

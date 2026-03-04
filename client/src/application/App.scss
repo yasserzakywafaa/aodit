@@ -2,16 +2,45 @@
 @import "../assets/scss/grid.scss";
 
 :root {
-  --aodit-primary: #76d6b6ff;
-  --aodit-secondary: #ffffff;
+  --black: #0a0a0a;
+  --white: #f5f3ef;
+  --cream: #ede9e1;
+  --red: #c0392b;
+  --gold: #b8963e;
+  --grey: #6b6b6b;
+  --light-grey: #d4d0c8;
+  --border: rgba(180, 174, 162, 0.25);
+  --aodit-primary: #b8963e;
+  --aodit-secondary: #f5f3ef;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+/* Grain overlay (SWISSLII style) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
 }
 
 #root {
   scroll-behavior: smooth;
   .ellipsis {
-    white-space: nowrap; /* Prevents text from wrapping */
-    overflow: hidden; /* Hides the overflow text */
-    text-overflow: ellipsis; /* Adds ellipsis at the end of the text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

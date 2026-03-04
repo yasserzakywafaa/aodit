@@ -2,14 +2,22 @@ import { Theme, createTheme } from "@mui/material/styles";
 
 export const white = "#F5F3EF";
 export const black = "#0A0A0A";
-export const grey = "#6b6b6b";
+export const cream = "#EDE9E1";
+export const grey = "#6B6B6B";
 export const lightGrey = "#D4D0C8";
+export const red = "#C0392B";
 export const border = "rgba(180,174,162,0.25)";
 
 export const primaryColor = "#B8963E"; // gold
-export const primaryColorOpaqueTen = "rgba(184, 150, 62, 0.1)"; // gold 10% Opacity
-export const primaryColorOpaqueThirty = "rgba(184, 150, 62, 0.3)"; // gold 30% Opacity
+export const primaryColorOpaqueTen = "rgba(184, 150, 62, 0.1)";
+export const primaryColorOpaqueThirty = "rgba(184, 150, 62, 0.3)";
+export const primaryColorOpaqueFifteen = "rgba(184, 150, 62, 0.15)";
+export const primaryColorOpaqueEight = "rgba(184, 150, 62, 0.08)";
 export const secondaryColor = white;
+
+export const fontFamilySerif = "'Cormorant Garamond', serif";
+export const fontFamilyMono = "'DM Mono', monospace";
+export const fontFamilySans = "'Instrument Sans', sans-serif";
 export const primaryColorForDarkTheme = primaryColor;
 export const secondaryColorForDarkTheme = secondaryColor;
 export const secondaryColorForLightTheme = primaryColor;
@@ -48,9 +56,13 @@ export const theme = createTheme({
   palette: {
     primary: { main: primaryColor },
     secondary: { main: white },
+    error: { main: red },
   },
   typography: {
-    fontFamily: "'Instrument Sans', sans-serif",
+    fontFamily: fontFamilySans,
+    h1: { fontFamily: fontFamilySerif, fontWeight: 300, letterSpacing: "-0.02em" },
+    h2: { fontFamily: fontFamilySerif, fontWeight: 300, letterSpacing: "-0.01em" },
+    h3: { fontFamily: fontFamilySerif, fontWeight: 400 },
   },
   components: {
     MuiButton: {

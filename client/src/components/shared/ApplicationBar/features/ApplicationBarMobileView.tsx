@@ -1,20 +1,9 @@
 import {
-  AlternateEmailOutlined,
-  AutoFixHighOutlined,
-  EarbudsOutlined,
   LockOpenOutlined,
   MenuOutlined,
   VpnKeyOutlined,
 } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  MenuItem,
-  Typography,
-} from "@mui/material";
-
+import { Box, Button, Divider, Drawer, MenuItem, Typography } from "@mui/material";
 import { Authentication } from "src/application/store/state";
 import Logo from "../../Logo";
 import { PagesMatch } from "../ApplicationBar";
@@ -23,6 +12,13 @@ import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
 import { primaryColor } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+
+const NAV_LINKS = [
+  { id: "ratings", label: "Ratings" },
+  { id: "methodology", label: "Methodology" },
+  { id: "about", label: "About" },
+  { id: "subscribe", label: "Subscribe" },
+] as const;
 
 interface ApplicationBarMobileViewParams {
   auth: Authentication;
@@ -39,9 +35,7 @@ interface ApplicationBarMobileViewParams {
 const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
   const {
     auth,
-    pagesMatch,
     isDrawerOpen,
-    isScrolledFromTop,
     handleSetDrawer,
     handleToggleLoginModal,
     handleToggleRegisterModal,
@@ -52,44 +46,16 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
 
   return (
     <>
-      {/* Mobile */}
       {(isTablet || isMobile) && !isDesktop && (
         <Box
           display="flex"
           component="div"
           flexDirection="row"
-          justifyContent={"space-between"}
+          justifyContent="space-between"
           alignItems="center"
           width="100%"
         >
-          {pagesMatch.isFeaturesPage ? (
-            !isScrolledFromTop ? (
-              <Logo
-                style={{
-                  width: "50px",
-                  height: "50px",
-                }}
-              />
-            ) : (
-              <Button
-                size="medium"
-                color="primary"
-                variant="contained"
-                onClick={handleOnMenuItemClick("create")}
-              >
-                Create Project
-              </Button>
-            )
-          ) : (
-            <Button
-              size="medium"
-              color="primary"
-              variant="contained"
-              onClick={handleOnMenuItemClick("create")}
-            >
-              Create Project
-            </Button>
-          )}
+          <Logo textLogo onClick={handleOnMenuItemClick("features")} />
 
           <Button
             variant="text"
@@ -109,95 +75,39 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
             <Box
               role="menu"
               sx={{
-                p: 1,
-                pt: 2,
+                p: 2,
+                pt: 3,
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
                 flexGrow: 1,
                 minWidth: "50dvw",
-                backgroundColor: "background.paper",
+                backgroundColor: "background.default",
               }}
             >
               <Box>
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("features")}
-                >
-                  <EarbudsOutlined
-                    fontSize="small"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="body1"
-                    color={
-                      pagesMatch.isFeaturesPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Features
+                <MenuItem className="menu-item" onClick={handleOnMenuItemClick("features")}>
+                  <Typography variant="body1" color={primaryColor}>
+                    Home
                   </Typography>
                 </MenuItem>
-
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("create")}
-                >
-                  <AutoFixHighOutlined
-                    fontSize="small"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography variant="body1">Create Project</Typography>
-                </MenuItem>
-
-                {/* <Divider
-                  orientation="horizontal"
-                  flexItem
-                  sx={{ my: 1, width: "30%", mx: "2rem" }}
-                />
-
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("pricing")}
-                >
-                  <AttachMoneyOutlined
-                    fontSize="small"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="body1"
-                    color={
-                      pagesMatch.isPricingPage ? primaryColor : "text.primary"
-                    }
+                {NAV_LINKS.map(({ id, label }) => (
+                  <MenuItem
+                    key={id}
+                    className="menu-item"
+                    onClick={handleOnMenuItemClick(id)}
                   >
-                    Pricing
-                  </Typography>
-                </MenuItem> */}
+                    <Typography variant="body1" color="text.primary">
+                      {label}
+                    </Typography>
+                  </MenuItem>
+                ))}
 
-                <Divider
-                  orientation="horizontal"
-                  flexItem
-                  sx={{ my: 1, width: "30%", mx: "2rem" }}
-                />
+                <Divider sx={{ my: 2, width: "80%", mx: "auto" }} />
 
-                <MenuItem
-                  className={`menu-item`}
-                  onClick={handleOnMenuItemClick("contact")}
-                >
-                  <AlternateEmailOutlined
-                    fontSize="small"
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  />
-                  <Typography
-                    variant="body1"
-                    color={
-                      pagesMatch.isContactPage ? primaryColor : "text.primary"
-                    }
-                  >
-                    Contact Us
+                <MenuItem className="menu-item" onClick={handleOnMenuItemClick("contact")}>
+                  <Typography variant="body1" color="text.secondary">
+                    Contact
                   </Typography>
                 </MenuItem>
               </Box>
@@ -210,29 +120,17 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 ) : (
                   <>
                     <MenuItem onClick={handleToggleRegisterModal}>
-                      <LockOpenOutlined
-                        fontSize="small"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
+                      <LockOpenOutlined fontSize="small" color="secondary" sx={{ mr: 1 }} />
                       <Typography variant="body1">Register</Typography>
                     </MenuItem>
-
                     <MenuItem onClick={handleToggleLoginModal}>
-                      <VpnKeyOutlined
-                        fontSize="small"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
+                      <VpnKeyOutlined fontSize="small" color="secondary" sx={{ mr: 1 }} />
                       <Typography variant="body1">Log in</Typography>
                     </MenuItem>
                   </>
                 )}
-
                 <MenuItem>
-                  <SettingsMenuButton
-                    setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
-                  >
+                  <SettingsMenuButton setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}>
                     <Typography variant="body1" sx={{ ml: 1 }}>
                       Settings
                     </Typography>

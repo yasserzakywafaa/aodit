@@ -4,7 +4,7 @@ import APP_CONSTANTS from "src/application/shared/app_constants";
  * Get the base URL for the application
  */
 export const getBaseUrl = (): string => {
-  return APP_CONSTANTS.APP_URL || "https://www.metriz.ai";
+  return APP_CONSTANTS.APP_URL || "https://www.aodit.ai";
 };
 
 /**

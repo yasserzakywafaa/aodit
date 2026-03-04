@@ -49,7 +49,7 @@ export const createServiceSchema = (
     url: getAbsoluteUrl(url),
     provider: {
       "@type": "Organization",
-      name: provider || "Metriz",
+      name: provider || "Aodit",
       url: getAbsoluteUrl(""),
     },
   };

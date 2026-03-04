@@ -7,7 +7,7 @@ import CONFIG from "../../config";
 
 // Logo URL constant
 export const LOGO_URL =
-  "https://s3.eu-west-2.amazonaws.com/metriz.ai/logo/metriz_logo.webp";
+  "https://s3.eu-west-2.amazonaws.com/aodit.ai/logo/aodit_logo.webp";
 
 // Template cache
 const templateCache: Map<string, HandlebarsTemplateDelegate> = new Map();

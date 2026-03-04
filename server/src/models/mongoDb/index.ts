@@ -26,8 +26,8 @@ const { IS_DEV, MONGODB_URI_DEV, IS_PROD, MONGODB_URI_PROD, MONGODB_URI } =
   CONFIG;
 
 export enum DBNamesEnum {
-  metriz_dev = "metriz_dev",
-  metriz_prod = "metriz_prod",
+  aodit_dev = "aodit_dev",
+  aodit_prod = "aodit_prod",
 }
 
 export enum DBCollectionsEnum {
@@ -48,7 +48,7 @@ const getMongoDbUri = (): string => {
 };
 
 const getDatabaseName = (): string => {
-  return IS_DEV ? DBNamesEnum.metriz_dev : DBNamesEnum.metriz_prod;
+  return IS_DEV ? DBNamesEnum.aodit_dev : DBNamesEnum.aodit_prod;
 };
 
 const databaseInit = async () => {

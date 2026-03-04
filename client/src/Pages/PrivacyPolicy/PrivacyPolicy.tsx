@@ -41,7 +41,7 @@ const PrivacyPolicyPage = () => {
 
   return (
     <Page
-      title="Privacy Policy | Metriz"
+      title="Privacy Policy | Aodit"
       className="privacy-policy-page"
       isLoading={false}
     >
@@ -101,7 +101,7 @@ const PrivacyPolicyPage = () => {
               />
             </ListItem>
             <ListItem>
-              <ListItemText primary="Company" secondary="Refers to Metriz." />
+              <ListItemText primary="Company" secondary="Refers to Aodit." />
             </ListItem>
             <ListItem>
               <ListItemText

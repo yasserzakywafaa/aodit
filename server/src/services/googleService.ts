@@ -45,7 +45,7 @@ export const handleSubmitSitemapToGoogle = async (siteMapFileName: string) => {
   });
 
   // Specify your site URL (as registered in Search Console)
-  const siteUrl = "sc-domain:metriz.ai"; // Ensure this matches exactly
+  const siteUrl = "sc-domain:aodit.ai"; // Ensure this matches exactly
   const sitemapUrl = `${CONFIG.APP_URL}/${siteMapFileName}`; // Full URL of your sitemap
 
   console.log(`🛠️  Submitting "${siteMapFileName}"  🛠️`);

@@ -19,18 +19,18 @@ interface PricingPlan {
  * Create Product schema with Offer for a pricing plan
  */
 export const createProductOfferSchema = (plan: PricingPlan): object => {
-  const productName = `Metriz ${plan.title} Plan`;
+  const productName = `Aodit ${plan.title} Plan`;
 
   const offer: any = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: productName,
-    description: `Metriz ${plan.title} subscription plan`,
+    description: `Aodit ${plan.title} subscription plan`,
     category: "Software Subscription",
     image: getImageUrl("/icons/icon_512x512.png"),
     brand: {
       "@type": "Brand",
-      name: "Metriz",
+      name: "Aodit",
     },
   };
 

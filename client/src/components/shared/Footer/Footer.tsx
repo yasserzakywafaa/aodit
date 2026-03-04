@@ -39,7 +39,7 @@ const Footer = () => {
       >
         <Box mb={{ xs: 3, sm: 0 }} paddingRight={{ sm: "1rem" }}>
           <Typography variant="body1">
-            At <span className="bold">metriz.ai</span>, we're built for
+            At <span className="bold">aodit.ai</span>, we're built for
             companies that need to streamline their tendering process. Our
             AI-powered platform helps businesses manage smart tendering
             processes and generate Bill of Quantities (BOQ) in minutes.
@@ -216,7 +216,7 @@ const Footer = () => {
         >
           <Typography variant="body2" color="text.secondary" mx={1}>
             {"Copyright © "}
-            <Link href={routes.features}>Metriz</Link>&nbsp;
+            <Link href={routes.features}>Aodit</Link>&nbsp;
             {new Date().getFullYear()}
           </Typography>
         </Box>

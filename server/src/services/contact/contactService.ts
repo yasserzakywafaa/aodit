@@ -70,7 +70,7 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
   };
 
   const mailOptionsUser = {
-    from: `"Metriz.ai" <${CONFIG.EMAIL}>`,
+    from: `"Aodit.ai" <${CONFIG.EMAIL}>`,
     to: email,
     subject: "Thank you for contacting us!",
     text: userTextContent,

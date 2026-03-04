@@ -3,7 +3,7 @@ import { Link } from "@mui/material";
 const AiToolsFyiBadge = () => {
   return (
     <Link
-      href="https://aitools.fyi/metriz?utm_source=metriz_embed"
+      href="https://aitools.fyi/aodit?utm_source=aodit_embed"
       target="_blank"
       sx={{
         display: "flex",

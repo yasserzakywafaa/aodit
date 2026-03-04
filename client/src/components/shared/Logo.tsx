@@ -52,12 +52,12 @@ const Logo = (props: LogoProps) => {
     return (
       <img
         src={logoSrc}
-        alt="Metriz Logo"
+        alt="Aodit Logo"
         style={defaultStyle}
         width={style?.width}
         height={style?.height}
         onClick={handleClick}
-        aria-label="metriz.ai logo image"
+        aria-label="aodit.ai logo image"
       />
     );
   };

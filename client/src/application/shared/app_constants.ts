@@ -36,15 +36,15 @@ const APP_CONSTANTS = {
   APP_URL:
     process.env.REACT_APP_ENV === "local" ||
     process.env.REACT_APP_ENV === "development"
-      ? "https://dev.metriz.ai"
-      : "https://www.metriz.ai",
+      ? "https://dev.aodit.ai"
+      : "https://www.aodit.ai",
 
   // Docs URL
   APP_DOCS_LINK:
     process.env.REACT_APP_ENV === "local" ||
     process.env.REACT_APP_ENV === "development"
-      ? "https://docs-dev.metriz.ai"
-      : "https://docs.metriz.ai",
+      ? "https://docs-dev.aodit.ai"
+      : "https://docs.aodit.ai",
 };
 
 export default APP_CONSTANTS;

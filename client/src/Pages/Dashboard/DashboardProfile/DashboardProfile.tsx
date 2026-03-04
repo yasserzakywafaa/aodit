@@ -338,7 +338,7 @@ const DashboardProfilePage = () => {
                     Account Age
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {calculateAccountAge()} days since joined Metriz
+                    {calculateAccountAge()} days since joined Aodit
                   </Typography>
                 </Grid>
 

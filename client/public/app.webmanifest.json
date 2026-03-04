@@ -1,7 +1,7 @@
 {
-  "name": "Metriz",
-  "short_name": "Metriz",
-  "description": "Scale your agency's content production with Metriz's automated bulk project generation. Create projects for multiple clients with automation, and enterprise-grade features!",
+  "name": "Aodit",
+  "short_name": "Aodit",
+  "description": "Scale your agency's content production with Aodit's automated bulk project generation. Create projects for multiple clients with automation, and enterprise-grade features!",
   "scope": "/",
   "start_url": "/",
   "display": "standalone",
@@ -10,7 +10,7 @@
   "background_color": "#000000",
   "lang": "en",
   "dir": "ltr",
-  "id": "metriz_v1.0.0",
+  "id": "aodit_v1.0.0",
   "display_override": ["window-controls-overlay"],
   "launch_handler": {
     "client_mode": ["focus-existing", "auto"]

@@ -1,5 +1,5 @@
 {
-  "name": "@yasserzakywafaa/metriz",
+  "name": "@yasserzakywafaa/aodit",
   "version": "1.0.0",
   "description": "A PWA, powered by AI",
   "private": true,
@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/yzwa/metriz.git"
+    "url": "https://gitlab.com/yzwa/aodit.git"
   },
   "scripts": {
     "start": "ts-node src/server.ts",

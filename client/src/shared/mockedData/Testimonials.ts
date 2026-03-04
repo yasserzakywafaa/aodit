@@ -5,7 +5,7 @@ export const testimonials: Testimonial[] = [
     author: "John Doe",
     authorTitle: "Marketing Manager",
     reviewBody:
-      "Metriz has revolutionized our content creation process. We can now generate high-quality projects in a fraction of the time!",
+      "Aodit has revolutionized our content creation process. We can now generate high-quality projects in a fraction of the time!",
     rating: 5,
     datePublished: "2023-01-15",
   },
@@ -21,7 +21,7 @@ export const testimonials: Testimonial[] = [
     author: "Peter Jones",
     authorTitle: "Content Strategist",
     reviewBody:
-      "SEO-optimized projects are crucial for our clients, and Metriz delivers every time. Highly recommended!",
+      "SEO-optimized projects are crucial for our clients, and Aodit delivers every time. Highly recommended!",
     rating: 5,
     datePublished: "2023-03-10",
   },

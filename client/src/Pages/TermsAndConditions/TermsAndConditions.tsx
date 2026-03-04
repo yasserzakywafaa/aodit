@@ -39,13 +39,13 @@ const TermsAndConditions = () => {
 
   return (
     <Page
-      title="Terms and Conditions | Metriz"
+      title="Terms and Conditions | Aodit"
       className="terms-and-conditions-page"
       isLoading={false}
     >
       <Container sx={{ mt: 3 }}>
         <Typography variant="h4" gutterBottom>
-          Terms and Conditions for Metriz
+          Terms and Conditions for Aodit
         </Typography>
         <Typography variant="subtitle1" gutterBottom color="primary">
           Last updated:{" "}
@@ -87,7 +87,7 @@ const TermsAndConditions = () => {
             <ListItem>
               <ListItemText
                 primary="Company"
-                secondary="(referred to as either 'the Company', 'We', 'Us' or 'Our' in this Agreement) refers to Metriz."
+                secondary="(referred to as either 'the Company', 'We', 'Us' or 'Our' in this Agreement) refers to Aodit."
               />
             </ListItem>
             <ListItem>
@@ -117,7 +117,7 @@ const TermsAndConditions = () => {
             <ListItem>
               <ListItemText
                 primary="Website"
-                secondary="refers to Metriz, accessible from www.metriz.ai"
+                secondary="refers to Aodit, accessible from www.aodit.ai"
               />
             </ListItem>
             <ListItem>
@@ -173,7 +173,7 @@ const TermsAndConditions = () => {
             Sharing personal information
           </Typography>
           <Typography paragraph>
-            Metriz uses personal information according to the Terms of Service
+            Aodit uses personal information according to the Terms of Service
             and this{" "}
             <Link
               component="a"
@@ -182,7 +182,7 @@ const TermsAndConditions = () => {
             >
               Privacy Policy
             </Link>
-            . Metriz may disclose your personal information to third parties,
+            . Aodit may disclose your personal information to third parties,
             including marketing, advertising and analytics providers.
           </Typography>
           <Typography paragraph>

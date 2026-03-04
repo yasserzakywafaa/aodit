@@ -78,7 +78,7 @@ const PricingPage = () => {
 
   return (
     <Page
-      title="Pricing for Agencies | Metriz"
+      title="Pricing for Agencies | Aodit"
       className="pricing-page"
       isLoading={isFetching}
     >

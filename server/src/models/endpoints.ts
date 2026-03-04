@@ -43,7 +43,7 @@ const END_POINTS = {
   WEBHOOKS: {
     N8N: {
       NEW_PROJECT_ADDED:
-        "https://n8n.yasserzaky.com/webhook/metriz-new-project-added",
+        "https://n8n.yasserzaky.com/webhook/aodit-new-project-added",
     },
   },
   DASHBOARD: {

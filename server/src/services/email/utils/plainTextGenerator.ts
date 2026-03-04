@@ -42,7 +42,7 @@ Great news! Your project "${projectTitle}" has been successfully generated and i
 Read your project here: ${projectUrl} 
 
 Best regards,
-The Metriz.ai Team
+The Aodit.ai Team
   `.trim();
 };
 
@@ -65,7 +65,7 @@ Thank you for reaching out to us. We have received your message and our team wil
     text += `\n\nYour Message:\n${message}`;
   }
 
-  text += `\n\nBest regards,\nThe Metriz.ai Team`;
+  text += `\n\nBest regards,\nThe Aodit.ai Team`;
 
   return text;
 };
@@ -91,7 +91,7 @@ ${message}
 Reply to: ${email}
 
 Best regards,
-The Metriz.ai Team
+The Aodit.ai Team
   `.trim();
 };
 
@@ -103,11 +103,11 @@ export const generateRegistrationWelcomePlainText = (
 ): string => {
   const { userName } = data;
   return `
-Welcome to Metriz.ai! 🎉
+Welcome to Aodit.ai! 🎉
 
 Hello ${userName},
 
-We're thrilled to have you join the Metriz.ai community! You're now ready to create stunning, AI-powered projects in seconds.
+We're thrilled to have you join the Aodit.ai community! You're now ready to create stunning, AI-powered projects in seconds.
 
 Getting Started:
 1. Enter your project topic or URL
@@ -116,6 +116,6 @@ Getting Started:
 4. Publish and share with the world!
 
 Best regards,
-The Metriz.ai Team
+The Aodit.ai Team
   `.trim();
 };

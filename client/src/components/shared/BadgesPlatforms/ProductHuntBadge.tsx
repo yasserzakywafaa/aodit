@@ -12,7 +12,7 @@ const ProductHuntBadge = () => {
 
   return (
     <Link
-      href="https://www.producthunt.com/posts/metriz?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-metriz"
+      href="https://www.producthunt.com/posts/aodit?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-aodit"
       target="_blank"
       sx={{
         display: "flex",
@@ -22,7 +22,7 @@ const ProductHuntBadge = () => {
     >
       <img
         src={`https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=955956&theme=${productHuntTheme}&t=1745235398441`}
-        alt="Metriz - AI&#0045;Powered&#0032;Project&#0032;Generator | Product Hunt"
+        alt="Aodit - AI&#0045;Powered&#0032;Project&#0032;Generator | Product Hunt"
         style={{
           width: "100%",
           height: "40px",

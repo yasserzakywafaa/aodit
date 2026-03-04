@@ -12,11 +12,11 @@ export const createContactPageSchema = (): object => {
     "@type": "ContactPage",
     name: "Contact Us",
     description:
-      "Get in touch with Metriz team. We're here to help you with any questions about our AI-powered project creation platform.",
+      "Get in touch with Aodit team. We're here to help you with any questions about our AI-powered project creation platform.",
     url: contactUrl,
     mainEntity: {
       "@type": "Organization",
-      name: "Metriz",
+      name: "Aodit",
       url: getAbsoluteUrl(""),
     },
   };

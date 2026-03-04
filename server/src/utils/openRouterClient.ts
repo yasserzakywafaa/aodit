@@ -23,8 +23,8 @@ export const createOpenRouterClient = (externalApiKey?: string): OpenAI => {
     apiKey: openRouterApiKey,
     baseURL: "https://openrouter.ai/api/v1",
     defaultHeaders: {
-      "HTTP-Referer": CONFIG.APP_URL || "https://www.metriz.ai",
-      "X-Title": "Metriz",
+      "HTTP-Referer": CONFIG.APP_URL || "https://www.aodit.ai",
+      "X-Title": "Aodit",
     },
   });
 };
@@ -128,8 +128,8 @@ export const handleOpenRouterHttpRequest = async (
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${openRouterApiKey}`,
-        "HTTP-Referer": CONFIG.APP_URL || "https://www.metriz.ai",
-        "X-Title": "Metriz",
+        "HTTP-Referer": CONFIG.APP_URL || "https://www.aodit.ai",
+        "X-Title": "Aodit",
       },
       body: JSON.stringify(requestBody),
     },

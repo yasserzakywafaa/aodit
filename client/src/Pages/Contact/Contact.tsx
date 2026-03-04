@@ -47,7 +47,7 @@ const ContactPage = () => {
 
   return (
     <Page
-      title="Contact Us | Metriz"
+      title="Contact Us | Aodit"
       className="contact-page"
       isLoading={isFetching}
     >

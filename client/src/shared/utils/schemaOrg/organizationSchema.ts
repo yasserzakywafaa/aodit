@@ -17,14 +17,14 @@ export const createOrganizationSchemaForSite = (aggregateRating?: {
   const organization: any = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Metriz",
+    name: "Aodit",
     url: baseUrl,
     logo: getImageUrl("/icons/icon_512x512.png"),
     description: "AI-powered projects creation platform.",
     sameAs: [
       // Add social media links if available
-      // "https://twitter.com/metriz",
-      // "https://www.linkedin.com/company/metriz",
+      // "https://twitter.com/aodit",
+      // "https://www.linkedin.com/company/aodit",
     ],
     contactPoint: {
       "@type": "ContactPoint",
@@ -45,7 +45,7 @@ export const createOrganizationSchemaForSite = (aggregateRating?: {
 };
 
 /**
- * Create SoftwareApplication schema for the Metriz platform
+ * Create SoftwareApplication schema for the Aodit platform
  */
 export const createSoftwareApplicationSchema = (
   aggregateRating?: {
@@ -59,7 +59,7 @@ export const createSoftwareApplicationSchema = (
   const application: any = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Metriz",
+    name: "Aodit",
     applicationCategory: "ContentManagementApplication",
     operatingSystem: "Web",
     offers: {

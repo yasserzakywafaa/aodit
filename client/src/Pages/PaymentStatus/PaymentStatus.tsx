@@ -78,7 +78,7 @@ const PaymentStatusPage = () => {
 
   return (
     <Page
-      title="Payment Success | Metriz"
+      title="Payment Success | Aodit"
       className={`payment-status-page ${
         showPaymentSuccess ? "payment-success" : ""
       }`}

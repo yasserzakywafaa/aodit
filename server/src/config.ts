@@ -138,19 +138,19 @@ const CONFIG = {
   APP_URL:
     process.env.LOCAL_CLIENT_URL ||
     (process.env.NODE_ENV === "development"
-      ? "https://dev.metriz.ai"
-      : "https://www.metriz.ai"),
+      ? "https://dev.aodit.ai"
+      : "https://www.aodit.ai"),
 
   SERVER_URL:
     process.env.LOCAL_SERVER_URL ||
     (process.env.NODE_ENV === "development"
-      ? "https://api-dev.metriz.ai"
-      : "https://api.metriz.ai"),
+      ? "https://api-dev.aodit.ai"
+      : "https://api.aodit.ai"),
 
   APP_DOCS_LINK:
     process.env.NODE_ENV === "development"
-      ? "https://docs-dev.metriz.ai"
-      : "https://docs.metriz.ai",
+      ? "https://docs-dev.aodit.ai"
+      : "https://docs.aodit.ai",
 
   INTEGRATION: {
     TEST_WORDPRESS_URL: (websiteUrl: string) => `${websiteUrl}/wp-json/wp/v2/`,

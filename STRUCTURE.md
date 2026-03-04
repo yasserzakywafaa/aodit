@@ -1,6 +1,6 @@
 # Project Folder Structure
 
-    metriz
+    aodit
     │── client
     │   ├── build/
     │   ├── node_modules/

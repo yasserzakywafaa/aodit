@@ -54,9 +54,9 @@ const FeaturesPage = () => {
   const faqData: FAQItem[] = useMemo(
     () => [
       {
-        question: "What is Metriz.ai?",
+        question: "What is Aodit.ai?",
         answer:
-          "Metriz is a smart tendering and BOQ (Bill of Quantity) management tool for marketing agencies.",
+          "Aodit is a smart tendering and BOQ (Bill of Quantity) management tool for marketing agencies.",
       },
     ],
     [],
@@ -74,7 +74,7 @@ const FeaturesPage = () => {
 
   return (
     <Page
-      title="Metriz: Smart Tendering & BOQ"
+      title="Aodit: Smart Tendering & BOQ"
       className="features-page"
       isLoading={isFetching}
     >

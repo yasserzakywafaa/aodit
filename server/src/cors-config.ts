@@ -17,7 +17,7 @@ const getAllowedOrigins = (): string[] => {
     return PUBLIC_URLS_CLIENT_PROD.split(", ");
   }
 
-  return ["https://metriz.ai", "https://www.metriz.ai", "https://api.metriz.ai"];
+  return ["https://aodit.ai", "https://www.aodit.ai", "https://api.aodit.ai"];
 };
 
 const corsOptions = {

@@ -58,9 +58,9 @@ export const sendRegistrationWelcomeEmail = async (
     });
 
     await transporter.sendMail({
-      from: `"Metriz.ai" <${CONFIG.EMAIL}>`,
+      from: `"Aodit.ai" <${CONFIG.EMAIL}>`,
       to: user.email,
-      subject: "Welcome to Metriz.ai! 🎉",
+      subject: "Welcome to Aodit.ai! 🎉",
       text: textContent,
       html: htmlContent,
     });

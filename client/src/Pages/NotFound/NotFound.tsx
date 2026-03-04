@@ -15,7 +15,7 @@ const NotFoundPage = () => {
   return (
     <>
       <Box component="div" className="not-found-page">
-        <Page title="Not Found | Metriz">
+        <Page title="Not Found | Aodit">
           <Box
             sx={{ p: 3 }}
             display="flex"

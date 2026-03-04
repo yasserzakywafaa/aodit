@@ -2,8 +2,8 @@
 @import "../assets/scss/grid.scss";
 
 :root {
-  --metriz-primary: #76d6b6ff;
-  --metriz-secondary: #ffffff;
+  --aodit-primary: #76d6b6ff;
+  --aodit-secondary: #ffffff;
 }
 
 #root {
@@ -41,30 +41,30 @@ hr {
 }
 
 .text-underline {
-  text-decoration: underline solid var(--metriz-primary);
+  text-decoration: underline solid var(--aodit-primary);
 }
 .text-underline-secondary {
-  text-decoration: underline solid var(--metriz-secondary);
+  text-decoration: underline solid var(--aodit-secondary);
 }
 
 .dark {
   a:not(.MuiButtonBase-root) {
-    color: var(--metriz-primary);
+    color: var(--aodit-primary);
     font-weight: 400;
-    text-decoration: underline solid var(--metriz-secondary) !important;
+    text-decoration: underline solid var(--aodit-secondary) !important;
     &:visited {
-      color: var(--metriz-primary);
+      color: var(--aodit-primary);
     }
   }
 }
 
 .light {
   a:not(.MuiButtonBase-root) {
-    color: var(--metriz-primary);
+    color: var(--aodit-primary);
     font-weight: 400;
-    text-decoration: underline solid var(--metriz-secondary) !important;
+    text-decoration: underline solid var(--aodit-secondary) !important;
     &:visited {
-      color: var(--metriz-primary);
+      color: var(--aodit-primary);
     }
   }
 }

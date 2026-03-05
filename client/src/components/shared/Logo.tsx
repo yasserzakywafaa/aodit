@@ -56,7 +56,6 @@ const Logo = (props: LogoProps) => {
           fontSize: 13,
           fontWeight: 500,
           letterSpacing: "0.15em",
-          // color: secondaryColor,
           textDecoration: "none",
           cursor: "pointer",
           ...style,

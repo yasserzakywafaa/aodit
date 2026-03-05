@@ -1,18 +1,18 @@
 import * as React from "react";
 
+import { Box } from "@mui/material";
 import FullLogo from "src/assets/images/logo_512x512.webp";
 import SmallLogo from "src/assets/images/icon_192x192.webp";
+import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
-import { primaryColor } from "src/application/shared/themes";
-import { Box } from "@mui/material";
 
 export interface LogoProps {
   variant?: LogoVariant;
   component?: LogoComponentEnum;
   style?: React.CSSProperties;
   onClick?: () => void;
-  /** When true, render text "SWISSLII" (SWISS in gold) instead of image */
+  /** When true, render text "Aodit" (Aodit in gold) instead of image */
   textLogo?: boolean;
 }
 
@@ -56,16 +56,15 @@ const Logo = (props: LogoProps) => {
           fontSize: 13,
           fontWeight: 500,
           letterSpacing: "0.15em",
-          color: "var(--white, #f5f3ef)",
+          // color: secondaryColor,
           textDecoration: "none",
           cursor: "pointer",
           ...style,
         }}
       >
-        <Box component="span" sx={{ color: primaryColor }}>
-          SWISS
+        <Box component="h3" sx={{ color: primaryColor }}>
+          Aodit
         </Box>
-        LII
       </Box>
     );
   }

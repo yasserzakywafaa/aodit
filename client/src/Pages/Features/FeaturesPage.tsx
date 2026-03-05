@@ -8,12 +8,12 @@ import {
   useSchemaOrg,
 } from "src/shared/utils/schemaOrg";
 
-import Hero from "./features/Hero";
-import RatingsSection from "./features/RatingsSection";
-import MethodologySection from "./features/MethodologySection";
 import AboutSection from "./features/AboutSection";
-import SubscribeSection from "./features/SubscribeSection";
+import Hero from "./features/Hero";
+import MethodologySection from "./features/MethodologySection";
 import Page from "src/components/shared/Page/Page";
+import RatingsSection from "./features/RatingsSection";
+import SubscribeSection from "./features/SubscribeSection";
 import { Testimonial } from "src/shared/types/types";
 import { routes } from "src/application/routes";
 import { testimonials } from "src/shared/mockedData/Testimonials";
@@ -78,7 +78,7 @@ const FeaturesPage = () => {
 
   return (
     <Page
-      title="SWISSLII — Swiss Lab for Intelligence International"
+      title="Aodit — AI-Powered Agent Risk Index"
       className="features-page"
       isLoading={isFetching}
     >

@@ -13,7 +13,7 @@ export const primaryColorOpaqueTen = "rgba(184, 150, 62, 0.1)";
 export const primaryColorOpaqueThirty = "rgba(184, 150, 62, 0.3)";
 export const primaryColorOpaqueFifteen = "rgba(184, 150, 62, 0.15)";
 export const primaryColorOpaqueEight = "rgba(184, 150, 62, 0.08)";
-export const secondaryColor = white;
+export const secondaryColor = black;
 
 export const fontFamilySerif = "'Cormorant Garamond', serif";
 export const fontFamilyMono = "'DM Mono', monospace";
@@ -60,8 +60,16 @@ export const theme = createTheme({
   },
   typography: {
     fontFamily: fontFamilySans,
-    h1: { fontFamily: fontFamilySerif, fontWeight: 300, letterSpacing: "-0.02em" },
-    h2: { fontFamily: fontFamilySerif, fontWeight: 300, letterSpacing: "-0.01em" },
+    h1: {
+      fontFamily: fontFamilySerif,
+      fontWeight: 300,
+      letterSpacing: "-0.02em",
+    },
+    h2: {
+      fontFamily: fontFamilySerif,
+      fontWeight: 300,
+      letterSpacing: "-0.01em",
+    },
     h3: { fontFamily: fontFamilySerif, fontWeight: 400 },
   },
   components: {
@@ -91,8 +99,11 @@ export const lightTheme = createTheme({
   ...theme,
   palette: {
     mode: "light",
-    background: { default: white },
-    text: { primary: black },
+    primary: { main: primaryColor },
+    secondary: { main: white },
+    background: { default: white, paper: cream },
+    text: { primary: black, secondary: grey },
+    divider: border,
   },
 });
 
@@ -100,7 +111,10 @@ export const darkTheme = createTheme({
   ...theme,
   palette: {
     mode: "dark",
-    background: { default: black },
+    primary: { main: primaryColor },
+    secondary: { main: white },
+    background: { default: black, paper: "#0d0c09" },
     text: { primary: white, secondary: grey },
+    divider: border,
   },
 });

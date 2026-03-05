@@ -113,7 +113,7 @@ const Page = (params: PageProps) => {
     return () => {
       setPreviousUrl(location.pathname);
     };
-  }, []);
+  }, [themeMode, location.pathname]);
 
   useEffect(() => {
     if (authStatus && provider && userId) {

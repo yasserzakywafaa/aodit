@@ -6,8 +6,6 @@ import {
   black,
   primaryColor,
   border,
-  grey,
-  lightGrey,
   fontFamilyMono,
   fontFamilySerif,
 } from "src/application/shared/themes";
@@ -28,20 +26,27 @@ const Hero = () => {
         px: { xs: 3, md: 6 },
       }}
     >
-      {/* Background */}
+      {/* Theme-adaptive background */}
       <Box
-        sx={{
+        sx={(theme) => ({
           position: "absolute",
           inset: 0,
-          background: `
+          background:
+            theme.palette.mode === "dark"
+              ? `
             radial-gradient(ellipse 60% 50% at 80% 20%, rgba(184,150,62,0.06) 0%, transparent 60%),
             radial-gradient(ellipse 40% 60% at 10% 80%, rgba(192,57,43,0.04) 0%, transparent 50%),
             linear-gradient(180deg, #0a0a0a 0%, #111008 100%)
+          `
+              : `
+            radial-gradient(ellipse 60% 50% at 80% 20%, rgba(184,150,62,0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 40% 60% at 10% 80%, rgba(192,57,43,0.03) 0%, transparent 50%),
+            linear-gradient(180deg, #f5f3ef 0%, #ede9e1 100%)
           `,
-        }}
+        })}
       />
       <Box
-        sx={{
+        sx={(theme) => ({
           position: "absolute",
           inset: 0,
           backgroundImage: `
@@ -49,8 +54,11 @@ const Hero = () => {
             linear-gradient(90deg, rgba(184,150,62,0.04) 1px, transparent 1px)
           `,
           backgroundSize: "80px 80px",
-          maskImage: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 40%, transparent 100%)",
-        }}
+          maskImage:
+            theme.palette.mode === "dark"
+              ? "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 40%, transparent 100%)"
+              : "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.08) 40%, transparent 100%)",
+        })}
       />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
@@ -96,7 +104,7 @@ const Hero = () => {
             maxWidth: 560,
             mt: 5,
             fontSize: 16,
-            color: "rgba(245,243,239,0.6)",
+            color: "text.secondary",
             lineHeight: 1.7,
           }}
         >
@@ -119,7 +127,7 @@ const Hero = () => {
               bgcolor: primaryColor,
               px: 3.5,
               py: 1.75,
-              "&:hover": { bgcolor: "var(--white, #f5f3ef)" },
+              "&:hover": { bgcolor: "secondary.main" },
             }}
           >
             View Ratings
@@ -157,12 +165,12 @@ const Hero = () => {
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: grey,
+              color: "text.secondary",
             },
             "& strong": {
               fontFamily: fontFamilyMono,
               fontSize: 11,
-              color: lightGrey,
+              color: "text.secondary",
               fontWeight: 400,
             },
           }}

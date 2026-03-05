@@ -1,14 +1,5 @@
-import {
-  LockOpenOutlined,
-  VpnKeyOutlined,
-} from "@mui/icons-material";
 import { Box, Link, MenuItem, Typography } from "@mui/material";
-import {
-  primaryColor,
-  secondaryColorForDarkTheme,
-  grey,
-  fontFamilyMono,
-} from "src/application/shared/themes";
+import { LockOpenOutlined, VpnKeyOutlined } from "@mui/icons-material";
 
 import { Authentication } from "src/application/store/state";
 import Logo from "../../Logo";
@@ -16,6 +7,7 @@ import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
+import { primaryColor } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
@@ -33,16 +25,6 @@ interface ApplicationBarDesktopViewParams {
   setIsInstallAppDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleOnMenuItemClick: (sectionId: string) => () => void;
 }
-
-const navLinkStyle = {
-  fontFamily: fontFamilyMono,
-  fontSize: 11,
-  letterSpacing: "0.12em",
-  textTransform: "uppercase" as const,
-  color: grey,
-  textDecoration: "none",
-  "&:hover": { color: secondaryColorForDarkTheme },
-};
 
 const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
   const {
@@ -88,7 +70,6 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                   key={id}
                   component="button"
                   variant="body2"
-                  sx={navLinkStyle}
                   onClick={handleOnMenuItemClick(id)}
                 >
                   {label}
@@ -114,7 +95,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 >
                   <LockOpenOutlined
                     fontSize="small"
-                    color="secondary"
+                    color="primary"
                     sx={{ mr: 0.5 }}
                   />
                   <Typography variant="body2" color="text.primary">
@@ -128,7 +109,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 >
                   <VpnKeyOutlined
                     fontSize="small"
-                    color="secondary"
+                    color="primary"
                     sx={{ mr: 0.5 }}
                   />
                   <Typography variant="body2" color="text.primary">

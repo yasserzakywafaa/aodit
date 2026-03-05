@@ -1,9 +1,6 @@
 import {
-  border,
   fontFamilyMono,
   fontFamilySerif,
-  grey,
-  lightGrey,
   primaryColor,
   red,
 } from "src/application/shared/themes";
@@ -106,8 +103,8 @@ const RatingsSection = () => (
     sx={{
       py: { xs: 6, md: 12.5 },
       px: { xs: 3, md: 6 },
-      borderTop: `1px solid ${border}`,
-      bgcolor: "#0d0c09",
+      borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+      bgcolor: "background.paper",
     }}
   >
     <Typography sx={SECTION_LABEL_STYLE}>Current Ratings</Typography>
@@ -143,7 +140,7 @@ const RatingsSection = () => (
       </Typography>
       <Typography
         sx={{
-          color: "rgba(245,243,239,0.55)",
+          color: "text.secondary",
           fontSize: 15,
           lineHeight: 1.75,
           pt: 1,
@@ -159,7 +156,7 @@ const RatingsSection = () => (
     <Table
       sx={{
         width: "100%",
-        "& th, & td": { borderBottom: `1px solid ${border}` },
+        "& th, & td": { borderBottom: "1px solid", borderColor: "divider" },
       }}
     >
       <TableHead>
@@ -170,7 +167,7 @@ const RatingsSection = () => (
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: grey,
+              color: "text.secondary",
               py: 1.5,
               px: 2,
             }}
@@ -183,7 +180,7 @@ const RatingsSection = () => (
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: grey,
+              color: "text.secondary",
               py: 1.5,
               px: 2,
             }}
@@ -196,7 +193,7 @@ const RatingsSection = () => (
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: grey,
+              color: "text.secondary",
               py: 1.5,
               px: 2,
             }}
@@ -209,7 +206,7 @@ const RatingsSection = () => (
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: grey,
+              color: "text.secondary",
               py: 1.5,
               px: 2,
             }}
@@ -222,7 +219,7 @@ const RatingsSection = () => (
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: grey,
+              color: "text.secondary",
               py: 1.5,
               px: 2,
             }}
@@ -235,7 +232,7 @@ const RatingsSection = () => (
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: grey,
+              color: "text.secondary",
               py: 1.5,
               px: 2,
             }}
@@ -248,7 +245,7 @@ const RatingsSection = () => (
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
-              color: grey,
+              color: "text.secondary",
               py: 1.5,
               px: 2,
             }}
@@ -265,14 +262,15 @@ const RatingsSection = () => (
               "& td": {
                 py: 2.25,
                 px: 2,
-                borderBottom: "1px solid rgba(180,174,162,0.08)",
+                borderBottom: "1px solid",
+                borderColor: "divider",
                 verticalAlign: "middle",
               },
               "&:hover td": { bgcolor: "rgba(184,150,62,0.03)" },
             }}
           >
             <TableCell
-              sx={{ fontFamily: fontFamilyMono, fontSize: 11, color: grey }}
+              sx={{ fontFamily: fontFamilyMono, fontSize: 11, color: "text.secondary" }}
             >
               {row.rank}
             </TableCell>
@@ -291,7 +289,7 @@ const RatingsSection = () => (
                 sx={{
                   fontFamily: fontFamilyMono,
                   fontSize: 10,
-                  color: grey,
+                  color: "text.secondary",
                   mt: 0.25,
                 }}
               >
@@ -302,7 +300,7 @@ const RatingsSection = () => (
               sx={{
                 fontFamily: fontFamilyMono,
                 fontSize: 12,
-                color: lightGrey,
+                color: "text.secondary",
               }}
             >
               {row.total}
@@ -416,7 +414,7 @@ const RatingsSection = () => (
         ⚠ Critical Finding — Report AIR-2026-FSB-001
       </Typography>
       <Typography
-        sx={{ fontSize: 14, color: "rgba(245,243,239,0.7)", lineHeight: 1.7 }}
+        sx={{ fontSize: 14, color: "text.secondary", lineHeight: 1.7 }}
       >
         <Box component="strong" sx={{ color: "text.primary" }}>
           Gemini (Google DeepMind)

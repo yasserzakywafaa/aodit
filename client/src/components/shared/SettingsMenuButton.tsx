@@ -72,7 +72,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
         }}
         onClick={handleMenuButtonClick}
       >
-        <Settings fontSize="medium" color="secondary" />
+        <Settings fontSize="medium" color="primary" />
 
         {props.children}
       </Box>
@@ -96,13 +96,13 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
             {themeMode === "dark" ? (
               <WbSunnyOutlined
                 fontSize="medium"
-                color="secondary"
+                color="primary"
                 sx={{ mr: 1 }}
               />
             ) : (
               <ModeNightOutlined
                 fontSize="medium"
-                color="secondary"
+                color="primary"
                 sx={{ mr: 1 }}
               />
             )}
@@ -119,7 +119,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
             <ListItemIcon>
               <InstallMobileOutlined
                 fontSize="medium"
-                color="secondary"
+                color="primary"
                 sx={{ mr: 1 }}
               />
             </ListItemIcon>
@@ -132,7 +132,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
           sx={{ ...buttonHoverStylePrimary }}
           onClick={handleOnRefreshClick}
         >
-          <RefreshOutlined fontSize="medium" color="secondary" sx={{ mr: 1 }} />
+          <RefreshOutlined fontSize="medium" color="primary" sx={{ mr: 1 }} />
           <Typography variant="body1">Refresh App</Typography>
         </MenuItem>
       </Menu>

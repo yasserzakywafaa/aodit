@@ -1,12 +1,11 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import {
-  border,
-  primaryColor,
-  grey,
   fontFamilyMono,
   fontFamilySerif,
+  primaryColor,
 } from "src/application/shared/themes";
+
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const SECTION_LABEL_STYLE = {
   fontFamily: fontFamilyMono,
@@ -41,11 +40,12 @@ const AboutSection = () => (
     sx={{
       py: { xs: 6, md: 12.5 },
       px: { xs: 3, md: 6 },
-      borderTop: `1px solid ${border}`,
-      bgcolor: "#0d0c09",
+      borderTop: "1px solid",
+      borderColor: "divider",
+      bgcolor: "background.paper",
     }}
   >
-    <Typography sx={SECTION_LABEL_STYLE}>About SWISSLII</Typography>
+    <Typography sx={SECTION_LABEL_STYLE}>About Aodit</Typography>
 
     <Box
       sx={{
@@ -60,7 +60,10 @@ const AboutSection = () => (
           component="h2"
           sx={{
             fontFamily: fontFamilySerif,
-            fontSize: { xs: "clamp(1.5rem, 3.5vw, 2.25rem)", md: "clamp(32px, 3.5vw, 50px)" },
+            fontSize: {
+              xs: "clamp(1.5rem, 3.5vw, 2.25rem)",
+              md: "clamp(32px, 3.5vw, 50px)",
+            },
             fontWeight: 300,
             lineHeight: 1.15,
             letterSpacing: "-0.01em",
@@ -68,23 +71,62 @@ const AboutSection = () => (
             color: "text.primary",
           }}
         >
-          An <Box component="em" sx={{ fontStyle: "italic", color: primaryColor }}>independent</Box>
+          An{" "}
+          <Box component="em" sx={{ fontStyle: "italic", color: primaryColor }}>
+            independent
+          </Box>
           <br />
           institution for
           <br />
           AI risk clarity
         </Typography>
-        <Typography sx={{ color: "rgba(245,243,239,0.6)", fontSize: 15, lineHeight: 1.8, mb: 2.5 }}>
-          SWISSLII — the Swiss Lab for Intelligence International — produces independent behavioral ratings for AI agents deployed in high-stakes financial and enterprise environments.
+        <Typography
+          sx={{
+            color: "text.secondary",
+            fontSize: 15,
+            lineHeight: 1.8,
+            mb: 2.5,
+          }}
+        >
+          Aodit — the AI-Powered Agent Risk Index — produces independent
+          behavioral ratings for AI agents deployed in high-stakes financial and
+          enterprise environments.
         </Typography>
-        <Typography sx={{ color: "rgba(245,243,239,0.6)", fontSize: 15, lineHeight: 1.8, mb: 2.5 }}>
-          We exist because the gap between AI capability and AI governance is real, growing, and consequential. Risk officers and compliance teams need legible, rigorous, independent assessments — not vendor claims.
+        <Typography
+          sx={{
+            color: "text.secondary",
+            fontSize: 15,
+            lineHeight: 1.8,
+            mb: 2.5,
+          }}
+        >
+          We exist because the gap between AI capability and AI governance is
+          real, growing, and consequential. Risk officers and compliance teams
+          need legible, rigorous, independent assessments — not vendor claims.
         </Typography>
-        <Typography sx={{ color: "rgba(245,243,239,0.6)", fontSize: 15, lineHeight: 1.8, mb: 2.5 }}>
-          Our methodology is modelled on established credit-rating frameworks, adapted for the specific failure modes of large language models in adversarial real-world conditions.
+        <Typography
+          sx={{
+            color: "text.secondary",
+            fontSize: 15,
+            lineHeight: 1.8,
+            mb: 2.5,
+          }}
+        >
+          Our methodology is modelled on established credit-rating frameworks,
+          adapted for the specific failure modes of large language models in
+          adversarial real-world conditions.
         </Typography>
-        <Typography sx={{ fontFamily: fontFamilyMono, fontSize: 11, color: grey, mt: 4, letterSpacing: "0.05em" }}>
-          Zürich, Switzerland · Founded 2026 · Independent · Not affiliated with any AI vendor
+        <Typography
+          sx={{
+            fontFamily: fontFamilyMono,
+            fontSize: 11,
+            color: "text.secondary",
+            mt: 4,
+            letterSpacing: "0.05em",
+          }}
+        >
+          Zurich, Switzerland · Founded 2026 · Independent · Not affiliated with
+          any AI vendor
         </Typography>
       </Box>
 
@@ -94,24 +136,51 @@ const AboutSection = () => (
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "1px",
-            bgcolor: border,
-            border: `1px solid ${border}`,
+            bgcolor: "divider",
+            border: "1px solid",
+            borderColor: "divider",
           }}
         >
           {stats.map((s) => (
             <Box key={s.label} sx={{ bgcolor: "background.default", p: 3.5 }}>
-              <Typography sx={{ fontFamily: fontFamilySerif, fontSize: 48, fontWeight: 300, color: primaryColor, lineHeight: 1, mb: 1 }}>
+              <Typography
+                sx={{
+                  fontFamily: fontFamilySerif,
+                  fontSize: 48,
+                  fontWeight: 300,
+                  color: primaryColor,
+                  lineHeight: 1,
+                  mb: 1,
+                }}
+              >
                 {s.num}
               </Typography>
-              <Typography sx={{ fontFamily: fontFamilyMono, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: grey }}>
+              <Typography
+                sx={{
+                  fontFamily: fontFamilyMono,
+                  fontSize: 10,
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: "text.secondary",
+                }}
+              >
                 {s.label}
               </Typography>
             </Box>
           ))}
         </Box>
 
-        <Box sx={{ mt: 3, p: 3, border: `1px solid ${border}` }}>
-          <Typography sx={{ fontFamily: fontFamilyMono, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: grey, mb: 2 }}>
+        <Box sx={{ mt: 3, p: 3, border: "1px solid", borderColor: "divider" }}>
+          <Typography
+            sx={{
+              fontFamily: fontFamilyMono,
+              fontSize: 10,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "text.secondary",
+              mb: 2,
+            }}
+          >
             Evaluation Coverage
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
@@ -123,11 +192,28 @@ const AboutSection = () => (
                   justifyContent: "space-between",
                   alignItems: "center",
                   pb: 1.25,
-                  borderBottom: i < coverage.length - 1 ? `1px solid ${border}` : "none",
+                  ...(i < coverage.length - 1
+                    ? { borderBottom: "1px solid", borderColor: "divider" }
+                    : {}),
                 }}
               >
-                <Typography sx={{ fontSize: 13, color: c.active ? "text.primary" : grey }}>{c.name}</Typography>
-                <Typography sx={{ fontFamily: fontFamilyMono, fontSize: 10, color: c.active ? primaryColor : grey }}>{c.status}</Typography>
+                <Typography
+                  sx={{
+                    fontSize: 13,
+                    color: c.active ? "text.primary" : "text.secondary",
+                  }}
+                >
+                  {c.name}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontFamily: fontFamilyMono,
+                    fontSize: 10,
+                    color: c.active ? primaryColor : "text.secondary",
+                  }}
+                >
+                  {c.status}
+                </Typography>
               </Box>
             ))}
           </Box>

@@ -106,13 +106,16 @@ const ApplicationBar = () => {
       {isAppBarVisible && (
         <AppBar
           position="fixed"
-          sx={{
+          sx={(theme) => ({
             boxShadow: 0,
-            bgcolor: "rgba(10,10,10,0.92)",
+            bgcolor:
+              theme.palette.mode === "dark"
+                ? "rgba(10,10,10,0.92)"
+                : "rgba(245,243,239,0.92)",
             backgroundImage: "none",
-            borderBottom: "1px solid var(--border, rgba(180,174,162,0.25))",
+            borderBottom: `1px solid ${theme.palette.divider}`,
             backdropFilter: "blur(12px)",
-          }}
+          })}
         >
           <Container
             maxWidth={false}

@@ -33,6 +33,7 @@ export enum DBNamesEnum {
 export enum DBCollectionsEnum {
   projects = "projects",
   users = "users",
+  lead_subscribers = "lead_subscribers",
 }
 
 const getMongoDbUri = (): string => {
@@ -115,6 +116,10 @@ const createIndexes = async () => {
     await users.createIndex({ role: 1 });
     await users.createIndex({ isPaidUser: 1 });
     await users.createIndex({ phoneNumber: 1 }, { unique: true, sparse: true });
+
+    const leadSubscribers = database.collection(DBCollectionsEnum.lead_subscribers);
+    await leadSubscribers.createIndex({ email: 1 }, { unique: true });
+    await leadSubscribers.createIndex({ createdAt: -1 });
   } catch (error) {
     console.error("❌ Error creating index:", error);
   }

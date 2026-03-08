@@ -25,6 +25,15 @@ export interface RegistrationWelcomePlainTextData {
   userName: string;
 }
 
+export interface LeadMagnetSubscriberPlainTextData {
+  email: string;
+}
+
+export interface LeadMagnetAdminPlainTextData {
+  email: string;
+  subscribedAt: string;
+}
+
 /**
  * Generate plain text for project ready email
  */
@@ -114,6 +123,43 @@ Getting Started:
 2. Let our AI generate your content
 3. Review and customize your project
 4. Publish and share with the world!
+
+Best regards,
+The Aodit.ai Team
+  `.trim();
+};
+
+/**
+ * Generate plain text for lead magnet subscriber confirmation email
+ */
+export const generateLeadMagnetSubscriberPlainText = (
+  data: LeadMagnetSubscriberPlainTextData,
+): string => {
+  const { email } = data;
+  return `
+You're on the list!
+
+We've received your request. You'll get updates when new ratings publish—quarterly reports, no marketing, no noise.
+
+Registered with: ${email}
+
+Best regards,
+The Aodit.ai Team
+  `.trim();
+};
+
+/**
+ * Generate plain text for lead magnet admin notification email
+ */
+export const generateLeadMagnetAdminPlainText = (
+  data: LeadMagnetAdminPlainTextData,
+): string => {
+  const { email, subscribedAt } = data;
+  return `
+New lead-magnet signup
+
+Email: ${email}
+Subscribed at: ${subscribedAt}
 
 Best regards,
 The Aodit.ai Team

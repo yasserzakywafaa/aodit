@@ -32,6 +32,9 @@ const END_POINTS = {
   CONTACT: {
     SUPPORT: `${publicApiUrl}/api/v1/contact-support`,
   },
+  LEAD_MAGNET: {
+    SUBSCRIBE: `${publicApiUrl}/api/v1/lead-magnet/subscribe`,
+  },
   AUTH: {
     USER_INFO: `${publicApiUrl}/api/v1/auth/user-info`,
     UPDATE_USER_INFO: `${publicApiUrl}/api/v1/auth/update-user-info`,

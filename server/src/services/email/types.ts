@@ -40,3 +40,18 @@ export interface ContactAdminEmailData extends BaseEmailData {
 export interface RegistrationEmailData extends BaseEmailData {
   userName: string;
 }
+
+/**
+ * Lead magnet subscriber confirmation email data (sent to user)
+ */
+export interface LeadMagnetSubscriberEmailData extends BaseEmailData {
+  email: string;
+}
+
+/**
+ * Lead magnet admin notification email data (sent to admin)
+ */
+export interface LeadMagnetAdminEmailData extends BaseEmailData {
+  email: string;
+  subscribedAt: string;
+}

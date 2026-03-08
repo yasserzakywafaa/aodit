@@ -4,16 +4,68 @@ import {
   grey,
   primaryColor,
 } from "src/application/shared/themes";
+import END_POINTS from "src/application/shared/endpoints";
+import {
+  Notify,
+  ToastTypes,
+} from "src/components/shared/Notification/Notification";
+import axios from "axios";
+import { useState } from "react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const SubscribeSection = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: wire to newsletter API
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed) {
+      Notify({
+        content: "Please enter your email address",
+        type: ToastTypes.Error,
+      });
+      return;
+    }
+    if (!emailRegex.test(trimmed)) {
+      Notify({
+        content: "Please enter a valid email address",
+        type: ToastTypes.Error,
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        END_POINTS.LEAD_MAGNET.SUBSCRIBE,
+        { email: trimmed },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      const message =
+        response.data?.message || "You're on the list. Check your inbox.";
+      Notify({ content: message, type: ToastTypes.Success });
+      setEmail("");
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        Notify({
+          content: error.response.data.message,
+          type: ToastTypes.Error,
+        });
+      } else {
+        Notify({
+          content: "Something went wrong. Please try again later.",
+          type: ToastTypes.Error,
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -102,13 +154,18 @@ const SubscribeSection = () => {
       >
         <TextField
           fullWidth
+          name="email"
           placeholder="your@email.com"
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           size="small"
           sx={{ flex: 1 }}
+          disabled={loading}
         />
         <Button
           type="submit"
+          disabled={loading}
           sx={{
             fontFamily: fontFamilyMono,
             fontSize: 11,

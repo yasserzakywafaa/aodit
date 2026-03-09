@@ -5,7 +5,7 @@ import {
 } from "../email/utils/plainTextGenerator";
 
 import CONFIG from "../../config";
-import { createSmtpTransporter } from "../email/utils/sendEmail";
+import { createOAuth2Transporter } from "../email/utils/sendEmail";
 import { renderEmailTemplate } from "../email/emailTemplateService";
 
 export interface ContactFormState {
@@ -20,7 +20,7 @@ type ContactSupportParams = ContactFormState;
 export const handleContactSupport = async (props: ContactSupportParams) => {
   const { name, email, subject, message } = props;
 
-  const transporter = createSmtpTransporter();
+  const transporter = await createOAuth2Transporter();
 
   // Prepare admin email data
   const adminEmailData: ContactAdminEmailData = {
@@ -38,6 +38,21 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
     appUrl: CONFIG.APP_URL,
   };
 
+  // Check admin recipient is configured
+  const adminEmail =
+    CONFIG.GMAIL_FORWARD_TO ?? CONFIG.GMAIL_SENDER ?? CONFIG.EMAIL;
+  if (!adminEmail) {
+    console.error("GMAIL_FORWARD_TO (or GMAIL_SENDER/EMAIL) is not set");
+    throw new Error(
+      "Email configuration error: GMAIL_FORWARD_TO is not configured",
+    );
+  }
+  const sender = CONFIG.GMAIL_SENDER ?? CONFIG.EMAIL;
+  if (!sender) {
+    console.error("GMAIL_SENDER (or EMAIL) is not set");
+    throw new Error("Email configuration error: sender is not configured");
+  }
+
   // Generate HTML content using Handlebars templates
   const adminHtmlContent = renderEmailTemplate(
     "contactAdminNotification",
@@ -53,8 +68,8 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
   const userTextContent = generateContactUserPlainText(userEmailData);
 
   const mailOptionsAdmin = {
-    from: CONFIG.EMAIL,
-    to: CONFIG.EMAIL,
+    from: `"Aodit.ai" <${sender}>`,
+    to: adminEmail,
     subject: `New Contact Form Submission: ${subject}`,
     text: adminTextContent,
     html: adminHtmlContent,
@@ -62,7 +77,7 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
   };
 
   const mailOptionsUser = {
-    from: `"Aodit.ai" <${CONFIG.EMAIL}>`,
+    from: `"Aodit.ai" <${sender}>`,
     to: email,
     subject: "Thank you for contacting us!",
     text: userTextContent,
@@ -70,9 +85,14 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
   };
 
   try {
-    await transporter.sendMail(mailOptionsAdmin);
-    await transporter.sendMail(mailOptionsUser);
+    // Send two emails in parallel
+    await Promise.all([
+      // Email 1: Notification to admin
+      transporter.sendMail(mailOptionsAdmin),
+      // Email 2: Confirmation to user
+      transporter.sendMail(mailOptionsUser),
+    ]);
   } catch (error: any) {
-    throw new Error(`Failed to send email: ${error.message}`);
+    throw error;
   }
 };

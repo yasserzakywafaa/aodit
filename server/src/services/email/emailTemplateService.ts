@@ -6,8 +6,7 @@ import { BaseEmailData } from "./types";
 import CONFIG from "../../config";
 
 // Logo URL constant
-export const LOGO_URL =
-  "https://s3.eu-west-2.amazonaws.com/aodit.ai/logo/aodit_logo.webp";
+export const LOGO_URL = `https://s3.eu-west-2.amazonaws.com/${CONFIG.HOST_AWS_S3_BUCKET_NAME}/logo/aodit_logo.webp`;
 
 // Template cache
 const templateCache: Map<string, HandlebarsTemplateDelegate> = new Map();

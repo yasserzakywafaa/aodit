@@ -1,9 +1,6 @@
 import * as React from "react";
 
-import { Box } from "@mui/material";
-import FullLogo from "src/assets/images/logo_512x512.webp";
-import SmallLogo from "src/assets/images/icon_192x192.webp";
-import { primaryColor } from "src/application/shared/themes";
+import AoditLogo from "src/assets/images/aodit_logo.webp";
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -12,8 +9,6 @@ export interface LogoProps {
   component?: LogoComponentEnum;
   style?: React.CSSProperties;
   onClick?: () => void;
-  /** When true, render text "Aodit" (Aodit in gold) instead of image */
-  textLogo?: boolean;
 }
 
 export enum LogoComponentEnum {
@@ -30,48 +25,20 @@ const Logo = (props: LogoProps) => {
     component = LogoComponentEnum.IMAGE,
     style,
     onClick,
-    textLogo = false,
   } = props;
 
   const handleClick = () => {
     if (onClick) {
       onClick();
-    } else if (component === LogoComponentEnum.ANCHOR || textLogo) {
+    } else if (component === LogoComponentEnum.ANCHOR) {
       navigate(routes.features);
     }
   };
 
-  if (textLogo) {
-    return (
-      <Box
-        component="a"
-        href={routes.features}
-        onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
-          if (onClick) onClick();
-          else handleClick();
-        }}
-        sx={{
-          fontFamily: "'DM Mono', monospace",
-          fontSize: 13,
-          fontWeight: 500,
-          letterSpacing: "0.15em",
-          textDecoration: "none",
-          cursor: "pointer",
-          ...style,
-        }}
-      >
-        <Box component="h3" sx={{ color: primaryColor }}>
-          Aodit
-        </Box>
-      </Box>
-    );
-  }
-
   const renderImageByVariant = (variant: LogoVariant) => {
-    const logoSrc = variant === "small" ? SmallLogo : FullLogo;
+    const logoSrc = variant === "small" ? AoditLogo : AoditLogo;
     const defaultStyle: React.CSSProperties = {
-      maxWidth: variant === "small" ? "120px" : "200px",
+      maxWidth: variant === "small" ? "40px" : "100px",
       width: "100%",
       height: "auto",
       objectFit: "contain",

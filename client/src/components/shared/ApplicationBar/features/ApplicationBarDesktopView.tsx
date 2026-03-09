@@ -1,9 +1,9 @@
 import { Box, Link, MenuItem, Typography } from "@mui/material";
 import { LockOpenOutlined, VpnKeyOutlined } from "@mui/icons-material";
+import Logo, { LogoComponentEnum } from "../../Logo";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Authentication } from "src/application/store/state";
-import Logo from "../../Logo";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
@@ -64,7 +64,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 gap: 5,
               }}
             >
-              <Logo textLogo onClick={handleOnMenuItemClick("features")} />
+              <Logo variant="small" component={LogoComponentEnum.ANCHOR} />
 
               {NAV_LINKS.map(({ id, label }) => (
                 <Link

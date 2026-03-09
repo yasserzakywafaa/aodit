@@ -1,11 +1,19 @@
 import {
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  MenuItem,
+  Typography,
+} from "@mui/material";
+import {
   LockOpenOutlined,
   MenuOutlined,
   VpnKeyOutlined,
 } from "@mui/icons-material";
-import { Box, Button, Divider, Drawer, MenuItem, Typography } from "@mui/material";
+import Logo, { LogoComponentEnum } from "../../Logo";
+
 import { Authentication } from "src/application/store/state";
-import Logo from "../../Logo";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
@@ -55,7 +63,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
           alignItems="center"
           width="100%"
         >
-          <Logo textLogo onClick={handleOnMenuItemClick("features")} />
+          <Logo variant="small" component={LogoComponentEnum.ANCHOR} />
 
           <Button
             variant="text"
@@ -86,7 +94,10 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
               }}
             >
               <Box>
-                <MenuItem className="menu-item" onClick={handleOnMenuItemClick("features")}>
+                <MenuItem
+                  className="menu-item"
+                  onClick={handleOnMenuItemClick("features")}
+                >
                   <Typography variant="body1" color={primaryColor}>
                     Home
                   </Typography>
@@ -105,7 +116,10 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
 
                 <Divider sx={{ my: 2, width: "80%", mx: "auto" }} />
 
-                <MenuItem className="menu-item" onClick={handleOnMenuItemClick("contact")}>
+                <MenuItem
+                  className="menu-item"
+                  onClick={handleOnMenuItemClick("contact")}
+                >
                   <Typography variant="body1" color="text.secondary">
                     Contact
                   </Typography>
@@ -120,17 +134,27 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 ) : (
                   <>
                     <MenuItem onClick={handleToggleRegisterModal}>
-                      <LockOpenOutlined fontSize="small" color="secondary" sx={{ mr: 1 }} />
+                      <LockOpenOutlined
+                        fontSize="small"
+                        color="secondary"
+                        sx={{ mr: 1 }}
+                      />
                       <Typography variant="body1">Register</Typography>
                     </MenuItem>
                     <MenuItem onClick={handleToggleLoginModal}>
-                      <VpnKeyOutlined fontSize="small" color="secondary" sx={{ mr: 1 }} />
+                      <VpnKeyOutlined
+                        fontSize="small"
+                        color="secondary"
+                        sx={{ mr: 1 }}
+                      />
                       <Typography variant="body1">Log in</Typography>
                     </MenuItem>
                   </>
                 )}
                 <MenuItem>
-                  <SettingsMenuButton setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}>
+                  <SettingsMenuButton
+                    setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+                  >
                     <Typography variant="body1" sx={{ ml: 1 }}>
                       Settings
                     </Typography>

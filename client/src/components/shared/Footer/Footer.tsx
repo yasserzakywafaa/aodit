@@ -1,11 +1,12 @@
 import "./Footer.scss";
 
-import { fontFamilyMono, primaryColor } from "src/application/shared/themes";
+import Logo, { LogoComponentEnum } from "../Logo";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { fontFamilyMono } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -53,9 +54,7 @@ const Footer = () => {
           color: "text.secondary",
         }}
       >
-        <Box component="span" sx={{ color: primaryColor }}>
-          Aodit
-        </Box>
+        <Logo variant="full" component={LogoComponentEnum.ANCHOR} />
       </Box>
 
       <Box sx={{ display: "flex", gap: 4 }}>

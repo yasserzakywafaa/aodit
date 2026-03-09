@@ -86,11 +86,17 @@ const CONFIG = {
   HOST_AWS_SECRET_KEY: process.env.HOST_AWS_SECRET_KEY,
   HOST_AWS_REGION: process.env.HOST_AWS_REGION,
 
-  // Email Service
+  // --- Email Service ---
   SMTP: process.env.SMTP,
   SMTP_PORT: process.env.SMTP_PORT,
   EMAIL: process.env.EMAIL,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+  // Gmail OAuth2 for Google
+  GMAIL_SENDER: process.env.GMAIL_SENDER,
+  GMAIL_FORWARD_TO: process.env.GMAIL_FORWARD_TO,
+  GMAIL_CLIENT_ID: process.env.GMAIL_CLIENT_ID,
+  GMAIL_CLIENT_SECRET: process.env.GMAIL_CLIENT_SECRET,
+  GMAIL_REFRESH_TOKEN: process.env.GMAIL_REFRESH_TOKEN,
 
   // Analytics
   GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.GOOGLE_ANALYTICS_MEASUREMENT_ID,

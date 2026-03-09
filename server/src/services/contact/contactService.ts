@@ -5,7 +5,7 @@ import {
 } from "../email/utils/plainTextGenerator";
 
 import CONFIG from "../../config";
-import nodeMailer from "nodemailer";
+import { createSmtpTransporter } from "../email/utils/sendEmail";
 import { renderEmailTemplate } from "../email/emailTemplateService";
 
 export interface ContactFormState {
@@ -20,15 +20,7 @@ type ContactSupportParams = ContactFormState;
 export const handleContactSupport = async (props: ContactSupportParams) => {
   const { name, email, subject, message } = props;
 
-  const transporter = nodeMailer.createTransport({
-    host: CONFIG.SMTP,
-    port: parseInt(CONFIG.SMTP_PORT ?? "587"),
-    secure: parseInt(CONFIG.SMTP_PORT ?? "587") === 465,
-    auth: {
-      user: CONFIG.EMAIL,
-      pass: CONFIG.EMAIL_PASSWORD,
-    },
-  });
+  const transporter = createSmtpTransporter();
 
   // Prepare admin email data
   const adminEmailData: ContactAdminEmailData = {

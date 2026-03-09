@@ -1,8 +1,8 @@
 import CONFIG from "../../config";
 import { RegistrationEmailData } from "./types";
 import { User } from "../../models/types";
+import { createOAuth2Transporter } from "./utils/sendEmail";
 import { generateRegistrationWelcomePlainText } from "./utils/plainTextGenerator";
-import nodeMailer from "nodemailer";
 import { renderEmailTemplate } from "./emailTemplateService";
 
 export interface SendRegistrationWelcomeEmailParams {
@@ -14,28 +14,20 @@ export interface SendRegistrationWelcomeEmailParams {
  * This function is non-blocking and will not throw errors to avoid breaking the registration flow
  */
 export const sendRegistrationWelcomeEmail = async (
-  params: SendRegistrationWelcomeEmailParams
+  params: SendRegistrationWelcomeEmailParams,
 ): Promise<{ success: boolean; error?: string }> => {
   const { user } = params;
 
   // Validate required fields
   if (!user?.email) {
     console.error(
-      "❌ Cannot send registration welcome email: user email is missing"
+      "❌ Cannot send registration welcome email: user email is missing",
     );
     return { success: false, error: "User email is missing" };
   }
 
   try {
-    const transporter = nodeMailer.createTransport({
-      host: CONFIG.SMTP,
-      port: parseInt(CONFIG.SMTP_PORT ?? "587"),
-      secure: parseInt(CONFIG.SMTP_PORT ?? "587") === 465,
-      auth: {
-        user: CONFIG.EMAIL,
-        pass: CONFIG.EMAIL_PASSWORD,
-      },
-    });
+    const transporter = await createOAuth2Transporter();
 
     const userName =
       user.name?.givenName && user.name?.familyName
@@ -57,13 +49,15 @@ export const sendRegistrationWelcomeEmail = async (
       userName,
     });
 
-    await transporter.sendMail({
-      from: `"Aodit.ai" <${CONFIG.EMAIL}>`,
+    const mailOptions = {
+      from: `"Aodit.ai" <${CONFIG.GMAIL_SENDER ?? CONFIG.EMAIL}>`,
       to: user.email,
       subject: "Welcome to Aodit.ai! 🎉",
       text: textContent,
       html: htmlContent,
-    });
+    };
+
+    await transporter.sendMail(mailOptions);
 
     console.log("✅ Registration welcome email sent successfully", {
       userEmail: user.email,

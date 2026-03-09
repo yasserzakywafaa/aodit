@@ -1,27 +1,88 @@
+// Instrument Sans (sans-serif – body / UI)
 @font-face {
-  font-family: "LexendDeca";
-  src: url("../fonts/LexendDeca/LexendDeca-Regular.ttf") format("truetype");
-  font-weight: normal;
+  font-family: "Instrument Sans";
+  src: url("../fonts/Instrument_Sans/InstrumentSans-Regular.ttf")
+    format("truetype");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "LexendDeca-Bold";
-  src: url("../fonts/LexendDeca/LexendDeca-Bold.ttf") format("truetype");
-  font-weight: bold;
+  font-family: "Instrument Sans";
+  src: url("../fonts/Instrument_Sans/InstrumentSans-Medium.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/Instrument_Sans/InstrumentSans-SemiBold.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/Instrument_Sans/InstrumentSans-Bold.ttf")
+    format("truetype");
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
-$font-family-base: "LexendDeca", sans-serif;
-$font-family-bold: "LexendDeca-Bold", sans-serif;
+// Cormorant Garamond (serif – headings); variable font covers 300–700
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("../fonts/Cormorant_Garamond/CormorantGaramond-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("../fonts/Cormorant_Garamond/CormorantGaramond-Italic.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+// DM Mono (monospace – labels, buttons)
+@font-face {
+  font-family: "DM Mono";
+  src: url("../fonts/DM_Mono/DMMono-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Mono";
+  src: url("../fonts/DM_Mono/DMMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Mono";
+  src: url("../fonts/DM_Mono/DMMono-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+$font-family-base: "Instrument Sans", sans-serif;
+$font-family-serif: "Cormorant Garamond", serif;
+$font-family-mono: "DM Mono", monospace;
 
 body {
   font-family: $font-family-base;
 }
 
 .bold {
-  font-family: $font-family-bold;
+  font-family: $font-family-base;
   font-weight: 600 !important;
 }
 

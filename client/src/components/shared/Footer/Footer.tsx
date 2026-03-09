@@ -93,7 +93,7 @@ const Footer = () => {
         Not affiliated with Moody's Investors Service, Inc. Rating nomenclature
         adapted for illustrative analytical purposes only. Does not constitute
         financial, legal, or regulatory advice. © {new Date().getFullYear()}{" "}
-        Swiss Lab for Intelligence International.
+        Swiss Lab for Intelligence (Swissli).
       </Typography>
     </Container>
   );

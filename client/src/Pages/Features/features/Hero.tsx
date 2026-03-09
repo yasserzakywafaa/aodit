@@ -1,14 +1,15 @@
+import {
+  black,
+  border,
+  fontFamilyMono,
+  fontFamilySerif,
+  primaryColor,
+} from "src/application/shared/themes";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import {
-  black,
-  primaryColor,
-  border,
-  fontFamilyMono,
-  fontFamilySerif,
-} from "src/application/shared/themes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 
 const Hero = () => {
@@ -16,13 +17,13 @@ const Hero = () => {
     <Box
       id="hero"
       sx={{
-        minHeight: "100vh",
+        minHeight: { xs: "75vh", md: "82vh" },
         display: "flex",
         flexDirection: "column",
-        justifyContent: "flex-end",
+        justifyContent: "center",
         position: "relative",
         overflow: "hidden",
-        pb: { xs: 6, md: 10 },
+        py: { xs: 8, md: 10 },
         px: { xs: 3, md: 6 },
       }}
     >
@@ -76,14 +77,17 @@ const Hero = () => {
           }}
         >
           <Box sx={{ width: 32, height: 1, bgcolor: primaryColor }} />
-          Swiss Lab for Intelligence International
+          Swiss Lab for Intelligence (Swissli)
         </Box>
 
         <Typography
           component="h1"
           sx={{
             fontFamily: fontFamilySerif,
-            fontSize: { xs: "clamp(2.5rem, 6vw, 4rem)", md: "clamp(52px, 8vw, 110px)" },
+            fontSize: {
+              xs: "clamp(2.5rem, 6vw, 4rem)",
+              md: "clamp(52px, 8vw, 110px)",
+            },
             fontWeight: 300,
             lineHeight: 0.92,
             letterSpacing: "-0.02em",
@@ -155,7 +159,7 @@ const Hero = () => {
           sx={{
             position: "absolute",
             right: { xs: 0, md: 60 },
-            bottom: { xs: 24, md: 80 },
+            bottom: { xs: 24, md: 48 },
             display: { xs: "none", md: "flex" },
             flexDirection: "column",
             gap: 1,

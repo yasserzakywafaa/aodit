@@ -83,6 +83,7 @@ const FeaturesPage = () => {
       isLoading={isFetching}
     >
       <Hero />
+      <SubscribeSection variant="compact" />
       <RatingsSection />
       <MethodologySection />
       <AboutSection />

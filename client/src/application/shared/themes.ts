@@ -102,7 +102,7 @@ export const lightTheme = createTheme({
     primary: { main: primaryColor },
     secondary: { main: white },
     background: { default: white, paper: cream },
-    text: { primary: black, secondary: grey },
+    text: { primary: black, secondary: "#000000" },
     divider: border,
   },
 });
@@ -114,7 +114,7 @@ export const darkTheme = createTheme({
     primary: { main: primaryColor },
     secondary: { main: white },
     background: { default: black, paper: "#0d0c09" },
-    text: { primary: white, secondary: grey },
+    text: { primary: white, secondary: "#ffffff" },
     divider: border,
   },
 });

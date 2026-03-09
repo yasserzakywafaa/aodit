@@ -1,6 +1,7 @@
 import { Box, Link, MenuItem, Typography } from "@mui/material";
 import { LockOpenOutlined, VpnKeyOutlined } from "@mui/icons-material";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Authentication } from "src/application/store/state";
 import Logo from "../../Logo";
 import { PagesMatch } from "../ApplicationBar";
@@ -88,35 +89,39 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
             {auth.isAuthenticated ? (
               <UserAccountMenuButton user={auth.user as User} />
             ) : (
-              <>
-                <MenuItem
-                  sx={{ ...buttonHoverStyleSecondary }}
-                  onClick={handleToggleRegisterModal}
-                >
-                  <LockOpenOutlined
-                    fontSize="small"
-                    color="primary"
-                    sx={{ mr: 0.5 }}
-                  />
-                  <Typography variant="body2" color="text.primary">
-                    Register
-                  </Typography>
-                </MenuItem>
+              // TODO: Remove this after going live to PROD
+              APP_CONSTANTS.IS_DEV ||
+              (APP_CONSTANTS.IS_LOCAL && (
+                <>
+                  <MenuItem
+                    sx={{ ...buttonHoverStyleSecondary }}
+                    onClick={handleToggleRegisterModal}
+                  >
+                    <LockOpenOutlined
+                      fontSize="small"
+                      color="primary"
+                      sx={{ mr: 0.5 }}
+                    />
+                    <Typography variant="body2" color="text.primary">
+                      Register
+                    </Typography>
+                  </MenuItem>
 
-                <MenuItem
-                  sx={{ ...buttonHoverStyleSecondary }}
-                  onClick={handleToggleLoginModal}
-                >
-                  <VpnKeyOutlined
-                    fontSize="small"
-                    color="primary"
-                    sx={{ mr: 0.5 }}
-                  />
-                  <Typography variant="body2" color="text.primary">
-                    Login
-                  </Typography>
-                </MenuItem>
-              </>
+                  <MenuItem
+                    sx={{ ...buttonHoverStyleSecondary }}
+                    onClick={handleToggleLoginModal}
+                  >
+                    <VpnKeyOutlined
+                      fontSize="small"
+                      color="primary"
+                      sx={{ mr: 0.5 }}
+                    />
+                    <Typography variant="body2" color="text.primary">
+                      Login
+                    </Typography>
+                  </MenuItem>
+                </>
+              ))
             )}
 
             <MenuItem sx={{ ...buttonHoverStyleSecondary }}>

@@ -153,12 +153,23 @@ const RatingsSection = () => (
       </Typography>
     </Box>
 
-    <Table
+    <Box
       sx={{
         width: "100%",
-        "& th, & td": { borderBottom: "1px solid", borderColor: "divider" },
+        minWidth: 0,
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
+        mx: { xs: -3, md: 0 },
+        px: { xs: 3, md: 0 },
       }}
     >
+      <Table
+        sx={{
+          minWidth: 560,
+          width: "100%",
+          "& th, & td": { borderBottom: "1px solid", borderColor: "divider" },
+        }}
+      >
       <TableHead>
         <TableRow>
           <TableCell
@@ -238,19 +249,6 @@ const RatingsSection = () => (
             }}
           >
             Status
-          </TableCell>
-          <TableCell
-            sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 10,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              py: 1.5,
-              px: 2,
-            }}
-          >
-            Report
           </TableCell>
         </TableRow>
       </TableHead>
@@ -371,27 +369,11 @@ const RatingsSection = () => (
                 {row.status}
               </Box>
             </TableCell>
-            <TableCell>
-              <Box
-                component="a"
-                href="#"
-                sx={{
-                  fontFamily: fontFamilyMono,
-                  fontSize: 11,
-                  color: primaryColor,
-                  textDecoration: "none",
-                  letterSpacing: "0.05em",
-                  opacity: 0.7,
-                  "&:hover": { opacity: 1 },
-                }}
-              >
-                PDF ↗
-              </Box>
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>
-    </Table>
+      </Table>
+    </Box>
 
     <Box
       sx={{

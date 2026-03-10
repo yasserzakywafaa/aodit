@@ -76,7 +76,6 @@ const Hero = () => {
             gap: 2,
           }}
         >
-          <Box sx={{ width: 32, height: 1, bgcolor: primaryColor }} />
           Swiss Lab for Intelligence (Swissli)
         </Box>
 

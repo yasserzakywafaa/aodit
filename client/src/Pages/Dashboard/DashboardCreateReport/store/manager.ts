@@ -10,7 +10,7 @@ import { Report } from "src/shared/types/report";
 import { useApplicationContext } from "src/application/store/Provider";
 
 export interface DashboardCreateReportManager {
-  handleCreateReport: (report: Report) => Promise<void>;
+  handleCreateReport: (report: Report) => Promise<Report | undefined>;
 }
 
 export const useDashboardCreateReportManager = (
@@ -22,7 +22,7 @@ export const useDashboardCreateReportManager = (
     },
   } = useApplicationContext();
 
-  const handleCreateReport = async (report: Report): Promise<void> => {
+  const handleCreateReport = async (report: Report): Promise<Report | undefined> => {
     if (!auth || !auth.user) {
       throw new Error("User ID is required");
     }
@@ -40,6 +40,7 @@ export const useDashboardCreateReportManager = (
       );
 
       store.setReport(response.data);
+      return response.data;
     } catch (error) {
       console.error("❌ Failed to create report:", error);
       if (axios.isAxiosError(error) && error.response) {
@@ -48,6 +49,7 @@ export const useDashboardCreateReportManager = (
           type: ToastTypes.Error,
         });
       }
+      return undefined;
     } finally {
       store.setIsFetching(false);
     }

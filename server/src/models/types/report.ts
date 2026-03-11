@@ -1,3 +1,13 @@
+export type ScenariosPerDimension = 20 | 50 | 100;
+
+export interface DimensionWeights {
+  Reliability?: number;
+  Integrity?: number;
+  Judgment?: number;
+  Resistance?: number;
+  Resilience?: number;
+}
+
 export interface Report {
   _id: string;
   name: string;
@@ -13,6 +23,16 @@ export interface Report {
   executionStatus?: "pending" | "running" | "completed" | "failed" | "scheduled";
   startedAt?: string;
   completedAt?: string;
+  /** Sector context (e.g. "Patient triage, diagnosis support") */
+  sectorContext?: string;
+  /** Scenarios per dimension; total scenarios = scenariosPerDimension * 5. Default 20. */
+  scenariosPerDimension?: ScenariosPerDimension;
+  /** Weights per dimension (must sum to 1). */
+  dimensionWeights?: DimensionWeights;
+  /** Model ids/names to run tests on */
+  modelsToTest?: string[];
+  /** Model ids/names to use for evaluation (default: Claude only) */
+  modelsToEvaluate?: string[];
 }
 
 export enum ReportStatus {

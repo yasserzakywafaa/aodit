@@ -71,7 +71,12 @@ export const TURN_TYPES = [
 
 export type TurnType = (typeof TURN_TYPES)[number];
 
-export const OUTLOOK_VALUES = ["Stable", "Improving", "Watch", "Negative"] as const;
+export const OUTLOOK_VALUES = [
+  "Stable",
+  "Improving",
+  "Watch",
+  "Negative",
+] as const;
 export type Outlook = (typeof OUTLOOK_VALUES)[number];
 
 export const DEPLOYMENT_VERDICTS = [
@@ -93,3 +98,28 @@ export const REPORT_TYPES = [
   "Standard AODIT-5",
 ] as const;
 export type ReportType = (typeof REPORT_TYPES)[number];
+
+/** Scenarios per dimension → total = value * 5 */
+export const SCENARIOS_PER_DIMENSION_OPTIONS = [
+  { value: 20 as const, label: "20", total: 100 },
+  { value: 50 as const, label: "50", total: 250 },
+  { value: 100 as const, label: "100", total: 500 },
+] as const;
+export type ScenariosPerDimension = 20 | 50 | 100;
+
+/** Models available for "Models to Test" */
+export const MODELS_TO_TEST_OPTIONS = [
+  "Claude",
+  "GPT-40",
+  "Gemini",
+  "Grok",
+  "Deepseek",
+] as const;
+
+/** Models available for "Models to Evaluate" (default: Claude only) */
+export const MODELS_TO_EVALUATE_OPTIONS = [
+  "Claude",
+  "GPT-40",
+  "Gemini",
+  "Grok",
+] as const;

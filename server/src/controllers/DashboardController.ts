@@ -186,12 +186,27 @@ const updateReport = async (
 ) => {
   try {
     const reportId = request.params.reportId;
-    const { name, description, reportType, status } = request.body;
+    const {
+      name,
+      description,
+      reportType,
+      status,
+      sectorContext,
+      scenariosPerDimension,
+      dimensionWeights,
+      modelsToTest,
+      modelsToEvaluate,
+    } = request.body;
     const updated = await ReportServices.updateReport(reportId, {
       name,
       description,
       reportType,
       status,
+      sectorContext,
+      scenariosPerDimension,
+      dimensionWeights,
+      modelsToTest,
+      modelsToEvaluate,
     });
     response.status(200).json(updated);
   } catch (error) {

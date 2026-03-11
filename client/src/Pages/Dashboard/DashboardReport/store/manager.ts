@@ -77,7 +77,16 @@ export const useDashboardReportManager = (
       store.setIsFetching(true);
       const response = await axios.put<Report>(
         END_POINTS.DASHBOARD.REPORTS.UPDATE_REPORT(reportId),
-        { name: data.name, description: data.description, reportType: data.reportType },
+        {
+          name: data.name,
+          description: data.description,
+          reportType: data.reportType,
+          sectorContext: data.sectorContext,
+          scenariosPerDimension: data.scenariosPerDimension,
+          dimensionWeights: data.dimensionWeights,
+          modelsToTest: data.modelsToTest,
+          modelsToEvaluate: data.modelsToEvaluate,
+        },
       );
       store.setReport(response.data);
       Notify({

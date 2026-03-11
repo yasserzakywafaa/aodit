@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
 import DashboardServices from "../services/dashboardService";
-import ProjectServices from "../services/projectService";
+import ReportServices from "../services/reportService";
+import * as ReportRunService from "../services/reports/reportRunService";
 
 const getUsersCount = async (
   request: Request,
@@ -118,76 +119,140 @@ const deleteUser = async (
   }
 };
 
-// Projects
-const getProjectsCount = async (
+// Reports
+const getReportsCount = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
   try {
-    const projectsCount = await ProjectServices.getProjectsCount();
-    response.status(200).json({ count: projectsCount });
+    const reportsCount = await ReportServices.getReportsCount();
+    response.status(200).json({ count: reportsCount });
   } catch (error) {
     next(error);
   }
 };
 
-const createProject = async (
+const createReport = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
   try {
-    const project = await ProjectServices.createProject(request.body);
-    response.status(201).json(project);
+    const report = await ReportServices.createReport(request.body);
+    response.status(201).json(report);
   } catch (error) {
     next(error);
   }
 };
 
-const getUserProjects = async (
+const getUserReports = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
   try {
     const { userId, page, limit } = request.query;
-    const projects = await ProjectServices.getUserProjects(
+    const reports = await ReportServices.getUserReports(
       userId as string,
       Number(page) || 1,
       Number(limit) || 10,
     );
-    response.status(200).json(projects);
+    response.status(200).json(reports);
   } catch (error) {
     next(error);
   }
 };
 
-const getProjectById = async (
+const getReportById = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
   try {
-    const project = await ProjectServices.getProjectById(
-      request.query.projectId as string,
+    const report = await ReportServices.getReportById(
+      request.query.reportId as string,
     );
-    response.status(200).json(project);
+    response.status(200).json(report);
   } catch (error) {
     next(error);
   }
 };
 
-const deleteProject = async (
+const updateReport = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
   try {
-    const project = await ProjectServices.deleteProject(
-      request.params.projectId,
+    const reportId = request.params.reportId;
+    const { name, description, reportType, status } = request.body;
+    const updated = await ReportServices.updateReport(reportId, {
+      name,
+      description,
+      reportType,
+      status,
+    });
+    response.status(200).json(updated);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteReport = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const report = await ReportServices.deleteReport(
+      request.params.reportId,
     );
-    response.status(200).json(project);
+    response.status(200).json(report);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserReportsCount = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const count = await ReportServices.getUserReportsCount(
+      request.params.userId,
+    );
+    response.status(200).json({ count });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const launchReport = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const reportId = request.params.reportId;
+    const run = await ReportRunService.launchReportRun(reportId);
+    response.status(201).json(run);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getReportRuns = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const runs = await ReportRunService.getReportRunsByReportId(
+      request.params.reportId,
+    );
+    response.status(200).json(runs);
   } catch (error) {
     next(error);
   }
@@ -201,12 +266,16 @@ const DashboardController = {
   blockUser,
   unblockUser,
   deleteUser,
-  // Projects
-  getProjectsCount,
-  createProject,
-  getUserProjects,
-  getProjectById,
-  deleteProject,
+  // Reports
+  getReportsCount,
+  createReport,
+  getUserReports,
+  getReportById,
+  updateReport,
+  deleteReport,
+  getUserReportsCount,
+  launchReport,
+  getReportRuns,
 };
 
 export default DashboardController;

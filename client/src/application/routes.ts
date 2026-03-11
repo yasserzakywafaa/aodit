@@ -32,15 +32,15 @@ export const routes = {
       base: "/dashboard/users",
       profile: "/dashboard/users/profile",
       userById: (userId: string) => `/dashboard/users/${userId}`,
-      userProjects: (userId: string) => `/dashboard/users/${userId}/projects`,
+      userReports: (userId: string) => `/dashboard/users/${userId}/reports`,
     },
     profile: "/dashboard/profile",
-    projects: {
-      base: "/dashboard/projects",
-      create: "/dashboard/projects/create",
-      projectById: (projectId: string) => `/dashboard/projects/${projectId}`,
-      projectsByUserId: (userId: string) =>
-        `/dashboard/users/${userId}/projects/`,
+    reports: {
+      base: "/dashboard/reports",
+      create: "/dashboard/reports/create",
+      reportById: (reportId: string) => `/dashboard/reports/${reportId}`,
+      reportsByUserId: (userId: string) =>
+        `/dashboard/users/${userId}/reports/`,
     },
     billing: {
       base: "/dashboard/billing",
@@ -53,15 +53,15 @@ export const routes = {
       users: {
         base: "/dashboard/admin/users",
         userById: (userId: string) => `/dashboard/admin/users/${userId}`,
-        userProjects: (userId: string) => `/dashboard/users/${userId}/projects`,
+        userReports: (userId: string) => `/dashboard/users/${userId}/reports`,
       },
-      projects: {
-        base: "/dashboard/admin/projects",
-        create: "/dashboard/admin/projects/create",
-        projectById: (projectId: string) =>
-          `/dashboard/admin/projects/${projectId}`,
-        projectsByUserId: (userId: string) =>
-          `/dashboard/admin/users/${userId}/projects/`,
+      reports: {
+        base: "/dashboard/admin/reports",
+        create: "/dashboard/admin/reports/create",
+        reportById: (reportId: string) =>
+          `/dashboard/admin/reports/${reportId}`,
+        reportsByUserId: (userId: string) =>
+          `/dashboard/admin/users/${userId}/reports/`,
       },
     },
   },

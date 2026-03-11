@@ -145,7 +145,7 @@ export const usePricing = () => {
 
     switch (subscriptionPlan) {
       case SubscriptionPlanEnum.Free:
-        navigate(routes.dashboard.projects.create);
+        navigate(routes.dashboard.reports.create);
         return;
 
       case SubscriptionPlanEnum.Lite:

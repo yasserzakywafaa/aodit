@@ -52,7 +52,7 @@ const PaymentStatusPage = () => {
     }`;
   };
 
-  const handleOnCreateClick = () => navigate(routes.dashboard.projects.create);
+  const handleOnCreateClick = () => navigate(routes.dashboard.reports.create);
   const handleOnMyProfileClick = () =>
     auth.user && navigate(routes.dashboard.user.userById(auth.user._id));
 

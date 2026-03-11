@@ -61,16 +61,16 @@ const DashboardLayout = lazy(
 const DashboardPage = lazy(
   () => import("../Pages/Dashboard/DashboardOverview/DashboardOverview"),
 );
-const DashboardProjectsPage = lazy(
-  () => import("../Pages/Dashboard/DashboardProjects/DashboardProjects"),
+const DashboardReportsPage = lazy(
+  () => import("../Pages/Dashboard/DashboardReports/DashboardReports"),
 );
-const DashboardProjectPage = lazy(
-  () => import("../Pages/Dashboard/DashboardProject/DashboardProject"),
+const DashboardReportPage = lazy(
+  () => import("../Pages/Dashboard/DashboardReport/DashboardReport"),
 );
 
-const DashboardCreateProjectPage = lazy(
+const DashboardCreateReportPage = lazy(
   () =>
-    import("../Pages/Dashboard/DashboardCreateProject/DashboardCreateProject"),
+    import("../Pages/Dashboard/DashboardCreateReport/DashboardCreateReport"),
 );
 
 // Dashboard Layout and Pages
@@ -131,18 +131,18 @@ const AppContent = () => {
                   <Route index element={<DashboardPage />} />
 
                   <Route
-                    path={routes.dashboard.projects.base}
-                    element={<DashboardProjectsPage />}
+                    path={routes.dashboard.reports.base}
+                    element={<DashboardReportsPage />}
                   />
 
                   <Route
-                    path={routes.dashboard.projects.projectById(":projectId")}
-                    element={<DashboardProjectPage />}
+                    path={routes.dashboard.reports.reportById(":reportId")}
+                    element={<DashboardReportPage />}
                   />
 
                   <Route
-                    path={routes.dashboard.projects.create}
-                    element={<DashboardCreateProjectPage />}
+                    path={routes.dashboard.reports.create}
+                    element={<DashboardCreateReportPage />}
                   />
 
                   <Route

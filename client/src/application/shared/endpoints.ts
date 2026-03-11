@@ -27,7 +27,7 @@ const END_POINTS = {
   },
   SCHEDULE: {
     TEST_SCHEDULE: `${publicApiUrl}api/v1/test-schedule`,
-    GET_ALL_SCHEDULED_PROJECTS: `${publicApiUrl}/api/v1/scheduled-projects`,
+    GET_ALL_SCHEDULED_REPORTS: `${publicApiUrl}/api/v1/scheduled-reports`,
   },
   CONTACT: {
     SUPPORT: `${publicApiUrl}/api/v1/contact-support`,
@@ -61,7 +61,7 @@ const END_POINTS = {
   DASHBOARD: {
     OVERVIEW: {
       GET_USERS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/users-count`,
-      GET_PROJECTS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/projects-count`,
+      GET_REPORTS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/reports-count`,
     },
     ADMIN: {
       USERS: {
@@ -71,27 +71,33 @@ const END_POINTS = {
         UNBLOCK_USER: (userId: string) =>
           `${publicApiUrl}/api/v1/dashboard/users/unblock/${userId}`,
       },
-      PROJECTS: {
-        GET_ALL_PROJECTS: `${publicApiUrl}/api/v1/dashboard/admin/projects`,
+      REPORTS: {
+        GET_ALL_REPORTS: `${publicApiUrl}/api/v1/dashboard/admin/reports`,
       },
     },
     USERS: {
       GET_ALL_USERS: `${publicApiUrl}/api/v1/dashboard/users`,
       GET_USER_BY_ID: (userId: string) =>
         `${publicApiUrl}/api/v1/dashboard/users/${userId}`,
-      GET_USER_PROJECTS_COUNT: (userId: string) =>
-        `${publicApiUrl}/api/v1/dashboard/users/${userId}/projects/count`,
+      GET_USER_REPORTS_COUNT: (userId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/users/${userId}/reports/count`,
       UPDATE_USER_INFO: (userId: string) =>
         `${publicApiUrl}/api/v1/dashboard/users/${userId}/info`,
       DELETE_USER: (userId: string) =>
         `${publicApiUrl}/api/v1/dashboard/users/delete/${userId}`,
     },
-    PROJECTS: {
-      CREATE_PROJECT: `${publicApiUrl}/api/v1/dashboard/projects/create`,
-      GET_PROJECT_BY_ID: `${publicApiUrl}/api/v1/dashboard/projects/get-project-by-id`,
-      GET_USER_PROJECTS: `${publicApiUrl}/api/v1/dashboard/projects/get-user-projects`,
-      DELETE_PROJECT: (projectId: string) =>
-        `${publicApiUrl}/api/v1/dashboard/projects/delete/${projectId}`,
+    REPORTS: {
+      CREATE_REPORT: `${publicApiUrl}/api/v1/dashboard/reports/create`,
+      GET_REPORT_BY_ID: `${publicApiUrl}/api/v1/dashboard/reports/get-report-by-id`,
+      GET_USER_REPORTS: `${publicApiUrl}/api/v1/dashboard/reports/get-user-reports`,
+      UPDATE_REPORT: (reportId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/reports/update/${reportId}`,
+      DELETE_REPORT: (reportId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/reports/delete/${reportId}`,
+      LAUNCH_REPORT: (reportId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/reports/launch/${reportId}`,
+      GET_REPORT_RUNS: (reportId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/reports/${reportId}/runs`,
     },
   },
 };

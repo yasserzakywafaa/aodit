@@ -8,7 +8,7 @@ import { useState } from "react";
 export interface DashboardOverviewStore {
   state: DashboardOverviewState;
   setIsFetching: (isFetching: boolean) => void;
-  setProjectsCount: (projectsCount: number) => void;
+  setReportsCount: (reportsCount: number) => void;
 }
 
 const useDashboardOverviewStore = (): DashboardOverviewStore => {
@@ -22,17 +22,17 @@ const useDashboardOverviewStore = (): DashboardOverviewStore => {
     }));
   };
 
-  const setProjectsCount = (projectsCount: number) => {
+  const setReportsCount = (reportsCount: number) => {
     setState((prev) => ({
       ...prev,
-      projectsCount,
+      reportsCount,
     }));
   };
 
   return {
     state,
     setIsFetching,
-    setProjectsCount,
+    setReportsCount,
   };
 };
 

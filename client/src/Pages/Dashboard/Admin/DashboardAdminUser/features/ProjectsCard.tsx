@@ -16,7 +16,7 @@ const ProjectsCard = ({ projectsCount, userId }: ProjectsCardProps) => {
   const navigate = useNavigate();
 
   const handleViewProjects = () => {
-    navigate(routes.dashboard.projects.projectsByUserId(userId));
+    navigate(routes.dashboard.reports.reportsByUserId(userId));
   };
 
   return (

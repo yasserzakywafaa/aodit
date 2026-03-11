@@ -90,8 +90,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               <UserAccountMenuButton user={auth.user as User} />
             ) : (
               // TODO: Remove this after going live to PROD
-              APP_CONSTANTS.IS_DEV ||
-              (APP_CONSTANTS.IS_LOCAL && (
+              (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
                 <>
                   <MenuItem
                     sx={{ ...buttonHoverStyleSecondary }}
@@ -121,7 +120,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                     </Typography>
                   </MenuItem>
                 </>
-              ))
+              )
             )}
 
             <MenuItem sx={{ ...buttonHoverStyleSecondary }}>

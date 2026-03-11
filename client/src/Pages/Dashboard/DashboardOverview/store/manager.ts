@@ -9,7 +9,7 @@ import END_POINTS from "src/application/shared/endpoints";
 
 export interface DashboardOverviewManager {
   setUp: () => Promise<void>;
-  handleFetchProjectsCount: () => Promise<void>;
+  handleFetchReportsCount: () => Promise<void>;
 }
 
 export const useDashboardOverviewManager = (
@@ -19,7 +19,7 @@ export const useDashboardOverviewManager = (
     store.setIsFetching(true);
 
     try {
-      await Promise.all([handleFetchProjectsCount()]);
+      await Promise.all([handleFetchReportsCount()]);
     } catch (error) {
       console.error("Failed to fetch dashboard overview data:", error);
     } finally {
@@ -27,18 +27,18 @@ export const useDashboardOverviewManager = (
     }
   };
 
-  const handleFetchProjectsCount = async (): Promise<void> => {
+  const handleFetchReportsCount = async (): Promise<void> => {
     try {
       const response: AxiosResponse<{ count: number }> = await axios.get(
-        END_POINTS.DASHBOARD.OVERVIEW.GET_PROJECTS_COUNT,
+        END_POINTS.DASHBOARD.OVERVIEW.GET_REPORTS_COUNT,
       );
-      store.setProjectsCount(response.data.count);
+      store.setReportsCount(response.data.count);
     } catch (error) {
-      console.error("❌ Failed to fetch projects count:", error);
+      console.error("❌ Failed to fetch reports count:", error);
       if (axios.isAxiosError(error) && error.response) {
         Notify({
           content:
-            error.response.data.message || "Failed to fetch projects count",
+            error.response.data.message || "Failed to fetch reports count",
           type: ToastTypes.Error,
         });
       }
@@ -47,6 +47,6 @@ export const useDashboardOverviewManager = (
 
   return {
     setUp,
-    handleFetchProjectsCount,
+    handleFetchReportsCount,
   };
 };

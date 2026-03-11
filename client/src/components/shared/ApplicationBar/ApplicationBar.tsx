@@ -18,7 +18,7 @@ import { useState } from "react";
 
 export interface PagesMatch {
   isFeaturesPage: boolean;
-  isProjectsPage: boolean;
+  isReportsPage: boolean;
   isPricingPage: boolean;
   isContactPage: boolean;
   isPrivacyPolicy: boolean;
@@ -56,7 +56,7 @@ const ApplicationBar = () => {
     isContactPage: !!useMatch(routes.contact),
     isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
     isTermsOfService: !!useMatch(routes.termsAndConditions),
-    isProjectsPage: !!useMatch(routes.dashboard.projects.base),
+    isReportsPage: !!useMatch(routes.dashboard.reports.base),
     isDashboardPage: location.pathname.startsWith(routes.dashboard.base),
   };
 
@@ -88,12 +88,12 @@ const ApplicationBar = () => {
       case "install":
         setIsInstallAppDialogOpen(true);
         return;
-      case "my-projects":
+      case "my-reports":
         auth.user &&
-          navigate(routes.dashboard.projects.projectsByUserId(auth.user._id));
+          navigate(routes.dashboard.reports.reportsByUserId(auth.user._id));
         return;
       case "create":
-        navigate(routes.dashboard.projects.create);
+        navigate(routes.dashboard.reports.create);
         break;
       default:
         scrollToSection(sectionId);

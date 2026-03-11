@@ -1,11 +1,11 @@
 export interface DashboardOverviewState {
   isFetching: boolean;
-  projectsCount: number | null;
+  reportsCount: number | null;
 }
 
 export const getDashboardOverviewInitialState = (): DashboardOverviewState => {
   return {
     isFetching: false,
-    projectsCount: null,
+    reportsCount: null,
   };
 };

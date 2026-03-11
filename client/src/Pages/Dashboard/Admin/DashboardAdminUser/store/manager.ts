@@ -44,7 +44,7 @@ export const useDashboardUserManager = (
   const handleGetProjectsCount = async (userId: string): Promise<void> => {
     try {
       const response: AxiosResponse<{ count: number }> = await axios.get(
-        END_POINTS.DASHBOARD.USERS.GET_USER_PROJECTS_COUNT(userId),
+        END_POINTS.DASHBOARD.USERS.GET_USER_REPORTS_COUNT(userId),
       );
 
       store.setProjectsCount(response.data.count);

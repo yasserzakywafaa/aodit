@@ -31,7 +31,9 @@ export enum DBNamesEnum {
 }
 
 export enum DBCollectionsEnum {
-  projects = "projects",
+  reports = "reports",
+  scenarios = "scenarios",
+  reportRuns = "report_runs",
   users = "users",
   lead_subscribers = "lead_subscribers",
 }
@@ -90,7 +92,9 @@ const createCollections = async () => {
 
 const createIndexes = async () => {
   const collectionsToSearch = [
-    DBCollectionsEnum.projects,
+    DBCollectionsEnum.reports,
+    DBCollectionsEnum.scenarios,
+    DBCollectionsEnum.reportRuns,
     DBCollectionsEnum.users,
   ];
 
@@ -102,9 +106,17 @@ const createIndexes = async () => {
       await collection.createIndex({ createdAt: -1 });
     }
 
-    const projects = database.collection(DBCollectionsEnum.projects);
-    await projects.createIndex({ slug: 1 });
-    await projects.createIndex({ "projectParams.hyperlinks": 1 });
+    const reports = database.collection(DBCollectionsEnum.reports);
+    await reports.createIndex({ userId: 1 });
+    await reports.createIndex({ createdAt: -1 });
+
+    const scenarios = database.collection(DBCollectionsEnum.scenarios);
+    await scenarios.createIndex({ reportId: 1 });
+    await scenarios.createIndex({ createdAt: -1 });
+
+    const reportRuns = database.collection(DBCollectionsEnum.reportRuns);
+    await reportRuns.createIndex({ reportId: 1 });
+    await reportRuns.createIndex({ createdAt: -1 });
 
     const users = database.collection(DBCollectionsEnum.users);
     await users.createIndex({ email: 1 });

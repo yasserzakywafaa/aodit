@@ -11,6 +11,11 @@ dashboardRoutes.get(
 );
 
 dashboardRoutes.get(
+  END_POINTS.DASHBOARD.OVERVIEW.GET_REPORTS_COUNT,
+  DashboardController.getReportsCount,
+);
+
+dashboardRoutes.get(
   END_POINTS.DASHBOARD.USERS.GET_ALL_USERS,
   DashboardController.getAllUsers,
 );
@@ -18,6 +23,11 @@ dashboardRoutes.get(
 dashboardRoutes.get(
   END_POINTS.DASHBOARD.USERS.GET_USER_BY_ID(":userId"),
   DashboardController.getUserById,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.USERS.GET_USER_REPORTS_COUNT(":userId"),
+  DashboardController.getUserReportsCount,
 );
 
 dashboardRoutes.put(
@@ -40,25 +50,40 @@ dashboardRoutes.delete(
   DashboardController.deleteUser,
 );
 
-// Project Routes
+// Report Routes
 dashboardRoutes.post(
-  END_POINTS.DASHBOARD.PROJECTS.CREATE_PROJECT,
-  DashboardController.createProject,
+  END_POINTS.DASHBOARD.REPORTS.CREATE_REPORT,
+  DashboardController.createReport,
 );
 
 dashboardRoutes.get(
-  END_POINTS.DASHBOARD.PROJECTS.GET_USER_PROJECTS,
-  DashboardController.getUserProjects,
+  END_POINTS.DASHBOARD.REPORTS.GET_USER_REPORTS,
+  DashboardController.getUserReports,
 );
 
 dashboardRoutes.get(
-  END_POINTS.DASHBOARD.PROJECTS.GET_PROJECT_BY_ID,
-  DashboardController.getProjectById,
+  END_POINTS.DASHBOARD.REPORTS.GET_REPORT_BY_ID,
+  DashboardController.getReportById,
+);
+
+dashboardRoutes.put(
+  END_POINTS.DASHBOARD.REPORTS.UPDATE_REPORT(":reportId"),
+  DashboardController.updateReport,
 );
 
 dashboardRoutes.delete(
-  END_POINTS.DASHBOARD.PROJECTS.DELETE_PROJECT(":projectId"),
-  DashboardController.deleteProject,
+  END_POINTS.DASHBOARD.REPORTS.DELETE_REPORT(":reportId"),
+  DashboardController.deleteReport,
+);
+
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.REPORTS.LAUNCH_REPORT(":reportId"),
+  DashboardController.launchReport,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.REPORTS.GET_REPORT_RUNS(":reportId"),
+  DashboardController.getReportRuns,
 );
 
 export default dashboardRoutes;

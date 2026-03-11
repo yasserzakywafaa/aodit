@@ -59,7 +59,7 @@ const DashboardLayout = () => {
     // Check if current pathname matches any admin subitem paths
     const adminSubPaths = [
       routes.dashboard.admin.users.base,
-      routes.dashboard.admin.projects.base,
+      routes.dashboard.admin.reports.base,
     ];
 
     const isOnAdminSubPage = adminSubPaths.some((subPath) =>
@@ -83,8 +83,8 @@ const DashboardLayout = () => {
       icon: <DashboardIcon />,
     },
     {
-      label: "Projects",
-      path: routes.dashboard.projects.base,
+      label: "Reports",
+      path: routes.dashboard.reports.base,
       icon: <ArticleIcon />,
     },
     {
@@ -99,8 +99,8 @@ const DashboardLayout = () => {
           icon: <PeopleIcon />,
         },
         {
-          label: "Projects",
-          path: routes.dashboard.admin.projects.base,
+          label: "Reports",
+          path: routes.dashboard.admin.reports.base,
           icon: <ArticleIcon />,
         },
       ],

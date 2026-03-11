@@ -13,6 +13,7 @@ import {
 } from "@mui/icons-material";
 import Logo, { LogoComponentEnum } from "../../Logo";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Authentication } from "src/application/store/state";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
@@ -132,24 +133,27 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     <UserAccountMenuButton user={auth.user as User} />
                   </MenuItem>
                 ) : (
-                  <>
-                    <MenuItem onClick={handleToggleRegisterModal}>
-                      <LockOpenOutlined
-                        fontSize="small"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body1">Register</Typography>
-                    </MenuItem>
-                    <MenuItem onClick={handleToggleLoginModal}>
-                      <VpnKeyOutlined
-                        fontSize="small"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body1">Log in</Typography>
-                    </MenuItem>
-                  </>
+                  // TODO: Remove this after going live to PROD
+                  (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
+                    <>
+                      <MenuItem onClick={handleToggleRegisterModal}>
+                        <LockOpenOutlined
+                          fontSize="small"
+                          color="secondary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="body1">Register</Typography>
+                      </MenuItem>
+                      <MenuItem onClick={handleToggleLoginModal}>
+                        <VpnKeyOutlined
+                          fontSize="small"
+                          color="secondary"
+                          sx={{ mr: 1 }}
+                        />
+                        <Typography variant="body1">Log in</Typography>
+                      </MenuItem>
+                    </>
+                  )
                 )}
                 <MenuItem>
                   <SettingsMenuButton

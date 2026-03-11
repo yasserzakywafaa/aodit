@@ -3,10 +3,10 @@
  * This is a simple utility to create plain text fallbacks for emails
  */
 
-export interface ProjectReadyPlainTextData {
+export interface ReportReadyPlainTextData {
   userName: string;
-  projectTitle: string;
-  projectUrl: string;
+  reportTitle: string;
+  reportUrl: string;
 }
 
 export interface ContactUserPlainTextData {
@@ -35,20 +35,20 @@ export interface LeadMagnetAdminPlainTextData {
 }
 
 /**
- * Generate plain text for project ready email
+ * Generate plain text for report ready email
  */
-export const generateProjectReadyPlainText = (
-  data: ProjectReadyPlainTextData,
+export const generateReportReadyPlainText = (
+  data: ReportReadyPlainTextData,
 ): string => {
-  const { userName, projectTitle, projectUrl } = data;
+  const { userName, reportTitle, reportUrl } = data;
   return `
-Your project is ready! 🎉
+Your report is ready! 🎉
 
 Hello ${userName},
 
-Great news! Your project "${projectTitle}" has been successfully generated and is now ready to view.
+Great news! Your report "${reportTitle}" has been successfully generated and is now ready to view.
 
-Read your project here: ${projectUrl} 
+Read your report here: ${reportUrl} 
 
 Best regards,
 The Aodit.ai Team
@@ -116,13 +116,13 @@ Welcome to Aodit.ai! 🎉
 
 Hello ${userName},
 
-We're thrilled to have you join the Aodit.ai community! You're now ready to create stunning, AI-powered projects in seconds.
+We're thrilled to have you join the Aodit.ai community! You're now ready to create AI agent risk reports in seconds.
 
 Getting Started:
-1. Enter your project topic or URL
-2. Let our AI generate your content
-3. Review and customize your project
-4. Publish and share with the world!
+1. Create a new report
+2. Configure scenarios and run evaluations
+3. Review scores and deployment verdicts
+4. Share and export your report!
 
 Best regards,
 The Aodit.ai Team

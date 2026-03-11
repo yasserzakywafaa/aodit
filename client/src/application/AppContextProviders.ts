@@ -1,11 +1,11 @@
 import { ApplicationContextProvider } from "./store/Provider";
 import { CancelSubscriptionModalContextProvider } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
-import { DashboardCreateProjectContextProvider } from "src/Pages/Dashboard/DashboardCreateProject/store/Provider";
+import { DashboardCreateReportContextProvider } from "src/Pages/Dashboard/DashboardCreateReport/store/Provider";
 import { DashboardOverviewContextProvider } from "src/Pages/Dashboard/DashboardOverview/store/Provider";
 import { DashboardProfileContextProvider } from "src/Pages/Dashboard/DashboardProfile/store/Provider";
-import { DashboardProjectContextProvider } from "src/Pages/Dashboard/DashboardProject/store/Provider";
-import { DashboardProjectsContextProvider } from "src/Pages/Dashboard/DashboardProjects/store/Provider";
+import { DashboardReportContextProvider } from "src/Pages/Dashboard/DashboardReport/store/Provider";
+import { DashboardReportsContextProvider } from "src/Pages/Dashboard/DashboardReports/store/Provider";
 import { DashboardUserContextProvider } from "src/Pages/Dashboard/Admin/DashboardAdminUser/store/Provider";
 import { DashboardUsersContextProvider } from "src/Pages/Dashboard/Admin/DashboardAdminUsers/store/Provider";
 import { LoginModalContextProvider } from "src/components/Modals/LoginModal/store/Provider";
@@ -31,11 +31,11 @@ const contextProviders = [
 
   // Dashboard Pages
   DashboardOverviewContextProvider,
-  DashboardProjectsContextProvider,
-  DashboardCreateProjectContextProvider,
+  DashboardReportsContextProvider,
+  DashboardCreateReportContextProvider,
   DashboardUsersContextProvider,
   DashboardUserContextProvider,
-  DashboardProjectContextProvider,
+  DashboardReportContextProvider,
 
   // Modals
   LoginModalContextProvider,

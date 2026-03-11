@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { primaryColor } from "src/application/shared/themes";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useDashboardProjectContext } from "src/Pages/Dashboard/DashboardProject/store/Provider";
+import { useDashboardReportContext } from "src/Pages/Dashboard/DashboardReport/store/Provider";
 import { useDashboardUserContext } from "src/Pages/Dashboard/Admin/DashboardAdminUser/store/Provider";
 
 const DashboardBreadcrumbs = () => {
@@ -29,7 +29,7 @@ const DashboardBreadcrumbs = () => {
     userContext = null;
   }
 
-  const projectContext = useDashboardProjectContext();
+  const reportContext = useDashboardReportContext();
 
   const pathSegments = location.pathname
     .split("/")
@@ -69,13 +69,13 @@ const DashboardBreadcrumbs = () => {
       return "";
     }
 
-    // Check if this segment is a project ID and we have project context
+    // Check if this segment is a report ID and we have report context
     if (
       isObjectId(segment) &&
-      projectContext?.store.state.project?.name &&
-      segments[index - 1] === "projects"
+      reportContext?.store.state.report?.name &&
+      segments[index - 1] === "reports"
     ) {
-      return projectContext.store.state.project.name;
+      return reportContext.store.state.report.name;
     }
 
     if (segment === "admin") {

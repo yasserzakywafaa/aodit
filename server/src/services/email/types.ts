@@ -8,12 +8,12 @@ export interface BaseEmailData {
 }
 
 /**
- * Project ready email data
+ * Report ready email data
  */
-export interface ProjectReadyEmailData extends BaseEmailData {
+export interface ReportReadyEmailData extends BaseEmailData {
   userName: string;
-  projectTitle: string;
-  projectUrl: string;
+  reportTitle: string;
+  reportUrl: string;
 }
 
 /**

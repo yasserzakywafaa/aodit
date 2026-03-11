@@ -18,7 +18,7 @@ export const handleTriggerWebhookN8n = async (
   webhookData: WebhookN8n,
 ): Promise<void> => {
   try {
-    await axios.post(END_POINTS.WEBHOOKS.N8N.NEW_PROJECT_ADDED, webhookData, {
+    await axios.post(END_POINTS.WEBHOOKS.N8N.NEW_REPORT_ADDED, webhookData, {
       headers: {
         "Content-Type": "application/json",
         "X-Custom-Header": new Date().toISOString(),

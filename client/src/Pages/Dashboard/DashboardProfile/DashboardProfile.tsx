@@ -227,7 +227,7 @@ const DashboardProfilePage = () => {
                   startIcon={<VisibilityOutlined />}
                   onClick={() =>
                     navigate(
-                      routes.dashboard.projects.projectsByUserId(user._id),
+                      routes.dashboard.reports.reportsByUserId(user._id),
                     )
                   }
                 >

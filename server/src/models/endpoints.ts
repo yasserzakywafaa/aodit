@@ -10,7 +10,7 @@ const END_POINTS = {
   },
   SCHEDULE: {
     TEST_SCHEDULE: "api/v1/test-schedule",
-    GET_ALL_SCHEDULED_PROJECTS: "/api/v1/scheduled-projects",
+    GET_ALL_SCHEDULED_REPORTS: "/api/v1/scheduled-reports",
   },
   CONTACT: {
     SUPPORT: "/api/v1/contact-support",
@@ -45,14 +45,14 @@ const END_POINTS = {
   },
   WEBHOOKS: {
     N8N: {
-      NEW_PROJECT_ADDED:
-        "https://n8n.yasserzaky.com/webhook/aodit-new-project-added",
+      NEW_REPORT_ADDED:
+        "https://n8n.yasserzaky.com/webhook/aodit-new-report-added",
     },
   },
   DASHBOARD: {
     OVERVIEW: {
       GET_USERS_COUNT: "/api/v1/dashboard/overview/users-count",
-      GET_PROJECTS_COUNT: "/api/v1/dashboard/overview/projects-count",
+      GET_REPORTS_COUNT: "/api/v1/dashboard/overview/reports-count",
       GET_CAMPAIGNS_COUNT: "/api/v1/dashboard/overview/campaigns-count",
     },
     ADMIN: {
@@ -63,27 +63,33 @@ const END_POINTS = {
         UNBLOCK_USER: (userId: string) =>
           `/api/v1/dashboard/users/unblock/${userId}`,
       },
-      PROJECTS: {
-        GET_ALL_PROJECTS: `/api/v1/dashboard/admin/projects`,
+      REPORTS: {
+        GET_ALL_REPORTS: `/api/v1/dashboard/admin/reports`,
       },
     },
     USERS: {
       GET_ALL_USERS: `/api/v1/dashboard/users`,
       GET_USER_BY_ID: (userId: string) => `/api/v1/dashboard/users/${userId}`,
-      GET_USER_PROJECTS_COUNT: (userId: string) =>
-        `/api/v1/dashboard/users/${userId}/projects/count`,
+      GET_USER_REPORTS_COUNT: (userId: string) =>
+        `/api/v1/dashboard/users/${userId}/reports/count`,
       UPDATE_USER_INFO: (userId: string) =>
         `/api/v1/dashboard/users/${userId}/info`,
       DELETE_USER: (userId: string) =>
         `/api/v1/dashboard/users/delete/${userId}`,
     },
-    // Projects
-    PROJECTS: {
-      CREATE_PROJECT: `/api/v1/dashboard/projects/create`,
-      GET_USER_PROJECTS: `/api/v1/dashboard/projects/get-user-projects`,
-      GET_PROJECT_BY_ID: `/api/v1/dashboard/projects/get-project-by-id`,
-      DELETE_PROJECT: (projectId: string) =>
-        `/api/v1/dashboard/projects/delete/${projectId}`,
+    // Reports
+    REPORTS: {
+      CREATE_REPORT: `/api/v1/dashboard/reports/create`,
+      GET_USER_REPORTS: `/api/v1/dashboard/reports/get-user-reports`,
+      GET_REPORT_BY_ID: `/api/v1/dashboard/reports/get-report-by-id`,
+      UPDATE_REPORT: (reportId: string) =>
+        `/api/v1/dashboard/reports/update/${reportId}`,
+      DELETE_REPORT: (reportId: string) =>
+        `/api/v1/dashboard/reports/delete/${reportId}`,
+      LAUNCH_REPORT: (reportId: string) =>
+        `/api/v1/dashboard/reports/launch/${reportId}`,
+      GET_REPORT_RUNS: (reportId: string) =>
+        `/api/v1/dashboard/reports/${reportId}/runs`,
     },
   },
 };

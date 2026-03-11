@@ -12,7 +12,7 @@ scheduleRouter.post(
 );
 
 scheduleRouter.post(
-  END_POINTS.SCHEDULE.GET_ALL_SCHEDULED_PROJECTS,
+  END_POINTS.SCHEDULE.GET_ALL_SCHEDULED_REPORTS,
   ScheduleController.getAllSchedules,
 );
 

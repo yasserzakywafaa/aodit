@@ -147,7 +147,7 @@ const RatingsSection = () => (
         }}
       >
         Financial Services Behavioral Security Benchmark. Six leading large
-        language models evaluated across a standardised 7-turn adversarial
+        language models evaluated across a standardised 8-turn adversarial
         banking simulation. Ratings reflect behavioral compliance quality and
         deployment suitability for live financial environments.
       </Typography>

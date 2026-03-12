@@ -110,10 +110,13 @@ export type ScenariosPerDimension = 20 | 50 | 100;
 /** Models available for "Models to Test" */
 export const MODELS_TO_TEST_OPTIONS = [
   "Claude",
-  "GPT-40",
+  "GPT",
   "Gemini",
   "Grok",
   "Deepseek",
+  "Kimi",
+  "Llama",
+  "Qwen",
 ] as const;
 
 /** Models available for "Models to Evaluate" (default: Claude only) */

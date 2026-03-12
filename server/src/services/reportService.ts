@@ -89,6 +89,12 @@ const seedScenariosForReport = async (
   await createBulkDocuments(scenarios, DBCollectionsEnum.scenarios);
 };
 
+/** Delete all scenarios for a report (used when re-seeding after scenariosPerDimension change). */
+const deleteScenariosByReportId = async (reportId: string): Promise<void> => {
+  const collection = database.collection(DBCollectionsEnum.scenarios);
+  await collection.deleteMany({ reportId });
+};
+
 const getReportsCount = async () => {
   const collection: Collection<Report> = database.collection<Report>(
     DBCollectionsEnum.reports,
@@ -173,6 +179,17 @@ const updateReport = async (
   if (data.dimensionWeights && Math.abs(sumWeights(data.dimensionWeights) - 1) > 0.001) {
     throw new Error("Dimension weights must sum to 1 (100%)");
   }
+
+  const current = (await getReportById(reportId)) as Report | null;
+  const scenariosPerDimensionChanged =
+    data.scenariosPerDimension != null &&
+    current?.scenariosPerDimension != null &&
+    data.scenariosPerDimension !== current.scenariosPerDimension;
+
+  if (scenariosPerDimensionChanged) {
+    await deleteScenariosByReportId(reportId);
+  }
+
   const now = new Date().toISOString();
   const payload = { ...data, updatedAt: now };
   const updated = await updateDocument<Report>(
@@ -180,6 +197,11 @@ const updateReport = async (
     payload,
     DBCollectionsEnum.reports,
   );
+
+  if (scenariosPerDimensionChanged && data.scenariosPerDimension != null) {
+    await seedScenariosForReport(reportId, data.scenariosPerDimension);
+  }
+
   return updated as unknown as Report | null;
 };
 

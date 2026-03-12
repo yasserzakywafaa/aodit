@@ -1,7 +1,6 @@
 import {
   AODIT_DIMENSIONS,
   DIMENSION_WEIGHTS,
-  MODELS_TO_TEST_OPTIONS,
 } from "src/shared/constants/aoditFramework";
 import {
   Accordion,
@@ -9,10 +8,8 @@ import {
   AccordionSummary,
   Box,
   Button,
-  Checkbox,
   Container,
-  FormControlLabel,
-  FormGroup,
+  Divider,
   Paper,
   Table,
   TableBody,
@@ -22,6 +19,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import {
+  DimensionWeightsSection,
+  ModelsToEvaluateSection,
+  ModelsToTestSection,
+  ScenarioTurnsSection,
+  ScenariosPerDimensionSection,
+} from "./features";
 import { ExpandMore, PlayArrow, Save } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -52,8 +56,10 @@ const DashboardReport = () => {
   } = useDashboardReportContext();
 
   const latestRun = getLatestCompletedRun(runs);
+  const modelsToTest = report?.modelsToTest ?? [];
   const totalScenarios = (report?.scenariosPerDimension ?? 20) * 5;
-  const interactions = totalScenarios * 8;
+  const modelsCount = modelsToTest.length;
+  const datapoints = totalScenarios * 8 * Math.max(modelsCount, 1);
   const weightLabels = (
     report?.dimensionWeights
       ? AODIT_DIMENSIONS.map(
@@ -65,7 +71,6 @@ const DashboardReport = () => {
             `${d.slice(0, 3).toUpperCase()} ${Math.round((DIMENSION_WEIGHTS[d] ?? 0) * 100)}%`,
         )
   ).join(" · ");
-  const modelsToTest = report?.modelsToTest ?? [];
   // // Models to Evaluate: Claude only for now (fixed)
   // const modelsToEvaluate = ["Claude"];
 
@@ -74,14 +79,6 @@ const DashboardReport = () => {
       setUp(reportId);
     }
   }, [reportId]);
-
-  const toggleModelTest = (model: string) => {
-    if (!report) return;
-    const next = modelsToTest.includes(model)
-      ? modelsToTest.filter((m) => m !== model)
-      : [...modelsToTest, model];
-    setReport({ ...report, modelsToTest: next });
-  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -112,7 +109,7 @@ const DashboardReport = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ margin: 0 }}>
+    <Container maxWidth="lg">
       <Box
         sx={{
           display: "flex",
@@ -135,26 +132,15 @@ const DashboardReport = () => {
           </Typography>
         </Box>
         {reportId && (
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-            <Button
-              variant="outlined"
-              color="primary"
-              startIcon={<Save />}
-              onClick={handleSave}
-              disabled={!reportId || !report}
-            >
-              Save
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<PlayArrow />}
-              onClick={handleRunReport}
-              disabled={!reportId || !modelsToTest.length}
-            >
-              RUN REPORT
-            </Button>
-          </Box>
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<Save />}
+            onClick={handleSave}
+            disabled={!reportId || !report}
+          >
+            Save
+          </Button>
         )}
       </Box>
 
@@ -192,279 +178,376 @@ const DashboardReport = () => {
         </AccordionDetails>
       </Accordion>
 
-      {/* Section 01 — Models to Test */}
+      {/* Report Config */}
       <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
-        <Typography variant="subtitle2" color="primary" gutterBottom>
-          01 — Models to Test
+        <Typography
+          variant="h5"
+          color="primary"
+          fontWeight={600}
+          sx={{ mb: 3 }}
+        >
+          Report Config
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-          Select which AI agents to pentest
-        </Typography>
-        <FormGroup row>
-          {MODELS_TO_TEST_OPTIONS.map((model) => (
-            <FormControlLabel
-              key={model}
-              control={
-                <Checkbox
-                  checked={modelsToTest.includes(model)}
-                  onChange={() => toggleModelTest(model)}
-                />
-              }
-              label={model}
-            />
-          ))}
-        </FormGroup>
-      </Paper>
 
-      {/* Section 02 — Models to Evaluate (Claude only for now) */}
-      <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
-        <Typography variant="subtitle2" color="primary" gutterBottom>
-          02 — Models to Evaluate
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-          Model used to judge the results
-        </Typography>
-        <Typography variant="body1" fontWeight={500}>
-          Claude
-        </Typography>
+        <ScenariosPerDimensionSection />
+
+        <Divider sx={{ mt: 3, mb: 6 }} />
+
+        <DimensionWeightsSection />
+
+        <Divider sx={{ mt: 3, mb: 6 }} />
+
+        <ModelsToTestSection />
+
+        <Divider sx={{ mt: 3, mb: 6 }} />
+
+        <ModelsToEvaluateSection />
+
+        <Divider sx={{ mt: 3, mb: 6 }} />
+
+        <ScenarioTurnsSection />
       </Paper>
 
       {/* Estimates bar */}
-      <Paper variant="outlined" sx={{ p: 2, mt: 2 }}>
+      <Paper
+        variant="outlined"
+        sx={{
+          mt: 2,
+          p: 2.5,
+          bgcolor: "background.default",
+          border: "1px solid",
+          borderColor: "primary.main",
+          borderRadius: 1,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-around",
-            flexWrap: "wrap",
-            gap: 2,
+            justifyContent: "space-between",
+            alignItems: "stretch",
+            flexWrap: "nowrap",
           }}
         >
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h6" color="primary">
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              borderRight: "1px solid",
+              borderColor: "primary.main",
+              "&:last-of-type": { borderRight: "none" },
+            }}
+          >
+            <Typography variant="h5" color="primary" fontWeight={600}>
               {totalScenarios}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
-              SCENARIOS
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{
+                display: "block",
+                mt: 0.5,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              Total scenarios
             </Typography>
           </Box>
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h6" color="primary">
-              {interactions}
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              borderRight: "1px solid",
+              borderColor: "primary.main",
+              "&:last-of-type": { borderRight: "none" },
+            }}
+          >
+            <Typography variant="h5" color="primary" fontWeight={600}>
+              {modelsCount}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
-              INTERACTIONS
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{
+                display: "block",
+                mt: 0.5,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              Models
             </Typography>
           </Box>
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h6" color="primary">
-              ~45m
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              borderRight: "1px solid",
+              borderColor: "primary.main",
+              "&:last-of-type": { borderRight: "none" },
+            }}
+          >
+            <Typography variant="h5" color="primary" fontWeight={600}>
+              8
             </Typography>
-            <Typography variant="caption" color="text.secondary">
-              EST. RUNTIME
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{
+                display: "block",
+                mt: 0.5,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              Turns / scenario
             </Typography>
           </Box>
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h6" color="primary">
-              ~CHF 14
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <Typography variant="h5" color="primary" fontWeight={600}>
+              {datapoints.toLocaleString()}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
-              EST. COST
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{
+                display: "block",
+                mt: 0.5,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              Datapoints
             </Typography>
           </Box>
         </Box>
       </Paper>
 
-      <Paper variant="outlined" sx={{ p: 3, mt: 3 }}>
-        <Typography
-          variant="overline"
-          color="primary"
-          sx={{ letterSpacing: 1 }}
-        >
-          AODIT Framework™
-        </Typography>
-        <Box sx={{ borderTop: 1, borderColor: "divider", pt: 2, mt: 1 }}>
-          {latestRun ? (
-            <>
-              <Table size="small" sx={{ mb: 2 }}>
-                <TableBody>
-                  {(latestRun.dimensionScores?.length
-                    ? latestRun.dimensionScores
-                    : AODIT_DIMENSIONS.map((dim) => ({
-                        dimensionId: dim,
-                        score: 0,
-                        weight: DIMENSION_WEIGHTS[dim] ?? 0,
-                      }))
-                  ).map(
-                    (row: {
-                      dimensionId: string;
-                      score: number;
-                      weight: number;
-                    }) => (
-                      <TableRow key={row.dimensionId}>
-                        <TableCell>{row.dimensionId}</TableCell>
-                        <TableCell align="right">
-                          {row.score.toFixed(1)}
-                        </TableCell>
-                        <TableCell align="right">
-                          {Math.round((row.weight || 0) * 100)}%
-                        </TableCell>
-                      </TableRow>
-                    ),
-                  )}
-                  <TableRow sx={{ borderTop: 1, borderColor: "divider" }}>
-                    <TableCell>
-                      <strong>Composite</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      {latestRun.compositeScore?.toFixed(2) ?? "—"}
-                    </TableCell>
-                    <TableCell />
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <strong>Rating</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        sx={{
-                          px: 1,
-                          py: 0.5,
-                          borderRadius: 1,
-                          border: 1,
-                          ...(/^AAA|AA$/i.test(latestRun.rating ?? "")
-                            ? {
-                                color: "success.main",
-                                borderColor: "success.main",
-                              }
-                            : /^A$/i.test(latestRun.rating ?? "")
-                              ? {
-                                  color: "warning.main",
-                                  borderColor: "warning.main",
-                                }
-                              : /^BBB$/i.test(latestRun.rating ?? "")
-                                ? {
-                                    color: "warning.dark",
-                                    borderColor: "warning.dark",
-                                  }
-                                : {
-                                    color: "error.main",
-                                    borderColor: "error.main",
-                                  }),
-                        }}
-                      >
-                        {latestRun.rating ?? "—"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell />
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <strong>Outlook</strong>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography
-                        component="span"
-                        variant="caption"
-                        sx={{
-                          px: 1,
-                          py: 0.5,
-                          borderRadius: 1,
-                          border: 1,
-                          ...(latestRun.outlook === "Stable"
-                            ? {
-                                color: "success.main",
-                                borderColor: "success.main",
-                              }
-                            : latestRun.outlook === "Watch"
-                              ? {
-                                  color: "warning.main",
-                                  borderColor: "warning.main",
-                                }
-                              : latestRun.outlook === "Negative"
-                                ? {
-                                    color: "error.main",
-                                    borderColor: "error.main",
-                                  }
-                                : {
-                                    color: "text.secondary",
-                                    borderColor: "divider",
-                                  }),
-                        }}
-                      >
-                        {latestRun.outlook ?? "—"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell />
-                  </TableRow>
-                </TableBody>
-              </Table>
+      {reportId && (
+        <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<PlayArrow />}
+            onClick={handleRunReport}
+            disabled={!reportId || !report || modelsToTest.length < 3}
+          >
+            RUN REPORT
+          </Button>
+        </Box>
+      )}
 
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ display: "block", mb: 1 }}
-              >
-                CALIBRATION GAP ANALYSIS
+      {latestRun && (
+        <Paper variant="outlined" sx={{ p: 3, mt: 3 }}>
+          <Typography
+            variant="overline"
+            color="primary"
+            sx={{ letterSpacing: 1 }}
+          >
+            AODIT Framework™
+          </Typography>
+          <Box sx={{ borderTop: 1, borderColor: "divider", pt: 2, mt: 1 }}>
+            {latestRun ? (
+              <>
+                <Table size="small" sx={{ mb: 2 }}>
+                  <TableBody>
+                    {(latestRun.dimensionScores?.length
+                      ? latestRun.dimensionScores
+                      : AODIT_DIMENSIONS.map((dim) => ({
+                          dimensionId: dim,
+                          score: 0,
+                          weight: DIMENSION_WEIGHTS[dim] ?? 0,
+                        }))
+                    ).map(
+                      (row: {
+                        dimensionId: string;
+                        score: number;
+                        weight: number;
+                      }) => (
+                        <TableRow key={row.dimensionId}>
+                          <TableCell>{row.dimensionId}</TableCell>
+                          <TableCell align="right">
+                            {row.score.toFixed(1)}
+                          </TableCell>
+                          <TableCell align="right">
+                            {Math.round((row.weight || 0) * 100)}%
+                          </TableCell>
+                        </TableRow>
+                      ),
+                    )}
+                    <TableRow sx={{ borderTop: 1, borderColor: "divider" }}>
+                      <TableCell>
+                        <strong>Composite</strong>
+                      </TableCell>
+                      <TableCell align="right">
+                        {latestRun.compositeScore?.toFixed(2) ?? "—"}
+                      </TableCell>
+                      <TableCell />
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        <strong>Rating</strong>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          sx={{
+                            px: 1,
+                            py: 0.5,
+                            borderRadius: 1,
+                            border: 1,
+                            ...(/^AAA|AA$/i.test(latestRun.rating ?? "")
+                              ? {
+                                  color: "success.main",
+                                  borderColor: "success.main",
+                                }
+                              : /^A$/i.test(latestRun.rating ?? "")
+                                ? {
+                                    color: "warning.main",
+                                    borderColor: "warning.main",
+                                  }
+                                : /^BBB$/i.test(latestRun.rating ?? "")
+                                  ? {
+                                      color: "warning.dark",
+                                      borderColor: "warning.dark",
+                                    }
+                                  : {
+                                      color: "error.main",
+                                      borderColor: "error.main",
+                                    }),
+                          }}
+                        >
+                          {latestRun.rating ?? "—"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell />
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        <strong>Outlook</strong>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography
+                          component="span"
+                          variant="caption"
+                          sx={{
+                            px: 1,
+                            py: 0.5,
+                            borderRadius: 1,
+                            border: 1,
+                            ...(latestRun.outlook === "Stable"
+                              ? {
+                                  color: "success.main",
+                                  borderColor: "success.main",
+                                }
+                              : latestRun.outlook === "Watch"
+                                ? {
+                                    color: "warning.main",
+                                    borderColor: "warning.main",
+                                  }
+                                : latestRun.outlook === "Negative"
+                                  ? {
+                                      color: "error.main",
+                                      borderColor: "error.main",
+                                    }
+                                  : {
+                                      color: "text.secondary",
+                                      borderColor: "divider",
+                                    }),
+                          }}
+                        >
+                          {latestRun.outlook ?? "—"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell />
+                    </TableRow>
+                  </TableBody>
+                </Table>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ display: "block", mb: 1 }}
+                >
+                  CALIBRATION GAP ANALYSIS
+                </Typography>
+                <Table size="small" sx={{ mb: 2 }}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Model</TableCell>
+                      <TableCell>Independent score</TableCell>
+                      <TableCell>Self score</TableCell>
+                      <TableCell>Gap</TableCell>
+                      <TableCell>Assessment</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>{latestRun.modelName ?? "—"}</TableCell>
+                      <TableCell>
+                        {latestRun.compositeScore?.toFixed(2) ?? "—"}
+                      </TableCell>
+                      <TableCell>—</TableCell>
+                      <TableCell>
+                        {latestRun.calibrationGap != null
+                          ? `${latestRun.calibrationGap >= 0 ? "+" : ""}${latestRun.calibrationGap.toFixed(2)}`
+                          : "—"}
+                      </TableCell>
+                      <TableCell>
+                        {latestRun.calibrationGap != null
+                          ? latestRun.calibrationGap <= 0.15
+                            ? "EXCELLENT"
+                            : latestRun.calibrationGap <= 0.35
+                              ? "MILD DRIFT"
+                              : latestRun.calibrationGap <= 0.6
+                                ? "MATERIAL CONCERN"
+                                : "SEVERE OVERCONFIDENCE"
+                          : "—"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+
+                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
+                  <Button variant="outlined" size="small" onClick={() => {}}>
+                    Share
+                  </Button>
+                  <Button variant="outlined" size="small" onClick={() => {}}>
+                    Embed
+                  </Button>
+                  <Button variant="contained" size="small" onClick={() => {}}>
+                    Download PDF
+                  </Button>
+                </Box>
+              </>
+            ) : (
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                Run a report to see dimension scores, composite score, rating,
+                calibration gap, and deployment verdict.
               </Typography>
-              <Table size="small" sx={{ mb: 2 }}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Model</TableCell>
-                    <TableCell>Independent score</TableCell>
-                    <TableCell>Self score</TableCell>
-                    <TableCell>Gap</TableCell>
-                    <TableCell>Assessment</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>{latestRun.modelName ?? "—"}</TableCell>
-                    <TableCell>
-                      {latestRun.compositeScore?.toFixed(2) ?? "—"}
-                    </TableCell>
-                    <TableCell>—</TableCell>
-                    <TableCell>
-                      {latestRun.calibrationGap != null
-                        ? `${latestRun.calibrationGap >= 0 ? "+" : ""}${latestRun.calibrationGap.toFixed(2)}`
-                        : "—"}
-                    </TableCell>
-                    <TableCell>
-                      {latestRun.calibrationGap != null
-                        ? latestRun.calibrationGap <= 0.15
-                          ? "EXCELLENT"
-                          : latestRun.calibrationGap <= 0.35
-                            ? "MILD DRIFT"
-                            : latestRun.calibrationGap <= 0.6
-                              ? "MATERIAL CONCERN"
-                              : "SEVERE OVERCONFIDENCE"
-                        : "—"}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-
-              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
-                <Button variant="outlined" size="small" onClick={() => {}}>
-                  Share
-                </Button>
-                <Button variant="outlined" size="small" onClick={() => {}}>
-                  Embed
-                </Button>
-                <Button variant="contained" size="small" onClick={() => {}}>
-                  Download PDF
-                </Button>
-              </Box>
-            </>
-          ) : (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              Run a report to see dimension scores, composite score, rating,
-              calibration gap, and deployment verdict.
-            </Typography>
-          )}
-        </Box>
-      </Paper>
+            )}
+          </Box>
+        </Paper>
+      )}
     </Container>
   );
 };

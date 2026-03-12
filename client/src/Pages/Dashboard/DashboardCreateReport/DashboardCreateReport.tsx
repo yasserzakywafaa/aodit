@@ -1,36 +1,18 @@
 import {
-  AODIT_DIMENSIONS,
-  SCENARIOS_PER_DIMENSION_OPTIONS,
-} from "src/shared/constants/aoditFramework";
-import {
   Box,
   Button,
   Card,
   CardContent,
   Container,
-  FormLabel,
   Grid,
-  Slider,
   TextField,
   Typography,
 } from "@mui/material";
 
-import type { AoditDimensionId } from "src/shared/constants/aoditFramework";
-import type { DimensionWeights } from "src/shared/types/report";
+import { fontFamilySans, fontFamilySerif, primaryColorFaint } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useDashboardCreateReportContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
-
-const weightSum = (w: DimensionWeights | undefined): number => {
-  if (!w) return 0;
-  return (
-    (w.Reliability ?? 0) +
-    (w.Integrity ?? 0) +
-    (w.Judgment ?? 0) +
-    (w.Resistance ?? 0) +
-    (w.Resilience ?? 0)
-  );
-};
 
 const DashboardCreateReport = () => {
   const navigate = useNavigate();
@@ -41,9 +23,6 @@ const DashboardCreateReport = () => {
     },
     manager: { handleCreateReport },
   } = useDashboardCreateReportContext();
-
-  const weightsTotal = weightSum(report.dimensionWeights);
-  const weightsOk = Math.abs(weightsTotal - 1) < 0.001;
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -57,14 +36,9 @@ const DashboardCreateReport = () => {
     });
   };
 
-  const handleWeightChange = (dim: AoditDimensionId, value: number) => {
-    const next = { ...report.dimensionWeights, [dim]: value / 100 };
-    setReport({ ...report, dimensionWeights: next });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!weightsOk) return;
+    if (!report.name?.trim()) return;
     try {
       const created = await handleCreateReport(report);
       if (created?._id) {
@@ -83,9 +57,9 @@ const DashboardCreateReport = () => {
         </Typography>
       </Box>
 
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12 }}>
+      <Grid container spacing={3} sx={{ mt: 1 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Box component="form" onSubmit={handleSubmit}>
             <Card variant="outlined" sx={{ borderWidth: 1 }}>
               <CardContent>
                 <Typography
@@ -118,175 +92,75 @@ const DashboardCreateReport = () => {
                 />
               </CardContent>
             </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12 }}>
-            <Card variant="outlined" sx={{ borderWidth: 1 }}>
-              <CardContent>
-                <FormLabel
-                  component="legend"
-                  sx={{
-                    mb: 1.5,
-                    display: "block",
-                    fontWeight: 600,
-                    color: "primary.main",
-                  }}
-                >
-                  Scenarios per dimension
-                </FormLabel>
-                <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                  {SCENARIOS_PER_DIMENSION_OPTIONS.map((opt) => {
-                    const selected =
-                      (report.scenariosPerDimension ?? 20) === opt.value;
-                    return (
-                      <Box
-                        key={opt.value}
-                        onClick={() =>
-                          setReport({
-                            ...report,
-                            scenariosPerDimension: opt.value,
-                          })
-                        }
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            setReport({
-                              ...report,
-                              scenariosPerDimension: opt.value,
-                            });
-                          }
-                        }}
-                        sx={{
-                          minWidth: 120,
-                          flex: "1 1 100px",
-                          maxWidth: 180,
-                          py: 2.5,
-                          px: 2,
-                          border: 1,
-                          borderColor: selected ? "primary.main" : "divider",
-                          bgcolor: selected
-                            ? "primary.main"
-                            : "background.paper",
-                          cursor: "pointer",
-                          textAlign: "center",
-                          "&:hover": {
-                            borderColor: "primary.light",
-                            bgcolor: selected
-                              ? "action.selected"
-                              : "action.hover",
-                          },
-                        }}
-                      >
-                        <Typography
-                          variant="h5"
-                          component="div"
-                          fontWeight="bold"
-                        >
-                          {opt.label}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {opt.total} total
-                        </Typography>
-                      </Box>
-                    );
-                  })}
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12 }}>
-            <Card variant="outlined" sx={{ borderWidth: 1 }}>
-              <CardContent>
-                <FormLabel
-                  component="legend"
-                  sx={{
-                    mb: 1.5,
-                    display: "block",
-                    fontWeight: 600,
-                    color: "primary.main",
-                  }}
-                >
-                  Dimension weights (must total 100%)
-                </FormLabel>
-                <Box sx={{ px: 1 }}>
-                  {AODIT_DIMENSIONS.map((dim) => (
-                    <Box
-                      key={dim}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
-                        mb: 1.5,
-                      }}
-                    >
-                      <Typography
-                        sx={{ minWidth: 120 }}
-                        variant="body2"
-                        fontWeight={500}
-                      >
-                        {dim.toUpperCase()}
-                      </Typography>
-                      <Slider
-                        value={Math.round(
-                          (report.dimensionWeights?.[dim] ?? 0.2) * 100,
-                        )}
-                        min={5}
-                        max={50}
-                        valueLabelDisplay="auto"
-                        valueLabelFormat={(v) => `${v}%`}
-                        onChange={(_, value) =>
-                          handleWeightChange(dim, value as number)
-                        }
-                        sx={{ flex: 1 }}
-                      />
-                      <Typography variant="body2" sx={{ minWidth: 36 }}>
-                        {Math.round(
-                          (report.dimensionWeights?.[dim] ?? 0.2) * 100,
-                        )}
-                        %
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-                <Box
-                  sx={{
-                    mt: 2,
-                    py: 1.5,
-                    px: 2,
-                    borderRadius: 1,
-                    border: 2,
-                    borderColor: weightsOk ? "success.main" : "error.main",
-                    bgcolor: "transparent",
-                    color: weightsOk ? "success.main" : "error.main",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Typography variant="body1" fontWeight={600} color="inherit">
-                    {weightsOk
-                      ? `✓ TOTAL: ${Math.round(weightsTotal * 100)}%`
-                      : `✗ TOTAL: ${Math.round(weightsTotal * 100)}% — must equal 100%`}
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!report.name?.trim()}
+              sx={{ mt: 3 }}
+            >
+              Go to Report Config
+            </Button>
+          </Box>
         </Grid>
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={!weightsOk}
-          sx={{ mt: 4 }}
-        >
-          Create Report
-        </Button>
-      </Box>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Box
+            sx={{
+              height: "100%",
+              p: 3,
+              borderLeft: { md: 1 },
+              borderColor: "divider",
+              pl: { md: 4 },
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontFamily: fontFamilySerif,
+                color: "primary.main",
+                mb: 2,
+                letterSpacing: "0.02em",
+              }}
+            >
+              Next step: Report Config
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                fontFamily: fontFamilySans,
+                color: "text.secondary",
+                lineHeight: 1.7,
+                mb: 2,
+              }}
+            >
+              After creating your report, you’ll configure scenarios per dimension,
+              dimension weights, and choose which AI models to test and evaluate.
+              You can then run the report and view results in the AODIT Framework.
+            </Typography>
+            <Box
+              sx={{
+                mt: 3,
+                py: 2,
+                px: 2,
+                bgcolor: primaryColorFaint,
+                borderLeft: 3,
+                borderColor: "primary.main",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ fontFamily: fontFamilySans, color: "text.secondary" }}
+              >
+                Scenarios and weights define how many test cases run per dimension
+                and how each dimension contributes to the composite score. Models
+                to test are the agents you want to evaluate; the evaluator model
+                judges the results.
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

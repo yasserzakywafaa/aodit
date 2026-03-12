@@ -29,7 +29,8 @@ export const useDashboardCreateReportManager = (
 
     store.setIsFetching(true);
     const payload = {
-      ...report,
+      name: report.name,
+      description: report.description,
       userId: auth.user._id,
     };
 

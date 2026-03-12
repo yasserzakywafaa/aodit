@@ -5,6 +5,7 @@ import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
+import CustomCursor from "src/components/shared/CustomCursor/CustomCursor";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
 import NotFoundPage from "../Pages/NotFound/NotFound";
@@ -72,6 +73,10 @@ const DashboardCreateReportPage = lazy(
   () =>
     import("../Pages/Dashboard/DashboardCreateReport/DashboardCreateReport"),
 );
+const DashboardReportRunPage = lazy(
+  () =>
+    import("../Pages/Dashboard/DashboardReportRun/DashboardReportRun"),
+);
 
 // Dashboard Layout and Pages
 const DashboardAdminUsersPage = lazy(
@@ -96,6 +101,7 @@ const AppContent = () => {
   return (
     <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>
       <CssBaseline />
+      <CustomCursor />
 
       {state.isFetchingUserInfo && (
         <LoaderSpinner variant={LoaderVariantEnum.Dots} />
@@ -138,6 +144,11 @@ const AppContent = () => {
                   <Route
                     path={routes.dashboard.reports.reportById(":reportId")}
                     element={<DashboardReportPage />}
+                  />
+
+                  <Route
+                    path={routes.dashboard.reports.reportRun(":reportId")}
+                    element={<DashboardReportRunPage />}
                   />
 
                   <Route

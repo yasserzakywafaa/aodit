@@ -1,5 +1,5 @@
 import {
-  fontFamilyMono,
+  fontFamilySans,
   fontFamilySerif,
   primaryColor,
 } from "src/application/shared/themes";
@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 const SECTION_LABEL_STYLE = {
-  fontFamily: fontFamilyMono,
+  fontFamily: fontFamilySans,
   fontSize: 10,
   letterSpacing: "0.2em",
   textTransform: "uppercase" as const,
@@ -118,7 +118,7 @@ const AboutSection = () => (
         </Typography>
         <Typography
           sx={{
-            fontFamily: fontFamilyMono,
+            fontFamily: fontFamilySans,
             fontSize: 11,
             color: "text.secondary",
             mt: 4,
@@ -157,7 +157,7 @@ const AboutSection = () => (
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: fontFamilyMono,
+                  fontFamily: fontFamilySans,
                   fontSize: 10,
                   letterSpacing: "0.15em",
                   textTransform: "uppercase",
@@ -173,7 +173,7 @@ const AboutSection = () => (
         <Box sx={{ mt: 3, p: 3, border: "1px solid", borderColor: "divider" }}>
           <Typography
             sx={{
-              fontFamily: fontFamilyMono,
+              fontFamily: fontFamilySans,
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
@@ -207,7 +207,7 @@ const AboutSection = () => (
                 </Typography>
                 <Typography
                   sx={{
-                    fontFamily: fontFamilyMono,
+                    fontFamily: fontFamilySans,
                     fontSize: 10,
                     color: c.active ? primaryColor : "text.secondary",
                   }}

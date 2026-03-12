@@ -1,7 +1,48 @@
-import { Box, Button, Grid, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import {
+  fontFamilySans,
+  primaryColor,
+  primaryColorDim,
+  primaryColorOpaqueTen,
+} from "src/application/shared/themes";
 
-import { SendOutlined } from "@mui/icons-material";
 import { useContactContext } from "../store/Provider";
+
+const REPORT_OPTIONS = [
+  "Frontier AI Risk Ratings",
+  "Trust & Deception Benchmark",
+  "Jailbreak Resistance Benchmark",
+  "Banking Agent Risk Ratings",
+  "AI Employee Stress Test",
+  "Custom Enterprise Report",
+];
+
+const inputSx = {
+  "& .MuiOutlinedInput-root": {
+    bgcolor: primaryColorOpaqueTen,
+    border: "1px solid",
+    borderColor: primaryColorDim,
+    fontFamily: fontFamilySans,
+    fontSize: 12,
+    letterSpacing: "0.5px",
+    "&:hover": { borderColor: primaryColor },
+    "&.Mui-focused": {
+      borderColor: primaryColor,
+      "& .MuiOutlinedInput-notchedOutline": { border: 0 },
+    },
+    "& fieldset": { border: 0 },
+  },
+  "& .MuiInputLabel-outlined": { fontFamily: fontFamilySans },
+};
 
 const ContactForm = () => {
   const {
@@ -9,10 +50,16 @@ const ContactForm = () => {
     manager: { handleUpdateContactForm, handleSubmitContactForm },
   } = useContactContext();
 
-  const handleOnFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    handleUpdateContactForm(name, value);
-  };
+  const handleChange =
+    (key: string) =>
+    (
+      e:
+        | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        | { target: { value: string; name?: string } },
+    ) => {
+      const value = "value" in e.target ? e.target.value : "";
+      handleUpdateContactForm(key, value);
+    };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -20,55 +67,118 @@ const ContactForm = () => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12 }}>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 0 }}>
+      <Grid container spacing={1.75}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <TextField
             required
             fullWidth
             name="name"
-            label="Name"
+            placeholder="Your name"
             value={state.contactForm.name}
-            onChange={handleOnFieldChange}
+            onChange={handleChange("name")}
+            sx={inputSx}
           />
         </Grid>
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <TextField
+            fullWidth
+            name="company"
+            placeholder="Company"
+            value={state.contactForm.company}
+            onChange={handleChange("company")}
+            sx={inputSx}
+          />
+        </Grid>
+        <Grid size={12}>
           <TextField
             required
             fullWidth
             type="email"
-            label="Email"
             name="email"
+            placeholder="Work email"
             value={state.contactForm.email}
-            onChange={handleOnFieldChange}
+            onChange={handleChange("email")}
+            sx={inputSx}
           />
         </Grid>
-        <Grid size={{ xs: 12 }}>
+        <Grid size={12}>
+          <FormControl fullWidth sx={inputSx}>
+            <InputLabel id="contact-report-label">
+              Report of interest
+            </InputLabel>
+            <Select
+              labelId="contact-report-label"
+              name="reportOfInterest"
+              value={state.contactForm.reportOfInterest}
+              onChange={(e) =>
+                handleUpdateContactForm("reportOfInterest", e.target.value)
+              }
+              label="Report of interest"
+              displayEmpty
+              renderValue={(v) => v || ""}
+              sx={{
+                fontFamily: fontFamilySans,
+                fontSize: 12,
+                "& .MuiOutlinedInput-notchedOutline": { border: 0 },
+              }}
+            >
+              <MenuItem value="" disabled>
+                Report of interest
+              </MenuItem>
+              {REPORT_OPTIONS.map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid size={12}>
           <TextField
-            required
             fullWidth
-            name="subject"
-            label="Subject"
-            value={state.contactForm.subject}
-            onChange={handleOnFieldChange}
-          />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <TextField
-            required
             multiline
-            fullWidth
-            rows={4}
+            rows={3}
             name="message"
-            label="Message"
+            placeholder="Describe your AI agent or use case (optional)"
             value={state.contactForm.message}
-            onChange={handleOnFieldChange}
+            onChange={handleChange("message")}
+            sx={inputSx}
           />
         </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Button type="submit" variant="contained" endIcon={<SendOutlined />}>
-            Send Message
+        <Grid size={12}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={state.isFetching}
+            sx={{
+              width: "100%",
+              py: 2,
+              fontFamily: fontFamilySans,
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.3em",
+              bgcolor: primaryColor,
+              color: "background.default",
+              border: 0,
+              mt: 0.5,
+              "&:hover": { bgcolor: "secondary.main" },
+            }}
+          >
+            SUBMIT REQUEST →
           </Button>
+          <Box
+            component="p"
+            sx={{
+              fontSize: 10,
+              color: "text.secondary",
+              letterSpacing: "0.5px",
+              textAlign: "center",
+              mt: 1.5,
+            }}
+          >
+            No spam. Your details are used only to process your rating request.
+          </Box>
         </Grid>
       </Grid>
     </Box>

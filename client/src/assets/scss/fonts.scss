@@ -1,81 +1,54 @@
-// Instrument Sans (sans-serif – body / UI)
+// Playfair Display (serif – headings); weights 400, 700, 900
 @font-face {
-  font-family: "Instrument Sans";
-  src: url("../fonts/Instrument_Sans/InstrumentSans-Regular.ttf")
+  font-family: "Playfair Display";
+  src: url("../fonts/Playfair_Display/PlayfairDisplay-Regular.ttf")
     format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Instrument Sans";
-  src: url("../fonts/Instrument_Sans/InstrumentSans-Medium.ttf")
-    format("truetype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Instrument Sans";
-  src: url("../fonts/Instrument_Sans/InstrumentSans-SemiBold.ttf")
-    format("truetype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Instrument Sans";
-  src: url("../fonts/Instrument_Sans/InstrumentSans-Bold.ttf")
+  font-family: "Playfair Display";
+  src: url("../fonts/Playfair_Display/PlayfairDisplay-Bold.ttf")
     format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
-
-// Cormorant Garamond (serif – headings); variable font covers 300–700
 @font-face {
-  font-family: "Cormorant Garamond";
-  src: url("../fonts/Cormorant_Garamond/CormorantGaramond-VariableFont_wght.ttf")
+  font-family: "Playfair Display";
+  src: url("../fonts/Playfair_Display/PlayfairDisplay-Black.ttf")
     format("truetype");
-  font-weight: 300 700;
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: "Cormorant Garamond";
-  src: url("../fonts/Cormorant_Garamond/CormorantGaramond-Italic.ttf")
-    format("truetype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
 
-// DM Mono (monospace – labels, buttons)
+// Syne (sans-serif – body / UI); weights 400, 500, 700
 @font-face {
-  font-family: "DM Mono";
-  src: url("../fonts/DM_Mono/DMMono-Light.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "DM Mono";
-  src: url("../fonts/DM_Mono/DMMono-Regular.ttf") format("truetype");
+  font-family: "Syne";
+  src: url("../fonts/Syne/Syne-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "DM Mono";
-  src: url("../fonts/DM_Mono/DMMono-Medium.ttf") format("truetype");
+  font-family: "Syne";
+  src: url("../fonts/Syne/Syne-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: "Syne";
+  src: url("../fonts/Syne/Syne-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
-$font-family-base: "Instrument Sans", sans-serif;
-$font-family-serif: "Cormorant Garamond", serif;
-$font-family-mono: "DM Mono", monospace;
+$font-family-base: "Syne", sans-serif;
+$font-family-serif: "Playfair Display", serif;
 
 body {
   font-family: $font-family-base;
@@ -83,7 +56,7 @@ body {
 
 .bold {
   font-family: $font-family-base;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
 }
 
 .italics {

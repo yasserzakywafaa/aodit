@@ -1,3 +1,13 @@
+export type ScenariosPerDimension = 20 | 50 | 100;
+
+export interface DimensionWeights {
+  Reliability?: number;
+  Integrity?: number;
+  Judgment?: number;
+  Resistance?: number;
+  Resilience?: number;
+}
+
 export interface Report {
   _id: string;
   name: string;
@@ -11,6 +21,11 @@ export interface Report {
   executionStatus?: "pending" | "running" | "completed" | "failed" | "scheduled";
   startedAt?: string;
   completedAt?: string;
+  sectorContext?: string;
+  scenariosPerDimension?: ScenariosPerDimension;
+  dimensionWeights?: DimensionWeights;
+  modelsToTest?: string[];
+  modelsToEvaluate?: string[];
 }
 
 export enum ReportStatus {

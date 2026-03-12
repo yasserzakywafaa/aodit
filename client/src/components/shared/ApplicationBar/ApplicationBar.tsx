@@ -67,7 +67,8 @@ const ApplicationBar = () => {
   const handleOnMenuItemClick = (sectionId: string) => () => {
     switch (sectionId) {
       case "features":
-        navigate(routes.features);
+      case "reports":
+        scrollToSection("ratings");
         break;
       case "ratings":
       case "methodology":
@@ -83,7 +84,11 @@ const ApplicationBar = () => {
         navigate(routes.pricing);
         break;
       case "contact":
-        navigate(routes.contact);
+        if (location.pathname === routes.features) {
+          scrollToSection("contact");
+        } else {
+          navigate(`${routes.features}#contact`);
+        }
         break;
       case "install":
         setIsInstallAppDialogOpen(true);

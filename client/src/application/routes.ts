@@ -39,6 +39,7 @@ export const routes = {
       base: "/dashboard/reports",
       create: "/dashboard/reports/create",
       reportById: (reportId: string) => `/dashboard/reports/${reportId}`,
+      reportRun: (reportId: string) => `/dashboard/reports/${reportId}/run`,
       reportsByUserId: (userId: string) =>
         `/dashboard/users/${userId}/reports/`,
     },

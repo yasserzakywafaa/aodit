@@ -4,7 +4,7 @@ import {
 } from "src/components/shared/Notification/Notification";
 import {
   border,
-  fontFamilyMono,
+  fontFamilySans,
   fontFamilySerif,
   grey,
   primaryColor,
@@ -84,10 +84,11 @@ const SubscribeSection = ({
     display: "flex",
     alignItems: "stretch",
     gap: 0,
-    maxWidth: 480,
+    width: "100%",
+    maxWidth: 600,
     mx: "auto",
     "& .MuiOutlinedInput-root": {
-      fontFamily: fontFamilyMono,
+      fontFamily: fontFamilySans,
       fontSize: 12,
       minHeight: inputHeight,
       height: inputHeight,
@@ -124,7 +125,7 @@ const SubscribeSection = ({
     },
   };
 
-  if (variant === "compact") {
+  const renderCompact = () => {
     return (
       <Box
         component="section"
@@ -139,7 +140,7 @@ const SubscribeSection = ({
       >
         <Box
           sx={{
-            maxWidth: 720,
+            // maxWidth: 720,
             mx: "auto",
             display: "flex",
             flexWrap: "wrap",
@@ -150,9 +151,7 @@ const SubscribeSection = ({
         >
           <Typography
             sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 10,
-              letterSpacing: "0.2em",
+              fontFamily: fontFamilySans,
               textTransform: "uppercase",
               color: primaryColor,
             }}
@@ -162,7 +161,7 @@ const SubscribeSection = ({
           <Box
             component="form"
             onSubmit={handleSubmit}
-            sx={{ ...formSx, maxWidth: 360, mx: 0 }}
+            sx={{ ...formSx, mx: 0 }}
           >
             <TextField
               fullWidth
@@ -172,31 +171,19 @@ const SubscribeSection = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               size="small"
-              sx={{ flex: 1 }}
               disabled={loading}
             />
-            <Button
-              type="submit"
-              disabled={loading}
-              sx={{
-                fontFamily: fontFamilyMono,
-                fontSize: 11,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                bgcolor: primaryColor,
-                color: "background.default",
-                px: 2.5,
-                py: 1.5,
-                borderRadius: 0,
-                "&:hover": { bgcolor: "secondary.main" },
-              }}
-            >
+            <Button type="submit" variant="contained" disabled={loading}>
               Subscribe
             </Button>
           </Box>
         </Box>
       </Box>
     );
+  };
+
+  if (variant === "compact") {
+    return renderCompact();
   }
 
   return (
@@ -229,9 +216,7 @@ const SubscribeSection = ({
       >
         <Typography
           sx={{
-            fontFamily: fontFamilyMono,
-            fontSize: 10,
-            letterSpacing: "0.2em",
+            fontFamily: fontFamilySans,
             textTransform: "uppercase",
             color: primaryColor,
             mb: 3,
@@ -286,25 +271,9 @@ const SubscribeSection = ({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             size="small"
-            sx={{ flex: 1 }}
             disabled={loading}
           />
-          <Button
-            type="submit"
-            disabled={loading}
-            sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 11,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              bgcolor: primaryColor,
-              color: "background.default",
-              px: 3,
-              py: 1.75,
-              borderRadius: 0,
-              "&:hover": { bgcolor: "secondary.main" },
-            }}
-          >
+          <Button type="submit" variant="contained" disabled={loading}>
             Subscribe
           </Button>
         </Box>
@@ -312,10 +281,8 @@ const SubscribeSection = ({
         <Typography
           sx={{
             mt: 3,
-            fontFamily: fontFamilyMono,
-            fontSize: 10,
+            fontFamily: fontFamilySans,
             color: "text.secondary",
-            letterSpacing: "0.08em",
           }}
         >
           For institutional inquiries: contact@aodit.ai

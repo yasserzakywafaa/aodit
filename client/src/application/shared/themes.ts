@@ -1,6 +1,6 @@
 import { Theme, createTheme } from "@mui/material/styles";
 
-export const white = "#F5F3EF";
+export const white = "#f8f8f8";
 export const black = "#0A0A0A";
 export const cream = "#EDE9E1";
 export const grey = "#6B6B6B";
@@ -8,31 +8,36 @@ export const lightGrey = "#D4D0C8";
 export const red = "#C0392B";
 export const border = "rgba(180,174,162,0.25)";
 
-export const primaryColor = "#B8963E"; // gold
-export const primaryColorOpaqueTen = "rgba(184, 150, 62, 0.1)";
-export const primaryColorOpaqueThirty = "rgba(184, 150, 62, 0.3)";
-export const primaryColorOpaqueFifteen = "rgba(184, 150, 62, 0.15)";
-export const primaryColorOpaqueEight = "rgba(184, 150, 62, 0.08)";
+export const primaryColor = "#C8960C"; // gold
+export const primaryColorOpaqueTen = "rgba(200, 150, 12, 0.1)";
+export const primaryColorOpaqueThirty = "rgba(200, 150, 12, 0.3)";
+export const primaryColorOpaqueFifteen = "rgba(200, 150, 12, 0.15)";
+export const primaryColorOpaqueEight = "rgba(200, 150, 12, 0.08)";
+export const primaryColorDim = "rgba(200, 150, 12, 0.2)";
+export const primaryColorFaint = "rgba(200, 150, 12, 0.06)";
 export const secondaryColor = black;
 
-export const fontFamilySerif = "'Cormorant Garamond', serif";
-export const fontFamilyMono = "'DM Mono', monospace";
-export const fontFamilySans = "'Instrument Sans', sans-serif";
+export const fontFamilySerif = "'Playfair Display', serif";
+export const fontFamilySans = "'Syne', sans-serif";
 export const primaryColorForDarkTheme = primaryColor;
 export const secondaryColorForDarkTheme = secondaryColor;
 export const secondaryColorForLightTheme = primaryColor;
 
 export const defaultBackDropFilterBlur = "blur(12px)";
-const borderRadius = "2px";
+const borderRadius = "0px";
 
 export const buttonStyle = {
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.1em",
-  fontFamily: "'DM Mono', monospace",
-  border: `1px solid ${border}`,
+  textTransform: "capitalize" as const,
+  fontFamily: fontFamilySans,
+  border: `1px solid ${primaryColor}`,
+  borderRadius,
   "&:hover": {
-    backgroundColor: primaryColor,
-    color: black,
+    color: primaryColor,
+    backgroundColor: primaryColorOpaqueThirty,
+    border: `1px solid ${primaryColor}`,
+  },
+  "&:active": {
+    boxShadow: "none",
   },
 };
 
@@ -48,7 +53,7 @@ export const dataGridStyle = (theme: Theme): object => ({
     borderBottom: "none",
   },
   "& .MuiDataGrid-row:hover": {
-    backgroundColor: "rgba(184, 150, 62, 0.03)",
+    backgroundColor: "rgba(200, 150, 12, 0.03)",
   },
 });
 
@@ -76,6 +81,25 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: { ...buttonStyle },
+        contained: {
+          "&.Mui-disabled": {
+            opacity: "0.7",
+            cursor: "not-allowed",
+            backgroundColor: primaryColor,
+          },
+          ...buttonStyle,
+        },
+        outlined: {
+          ...buttonStyle,
+        },
+        text: {
+          ...buttonStyle,
+          border: 0,
+          "&:hover": {
+            backgroundColor: primaryColorOpaqueThirty,
+            border: 0,
+          },
+        },
       },
     },
     MuiTable: {
@@ -87,8 +111,24 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius,
-          backgroundColor: black,
-          border: `1px solid ${border}`,
+          border: 0,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius,
+          backgroundImage: "unset",
+          border: `1px solid ${primaryColor}`,
+        },
+      },
+    },
+    MuiSlider: {
+      styleOverrides: {
+        thumb: {
+          borderRadius,
+          backgroundColor: primaryColor,
         },
       },
     },
@@ -113,7 +153,8 @@ export const darkTheme = createTheme({
     mode: "dark",
     primary: { main: primaryColor },
     secondary: { main: white },
-    background: { default: black, paper: "#0d0c09" },
+    // background: { default: black, paper: "#0d0c09" },
+    background: { default: black, paper: "#171616" },
     text: { primary: white, secondary: "#ffffff" },
     divider: border,
   },

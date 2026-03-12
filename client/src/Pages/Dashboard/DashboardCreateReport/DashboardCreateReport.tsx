@@ -1,18 +1,16 @@
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   Container,
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
 
+import { fontFamilySans, fontFamilySerif, primaryColorFaint } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
-import { REPORT_TYPES } from "src/shared/constants/aoditFramework";
 import { useDashboardCreateReportContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +30,6 @@ const DashboardCreateReport = () => {
     >,
   ) => {
     const { name, value } = e.target;
-
     setReport({
       ...report,
       [name as string]: value,
@@ -41,10 +38,12 @@ const DashboardCreateReport = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!report.name?.trim()) return;
     try {
-      await handleCreateReport(report);
-
-      navigate(routes.dashboard.reports.base);
+      const created = await handleCreateReport(report);
+      if (created?._id) {
+        navigate(routes.dashboard.reports.reportById(created._id));
+      }
     } catch (error) {
       console.error("❌ Failed to create report:", error);
     }
@@ -58,62 +57,110 @@ const DashboardCreateReport = () => {
         </Typography>
       </Box>
 
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <TextField
-              label="Report Name"
-              name="name"
-              value={report.name}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <FormControl fullWidth>
-              <InputLabel id="report-type-label">Report Type</InputLabel>
-              <Select
-                labelId="report-type-label"
-                label="Report Type"
-                name="reportType"
-                value={report.reportType || ""}
-                onChange={(e) =>
-                  setReport({ ...report, reportType: e.target.value })
-                }
-              >
-                {REPORT_TYPES.map((type) => (
-                  <MenuItem key={type} value={type}>
-                    {type}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid size={{ xs: 12 }}>
-            <TextField
-              label="Description"
-              name="description"
-              multiline
-              rows={4}
-              value={report.description || ""}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
+      <Grid container spacing={3} sx={{ mt: 1 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Box component="form" onSubmit={handleSubmit}>
+            <Card variant="outlined" sx={{ borderWidth: 1 }}>
+              <CardContent>
+                <Typography
+                  variant="subtitle1"
+                  color="primary"
+                  fontWeight={600}
+                  sx={{ mb: 2 }}
+                >
+                  Report details
+                </Typography>
+                <TextField
+                  label="Report Name"
+                  name="name"
+                  value={report.name ?? ""}
+                  onChange={handleChange}
+                  placeholder="e.g. Healthcare Agent Risk 2026"
+                  required
+                  fullWidth
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Description"
+                  name="description"
+                  multiline
+                  rows={4}
+                  value={report.description ?? ""}
+                  onChange={handleChange}
+                  placeholder="Optional description of the report"
+                  fullWidth
+                />
+              </CardContent>
+            </Card>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!report.name?.trim()}
+              sx={{ mt: 3 }}
+            >
+              Go to Report Config
+            </Button>
+          </Box>
         </Grid>
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ mt: 4 }}
-        >
-          Create Report
-        </Button>
-      </Box>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Box
+            sx={{
+              height: "100%",
+              p: 3,
+              borderLeft: { md: 1 },
+              borderColor: "divider",
+              pl: { md: 4 },
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontFamily: fontFamilySerif,
+                color: "primary.main",
+                mb: 2,
+                letterSpacing: "0.02em",
+              }}
+            >
+              Next step: Report Config
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                fontFamily: fontFamilySans,
+                color: "text.secondary",
+                lineHeight: 1.7,
+                mb: 2,
+              }}
+            >
+              After creating your report, you’ll configure scenarios per dimension,
+              dimension weights, and choose which AI models to test and evaluate.
+              You can then run the report and view results in the AODIT Framework.
+            </Typography>
+            <Box
+              sx={{
+                mt: 3,
+                py: 2,
+                px: 2,
+                bgcolor: primaryColorFaint,
+                borderLeft: 3,
+                borderColor: "primary.main",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ fontFamily: fontFamilySans, color: "text.secondary" }}
+              >
+                Scenarios and weights define how many test cases run per dimension
+                and how each dimension contributes to the composite score. Models
+                to test are the agents you want to evaluate; the evaluator model
+                judges the results.
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

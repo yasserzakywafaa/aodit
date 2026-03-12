@@ -9,10 +9,12 @@ import {
 } from "src/shared/utils/schemaOrg";
 
 import AboutSection from "./features/AboutSection";
+import ContactSection from "./features/ContactSection";
 import Hero from "./features/Hero";
 import MethodologySection from "./features/MethodologySection";
 import Page from "src/components/shared/Page/Page";
 import RatingsSection from "./features/RatingsSection";
+import ReportsSection from "./features/ReportsSection";
 import SubscribeSection from "./features/SubscribeSection";
 import { Testimonial } from "src/shared/types/types";
 import { routes } from "src/application/routes";
@@ -84,10 +86,12 @@ const FeaturesPage = () => {
     >
       <Hero />
       <SubscribeSection variant="compact" />
+      <ReportsSection />
       <RatingsSection />
       <MethodologySection />
       <AboutSection />
       <SubscribeSection />
+      <ContactSection />
     </Page>
   );
 };

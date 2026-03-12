@@ -15,6 +15,7 @@ import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { removeLocalStorageAuthItems } from "src/shared/utils/localstorage";
 import { routes } from "./routes";
 import { useApplicationContext } from "./store/Provider";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const ResetAndRedirectHome = () => {
   const navigate = useNavigate();
@@ -74,8 +75,7 @@ const DashboardCreateReportPage = lazy(
     import("../Pages/Dashboard/DashboardCreateReport/DashboardCreateReport"),
 );
 const DashboardReportRunPage = lazy(
-  () =>
-    import("../Pages/Dashboard/DashboardReportRun/DashboardReportRun"),
+  () => import("../Pages/Dashboard/DashboardReportRun/DashboardReportRun"),
 );
 
 // Dashboard Layout and Pages
@@ -93,6 +93,7 @@ const AppContent = () => {
     store: { state },
     manager: { handleInitialAuthentication },
   } = useApplicationContext();
+  const { isDesktop } = useDeviceSize();
 
   useEffect(() => {
     handleInitialAuthentication();
@@ -101,7 +102,7 @@ const AppContent = () => {
   return (
     <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>
       <CssBaseline />
-      <CustomCursor />
+      {isDesktop && <CustomCursor />}
 
       {state.isFetchingUserInfo && (
         <LoaderSpinner variant={LoaderVariantEnum.Dots} />

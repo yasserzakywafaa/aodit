@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { fontFamilyMono } from "src/application/shared/themes";
+import { fontFamilySans } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -48,7 +48,7 @@ const Footer = () => {
       <Box
         component="span"
         sx={{
-          fontFamily: fontFamilyMono,
+          fontFamily: fontFamilySans,
           fontSize: 12,
           letterSpacing: "0.15em",
           color: "text.secondary",
@@ -64,7 +64,7 @@ const Footer = () => {
             href={href}
             onClick={handleSectionClick(href)}
             sx={{
-              fontFamily: fontFamilyMono,
+              fontFamily: fontFamilySans,
               fontSize: 10,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -80,7 +80,7 @@ const Footer = () => {
 
       <Typography
         sx={{
-          fontFamily: fontFamilyMono,
+          fontFamily: fontFamilySans,
           fontSize: 9,
           letterSpacing: "0.08em",
           color: "text.secondary",

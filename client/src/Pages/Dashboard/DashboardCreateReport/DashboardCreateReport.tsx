@@ -1,4 +1,8 @@
 import {
+  AODIT_DIMENSIONS,
+  SCENARIOS_PER_DIMENSION_OPTIONS,
+} from "src/shared/constants/aoditFramework";
+import {
   Box,
   Button,
   Card,
@@ -11,15 +15,11 @@ import {
   Typography,
 } from "@mui/material";
 
-import { routes } from "src/application/routes";
-import {
-  AODIT_DIMENSIONS,
-  SCENARIOS_PER_DIMENSION_OPTIONS,
-} from "src/shared/constants/aoditFramework";
 import type { AoditDimensionId } from "src/shared/constants/aoditFramework";
+import type { DimensionWeights } from "src/shared/types/report";
+import { routes } from "src/application/routes";
 import { useDashboardCreateReportContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
-import type { DimensionWeights } from "src/shared/types/report";
 
 const weightSum = (w: DimensionWeights | undefined): number => {
   if (!w) return 0;
@@ -88,7 +88,12 @@ const DashboardCreateReport = () => {
           <Grid size={{ xs: 12 }}>
             <Card variant="outlined" sx={{ borderWidth: 1 }}>
               <CardContent>
-                <Typography variant="subtitle1" color="primary" fontWeight={600} sx={{ mb: 2 }}>
+                <Typography
+                  variant="subtitle1"
+                  color="primary"
+                  fontWeight={600}
+                  sx={{ mb: 2 }}
+                >
                   Report details
                 </Typography>
                 <TextField
@@ -118,12 +123,21 @@ const DashboardCreateReport = () => {
           <Grid size={{ xs: 12 }}>
             <Card variant="outlined" sx={{ borderWidth: 1 }}>
               <CardContent>
-                <FormLabel component="legend" sx={{ mb: 1.5, display: "block", fontWeight: 600, color: "primary.main" }}>
+                <FormLabel
+                  component="legend"
+                  sx={{
+                    mb: 1.5,
+                    display: "block",
+                    fontWeight: 600,
+                    color: "primary.main",
+                  }}
+                >
                   Scenarios per dimension
                 </FormLabel>
                 <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                   {SCENARIOS_PER_DIMENSION_OPTIONS.map((opt) => {
-                    const selected = (report.scenariosPerDimension ?? 20) === opt.value;
+                    const selected =
+                      (report.scenariosPerDimension ?? 20) === opt.value;
                     return (
                       <Box
                         key={opt.value}
@@ -138,7 +152,10 @@ const DashboardCreateReport = () => {
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ") {
                             e.preventDefault();
-                            setReport({ ...report, scenariosPerDimension: opt.value });
+                            setReport({
+                              ...report,
+                              scenariosPerDimension: opt.value,
+                            });
                           }
                         }}
                         sx={{
@@ -147,19 +164,26 @@ const DashboardCreateReport = () => {
                           maxWidth: 180,
                           py: 2.5,
                           px: 2,
-                          border: 2,
+                          border: 1,
                           borderColor: selected ? "primary.main" : "divider",
-                          bgcolor: selected ? "action.selected" : "background.paper",
-                          borderRadius: 1,
+                          bgcolor: selected
+                            ? "primary.main"
+                            : "background.paper",
                           cursor: "pointer",
                           textAlign: "center",
                           "&:hover": {
                             borderColor: "primary.light",
-                            bgcolor: selected ? "action.selected" : "action.hover",
+                            bgcolor: selected
+                              ? "action.selected"
+                              : "action.hover",
                           },
                         }}
                       >
-                        <Typography variant="h5" component="div" fontWeight="bold">
+                        <Typography
+                          variant="h5"
+                          component="div"
+                          fontWeight="bold"
+                        >
                           {opt.label}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -176,17 +200,39 @@ const DashboardCreateReport = () => {
           <Grid size={{ xs: 12 }}>
             <Card variant="outlined" sx={{ borderWidth: 1 }}>
               <CardContent>
-                <FormLabel component="legend" sx={{ mb: 1.5, display: "block", fontWeight: 600, color: "primary.main" }}>
+                <FormLabel
+                  component="legend"
+                  sx={{
+                    mb: 1.5,
+                    display: "block",
+                    fontWeight: 600,
+                    color: "primary.main",
+                  }}
+                >
                   Dimension weights (must total 100%)
                 </FormLabel>
                 <Box sx={{ px: 1 }}>
                   {AODIT_DIMENSIONS.map((dim) => (
-                    <Box key={dim} sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1.5 }}>
-                      <Typography sx={{ minWidth: 120 }} variant="body2" fontWeight={500}>
+                    <Box
+                      key={dim}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                        mb: 1.5,
+                      }}
+                    >
+                      <Typography
+                        sx={{ minWidth: 120 }}
+                        variant="body2"
+                        fontWeight={500}
+                      >
                         {dim.toUpperCase()}
                       </Typography>
                       <Slider
-                        value={Math.round((report.dimensionWeights?.[dim] ?? 0.2) * 100)}
+                        value={Math.round(
+                          (report.dimensionWeights?.[dim] ?? 0.2) * 100,
+                        )}
                         min={5}
                         max={50}
                         valueLabelDisplay="auto"
@@ -197,7 +243,10 @@ const DashboardCreateReport = () => {
                         sx={{ flex: 1 }}
                       />
                       <Typography variant="body2" sx={{ minWidth: 36 }}>
-                        {Math.round((report.dimensionWeights?.[dim] ?? 0.2) * 100)}%
+                        {Math.round(
+                          (report.dimensionWeights?.[dim] ?? 0.2) * 100,
+                        )}
+                        %
                       </Typography>
                     </Box>
                   ))}

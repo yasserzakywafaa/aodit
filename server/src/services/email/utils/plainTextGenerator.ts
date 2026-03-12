@@ -16,8 +16,9 @@ export interface ContactUserPlainTextData {
 
 export interface ContactAdminPlainTextData {
   name: string;
+  company?: string;
   email: string;
-  subject: string;
+  reportOfInterest?: string;
   message: string;
 }
 
@@ -85,17 +86,18 @@ Thank you for reaching out to us. We have received your message and our team wil
 export const generateContactAdminPlainText = (
   data: ContactAdminPlainTextData,
 ): string => {
-  const { name, email, subject, message } = data;
+  const { name, company, email, reportOfInterest, message } = data;
+  let details = `Name: ${name}\nEmail: ${email}`;
+  if (company) details += `\nCompany: ${company}`;
+  if (reportOfInterest) details += `\nReport of interest: ${reportOfInterest}`;
   return `
 New Contact Form Submission
 
 Sender Details:
-Name: ${name}
-Email: ${email}
-Subject: ${subject}
+${details}
 
 Message:
-${message}
+${message || "(none)"}
 
 Reply to: ${email}
 

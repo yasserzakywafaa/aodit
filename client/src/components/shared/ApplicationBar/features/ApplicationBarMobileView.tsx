@@ -23,10 +23,9 @@ import { primaryColor } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
-  { id: "ratings", label: "Ratings" },
+  { id: "reports", label: "Reports" },
   { id: "methodology", label: "Methodology" },
-  { id: "about", label: "About" },
-  { id: "subscribe", label: "Subscribe" },
+  { id: "about", label: "Who it's for" },
 ] as const;
 
 interface ApplicationBarMobileViewParams {
@@ -97,10 +96,10 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
               <Box>
                 <MenuItem
                   className="menu-item"
-                  onClick={handleOnMenuItemClick("features")}
+                  onClick={handleOnMenuItemClick("reports")}
                 >
                   <Typography variant="body1" color={primaryColor}>
-                    Home
+                    Reports
                   </Typography>
                 </MenuItem>
                 {NAV_LINKS.map(({ id, label }) => (
@@ -121,8 +120,8 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   className="menu-item"
                   onClick={handleOnMenuItemClick("contact")}
                 >
-                  <Typography variant="body1" color="text.secondary">
-                    Contact
+                  <Typography variant="body1" color={primaryColor}>
+                    Get your agent rated
                   </Typography>
                 </MenuItem>
               </Box>

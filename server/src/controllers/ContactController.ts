@@ -9,10 +9,17 @@ export const contactSupport = async (
   response: Response,
   next: NextFunction,
 ) => {
-  const { name, email, subject, message } = request.body as ContactFormState;
+  const { name, company, email, reportOfInterest, message } =
+    request.body as ContactFormState;
 
   try {
-    await handleContactSupport({ name, email, subject, message });
+    await handleContactSupport({
+      name,
+      company,
+      email,
+      reportOfInterest,
+      message,
+    });
 
     response.status(200).send("✅ Emails sent successfully");
   } catch (error: any) {

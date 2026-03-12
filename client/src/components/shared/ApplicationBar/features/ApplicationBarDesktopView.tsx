@@ -1,4 +1,4 @@
-import { Box, Link, MenuItem, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Typography } from "@mui/material";
 import { LockOpenOutlined, VpnKeyOutlined } from "@mui/icons-material";
 import Logo, { LogoComponentEnum } from "../../Logo";
 
@@ -12,10 +12,9 @@ import { primaryColor } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
-  { id: "ratings", label: "Ratings" },
+  { id: "reports", label: "Reports" },
   { id: "methodology", label: "Methodology" },
-  { id: "about", label: "About" },
-  { id: "subscribe", label: "Subscribe" },
+  { id: "about", label: "Who it's for" },
 ] as const;
 
 interface ApplicationBarDesktopViewParams {
@@ -67,15 +66,22 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               <Logo variant="small" component={LogoComponentEnum.ANCHOR} />
 
               {NAV_LINKS.map(({ id, label }) => (
-                <Link
+                <Button
                   key={id}
-                  component="button"
-                  variant="body2"
+                  component="a"
+                  variant="text"
                   onClick={handleOnMenuItemClick(id)}
                 >
                   {label}
-                </Link>
+                </Button>
               ))}
+              <Button
+                component="a"
+                variant="contained"
+                onClick={handleOnMenuItemClick("contact")}
+              >
+                Get your agent rated
+              </Button>
             </Box>
           </Box>
 

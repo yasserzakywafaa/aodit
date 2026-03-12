@@ -29,8 +29,9 @@ export interface ContactUserEmailData extends BaseEmailData {
  */
 export interface ContactAdminEmailData extends BaseEmailData {
   name: string;
+  company?: string;
   email: string;
-  subject: string;
+  reportOfInterest?: string;
   message: string;
 }
 

@@ -5,8 +5,10 @@ export interface ContactInitialState {
 
 export interface ContactFormState {
   name: string;
+  company: string;
   email: string;
-  subject: string;
+  role: string;
+  reportOfInterest: string;
   message: string;
 }
 
@@ -15,8 +17,10 @@ export const getContactInitialState = (): ContactInitialState => {
     isFetching: false,
     contactForm: {
       name: "",
+      company: "",
       email: "",
-      subject: "",
+      role: "",
+      reportOfInterest: "",
       message: "",
     },
   };

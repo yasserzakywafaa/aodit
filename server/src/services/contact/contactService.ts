@@ -10,23 +10,25 @@ import { renderEmailTemplate } from "../email/emailTemplateService";
 
 export interface ContactFormState {
   name: string;
+  company?: string;
   email: string;
-  subject: string;
+  reportOfInterest?: string;
   message: string;
 }
 
 type ContactSupportParams = ContactFormState;
 
 export const handleContactSupport = async (props: ContactSupportParams) => {
-  const { name, email, subject, message } = props;
+  const { name, company, email, reportOfInterest, message } = props;
 
   const transporter = await createOAuth2Transporter();
 
   // Prepare admin email data
   const adminEmailData: ContactAdminEmailData = {
     name,
+    company,
     email,
-    subject,
+    reportOfInterest,
     message,
     appUrl: CONFIG.APP_URL,
   };
@@ -70,7 +72,7 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
   const mailOptionsAdmin = {
     from: `"Aodit.ai" <${sender}>`,
     to: adminEmail,
-    subject: `New Contact Form Submission: ${subject}`,
+    subject: `Rating request${reportOfInterest ? `: ${reportOfInterest}` : ""}`,
     text: adminTextContent,
     html: adminHtmlContent,
     replyTo: email,

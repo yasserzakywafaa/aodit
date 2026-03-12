@@ -1,5 +1,5 @@
 import {
-  fontFamilyMono,
+  fontFamilySans,
   fontFamilySerif,
   grey,
   primaryColor,
@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 const SECTION_LABEL_STYLE = {
-  fontFamily: fontFamilyMono,
+  fontFamily: fontFamilySans,
   fontSize: 10,
   letterSpacing: "0.2em",
   textTransform: "uppercase" as const,
@@ -127,7 +127,7 @@ const MethodologySection = () => (
         >
           <Typography
             sx={{
-              fontFamily: fontFamilyMono,
+              fontFamily: fontFamilySans,
               fontSize: 11,
               letterSpacing: "0.1em",
               color: primaryColor,
@@ -153,7 +153,7 @@ const MethodologySection = () => (
           </Typography>
           <Typography
             sx={{
-              fontFamily: fontFamilyMono,
+              fontFamily: fontFamilySans,
               fontSize: 20,
               color: "rgba(184,150,62,0.3)",
               mt: 2.5,
@@ -177,7 +177,7 @@ const MethodologySection = () => (
     >
       <Typography
         sx={{
-          fontFamily: fontFamilyMono,
+          fontFamily: fontFamilySans,
           fontSize: 10,
           letterSpacing: "0.2em",
           textTransform: "uppercase",

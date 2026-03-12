@@ -30,7 +30,7 @@
             <td style="padding: 0 30px 30px 30px; background-color: #ffffff;">
               <div style="color: #0A0A0A; line-height: 1.6;">
                 <!-- Alert Header -->
-                <div style="margin: 0 0 30px 0; padding: 15px 20px; background-color: rgba(184, 150, 62, 0.1); border-left: 4px solid #B8963E;">
+                <div style="margin: 0 0 30px 0; padding: 15px 20px; background-color: rgba(184, 150, 62, 0.1); border-left: 4px solid #C8960C;">
                   <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #8B6914; line-height: 1.2;">
                     New Contact Form Submission
                   </h1>
@@ -38,7 +38,7 @@
                 
                 <!-- Sender Information -->
                 <div style="margin: 0 0 30px 0;">
-                  <h2 style="margin: 0 0 15px 0; font-size: 20px; font-weight: 600; color: #B8963E;">
+                  <h2 style="margin: 0 0 15px 0; font-size: 20px; font-weight: 600; color: #C8960C;">
                     Sender Details
                   </h2>
                   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -50,31 +50,53 @@
                         {{name}}
                       </td>
                     </tr>
+                    {{#if company}}
+                    <tr>
+                      <td style="padding: 8px 0; font-size: 14px; color: #6B6B6B;">
+                        <strong style="color: #0A0A0A;">Company:</strong>
+                      </td>
+                      <td style="padding: 8px 0; font-size: 14px; color: #0A0A0A;">
+                        {{company}}
+                      </td>
+                    </tr>
+                    {{/if}}
                     <tr>
                       <td style="padding: 8px 0; font-size: 14px; color: #6B6B6B;">
                         <strong style="color: #0A0A0A;">Email:</strong>
                       </td>
                       <td style="padding: 8px 0; font-size: 14px; color: #0A0A0A;">
-                        <a href="mailto:{{email}}" style="color: #B8963E; text-decoration: none;">{{email}}</a>
+                        <a href="mailto:{{email}}" style="color: #C8960C; text-decoration: none;">{{email}}</a>
                       </td>
                     </tr>
+                    {{#if role}}
                     <tr>
                       <td style="padding: 8px 0; font-size: 14px; color: #6B6B6B;">
-                        <strong style="color: #0A0A0A;">Subject:</strong>
+                        <strong style="color: #0A0A0A;">I am a:</strong>
                       </td>
                       <td style="padding: 8px 0; font-size: 14px; color: #0A0A0A;">
-                        {{subject}}
+                        {{role}}
                       </td>
                     </tr>
+                    {{/if}}
+                    {{#if reportOfInterest}}
+                    <tr>
+                      <td style="padding: 8px 0; font-size: 14px; color: #6B6B6B;">
+                        <strong style="color: #0A0A0A;">Report of interest:</strong>
+                      </td>
+                      <td style="padding: 8px 0; font-size: 14px; color: #0A0A0A;">
+                        {{reportOfInterest}}
+                      </td>
+                    </tr>
+                    {{/if}}
                   </table>
                 </div>
                 
                 <!-- Message Content -->
                 <div style="margin: 0 0 30px 0;">
-                  <h2 style="margin: 0 0 15px 0; font-size: 20px; font-weight: 600; color: #B8963E;">
+                  <h2 style="margin: 0 0 15px 0; font-size: 20px; font-weight: 600; color: #C8960C;">
                     Message
                   </h2>
-                  <div style="padding: 20px; background-color: #EDE9E1; border-left: 4px solid #B8963E;">
+                  <div style="padding: 20px; background-color: #EDE9E1; border-left: 4px solid #C8960C;">
                     <p style="margin: 0; font-size: 14px; color: #0A0A0A; line-height: 1.6; white-space: pre-wrap;">{{message}}</p>
                   </div>
                 </div>
@@ -82,10 +104,10 @@
                 <!-- Reply CTA -->
                 <div style="margin: 30px 0 0 0; padding: 20px; background-color: #EDE9E1;">
                   <p style="margin: 0 0 15px 0; font-size: 14px; color: #6B6B6B; line-height: 1.6;">
-                    <strong style="color: #0A0A0A;">Reply to:</strong> <a href="mailto:{{email}}" style="color: #B8963E; text-decoration: none;">{{email}}</a>
+                    <strong style="color: #0A0A0A;">Reply to:</strong> <a href="mailto:{{email}}" style="color: #C8960C; text-decoration: none;">{{email}}</a>
                   </p>
-                  <a href="mailto:{{email}}?subject=Re: {{subject}}" 
-                     style="display: inline-block; background-color: #B8963E; color: #0A0A0A; padding: 12px 30px; text-decoration: none; font-weight: 600; font-size: 14px;">
+                  <a href="mailto:{{email}}?subject=Re: Rating request{{#if reportOfInterest}} - {{reportOfInterest}}{{/if}}" 
+                     style="display: inline-block; background-color: #C8960C; color: #0A0A0A; padding: 12px 30px; text-decoration: none; font-weight: 600; font-size: 14px;">
                     Reply via Email
                   </a>
                 </div>

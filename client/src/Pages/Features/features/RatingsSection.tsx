@@ -1,5 +1,5 @@
 import {
-  fontFamilyMono,
+  fontFamilySans,
   fontFamilySerif,
   primaryColor,
   red,
@@ -14,7 +14,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 
 const SECTION_LABEL_STYLE = {
-  fontFamily: fontFamilyMono,
+  fontFamily: fontFamilySans,
   fontSize: 10,
   letterSpacing: "0.2em",
   textTransform: "uppercase" as const,
@@ -170,208 +170,210 @@ const RatingsSection = () => (
           "& th, & td": { borderBottom: "1px solid", borderColor: "divider" },
         }}
       >
-      <TableHead>
-        <TableRow>
-          <TableCell
-            sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 10,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              py: 1.5,
-              px: 2,
-            }}
-          >
-            #
-          </TableCell>
-          <TableCell
-            sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 10,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              py: 1.5,
-              px: 2,
-            }}
-          >
-            Model
-          </TableCell>
-          <TableCell
-            sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 10,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              py: 1.5,
-              px: 2,
-            }}
-          >
-            Score
-          </TableCell>
-          <TableCell
-            sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 10,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              py: 1.5,
-              px: 2,
-            }}
-          >
-            Rating
-          </TableCell>
-          <TableCell
-            sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 10,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              py: 1.5,
-              px: 2,
-            }}
-          >
-            Outlook
-          </TableCell>
-          <TableCell
-            sx={{
-              fontFamily: fontFamilyMono,
-              fontSize: 10,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              py: 1.5,
-              px: 2,
-            }}
-          >
-            Status
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {ratingData.map((row) => (
-          <TableRow
-            key={row.rank}
-            sx={{
-              "& td": {
-                py: 2.25,
-                px: 2,
-                borderBottom: "1px solid",
-                borderColor: "divider",
-                verticalAlign: "middle",
-              },
-              "&:hover td": { bgcolor: "rgba(184,150,62,0.03)" },
-            }}
-          >
-            <TableCell
-              sx={{ fontFamily: fontFamilyMono, fontSize: 11, color: "text.secondary" }}
-            >
-              {row.rank}
-            </TableCell>
-            <TableCell>
-              <Box
-                sx={{
-                  fontFamily: "inherit",
-                  fontSize: 15,
-                  fontWeight: 500,
-                  color: "text.primary",
-                }}
-              >
-                {row.model}
-              </Box>
-              <Box
-                sx={{
-                  fontFamily: fontFamilyMono,
-                  fontSize: 10,
-                  color: "text.secondary",
-                  mt: 0.25,
-                }}
-              >
-                {row.issuer}
-              </Box>
-            </TableCell>
+        <TableHead>
+          <TableRow>
             <TableCell
               sx={{
-                fontFamily: fontFamilyMono,
-                fontSize: 12,
-                color: "text.secondary",
-              }}
-            >
-              {row.total}
-            </TableCell>
-            <TableCell>
-              <Box
-                component="span"
-                sx={{
-                  fontFamily: fontFamilyMono,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  letterSpacing: "0.05em",
-                  px: 1.25,
-                  py: 0.5,
-                  borderRadius: "2px",
-                  bgcolor: "rgba(184,150,62,0.15)",
-                  color: primaryColor,
-                }}
-              >
-                {row.rating}
-              </Box>
-            </TableCell>
-            <TableCell
-              sx={{
-                fontFamily: fontFamilyMono,
+                fontFamily: fontFamilySans,
                 fontSize: 10,
-                letterSpacing: "0.08em",
+                letterSpacing: "0.15em",
                 textTransform: "uppercase",
-                color:
-                  row.outlook === "Stable"
-                    ? "#6aaa6a"
-                    : row.outlook === "Negative"
-                      ? red
-                      : "#e0a030",
+                color: "text.secondary",
+                py: 1.5,
+                px: 2,
               }}
             >
-              {row.outlook}
+              #
             </TableCell>
-            <TableCell>
-              <Box
-                component="span"
-                sx={{
-                  fontFamily: fontFamilyMono,
-                  fontSize: 10,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  px: 1,
-                  py: 0.375,
-                  borderRadius: "2px",
-                  bgcolor:
-                    row.status === "Approved"
-                      ? "rgba(106,170,106,0.12)"
-                      : row.status === "Conditional"
-                        ? "rgba(192,57,43,0.1)"
-                        : row.status === "Monitored"
-                          ? "rgba(224,160,48,0.1)"
-                          : "rgba(192,57,43,0.15)",
-                  color:
-                    row.status === "Approved"
-                      ? "#6aaa6a"
-                      : row.status === "Conditional"
-                        ? "#e07060"
-                        : row.status === "Monitored"
-                          ? "#e0a030"
-                          : red,
-                }}
-              >
-                {row.status}
-              </Box>
+            <TableCell
+              sx={{
+                fontFamily: fontFamilySans,
+                fontSize: 10,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "text.secondary",
+                py: 1.5,
+                px: 2,
+              }}
+            >
+              Model
+            </TableCell>
+            <TableCell
+              sx={{
+                fontFamily: fontFamilySans,
+                fontSize: 10,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "text.secondary",
+                py: 1.5,
+                px: 2,
+              }}
+            >
+              Score
+            </TableCell>
+            <TableCell
+              sx={{
+                fontFamily: fontFamilySans,
+                fontSize: 10,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "text.secondary",
+                py: 1.5,
+                px: 2,
+              }}
+            >
+              Rating
+            </TableCell>
+            <TableCell
+              sx={{
+                fontFamily: fontFamilySans,
+                fontSize: 10,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "text.secondary",
+                py: 1.5,
+                px: 2,
+              }}
+            >
+              Outlook
+            </TableCell>
+            <TableCell
+              sx={{
+                fontFamily: fontFamilySans,
+                fontSize: 10,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "text.secondary",
+                py: 1.5,
+                px: 2,
+              }}
+            >
+              Status
             </TableCell>
           </TableRow>
-        ))}
-      </TableBody>
+        </TableHead>
+        <TableBody>
+          {ratingData.map((row) => (
+            <TableRow
+              key={row.rank}
+              sx={{
+                "& td": {
+                  py: 2.25,
+                  px: 2,
+                  borderBottom: "1px solid",
+                  borderColor: "divider",
+                  verticalAlign: "middle",
+                },
+                "&:hover td": { bgcolor: "rgba(184,150,62,0.03)" },
+              }}
+            >
+              <TableCell
+                sx={{
+                  fontFamily: fontFamilySans,
+                  fontSize: 11,
+                  color: "text.secondary",
+                }}
+              >
+                {row.rank}
+              </TableCell>
+              <TableCell>
+                <Box
+                  sx={{
+                    fontFamily: "inherit",
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "text.primary",
+                  }}
+                >
+                  {row.model}
+                </Box>
+                <Box
+                  sx={{
+                    fontFamily: fontFamilySans,
+                    fontSize: 10,
+                    color: "text.secondary",
+                    mt: 0.25,
+                  }}
+                >
+                  {row.issuer}
+                </Box>
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontFamily: fontFamilySans,
+                  fontSize: 12,
+                  color: "text.secondary",
+                }}
+              >
+                {row.total}
+              </TableCell>
+              <TableCell>
+                <Box
+                  component="span"
+                  sx={{
+                    fontFamily: fontFamilySans,
+                    fontSize: 13,
+                    fontWeight: 500,
+                    letterSpacing: "0.05em",
+                    px: 1.25,
+                    py: 0.5,
+                    bgcolor: "rgba(184,150,62,0.15)",
+                    color: primaryColor,
+                  }}
+                >
+                  {row.rating}
+                </Box>
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontFamily: fontFamilySans,
+                  fontSize: 10,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color:
+                    row.outlook === "Stable"
+                      ? "#6aaa6a"
+                      : row.outlook === "Negative"
+                        ? red
+                        : "#e0a030",
+                }}
+              >
+                {row.outlook}
+              </TableCell>
+              <TableCell>
+                <Box
+                  component="span"
+                  sx={{
+                    fontFamily: fontFamilySans,
+                    fontSize: 10,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    px: 1,
+                    py: 0.375,
+                    bgcolor:
+                      row.status === "Approved"
+                        ? "rgba(106,170,106,0.12)"
+                        : row.status === "Conditional"
+                          ? "rgba(192,57,43,0.1)"
+                          : row.status === "Monitored"
+                            ? "rgba(224,160,48,0.1)"
+                            : "rgba(192,57,43,0.15)",
+                    color:
+                      row.status === "Approved"
+                        ? "#6aaa6a"
+                        : row.status === "Conditional"
+                          ? "#e07060"
+                          : row.status === "Monitored"
+                            ? "#e0a030"
+                            : red,
+                  }}
+                >
+                  {row.status}
+                </Box>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
     </Box>
 
@@ -385,7 +387,7 @@ const RatingsSection = () => (
     >
       <Typography
         sx={{
-          fontFamily: fontFamilyMono,
+          fontFamily: fontFamilySans,
           fontSize: 10,
           letterSpacing: "0.2em",
           textTransform: "uppercase",

@@ -24,6 +24,7 @@ import {
   Toolbar,
 } from "@mui/material";
 import { Fragment, useState } from "react";
+import { alpha, useTheme } from "@mui/material/styles";
 import Logo, { LogoComponentEnum } from "src/components/shared/Logo";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -53,6 +54,7 @@ interface DashboardMenuItem {
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isInstallAppDialogOpen, setIsInstallAppDialogOpen] = useState(false);
   const [openMenuItem, setOpenMenuItem] = useState<string | null>(() => {
@@ -343,6 +345,22 @@ const DashboardLayout = () => {
             width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
             mt: { xs: `${APP_BAR_HEIGHT}px`, md: 0 },
             height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: -1,
+              pointerEvents: "none",
+              backgroundColor: "transparent",
+              backgroundImage: `
+                linear-gradient(${alpha(theme.palette.primary.main, 0.05)} 1px, transparent 1px),
+                linear-gradient(90deg, ${alpha(theme.palette.primary.main, 0.05)} 1px, transparent 1px)
+              `,
+              backgroundSize: "60px 60px",
+            },
           }}
         >
           <Notification />

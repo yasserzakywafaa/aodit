@@ -2,18 +2,18 @@ import {
   fontFamilySans,
   fontFamilySerif,
   grey,
-  primaryColor,
 } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/material/styles";
 
 const SECTION_LABEL_STYLE = {
   fontFamily: fontFamilySans,
   fontSize: 10,
   letterSpacing: "0.2em",
   textTransform: "uppercase" as const,
-  color: primaryColor,
+  color: "primary.main",
   mb: 6,
   display: "flex",
   alignItems: "center",
@@ -84,7 +84,7 @@ const MethodologySection = () => (
       >
         Five sub-factors.
         <br />
-        <Box component="em" sx={{ fontStyle: "italic", color: primaryColor }}>
+          <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
           Equal weight.
         </Box>
         <br />
@@ -130,7 +130,7 @@ const MethodologySection = () => (
               fontFamily: fontFamilySans,
               fontSize: 11,
               letterSpacing: "0.1em",
-              color: primaryColor,
+              color: "primary.main",
               mb: 2,
             }}
           >
@@ -155,7 +155,7 @@ const MethodologySection = () => (
             sx={{
               fontFamily: fontFamilySans,
               fontSize: 20,
-              color: "rgba(184,150,62,0.3)",
+              color: (t) => alpha(t.palette.primary.main, 0.3),
               mt: 2.5,
               fontWeight: 300,
             }}

@@ -1,7 +1,6 @@
 import {
   fontFamilySans,
   fontFamilySerif,
-  primaryColor,
 } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
@@ -12,7 +11,7 @@ const SECTION_LABEL_STYLE = {
   fontSize: 10,
   letterSpacing: "0.2em",
   textTransform: "uppercase" as const,
-  color: primaryColor,
+  color: "primary.main",
   mb: 6,
   display: "flex",
   alignItems: "center",
@@ -72,7 +71,7 @@ const AboutSection = () => (
           }}
         >
           An{" "}
-          <Box component="em" sx={{ fontStyle: "italic", color: primaryColor }}>
+          <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
             independent
           </Box>
           <br />
@@ -148,7 +147,7 @@ const AboutSection = () => (
                   fontFamily: fontFamilySerif,
                   fontSize: 48,
                   fontWeight: 300,
-                  color: primaryColor,
+                  color: "primary.main",
                   lineHeight: 1,
                   mb: 1,
                 }}
@@ -209,7 +208,7 @@ const AboutSection = () => (
                   sx={{
                     fontFamily: fontFamilySans,
                     fontSize: 10,
-                    color: c.active ? primaryColor : "text.secondary",
+                    color: c.active ? "primary.main" : "text.secondary",
                   }}
                 >
                   {c.status}

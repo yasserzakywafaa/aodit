@@ -7,9 +7,8 @@ import {
   fontFamilySans,
   fontFamilySerif,
   grey,
-  primaryColor,
-  primaryColorOpaqueTen,
 } from "src/application/shared/themes";
+import { alpha } from "@mui/material/styles";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -104,10 +103,10 @@ const SubscribeSection = ({
         borderColor: "rgba(184, 150, 62, 0.65)",
       },
       "&.Mui-focused": {
-        borderColor: primaryColor,
+        borderColor: "primary.main",
         borderWidth: "1.5px",
         "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: primaryColor,
+          borderColor: "primary.main",
           borderWidth: "1.5px",
         },
       },
@@ -135,7 +134,7 @@ const SubscribeSection = ({
           borderTop: "1px solid",
           borderBottom: "1px solid",
           borderColor: "divider",
-          bgcolor: primaryColorOpaqueTen,
+          bgcolor: (t) => alpha(t.palette.primary.main, 0.1),
         }}
       >
         <Box
@@ -153,7 +152,7 @@ const SubscribeSection = ({
             sx={{
               fontFamily: fontFamilySans,
               textTransform: "uppercase",
-              color: primaryColor,
+              color: "primary.main",
             }}
           >
             Stay informed
@@ -207,29 +206,29 @@ const SubscribeSection = ({
           py: { xs: 4, md: 6 },
           border: `1px solid ${border}`,
           borderLeft: "4px solid",
-          borderLeftColor: primaryColor,
+          borderLeftColor: "primary.main",
           bgcolor:
             theme.palette.mode === "dark"
               ? "rgba(255,255,255,0.02)"
               : "rgba(0,0,0,0.02)",
         })}
       >
-        <Typography
-          sx={{
-            fontFamily: fontFamilySans,
-            textTransform: "uppercase",
-            color: primaryColor,
-            mb: 3,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2,
-          }}
-        >
-          <Box
-            component="span"
-            sx={{ width: 24, height: 1, bgcolor: primaryColor }}
-          />
+          <Typography
+            sx={{
+              fontFamily: fontFamilySans,
+              textTransform: "uppercase",
+              color: "primary.main",
+              mb: 3,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 2,
+            }}
+          >
+            <Box
+              component="span"
+              sx={{ width: 24, height: 1, bgcolor: "primary.main" }}
+            />
           Stay Informed
         </Typography>
 
@@ -248,7 +247,7 @@ const SubscribeSection = ({
           }}
         >
           Receive{" "}
-          <Box component="em" sx={{ fontStyle: "italic", color: primaryColor }}>
+          <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
             ratings
           </Box>{" "}
           when they publish

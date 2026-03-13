@@ -14,7 +14,6 @@ import { Notify } from "./Notification/Notification";
 import ProfileAvatar from "./ProfileAvatar";
 import { User } from "src/shared/types/user";
 import axios from "axios";
-import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
@@ -83,10 +82,10 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const buttonHoverStylePrimary = {
     "&:hover": {
       "& .MuiTypography-root": {
-        color: primaryColor,
+        color: "primary.main",
       },
       "& .MuiSvgIcon-root": {
-        color: primaryColor,
+        color: "primary.main",
       },
     },
   };
@@ -119,7 +118,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
             whiteSpace: "nowrap",
             textOverflow: "ellipsis",
             "&.MuiTypography-root:hover": {
-              color: primaryColor,
+              color: "primary.main",
             },
           }}
           marginLeft={1}

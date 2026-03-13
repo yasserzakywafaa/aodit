@@ -1,6 +1,7 @@
 const APP_CONSTANTS = {
   DESIGN: {
     LOCAL_STORAGE_APP_THEME: "appTheme",
+    LOCAL_STORAGE_APP_PRIMARY_COLOR: "appPrimaryColor",
   },
   // Variables
   DEV_CLIENT_PORT: process.env.REACT_APP_PORT,

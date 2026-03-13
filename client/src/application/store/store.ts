@@ -3,13 +3,14 @@ import {
   Authentication,
   TrackingInfo,
   getApplicationInitialState,
+  getPrimaryColorPreference,
   getThemePreference,
 } from "./state";
 import { black, white } from "../shared/themes";
 
 import APP_CONSTANTS from "../shared/app_constants";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface ApplicationStore {
   state: ApplicationInitialState;
@@ -20,12 +21,20 @@ export interface ApplicationStore {
   handleIsFetchingUserInfo: (isFetchingUserInfo: boolean) => void;
   toggleThemeMode: () => void;
   updateAuthInfo: (authInfo?: Authentication) => void;
+  /** Update the MUI primary accent color and persist it to localStorage. */
+  setThemePrimaryColor: (color: string) => void;
 }
 
 const useApplicationStore = (): ApplicationStore => {
   const [state, setState] = useState<ApplicationInitialState>(
     getApplicationInitialState()
   );
+
+  // Apply stored primary color CSS variable on mount
+  useEffect(() => {
+    const stored = getPrimaryColorPreference();
+    document.documentElement.style.setProperty("--aodit-primary", stored);
+  }, []);
 
   const updateState = (newState: ApplicationInitialState) => {
     setState(newState);
@@ -75,6 +84,19 @@ const useApplicationStore = (): ApplicationStore => {
         document.body.classList.add(APP_CONSTANTS.APP_THEME_CLASS.DARK);
         break;
     }
+  };
+
+  const applyPrimaryColorToDOM = (color: string) => {
+    document.documentElement.style.setProperty("--aodit-primary", color);
+  };
+
+  const setThemePrimaryColor = (color: string) => {
+    setState((prev) => ({ ...prev, themePrimaryColor: color }));
+    localStorage.setItem(
+      APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_PRIMARY_COLOR,
+      color,
+    );
+    applyPrimaryColorToDOM(color);
   };
 
   const toggleThemeMode = () => {
@@ -174,6 +196,7 @@ const useApplicationStore = (): ApplicationStore => {
     handleIsFetchingUserInfo,
     toggleThemeMode,
     updateAuthInfo,
+    setThemePrimaryColor,
   };
 };
 

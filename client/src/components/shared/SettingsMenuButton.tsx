@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Box, ListItemIcon, Typography } from "@mui/material";
+import { Box, Divider, ListItemIcon, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import {
   InstallMobileOutlined,
@@ -12,9 +12,10 @@ import {
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { primaryColor } from "src/application/shared/themes";
+import ThemeColorPicker from "./ThemeColorPicker/ThemeColorPicker";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
+import { useTheme } from "@mui/material/styles";
 
 export interface SettingsMenuButtonProps {
   children?: JSX.Element;
@@ -29,6 +30,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
     manager: { handleToggleThemeMode },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
+  const muiTheme = useTheme();
   const [element, setElement] = React.useState<null | HTMLElement>(null);
 
   const isOpen = Boolean(element);
@@ -47,14 +49,12 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
     window.location.reload();
   };
 
+  const accentColor = muiTheme.palette.primary.main;
+
   const buttonHoverStylePrimary = {
     "&:hover": {
-      "& .MuiTypography-root": {
-        color: primaryColor,
-      },
-      "& .MuiSvgIcon-root": {
-        color: primaryColor,
-      },
+      "& .MuiTypography-root": { color: accentColor },
+      "& .MuiSvgIcon-root": { color: accentColor },
     },
   };
 
@@ -110,6 +110,13 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
 
           <Typography variant="body1">Theme</Typography>
         </MenuItem>
+
+        <Divider sx={{ my: 0.5, opacity: 0.4 }} />
+
+        {/* Accent color picker — no close-on-click so the user can browse colors */}
+        <ThemeColorPicker />
+
+        <Divider sx={{ my: 0.5, opacity: 0.4 }} />
 
         {!isInStandaloneMode && (
           <MenuItem

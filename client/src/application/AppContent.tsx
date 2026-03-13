@@ -1,15 +1,15 @@
 import "./App.scss";
 
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { darkTheme, lightTheme } from "./shared/themes";
-import { lazy, useEffect } from "react";
+import { buildDynamicThemes } from "./shared/themes";
+import { lazy, useMemo, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import CustomCursor from "src/components/shared/CustomCursor/CustomCursor";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
 import NotFoundPage from "../Pages/NotFound/NotFound";
-import { ThemeProvider } from "@emotion/react";
 import { getApplicationInitialState } from "./store/state";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { removeLocalStorageAuthItems } from "src/shared/utils/localstorage";
@@ -98,6 +98,11 @@ const AppContent = () => {
   useEffect(() => {
     handleInitialAuthentication();
   }, []);
+
+  const { light: lightTheme, dark: darkTheme } = useMemo(
+    () => buildDynamicThemes(state.themePrimaryColor),
+    [state.themePrimaryColor],
+  );
 
   return (
     <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>

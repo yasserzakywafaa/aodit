@@ -15,6 +15,8 @@ import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
 export interface ApplicationManager {
   handleIsFetching: (isFetching: boolean) => void;
   handleToggleThemeMode: () => void;
+  /** Change the primary accent color of the MUI theme instantly. */
+  handleSetPrimaryColor: (color: string) => void;
   handleSetAuthInfo: (authInfo: Authentication) => void;
   handleFetchUserInfo: (userId: string) => Promise<User | null>;
   handleInitialAuthentication: () => Promise<void>;
@@ -41,6 +43,10 @@ export const useApplicationManager = (
         },
       });
     }
+  };
+
+  const handleSetPrimaryColor = (color: string) => {
+    store.setThemePrimaryColor(color);
   };
 
   const handleSetAuthInfo = (authInfo: Authentication) => {
@@ -165,6 +171,7 @@ export const useApplicationManager = (
   return {
     handleIsFetching,
     handleToggleThemeMode,
+    handleSetPrimaryColor,
     handleSetAuthInfo,
     handleFetchUserInfo,
     handleInitialAuthentication,

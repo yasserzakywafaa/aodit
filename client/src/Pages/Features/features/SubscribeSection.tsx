@@ -3,18 +3,18 @@ import {
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
 import {
-  border,
   fontFamilySans,
   fontFamilySerif,
   grey,
+  primaryColor,
 } from "src/application/shared/themes";
-import { alpha } from "@mui/material/styles";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import END_POINTS from "src/application/shared/endpoints";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/material/styles";
 import axios from "axios";
 import { useState } from "react";
 
@@ -91,25 +91,10 @@ const SubscribeSection = ({
       fontSize: 12,
       minHeight: inputHeight,
       height: inputHeight,
-      bgcolor: (theme: { palette: { mode: string } }) =>
-        theme.palette.mode === "dark"
-          ? "rgba(255,255,255,0.05)"
-          : "rgba(0,0,0,0.04)",
       border: "1px solid",
-      borderColor: "rgba(184, 150, 62, 0.4)",
+      borderColor: primaryColor,
       borderRight: "none",
       color: "text.primary",
-      "&:hover": {
-        borderColor: "rgba(184, 150, 62, 0.65)",
-      },
-      "&.Mui-focused": {
-        borderColor: "primary.main",
-        borderWidth: "1.5px",
-        "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: "primary.main",
-          borderWidth: "1.5px",
-        },
-      },
       "& fieldset": { border: "none" },
     },
     "& .MuiInputBase-input": {
@@ -198,37 +183,33 @@ const SubscribeSection = ({
       }}
     >
       <Box
-        sx={(theme) => ({
+        sx={{
           maxWidth: 640,
           mx: "auto",
           textAlign: "center",
           px: { xs: 3, md: 5 },
           py: { xs: 4, md: 6 },
-          border: `1px solid ${border}`,
+          border: `1px solid ${primaryColor}`,
           borderLeft: "4px solid",
           borderLeftColor: "primary.main",
-          bgcolor:
-            theme.palette.mode === "dark"
-              ? "rgba(255,255,255,0.02)"
-              : "rgba(0,0,0,0.02)",
-        })}
+        }}
       >
-          <Typography
-            sx={{
-              fontFamily: fontFamilySans,
-              textTransform: "uppercase",
-              color: "primary.main",
-              mb: 3,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 2,
-            }}
-          >
-            <Box
-              component="span"
-              sx={{ width: 24, height: 1, bgcolor: "primary.main" }}
-            />
+        <Typography
+          sx={{
+            fontFamily: fontFamilySans,
+            textTransform: "uppercase",
+            color: "primary.main",
+            mb: 3,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 2,
+          }}
+        >
+          <Box
+            component="span"
+            sx={{ width: 24, height: 1, bgcolor: "primary.main" }}
+          />
           Stay Informed
         </Typography>
 
@@ -247,7 +228,10 @@ const SubscribeSection = ({
           }}
         >
           Receive{" "}
-          <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
+          <Box
+            component="em"
+            sx={{ fontStyle: "italic", color: "primary.main" }}
+          >
             ratings
           </Box>{" "}
           when they publish

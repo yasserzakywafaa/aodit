@@ -1,7 +1,4 @@
-import {
-  fontFamilySans,
-  fontFamilySerif,
-} from "src/application/shared/themes";
+import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -20,7 +17,7 @@ const SECTION_LABEL_STYLE = {
 
 const stats = [
   { num: "6", label: "Models Rated" },
-  { num: "7", label: "Adversarial Turns" },
+  { num: "8", label: "Adversarial Turns" },
   { num: "4", label: "Attack Vectors" },
   { num: "5", label: "Rating Dimensions" },
 ];
@@ -71,7 +68,10 @@ const AboutSection = () => (
           }}
         >
           An{" "}
-          <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
+          <Box
+            component="em"
+            sx={{ fontStyle: "italic", color: "primary.main" }}
+          >
             independent
           </Box>
           <br />

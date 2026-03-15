@@ -84,7 +84,7 @@ const MethodologySection = () => (
       >
         Five sub-factors.
         <br />
-          <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
+        <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
           Equal weight.
         </Box>
         <br />
@@ -117,12 +117,6 @@ const MethodologySection = () => (
           sx={{
             bgcolor: "background.default",
             p: { xs: 2, md: 3 },
-            "&:hover": {
-              bgcolor: (theme) =>
-                theme.palette.mode === "dark"
-                  ? "rgba(255,255,255,0.03)"
-                  : "rgba(0,0,0,0.02)",
-            },
           }}
         >
           <Typography

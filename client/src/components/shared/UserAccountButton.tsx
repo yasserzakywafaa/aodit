@@ -112,6 +112,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
         <Typography
           variant="body1"
+          color="text.primary"
           sx={{
             maxWidth: "100px",
             overflowX: "hidden",
@@ -143,11 +144,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
           onClick={handleOnProfileClick}
         >
           <ListItemIcon>
-            <PersonOutlined
-              fontSize="medium"
-              color="secondary"
-              sx={{ mr: 1 }}
-            />
+            <PersonOutlined fontSize="medium" color="primary" sx={{ mr: 1 }} />
           </ListItemIcon>
           <Typography variant="body1" color="text.primary">
             Profile
@@ -165,7 +162,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
               <ListItemIcon>
                 <DashboardIcon
                   fontSize="medium"
-                  color="secondary"
+                  color="primary"
                   sx={{ mr: 1 }}
                 />
               </ListItemIcon>

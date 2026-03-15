@@ -2,7 +2,6 @@ import { Theme, createTheme } from "@mui/material/styles";
 
 export const white = "#f8f8f8";
 export const black = "#0A0A0A";
-export const cream = "#EDE9E1";
 export const grey = "#6B6B6B";
 export const lightGrey = "#D4D0C8";
 export const red = "#C0392B";
@@ -59,7 +58,9 @@ export const dataGridStyle = (theme: Theme): object => ({
 
 export const theme = createTheme({
   palette: {
-    primary: { main: primaryColor },
+    primary: {
+      main: primaryColor,
+    },
     secondary: { main: white },
     error: { main: red },
   },
@@ -132,6 +133,15 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            borderRadius,
+          },
+        },
+      },
+    },
   },
 });
 
@@ -141,9 +151,9 @@ export const lightTheme = createTheme({
     mode: "light",
     primary: { main: primaryColor },
     secondary: { main: white },
-    background: { default: white, paper: cream },
+    background: { default: white },
     text: { primary: black, secondary: "#000000" },
-    divider: border,
+    divider: primaryColor,
   },
 });
 
@@ -153,8 +163,8 @@ export const darkTheme = createTheme({
     mode: "dark",
     primary: { main: primaryColor },
     secondary: { main: white },
-    background: { default: black, paper: "#171616" },
+    background: { default: black },
     text: { primary: white, secondary: "#ffffff" },
-    divider: border,
+    divider: primaryColor,
   },
 });

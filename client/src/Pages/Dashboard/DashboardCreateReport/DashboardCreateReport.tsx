@@ -9,7 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 
-import { fontFamilySans, fontFamilySerif, primaryColorFaint } from "src/application/shared/themes";
+import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+import { alpha } from "@mui/material/styles";
 import { routes } from "src/application/routes";
 import { useDashboardCreateReportContext } from "./store/Provider";
 import { useNavigate } from "react-router-dom";
@@ -143,7 +144,7 @@ const DashboardCreateReport = () => {
                 mt: 3,
                 py: 2,
                 px: 2,
-                bgcolor: primaryColorFaint,
+                bgcolor: (t) => alpha(t.palette.primary.main, 0.06),
                 borderLeft: 3,
                 borderColor: "primary.main",
               }}

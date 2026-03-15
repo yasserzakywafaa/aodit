@@ -2,7 +2,6 @@ import { Breadcrumbs, Link, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
-import { primaryColor } from "src/application/shared/themes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDashboardReportContext } from "src/Pages/Dashboard/DashboardReport/store/Provider";
 import { useDashboardUserContext } from "src/Pages/Dashboard/Admin/DashboardAdminUser/store/Provider";
@@ -136,10 +135,10 @@ const DashboardBreadcrumbs = () => {
             underline="hover"
             color="inherit"
             onClick={(e) => handleClick(e, crumb.path)}
-            sx={{
+              sx={{
               cursor: "pointer",
               "&:hover": {
-                color: primaryColor,
+                color: "primary.main",
               },
             }}
           >

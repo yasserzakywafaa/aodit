@@ -1,20 +1,20 @@
 import {
   fontFamilySans,
   fontFamilySerif,
-  primaryColor,
 } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 import { scrollToSection } from "src/shared/utils/scrollTo";
-import { useTheme } from "@mui/material/styles";
 
 const Hero = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const gridOpacity = isDark ? 0.09 : 0.04;
+  const accent = theme.palette.primary.main;
 
   return (
     <Box
@@ -42,8 +42,8 @@ const Hero = () => {
           pointerEvents: "none",
           backgroundColor: "transparent",
           backgroundImage: `
-            linear-gradient(rgba(200, 150, 12, ${gridOpacity}) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(200, 150, 12, ${gridOpacity}) 1px, transparent 1px)
+            linear-gradient(${alpha(accent, gridOpacity)} 1px, transparent 1px),
+            linear-gradient(90deg, ${alpha(accent, gridOpacity)} 1px, transparent 1px)
           `,
           backgroundSize: "80px 80px",
         }}
@@ -57,7 +57,7 @@ const Hero = () => {
             fontSize: 10,
             letterSpacing: "0.25em",
             textTransform: "uppercase",
-            color: primaryColor,
+            color: "primary.main",
             mb: 3.5,
           }}
         >
@@ -88,7 +88,7 @@ const Hero = () => {
           <Box
             component="span"
             sx={{
-              color: primaryColor,
+              color: "primary.main",
               position: "relative",
               display: "inline-block",
               "&::after": {
@@ -98,7 +98,7 @@ const Hero = () => {
                 left: 0,
                 right: 0,
                 height: "3px",
-                background: primaryColor,
+                background: "primary.main",
                 transform: "scaleX(1)",
               },
             }}
@@ -112,7 +112,6 @@ const Hero = () => {
           sx={{
             maxWidth: 560,
             fontSize: 16,
-            // color: "rgba(242,237,228,0.6)",
             lineHeight: 1.8,
             mb: 6,
           }}

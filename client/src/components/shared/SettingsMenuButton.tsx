@@ -12,9 +12,9 @@ import {
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { primaryColor } from "src/application/shared/themes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
+import { useTheme } from "@mui/material/styles";
 
 export interface SettingsMenuButtonProps {
   children?: JSX.Element;
@@ -29,6 +29,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
     manager: { handleToggleThemeMode },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
+  const muiTheme = useTheme();
   const [element, setElement] = React.useState<null | HTMLElement>(null);
 
   const isOpen = Boolean(element);
@@ -47,14 +48,12 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
     window.location.reload();
   };
 
+  const accentColor = muiTheme.palette.primary.main;
+
   const buttonHoverStylePrimary = {
     "&:hover": {
-      "& .MuiTypography-root": {
-        color: primaryColor,
-      },
-      "& .MuiSvgIcon-root": {
-        color: primaryColor,
-      },
+      "& .MuiTypography-root": { color: accentColor },
+      "& .MuiSvgIcon-root": { color: accentColor },
     },
   };
 

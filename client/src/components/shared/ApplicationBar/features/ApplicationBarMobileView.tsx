@@ -19,7 +19,6 @@ import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
-import { primaryColor } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
@@ -98,7 +97,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   className="menu-item"
                   onClick={handleOnMenuItemClick("reports")}
                 >
-                  <Typography variant="body1" color={primaryColor}>
+                  <Typography variant="body1" color="primary">
                     Reports
                   </Typography>
                 </MenuItem>
@@ -120,7 +119,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   className="menu-item"
                   onClick={handleOnMenuItemClick("contact")}
                 >
-                  <Typography variant="body1" color={primaryColor}>
+                  <Typography variant="body1" color="primary">
                     Get your agent rated
                   </Typography>
                 </MenuItem>

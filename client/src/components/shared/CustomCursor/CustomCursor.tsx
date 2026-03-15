@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-
-import { primaryColor } from "src/application/shared/themes";
+import { useTheme } from "@mui/material/styles";
 
 const CURSOR_SIZE = 8;
 const RING_SIZE = 32;
@@ -22,6 +21,21 @@ const CustomCursor = () => {
   const rx = useRef(0);
   const ry = useRef(0);
 
+  const theme = useTheme();
+  const accentColor = theme.palette.primary.main;
+
+  // Keep a mutable ref so the event-handler closure always reads the latest color
+  const accentRef = useRef(accentColor);
+  useEffect(() => {
+    accentRef.current = accentColor;
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (dot && ring) {
+      dot.style.background = accentColor;
+      ring.style.borderColor = accentColor;
+    }
+  }, [accentColor]);
+
   useEffect(() => {
     const dot = dotRef.current;
     const ring = ringRef.current;
@@ -41,9 +55,9 @@ const CustomCursor = () => {
         ring.style.borderColor = "#fff";
         ring.style.mixBlendMode = "difference";
       } else {
-        dot.style.background = primaryColor;
+        dot.style.background = accentRef.current;
         dot.style.mixBlendMode = "unset";
-        ring.style.borderColor = primaryColor;
+        ring.style.borderColor = accentRef.current;
         ring.style.mixBlendMode = "unset";
       }
     };
@@ -105,7 +119,7 @@ const CustomCursor = () => {
         style={{
           width: CURSOR_SIZE,
           height: CURSOR_SIZE,
-          background: primaryColor,
+          background: accentColor,
           position: "fixed",
           pointerEvents: "none",
           zIndex: 9999,
@@ -119,7 +133,7 @@ const CustomCursor = () => {
         style={{
           width: RING_SIZE,
           height: RING_SIZE,
-          border: `1px solid ${primaryColor}`,
+          border: `1px solid ${accentColor}`,
           position: "fixed",
           pointerEvents: "none",
           zIndex: 9998,

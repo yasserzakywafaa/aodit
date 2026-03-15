@@ -1,19 +1,17 @@
 import {
   fontFamilySans,
   fontFamilySerif,
-  primaryColor,
-  primaryColorDim,
-  primaryColorFaint,
 } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/material/styles";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 
 const SECTION_EYEBROW_STYLE = {
   fontSize: 9,
   letterSpacing: "0.25em",
-  color: primaryColor,
+  color: "primary.main",
   mb: 2,
   fontFamily: fontFamilySans,
 };
@@ -139,8 +137,9 @@ const ReportsSection = () => {
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
           gap: "1px",
-          bgcolor: primaryColorDim,
-          border: `1px solid ${primaryColorDim}`,
+          bgcolor: (t) => alpha(t.palette.primary.main, 0.2),
+          border: "1px solid",
+          borderColor: (t) => alpha(t.palette.primary.main, 0.2),
         }}
       >
         {reportCards.map((card) => (
@@ -162,13 +161,13 @@ const ReportsSection = () => {
                 left: 0,
                 right: 0,
                 height: 2,
-                bgcolor: primaryColor,
+                bgcolor: "primary.main",
                 transform: "scaleX(0)",
                 transformOrigin: "left",
                 transition: "transform 0.4s ease",
               },
               "&:hover": {
-                bgcolor: primaryColorFaint,
+                bgcolor: (t) => alpha(t.palette.primary.main, 0.06),
                 "&::after": { transform: "scaleX(1)" },
                 "& .card-cta-arrow": { transform: "translateX(4px)" },
               },
@@ -252,7 +251,7 @@ const ReportsSection = () => {
                         top: 0,
                         height: "100%",
                         width: `${w.fill}%`,
-                        bgcolor: primaryColor,
+                        bgcolor: "primary.main",
                       }}
                     />
                   </Box>
@@ -260,7 +259,7 @@ const ReportsSection = () => {
                     sx={{
                       fontSize: 8,
                       letterSpacing: "0.1em",
-                      color: primaryColor,
+                      color: "primary.main",
                       width: 28,
                       textAlign: "right",
                       fontFamily: fontFamilySans,
@@ -276,7 +275,7 @@ const ReportsSection = () => {
               sx={{
                 fontSize: 10,
                 letterSpacing: "0.2em",
-                color: primaryColor,
+                color: "primary.main",
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
@@ -297,7 +296,8 @@ const ReportsSection = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            border: `1px dashed ${primaryColorDim}`,
+            border: "1px dashed",
+            borderColor: (t) => alpha(t.palette.primary.main, 0.2),
             minHeight: 300,
             bgcolor: "background.default",
             opacity: 0.5,

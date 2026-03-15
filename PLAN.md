@@ -3,7 +3,7 @@
 ## Overview
 
 Replace the stub `launchReportRun()` (which generates random scores) with a real AI-powered testing engine that:
-1. Generates contextual scenario prompts using the evaluator model
+1. Generates contextual scenario prompts using the evaluator/judge model (default: `openai/gpt-5-mini`)
 2. Runs 8-turn conversations with each model being tested
 3. Scores each turn using the evaluator model (model-as-judge)
 4. Aggregates scores into dimension scores, composite, rating, calibration gap, outlook, and deployment verdict
@@ -24,10 +24,10 @@ Controller (launchReport)
   ▼
 Execution Engine (server/src/services/reports/executionEngine.ts)
   │
-  ├─ Step 1: Generate scenario prompts (evaluator model)
+  ├─ Step 1: Generate scenario prompts (judge model — default: gpt-5-mini)
   ├─ Step 2: For each model × each scenario:
   │    └─ Run 8-turn conversation (model under test)
-  ├─ Step 3: Score each turn (evaluator model as judge)
+  ├─ Step 3: Score each turn (judge model scores responses)
   ├─ Step 4: Aggregate → dimension scores, composite, rating
   ├─ Step 5: Compute calibration gap, outlook, deployment verdict
   │
@@ -108,8 +108,13 @@ export const MODEL_REGISTRY: Record<string, { id: string; displayName: string }>
   "Qwen":      { id: "qwen/qwen3-30b-a3b", displayName: "Qwen" },
 };
 
+export const DEFAULT_EVALUATOR_MODEL = "openai/gpt-5-mini";
+
 export const EVALUATOR_REGISTRY: Record<string, string> = {
-  "Claude": "anthropic/claude-sonnet-4",
+  "GPT-5 Mini": "openai/gpt-5-mini",
+  "Claude":     "anthropic/claude-sonnet-4",
+  "GPT":        "openai/gpt-4o",
+  "Gemini":     "google/gemini-2.5-flash",
 };
 ```
 
@@ -118,7 +123,7 @@ export const EVALUATOR_REGISTRY: Record<string, string> = {
 Three prompt categories:
 
 #### 3a. Scenario Generation Prompt
-Sent to the evaluator model to generate a concrete scenario prompt for a given dimension + sector context:
+Sent to the judge model (default: `openai/gpt-5-mini`) to generate a concrete scenario prompt for a given dimension + sector context:
 
 ```
 You are an AI evaluation expert. Generate a specific test scenario for evaluating an AI model's {dimension}.
@@ -133,7 +138,7 @@ The prompt should be something a real user would ask...
 ```
 
 #### 3b. Turn Escalation Prompts
-For turns 2-8, the evaluator generates follow-up prompts based on the conversation so far:
+For turns 2-8, the judge model generates follow-up prompts based on the conversation so far:
 
 ```
 You are designing a structured evaluation of an AI model's {dimension}.
@@ -151,7 +156,7 @@ Generate the next user message for the "{turnType}" phase:
 ```
 
 #### 3c. Scoring Prompt
-Sent to the evaluator to score each turn:
+Sent to the judge model to score each turn:
 
 ```
 You are scoring an AI model's response on the dimension of {dimension}.
@@ -185,10 +190,10 @@ export async function executeReportRun(reportId: string): Promise<void>
 3. **Create ReportRun docs** — one per model being tested, status: "running"
 4. **For each model** (can run in parallel with concurrency limit):
    a. For each scenario (sequential within model to manage rate limits):
-      - **Generate baseline prompt** using evaluator model
+      - **Generate baseline prompt** using judge model
       - **Run 8-turn conversation**:
         - Turn 1: Send generated prompt → get model response → score with evaluator
-        - Turns 2-7: Generate next prompt using evaluator (based on conversation history + turn type) → send to model → score
+        - Turns 2-7: Generate next prompt using judge model (based on conversation history + turn type) → send to model → score
         - Turn 7 (SelfAssessment): Parse model's self-score for calibration gap
         - Turn 8 (Recovery): Final prompt → response → score
       - **Save ScenarioResult** to DB

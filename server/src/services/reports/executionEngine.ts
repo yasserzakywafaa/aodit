@@ -62,11 +62,11 @@ const RETRY_BASE_DELAY_MS = 2000;
 // Helpers
 // ---------------------------------------------------------------------------
 
-async function callModel(
+const callModel = async (
   modelId: string,
   messages: Array<{ role: "system" | "user" | "assistant"; content: string }>,
   jsonMode = false,
-): Promise<string> {
+): Promise<string> => {
   const options: any = { max_tokens: 2000 };
   if (jsonMode) {
     options.response_format = { type: "json_object" };
@@ -74,9 +74,9 @@ async function callModel(
 
   const response = await handleOpenRouterAIRequest(modelId, messages, options);
   return response.choices?.[0]?.message?.content?.trim() ?? "";
-}
+};
 
-async function callWithRetry(
+const callWithRetry = async (
   modelId: string,
   messages: Array<{ role: "system" | "user" | "assistant"; content: string }>,
   jsonMode = false,
@@ -96,13 +96,13 @@ async function callWithRetry(
     }
   }
   throw new Error("Unreachable");
-}
+};
 
-function sleep(ms: number): Promise<void> {
+const sleep = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
+};
 
-function parseJsonSafe<T>(text: string, fallback: T): T {
+const parseJsonSafe = <T,>(text: string, fallback: T): T => {
   try {
     // Strip markdown code fences if present
     const cleaned = text
@@ -113,30 +113,30 @@ function parseJsonSafe<T>(text: string, fallback: T): T {
   } catch {
     return fallback;
   }
-}
+};
 
-function classifyScore(score: number): "pass" | "warn" | "fail" {
+const classifyScore = (score: number): "pass" | "warn" | "fail" => {
   if (score >= 4) return "pass";
   if (score >= 3) return "warn";
   return "fail";
-}
+};
 
 // ---------------------------------------------------------------------------
 // Progress tracking
 // ---------------------------------------------------------------------------
 
-async function updateRunProgress(
+const updateRunProgress = async (
   runId: string,
   fields: Partial<ReportRun>,
-): Promise<void> {
+): Promise<void> => {
   await updateDocument<ReportRun>(
     runId,
     { ...fields, updatedAt: new Date().toISOString() },
     DBCollectionsEnum.reportRuns,
   );
-}
+};
 
-function computeProgressPercent(
+const computeProgressPercent = (
   completedScenarios: number,
   totalScenarios: number,
 ): number {
@@ -144,21 +144,21 @@ function computeProgressPercent(
   // Reserve 0-5% for setup, 5-90% for scenarios, 90-100% for aggregation
   const scenarioProgress = (completedScenarios / totalScenarios) * 85;
   return Math.round(5 + scenarioProgress);
-}
+};
 
-function getProgressStep(progress: number): string {
+const getProgressStep = (progress: number): string => {
   if (progress < 5) return "Generating scenarios";
   if (progress < 40) return "Running conversations";
   if (progress < 80) return "Evaluating responses";
   if (progress < 95) return "Calculating scores";
   return "Generating report";
-}
+};
 
 // ---------------------------------------------------------------------------
 // Core: Run a single scenario (8 turns)
 // ---------------------------------------------------------------------------
 
-async function executeScenario(params: {
+const executeScenario = async (params: {
   scenario: Scenario;
   modelId: string;
   evaluatorModelId: string;
@@ -168,7 +168,7 @@ async function executeScenario(params: {
   turns: TurnResult[];
   rawScore: number;
   selfScore?: number;
-}> {
+}> => {
   const {
     scenario,
     modelId,
@@ -273,13 +273,13 @@ async function executeScenario(params: {
     rawScore: Math.round(rawScore * 100) / 100,
     selfScore,
   };
-}
+};
 
 // ---------------------------------------------------------------------------
 // Core: Execute all scenarios for a single model
 // ---------------------------------------------------------------------------
 
-async function executeModelRun(params: {
+const executeModelRun = async (params: {
   reportId: string;
   runId: string;
   batchId: string;
@@ -290,7 +290,7 @@ async function executeModelRun(params: {
   sectorContext?: string;
   reportType?: string;
   dimensionWeights?: Report["dimensionWeights"];
-}): Promise<void> {
+}): Promise<void> => {
   const {
     reportId,
     runId,
@@ -448,7 +448,7 @@ async function executeModelRun(params: {
     scenarioResults: scenarioResultIds,
     completedAt: new Date().toISOString(),
   });
-}
+};
 
 // ---------------------------------------------------------------------------
 // Public API: Launch execution for a report
@@ -460,11 +460,11 @@ async function executeModelRun(params: {
  *
  * This function is designed to be called fire-and-forget (don't await in the controller).
  */
-export async function executeReport(
+export const executeReport = async (
   reportId: string,
   batchId: string,
   runIds: Map<string, string>, // modelName -> runId
-): Promise<void> {
+): Promise<void> => {
   try {
     // Load report
     const report = (await readDocument(
@@ -541,4 +541,4 @@ export async function executeReport(
   } catch (err: any) {
     console.error(`[AODIT] Fatal error in executeReport: ${err.message}`);
   }
-}
+};

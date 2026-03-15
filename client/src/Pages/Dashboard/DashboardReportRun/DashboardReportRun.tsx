@@ -22,14 +22,14 @@ const PIPELINE_STEPS = [
 
 const POLL_INTERVAL_MS = 3000;
 
-function stepIndexFromName(stepName: string): number {
+const stepIndexFromName = (stepName: string): number => {
   const idx = PIPELINE_STEPS.findIndex(
     (s) => s.toLowerCase() === stepName.toLowerCase(),
   );
   return idx >= 0 ? idx : 0;
-}
+};
 
-export default function DashboardReportRun() {
+const DashboardReportRun = () => {
   const { reportId } = useParams<{ reportId: string }>();
   const navigate = useNavigate();
   const [report, setReport] = useState<Report | null>(null);
@@ -255,4 +255,6 @@ export default function DashboardReportRun() {
       </Paper>
     </Box>
   );
-}
+};
+
+export default DashboardReportRun;

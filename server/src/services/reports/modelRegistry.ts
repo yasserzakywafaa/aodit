@@ -31,7 +31,7 @@ export const EVALUATOR_REGISTRY: Record<string, string> = {
 };
 
 /** Resolve a friendly model name to its OpenRouter model ID for testing. */
-export function resolveModelId(friendlyName: string): string {
+export const resolveModelId = (friendlyName: string): string => {
   const entry = MODEL_REGISTRY[friendlyName];
   if (!entry) {
     throw new Error(
@@ -39,15 +39,15 @@ export function resolveModelId(friendlyName: string): string {
     );
   }
   return entry.id;
-}
+};
 
 /** Resolve the evaluator model ID from report config, falling back to default. */
-export function resolveEvaluatorModelId(
+export const resolveEvaluatorModelId = (
   modelsToEvaluate?: string[],
-): string {
+): string => {
   if (!modelsToEvaluate || modelsToEvaluate.length === 0) {
     return DEFAULT_EVALUATOR_MODEL;
   }
   const name = modelsToEvaluate[0];
   return EVALUATOR_REGISTRY[name] ?? DEFAULT_EVALUATOR_MODEL;
-}
+};

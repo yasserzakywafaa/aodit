@@ -8,7 +8,6 @@ import React, { useState } from "react";
 
 import { Phone } from "@mui/icons-material";
 import PhoneOtpAuthForm from "src/components/shared/Auth/PhoneOtpAuthForm";
-import { primaryColor } from "src/application/shared/themes";
 
 interface PhoneAuthProps {
   authType?: "login" | "register";
@@ -74,7 +73,7 @@ const PhoneAuth: React.FC<PhoneAuthProps> = ({
           borderColor: expanded ? "divider" : "transparent",
           "&:before": { display: "none" },
           "&.Mui-expanded": {
-            borderColor: expanded ? primaryColor : "transparent",
+            borderColor: expanded ? "primary.main" : "transparent",
           },
         }}
       >

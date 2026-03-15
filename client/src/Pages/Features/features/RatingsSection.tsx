@@ -1,7 +1,6 @@
 import {
   fontFamilySans,
   fontFamilySerif,
-  primaryColor,
   red,
 } from "src/application/shared/themes";
 
@@ -12,13 +11,14 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/material/styles";
 
 const SECTION_LABEL_STYLE = {
   fontFamily: fontFamilySans,
   fontSize: 10,
   letterSpacing: "0.2em",
   textTransform: "uppercase" as const,
-  color: primaryColor,
+  color: "primary.main",
   mb: 6,
   display: "flex",
   alignItems: "center",
@@ -28,7 +28,7 @@ const SECTION_LABEL_STYLE = {
     flex: 1,
     maxWidth: 60,
     height: 1,
-    bgcolor: primaryColor,
+    bgcolor: "primary.main",
     opacity: 0.4,
   },
 };
@@ -134,7 +134,7 @@ const RatingsSection = () => (
         2026 AI Agent
         <br />
         Risk{" "}
-        <Box component="em" sx={{ fontStyle: "italic", color: primaryColor }}>
+          <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
           Ratings
         </Box>
       </Typography>
@@ -264,7 +264,7 @@ const RatingsSection = () => (
                   borderColor: "divider",
                   verticalAlign: "middle",
                 },
-                "&:hover td": { bgcolor: "rgba(184,150,62,0.03)" },
+                "&:hover td": { bgcolor: (t) => alpha(t.palette.primary.main, 0.03) },
               }}
             >
               <TableCell
@@ -317,8 +317,8 @@ const RatingsSection = () => (
                     letterSpacing: "0.05em",
                     px: 1.25,
                     py: 0.5,
-                    bgcolor: "rgba(184,150,62,0.15)",
-                    color: primaryColor,
+                    bgcolor: (t) => alpha(t.palette.primary.main, 0.15),
+                    color: "primary.main",
                   }}
                 >
                   {row.rating}

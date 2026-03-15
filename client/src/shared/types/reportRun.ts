@@ -4,9 +4,20 @@ export interface DimensionScore {
   weight: number;
 }
 
+export interface FeedItem {
+  id: string;
+  dim: string;
+  model: string;
+  turn: number;
+  text: string;
+  score: string;
+  type: "pass" | "warn" | "fail";
+}
+
 export interface ReportRun {
   _id?: string;
   reportId: string;
+  batchId?: string;
   modelId?: string;
   modelName?: string;
   status: "pending" | "running" | "completed" | "failed";
@@ -17,6 +28,12 @@ export interface ReportRun {
   outlook?: string;
   deploymentVerdict?: string;
   scenarioResults?: string[];
+  // Progress tracking
+  progress?: number;
+  currentStep?: string;
+  totalScenarios?: number;
+  completedScenarios?: number;
+  feedItems?: FeedItem[];
   startedAt?: string;
   completedAt?: string;
   createdAt?: string;

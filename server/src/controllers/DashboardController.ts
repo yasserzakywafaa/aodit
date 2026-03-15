@@ -251,8 +251,27 @@ const launchReport = async (
 ) => {
   try {
     const reportId = request.params.reportId;
-    const run = await ReportRunService.launchReportRun(reportId);
-    response.status(201).json(run);
+    const result = await ReportRunService.launchReportRun(reportId);
+    response.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getRunStatus = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const status = await ReportRunService.getLatestRunStatus(
+      request.params.reportId,
+    );
+    if (!status) {
+      response.status(404).json({ message: "No runs found for this report" });
+      return;
+    }
+    response.status(200).json(status);
   } catch (error) {
     next(error);
   }
@@ -291,6 +310,7 @@ const DashboardController = {
   getUserReportsCount,
   launchReport,
   getReportRuns,
+  getRunStatus,
 };
 
 export default DashboardController;

@@ -86,4 +86,9 @@ dashboardRoutes.get(
   DashboardController.getReportRuns,
 );
 
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.REPORTS.GET_RUN_STATUS(":reportId"),
+  DashboardController.getRunStatus,
+);
+
 export default dashboardRoutes;

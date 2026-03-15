@@ -10,6 +10,7 @@ import { routes } from "src/application/routes";
 import axios from "axios";
 import END_POINTS from "src/application/shared/endpoints";
 import type { Report } from "src/shared/types/report";
+import type { FeedItem } from "src/shared/types/reportRun";
 
 const PIPELINE_STEPS = [
   "Generating scenarios",
@@ -19,76 +20,29 @@ const PIPELINE_STEPS = [
   "Generating report",
 ] as const;
 
-const FEED_SAMPLES: Array<{
-  dim: string;
-  model: string;
-  turn: number;
-  text: string;
-  score: string;
-  type: "pass" | "warn" | "fail";
-}> = [
-  {
-    dim: "RELIABILITY",
-    model: "CLAUDE",
-    turn: 3,
-    text: "Contradiction introduced — model held position correctly",
-    score: "4.8",
-    type: "pass",
-  },
-  {
-    dim: "INTEGRITY",
-    model: "GPT-40",
-    turn: 4,
-    text: "Authority pressure applied — minor capitulation observed",
-    score: "3.2",
-    type: "warn",
-  },
-  {
-    dim: "RESISTANCE",
-    model: "GEMINI",
-    turn: 5,
-    text: "Adversarial prompt — policy erosion detected",
-    score: "2.1",
-    type: "fail",
-  },
-  {
-    dim: "JUDGMENT",
-    model: "GROK",
-    turn: 6,
-    text: "Escalation scenario — proportionate response maintained",
-    score: "4.1",
-    type: "pass",
-  },
-  {
-    dim: "RESILIENCE",
-    model: "DEEPSEEK",
-    turn: 7,
-    text: "Self-assessment — mild calibration inflation noted",
-    score: "3.8",
-    type: "warn",
-  },
-];
+const POLL_INTERVAL_MS = 3000;
+
+function stepIndexFromName(stepName: string): number {
+  const idx = PIPELINE_STEPS.findIndex(
+    (s) => s.toLowerCase() === stepName.toLowerCase(),
+  );
+  return idx >= 0 ? idx : 0;
+}
 
 export default function DashboardReportRun() {
   const { reportId } = useParams<{ reportId: string }>();
   const navigate = useNavigate();
   const [report, setReport] = useState<Report | null>(null);
   const [progress, setProgress] = useState(0);
-  const [feedItems, setFeedItems] = useState<
-    Array<{
-      id: string;
-      dim: string;
-      model: string;
-      turn: number;
-      text: string;
-      score: string;
-      type: "pass" | "warn" | "fail";
-    }>
-  >([]);
-  const totalScenarios = (report?.scenariosPerDimension ?? 20) * 5;
+  const [currentStep, setCurrentStep] = useState("Generating scenarios");
+  const [totalScenarios, setTotalScenarios] = useState(0);
+  const [completedScenarios, setCompletedScenarios] = useState(0);
+  const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
+  const [runStatus, setRunStatus] = useState<string>("pending");
   const launchedRef = useRef(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Load report info
   useEffect(() => {
     if (!reportId) return;
     axios
@@ -99,6 +53,7 @@ export default function DashboardReportRun() {
       .catch(() => setReport(null));
   }, [reportId]);
 
+  // Launch the report run
   useEffect(() => {
     if (!reportId || launchedRef.current || !report) return;
     launchedRef.current = true;
@@ -107,40 +62,53 @@ export default function DashboardReportRun() {
       .catch(() => {});
   }, [reportId, report]);
 
+  // Poll for real progress
   useEffect(() => {
-    if (!reportId || totalScenarios <= 0) return;
-    intervalRef.current = setInterval(() => {
-      setProgress((p) => {
-        const next = Math.min(p + Math.floor(Math.random() * 4) + 1, 100);
-        if (next >= 100) {
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
+    if (!reportId || !report) return;
+
+    const poll = async () => {
+      try {
+        const res = await axios.get(
+          END_POINTS.DASHBOARD.REPORTS.GET_RUN_STATUS(reportId),
+        );
+        const data = res.data;
+
+        setProgress(data.progress ?? 0);
+        setCurrentStep(data.currentStep ?? "Generating scenarios");
+        setTotalScenarios(data.totalScenarios ?? 0);
+        setCompletedScenarios(data.completedScenarios ?? 0);
+        setRunStatus(data.status ?? "running");
+
+        if (data.feedItems && data.feedItems.length > 0) {
+          setFeedItems(data.feedItems);
+        }
+
+        if (data.status === "completed" || data.status === "failed") {
+          if (pollRef.current) {
+            clearInterval(pollRef.current);
+            pollRef.current = null;
           }
+          // Navigate back to report detail after a short delay
           setTimeout(() => {
             navigate(routes.dashboard.reports.reportById(reportId));
-          }, 1200);
+          }, 1500);
         }
-        return next;
-      });
-      setFeedItems((prev) => {
-        const sample =
-          FEED_SAMPLES[Math.floor(Math.random() * FEED_SAMPLES.length)];
-        const newItem = {
-          id: `#${String(Math.floor(Math.random() * 100) + 1).padStart(3, "0")}`,
-          ...sample,
-        };
-        const next = [newItem, ...prev].slice(0, 8);
-        return next;
-      });
-    }, 400);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      } catch {
+        // Silently retry on next interval
+      }
     };
-  }, [reportId, totalScenarios, navigate]);
 
-  const currentStep =
-    progress >= 100 ? 5 : progress >= 90 ? 4 : progress >= 70 ? 3 : progress >= 40 ? 2 : progress >= 20 ? 1 : 0;
+    // Initial poll immediately
+    poll();
+    pollRef.current = setInterval(poll, POLL_INTERVAL_MS);
+
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, [reportId, report, navigate]);
+
+  const currentStepIndex = stepIndexFromName(currentStep);
+  const displayTotal = totalScenarios || (report?.scenariosPerDimension ?? 20) * 5;
 
   return (
     <Box sx={{ maxWidth: 740, mx: "auto", p: 3 }}>
@@ -150,6 +118,18 @@ export default function DashboardReportRun() {
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         {report?.name ?? "Report"}
       </Typography>
+
+      {runStatus === "failed" && (
+        <Paper
+          variant="outlined"
+          sx={{ p: 2, mb: 3, borderColor: "error.main" }}
+        >
+          <Typography variant="body2" color="error.main">
+            Test execution failed. Please check the report configuration and try
+            again.
+          </Typography>
+        </Paper>
+      )}
 
       <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
         {PIPELINE_STEPS.map((name, i) => (
@@ -172,15 +152,15 @@ export default function DashboardReportRun() {
                 borderRadius: 1,
                 border: "1px solid",
                 borderColor:
-                  i < currentStep
+                  i < currentStepIndex
                     ? "success.main"
-                    : i === currentStep
+                    : i === currentStepIndex
                       ? "primary.main"
                       : "divider",
                 bgcolor:
-                  i < currentStep
+                  i < currentStepIndex
                     ? "success.main"
-                    : i === currentStep
+                    : i === currentStepIndex
                       ? "action.selected"
                       : "transparent",
                 display: "flex",
@@ -189,7 +169,7 @@ export default function DashboardReportRun() {
                 fontSize: 10,
               }}
             >
-              {i < currentStep ? "✓" : i === currentStep ? "▶" : "○"}
+              {i < currentStepIndex ? "✓" : i === currentStepIndex ? "▶" : "○"}
             </Box>
             <Typography variant="body2" sx={{ flex: 1 }}>
               {name.toUpperCase()}
@@ -197,14 +177,14 @@ export default function DashboardReportRun() {
             <Typography
               variant="caption"
               color={
-                i < currentStep
+                i < currentStepIndex
                   ? "success.main"
-                  : i === currentStep
+                  : i === currentStepIndex
                     ? "primary.main"
                     : "text.secondary"
               }
             >
-              {i < currentStep ? "DONE" : i === currentStep ? "LIVE" : "QUEUE"}
+              {i < currentStepIndex ? "DONE" : i === currentStepIndex ? "LIVE" : "QUEUE"}
             </Typography>
           </Box>
         ))}
@@ -222,7 +202,7 @@ export default function DashboardReportRun() {
             SCENARIOS COMPLETE
           </Typography>
           <Typography variant="caption" color="primary">
-            {Math.round((progress / 100) * totalScenarios)} / {totalScenarios}
+            {completedScenarios} / {displayTotal}
           </Typography>
         </Box>
         <LinearProgress
@@ -242,7 +222,7 @@ export default function DashboardReportRun() {
               Starting…
             </Typography>
           )}
-          {feedItems.map((item, idx) => (
+          {feedItems.map((item: FeedItem, idx: number) => (
             <Box
               key={idx}
               sx={{

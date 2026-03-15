@@ -1,14 +1,11 @@
 import APP_CONSTANTS from "../shared/app_constants";
 import { PaletteMode } from "@mui/material";
 import { User } from "src/shared/types/user";
-import { primaryColor } from "../shared/themes";
 
 export interface ApplicationInitialState {
   isFetching: boolean;
   isFetchingUserInfo: boolean;
   themeMode: PaletteMode;
-  /** Current primary accent color for the MUI theme */
-  themePrimaryColor: string;
   auth: Authentication;
   previousUrl: string;
   trackingInfo: TrackingInfo;
@@ -55,30 +52,17 @@ export const getThemePreference = (user?: User | null): PaletteMode => {
   return storedTheme || "dark";
 };
 
-/**
- * Gets the stored primary accent color from localStorage.
- * Falls back to the default gold if nothing is saved.
- */
-export const getPrimaryColorPreference = (): string => {
-  return (
-    localStorage.getItem(APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_PRIMARY_COLOR) ||
-    primaryColor
-  );
-};
-
 export const getApplicationInitialState = (): ApplicationInitialState => {
   // Check if there's a user in localStorage first
   const storedUser = localStorage.getItem(APP_CONSTANTS.LOCAL_STORAGE.USER);
   const parsedUser = storedUser ? JSON.parse(storedUser) : null;
 
   const appThemMode = getThemePreference(parsedUser);
-  const appPrimaryColor = getPrimaryColorPreference();
 
   return {
     isFetching: false,
     isFetchingUserInfo: true,
     themeMode: appThemMode,
-    themePrimaryColor: appPrimaryColor,
     previousUrl: "",
     auth: {
       user: null,

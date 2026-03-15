@@ -1,8 +1,8 @@
 import "./App.scss";
 
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { buildDynamicThemes } from "./shared/themes";
-import { lazy, useMemo, useEffect } from "react";
+import { darkTheme, lightTheme } from "./shared/themes";
+import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
@@ -98,11 +98,6 @@ const AppContent = () => {
   useEffect(() => {
     handleInitialAuthentication();
   }, []);
-
-  const { light: lightTheme, dark: darkTheme } = useMemo(
-    () => buildDynamicThemes(state.themePrimaryColor),
-    [state.themePrimaryColor],
-  );
 
   return (
     <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>

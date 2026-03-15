@@ -8,13 +8,13 @@ export const lightGrey = "#D4D0C8";
 export const red = "#C0392B";
 export const border = "rgba(180,174,162,0.25)";
 
-export const primaryColor = "#C8960C"; // gold (default)
-export const primaryColorOpaqueTen = "rgba(200, 150, 12, 0.1)";
-export const primaryColorOpaqueThirty = "rgba(200, 150, 12, 0.3)";
-export const primaryColorOpaqueFifteen = "rgba(200, 150, 12, 0.15)";
-export const primaryColorOpaqueEight = "rgba(200, 150, 12, 0.08)";
-export const primaryColorDim = "rgba(200, 150, 12, 0.2)";
-export const primaryColorFaint = "rgba(200, 150, 12, 0.06)";
+export const primaryColor = "#047857"; // emerald
+export const primaryColorOpaqueTen = "rgba(4, 120, 87, 0.1)";
+export const primaryColorOpaqueThirty = "rgba(4, 120, 87, 0.3)";
+export const primaryColorOpaqueFifteen = "rgba(4, 120, 87, 0.15)";
+export const primaryColorOpaqueEight = "rgba(4, 120, 87, 0.08)";
+export const primaryColorDim = "rgba(4, 120, 87, 0.2)";
+export const primaryColorFaint = "rgba(4, 120, 87, 0.06)";
 export const secondaryColor = black;
 
 export const fontFamilySerif = "'Playfair Display', serif";
@@ -26,49 +26,20 @@ export const secondaryColorForLightTheme = primaryColor;
 export const defaultBackDropFilterBlur = "blur(12px)";
 const borderRadius = "0px";
 
-/**
- * Curated accent colors suited to Aodit's AI risk-index identity.
- * Each entry has a hex value, a display label, and a short rationale.
- */
-export const AODIT_THEME_COLORS = [
-  { value: "#C8960C", label: "Gold", description: "Financial authority (default)" },
-  { value: "#1B4F8C", label: "Navy", description: "Institutional trust & stability" },
-  { value: "#047857", label: "Emerald", description: "AI safety & positive performance" },
-  { value: "#7C3AED", label: "Violet", description: "AI/ML innovation & intelligence" },
-  { value: "#0891B2", label: "Teal", description: "Data analytics & fintech" },
-  { value: "#DC2626", label: "Crimson", description: "Risk alerts & critical findings" },
-  { value: "#D97706", label: "Amber", description: "Caution & risk awareness" },
-  { value: "#475569", label: "Slate", description: "Neutral enterprise authority" },
-] as const;
-
-/** Hex value type derived from the curated palette (plus free-form strings). */
-export type ThemeColorValue = (typeof AODIT_THEME_COLORS)[number]["value"] | string;
-
-const makeButtonStyle = (color: string) => ({
+export const buttonStyle = {
   textTransform: "capitalize" as const,
   fontFamily: fontFamilySans,
-  border: `1px solid ${color}`,
+  border: `1px solid ${primaryColor}`,
   borderRadius,
   "&:hover": {
-    color,
-    backgroundColor: hexToRgba(color, 0.3),
-    border: `1px solid ${color}`,
+    color: primaryColor,
+    backgroundColor: primaryColorOpaqueThirty,
+    border: `1px solid ${primaryColor}`,
   },
   "&:active": {
     boxShadow: "none",
   },
-});
-
-/** Convert a hex color to rgba with the given alpha. */
-export function hexToRgba(hex: string, alpha: number): string {
-  const sanitized = hex.replace("#", "");
-  const r = parseInt(sanitized.substring(0, 2), 16);
-  const g = parseInt(sanitized.substring(2, 4), 16);
-  const b = parseInt(sanitized.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-export const buttonStyle = makeButtonStyle(primaryColor);
+};
 
 export const AvatarSquareStyle = {
   mr: 1,
@@ -82,116 +53,108 @@ export const dataGridStyle = (theme: Theme): object => ({
     borderBottom: "none",
   },
   "& .MuiDataGrid-row:hover": {
-    backgroundColor: hexToRgba(primaryColor, 0.03),
+    backgroundColor: primaryColorFaint,
   },
 });
 
-/**
- * Build MUI light + dark themes for any primary accent color.
- * This is the primary way to create themes going forward.
- */
-export const buildDynamicThemes = (accent: string = primaryColor) => {
-  const btn = makeButtonStyle(accent);
-
-  const base = createTheme({
-    palette: {
-      primary: { main: accent },
-      secondary: { main: white },
-      error: { main: red },
+export const theme = createTheme({
+  palette: {
+    primary: { main: primaryColor },
+    secondary: { main: white },
+    error: { main: red },
+  },
+  typography: {
+    fontFamily: fontFamilySans,
+    h1: {
+      fontFamily: fontFamilySerif,
+      fontWeight: 300,
+      letterSpacing: "-0.02em",
     },
-    typography: {
-      fontFamily: fontFamilySans,
-      h1: {
-        fontFamily: fontFamilySerif,
-        fontWeight: 300,
-        letterSpacing: "-0.02em",
-      },
-      h2: {
-        fontFamily: fontFamilySerif,
-        fontWeight: 300,
-        letterSpacing: "-0.01em",
-      },
-      h3: { fontFamily: fontFamilySerif, fontWeight: 400 },
+    h2: {
+      fontFamily: fontFamilySerif,
+      fontWeight: 300,
+      letterSpacing: "-0.01em",
     },
-    components: {
-      MuiButton: {
-        styleOverrides: {
-          root: { ...btn },
-          contained: {
-            "&.Mui-disabled": {
-              opacity: "0.7",
-              cursor: "not-allowed",
-              backgroundColor: accent,
-            },
-            ...btn,
+    h3: { fontFamily: fontFamilySerif, fontWeight: 400 },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: { ...buttonStyle },
+        contained: {
+          "&.Mui-disabled": {
+            opacity: "0.7",
+            cursor: "not-allowed",
+            backgroundColor: primaryColor,
           },
-          outlined: { ...btn },
-          text: {
-            ...btn,
+          ...buttonStyle,
+        },
+        outlined: {
+          ...buttonStyle,
+        },
+        text: {
+          ...buttonStyle,
+          border: 0,
+          "&:hover": {
+            backgroundColor: primaryColorOpaqueThirty,
             border: 0,
-            "&:hover": {
-              backgroundColor: hexToRgba(accent, 0.3),
-              border: 0,
-            },
           },
         },
       },
-      MuiTable: {
-        styleOverrides: {
-          root: { backdropFilter: defaultBackDropFilterBlur },
-        },
+    },
+    MuiTable: {
+      styleOverrides: {
+        root: { backdropFilter: defaultBackDropFilterBlur },
       },
-      MuiCard: {
-        styleOverrides: {
-          root: { borderRadius, border: 0 },
-        },
-      },
-      MuiDialog: {
-        styleOverrides: {
-          paper: {
-            borderRadius,
-            backgroundImage: "unset",
-            border: `1px solid ${accent}`,
-          },
-        },
-      },
-      MuiSlider: {
-        styleOverrides: {
-          thumb: { borderRadius, backgroundColor: accent },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius,
+          border: 0,
         },
       },
     },
-  });
-
-  const light = createTheme({
-    ...base,
-    palette: {
-      mode: "light",
-      primary: { main: accent },
-      secondary: { main: white },
-      background: { default: white, paper: cream },
-      text: { primary: black, secondary: "#000000" },
-      divider: border,
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius,
+          backgroundImage: "unset",
+          border: `1px solid ${primaryColor}`,
+        },
+      },
     },
-  });
-
-  const dark = createTheme({
-    ...base,
-    palette: {
-      mode: "dark",
-      primary: { main: accent },
-      secondary: { main: white },
-      background: { default: black, paper: "#171616" },
-      text: { primary: white, secondary: "#ffffff" },
-      divider: border,
+    MuiSlider: {
+      styleOverrides: {
+        thumb: {
+          borderRadius,
+          backgroundColor: primaryColor,
+        },
+      },
     },
-  });
+  },
+});
 
-  return { light, dark };
-};
+export const lightTheme = createTheme({
+  ...theme,
+  palette: {
+    mode: "light",
+    primary: { main: primaryColor },
+    secondary: { main: white },
+    background: { default: white, paper: cream },
+    text: { primary: black, secondary: "#000000" },
+    divider: border,
+  },
+});
 
-// Static default themes (kept for backwards compatibility)
-const { light: lightTheme, dark: darkTheme } = buildDynamicThemes(primaryColor);
-
-export const theme = lightTheme;
-export { lightTheme, darkTheme };
+export const darkTheme = createTheme({
+  ...theme,
+  palette: {
+    mode: "dark",
+    primary: { main: primaryColor },
+    secondary: { main: white },
+    background: { default: black, paper: "#171616" },
+    text: { primary: white, secondary: "#ffffff" },
+    divider: border,
+  },
+});

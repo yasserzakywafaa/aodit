@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Box, Divider, ListItemIcon, Typography } from "@mui/material";
+import { Box, ListItemIcon, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import {
   InstallMobileOutlined,
@@ -12,7 +12,6 @@ import {
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import ThemeColorPicker from "./ThemeColorPicker/ThemeColorPicker";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
 import { useTheme } from "@mui/material/styles";
@@ -110,13 +109,6 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
 
           <Typography variant="body1">Theme</Typography>
         </MenuItem>
-
-        <Divider sx={{ my: 0.5, opacity: 0.4 }} />
-
-        {/* Accent color picker — no close-on-click so the user can browse colors */}
-        <ThemeColorPicker />
-
-        <Divider sx={{ my: 0.5, opacity: 0.4 }} />
 
         {!isInStandaloneMode && (
           <MenuItem

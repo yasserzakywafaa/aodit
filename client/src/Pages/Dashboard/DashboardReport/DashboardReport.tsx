@@ -27,12 +27,18 @@ import {
   ScenariosPerDimensionSection,
 } from "./features";
 import { ExpandMore, PlayArrow, Save, Visibility } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { AoditReportPDF } from "./ReportPDF/AoditReportPDF";
+import CircularProgress from "@mui/material/CircularProgress";
+import END_POINTS from "src/application/shared/endpoints";
 import { ReportRun } from "src/shared/types/reportRun";
+import type { ScenarioResult } from "src/shared/types/scenarioResult";
+import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { useDashboardReportContext } from "./store/Provider";
-import { useEffect } from "react";
 
 const getLatestCompletedRun = (runs: ReportRun[]): ReportRun | undefined => {
   const completed = runs.filter((r) => r.status === "completed");
@@ -56,6 +62,38 @@ const DashboardReport = () => {
   } = useDashboardReportContext();
 
   const latestRun = getLatestCompletedRun(runs);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  const handleDownloadPDF = async () => {
+    if (!report || !latestRun || !reportId) return;
+    setIsGeneratingPDF(true);
+    try {
+      const res = await axios.get<ScenarioResult[]>(
+        END_POINTS.DASHBOARD.REPORTS.GET_SCENARIO_RESULTS(
+          reportId,
+          latestRun._id,
+        ),
+      );
+      const blob = await pdf(
+        <AoditReportPDF
+          report={report}
+          run={latestRun}
+          scenarioResults={res.data}
+        />,
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `AODIT-${report.name.replace(/\s+/g, "-")}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("[AODIT] PDF generation failed:", err);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   const modelsToTest = report?.modelsToTest ?? [];
   const totalScenarios = (report?.scenariosPerDimension ?? 20) * 5;
   const modelsCount = modelsToTest.length;
@@ -567,8 +605,18 @@ const DashboardReport = () => {
                   <Button variant="outlined" size="small" onClick={() => {}}>
                     Embed
                   </Button>
-                  <Button variant="contained" size="small" onClick={() => {}}>
-                    Download PDF
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={handleDownloadPDF}
+                    disabled={isGeneratingPDF}
+                    startIcon={
+                      isGeneratingPDF ? (
+                        <CircularProgress size={12} color="inherit" />
+                      ) : undefined
+                    }
+                  >
+                    {isGeneratingPDF ? "Generating…" : "Download PDF"}
                   </Button>
                 </Box>
               </>

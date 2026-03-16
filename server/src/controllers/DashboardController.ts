@@ -1,8 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 
+import {
+  DBCollectionsEnum,
+  getDocumentsByQueryFromDb,
+} from "../models/mongoDb";
+
 import DashboardServices from "../services/dashboardService";
 import ReportServices from "../services/reportService";
 import * as ReportRunService from "../services/reports/reportRunService";
+import { ScenarioResult } from "../models/types/scenarioResult";
 
 const getUsersCount = async (
   request: Request,
@@ -290,6 +296,29 @@ const getReportRuns = async (
   }
 };
 
+const getScenarioResults = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { reportId } = request.params;
+    const { runId } = request.query as { runId?: string };
+
+    const query = runId
+      ? { reportRunId: runId }
+      : { reportId };
+
+    const results = await getDocumentsByQueryFromDb<ScenarioResult>(
+      query as any,
+      DBCollectionsEnum.scenarioResults,
+    );
+    response.status(200).json(results);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const DashboardController = {
   getUsersCount,
   getAllUsers,
@@ -309,6 +338,7 @@ const DashboardController = {
   launchReport,
   getReportRuns,
   getRunStatus,
+  getScenarioResults,
 };
 
 export default DashboardController;

@@ -8,13 +8,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  fontFamilySans,
-  fontFamilySerif,
-  primaryColorFaint,
-} from "src/application/shared/themes";
-
 import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+
 import { alpha } from "@mui/material/styles";
 import { routes } from "src/application/routes";
 import { useDashboardCreateReportContext } from "./store/Provider";

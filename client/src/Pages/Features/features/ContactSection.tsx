@@ -1,7 +1,6 @@
 import {
   fontFamilySans,
   fontFamilySerif,
-  primaryColor,
 } from "src/application/shared/themes";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -10,7 +9,7 @@ import ContactForm from "src/Pages/Contact/features/ContactForm";
 const SECTION_EYEBROW_STYLE = {
   fontSize: 9,
   letterSpacing: "0.25em",
-  color: primaryColor,
+  color: "primary.main",
   mb: 2,
   fontFamily: fontFamilySans,
 };
@@ -82,7 +81,7 @@ const ContactSection = () => (
                 color: "text.secondary",
               }}
             >
-              <Typography component="span" sx={{ color: primaryColor }}>
+              <Typography component="span" sx={{ color: "primary.main" }}>
                 ✓
               </Typography>
               <Typography component="span">{text}</Typography>

@@ -13,7 +13,7 @@ import LoaderSpinner from "../Loader/LoaderSpinner";
 import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
-import { primaryColorOpaqueTen } from "src/application/shared/themes";
+import { alpha } from "@mui/material/styles";
 import { usePricing } from "./usePricing";
 
 export const Pricing = () => {
@@ -70,7 +70,7 @@ export const Pricing = () => {
                     border: isBasicPlan ? "1px solid" : undefined,
                     borderColor: isBasicPlan ? "primary.main" : undefined,
                     backgroundColor: isBasicPlan
-                      ? primaryColorOpaqueTen
+                      ? (t) => alpha(t.palette.primary.main, 0.1)
                       : undefined,
                   }}
                 >

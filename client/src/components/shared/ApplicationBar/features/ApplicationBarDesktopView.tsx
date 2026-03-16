@@ -8,7 +8,6 @@ import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
-import { primaryColor } from "src/application/shared/themes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
@@ -38,8 +37,8 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
 
   const buttonHoverStyleSecondary = {
     "&:hover": {
-      "& .MuiTypography-root": { color: primaryColor },
-      "& .MuiSvgIcon-root": { color: primaryColor },
+      "& .MuiTypography-root": { color: "primary.main" },
+      "& .MuiSvgIcon-root": { color: "primary.main" },
     },
   };
 

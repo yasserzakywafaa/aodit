@@ -14,7 +14,6 @@ import { Notify } from "./Notification/Notification";
 import ProfileAvatar from "./ProfileAvatar";
 import { User } from "src/shared/types/user";
 import axios from "axios";
-import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
@@ -83,10 +82,10 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const buttonHoverStylePrimary = {
     "&:hover": {
       "& .MuiTypography-root": {
-        color: primaryColor,
+        color: "primary.main",
       },
       "& .MuiSvgIcon-root": {
-        color: primaryColor,
+        color: "primary.main",
       },
     },
   };
@@ -113,13 +112,14 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
         <Typography
           variant="body1"
+          color="text.primary"
           sx={{
             maxWidth: "100px",
             overflowX: "hidden",
             whiteSpace: "nowrap",
             textOverflow: "ellipsis",
             "&.MuiTypography-root:hover": {
-              color: primaryColor,
+              color: "primary.main",
             },
           }}
           marginLeft={1}
@@ -144,11 +144,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
           onClick={handleOnProfileClick}
         >
           <ListItemIcon>
-            <PersonOutlined
-              fontSize="medium"
-              color="secondary"
-              sx={{ mr: 1 }}
-            />
+            <PersonOutlined fontSize="medium" color="primary" sx={{ mr: 1 }} />
           </ListItemIcon>
           <Typography variant="body1" color="text.primary">
             Profile
@@ -166,7 +162,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
               <ListItemIcon>
                 <DashboardIcon
                   fontSize="medium"
-                  color="secondary"
+                  color="primary"
                   sx={{ mr: 1 }}
                 />
               </ListItemIcon>

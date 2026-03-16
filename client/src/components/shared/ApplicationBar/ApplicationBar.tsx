@@ -66,7 +66,6 @@ const ApplicationBar = () => {
 
   const handleOnMenuItemClick = (sectionId: string) => () => {
     switch (sectionId) {
-      case "features":
       case "reports":
         scrollToSection("ratings");
         break;

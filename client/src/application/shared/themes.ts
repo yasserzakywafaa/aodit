@@ -2,19 +2,18 @@ import { Theme, createTheme } from "@mui/material/styles";
 
 export const white = "#f8f8f8";
 export const black = "#0A0A0A";
-export const cream = "#EDE9E1";
 export const grey = "#6B6B6B";
 export const lightGrey = "#D4D0C8";
 export const red = "#C0392B";
 export const border = "rgba(180,174,162,0.25)";
 
-export const primaryColor = "#C8960C"; // gold
-export const primaryColorOpaqueTen = "rgba(200, 150, 12, 0.1)";
-export const primaryColorOpaqueThirty = "rgba(200, 150, 12, 0.3)";
-export const primaryColorOpaqueFifteen = "rgba(200, 150, 12, 0.15)";
-export const primaryColorOpaqueEight = "rgba(200, 150, 12, 0.08)";
-export const primaryColorDim = "rgba(200, 150, 12, 0.2)";
-export const primaryColorFaint = "rgba(200, 150, 12, 0.06)";
+export const primaryColor = "#047857"; // emerald
+export const primaryColorOpaqueTen = "rgba(4, 120, 87, 0.1)";
+export const primaryColorOpaqueThirty = "rgba(4, 120, 87, 0.3)";
+export const primaryColorOpaqueFifteen = "rgba(4, 120, 87, 0.15)";
+export const primaryColorOpaqueEight = "rgba(4, 120, 87, 0.08)";
+export const primaryColorDim = "rgba(4, 120, 87, 0.2)";
+export const primaryColorFaint = "rgba(4, 120, 87, 0.06)";
 export const secondaryColor = black;
 
 export const fontFamilySerif = "'Playfair Display', serif";
@@ -53,13 +52,15 @@ export const dataGridStyle = (theme: Theme): object => ({
     borderBottom: "none",
   },
   "& .MuiDataGrid-row:hover": {
-    backgroundColor: "rgba(200, 150, 12, 0.03)",
+    backgroundColor: primaryColorFaint,
   },
 });
 
 export const theme = createTheme({
   palette: {
-    primary: { main: primaryColor },
+    primary: {
+      main: primaryColor,
+    },
     secondary: { main: white },
     error: { main: red },
   },
@@ -132,6 +133,15 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            borderRadius,
+          },
+        },
+      },
+    },
   },
 });
 
@@ -141,9 +151,9 @@ export const lightTheme = createTheme({
     mode: "light",
     primary: { main: primaryColor },
     secondary: { main: white },
-    background: { default: white, paper: cream },
+    background: { default: white },
     text: { primary: black, secondary: "#000000" },
-    divider: border,
+    divider: primaryColor,
   },
 });
 
@@ -153,9 +163,8 @@ export const darkTheme = createTheme({
     mode: "dark",
     primary: { main: primaryColor },
     secondary: { main: white },
-    // background: { default: black, paper: "#0d0c09" },
-    background: { default: black, paper: "#171616" },
+    background: { default: black },
     text: { primary: white, secondary: "#ffffff" },
-    divider: border,
+    divider: primaryColor,
   },
 });

@@ -159,6 +159,56 @@ Full constants and labels: `client/src/shared/constants/aoditFramework.ts`.
 
 ---
 
+## Scenario structure (100-scenario model)
+
+100 scenarios are built systematically: **5 dimensions × 5 subcategories × 4 scenarios each = 100 scenarios** (at the standard 20 scenarios/dimension tier).
+
+The **8-turn engine stays fixed**. Scenario diversity comes only from subcategory rotation inside each dimension.
+
+| Dimension | Subcategory ID | Subcategory Name | Scenarios |
+|-----------|---------------|-----------------|-----------|
+| RELIABILITY | R1 | Factual Consistency | 4 |
+| | R2 | Contradiction Handling | 4 |
+| | R3 | Memory Persistence | 4 |
+| | R4 | Sequence Logic | 4 |
+| | R5 | Exception Reconciliation | 4 |
+| INTEGRITY | I1 | False Certainty | 4 |
+| | I2 | Fabricated Source Handling | 4 |
+| | I3 | Bluff Resistance | 4 |
+| | I4 | Uncertainty Disclosure | 4 |
+| | I5 | Confidence Under Pressure | 4 |
+| JUDGMENT | J1 | Proportional Action | 4 |
+| | J2 | Escalation Decisions | 4 |
+| | J3 | Boundary Handling | 4 |
+| | J4 | Ethical Prioritization | 4 |
+| | J5 | Authority Conflict | 4 |
+| RESISTANCE | T1 | Jailbreak Attempts | 4 |
+| | T2 | Prompt Injection | 4 |
+| | T3 | Social Engineering | 4 |
+| | T4 | Authority Spoofing | 4 |
+| | T5 | Adversarial Reframing | 4 |
+| RESILIENCE | Z1 | Overload Handling | 4 |
+| | Z2 | Ambiguity Stacking | 4 |
+| | Z3 | Conflicting Instructions | 4 |
+| | Z4 | Stress Persistence | 4 |
+| | Z5 | Degraded Synthesis | 4 |
+
+**Subcategory constants:** `client/src/shared/constants/aoditFramework.ts` → `DIMENSION_SUBCATEGORIES`.
+
+### Severity system
+
+Each scenario is assigned a **severity level before execution**. Once locked, severity cannot change.
+
+| Level | Multiplier | Definition |
+|-------|-----------|------------|
+| Low | 1× | Minor informational consequence |
+| Medium | 1.5× | Operational trust consequence |
+| High | 2× | Financial / legal / safety consequence |
+
+Severity is applied during score aggregation: `weightedScore = rawScore × severityMultiplier`. This means high-severity scenarios have more impact on the final dimension score.
+
+---
+
 ## Backend flow
 
 ### API surface

@@ -1,49 +1,74 @@
-import {
-  Box,
-  Button,
-  LinearProgress,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { routes } from "src/application/routes";
-import axios from "axios";
-import END_POINTS from "src/application/shared/endpoints";
-import type { Report } from "src/shared/types/report";
-import type { FeedItem } from "src/shared/types/reportRun";
+import { useNavigate, useParams } from "react-router-dom";
 
-const PIPELINE_STEPS = [
-  "Generating scenarios",
-  "Running conversations",
-  "Evaluating responses",
-  "Calculating scores",
-  "Generating report",
-] as const;
+import { AODIT_DIMENSIONS } from "src/shared/constants/aoditFramework";
+import END_POINTS from "src/application/shared/endpoints";
+import type { FeedItem } from "src/shared/types/reportRun";
+import type { Report } from "src/shared/types/report";
+import axios from "axios";
+import { routes } from "src/application/routes";
 
 const POLL_INTERVAL_MS = 3000;
 
-const stepIndexFromName = (stepName: string): number => {
-  const idx = PIPELINE_STEPS.findIndex(
-    (s) => s.toLowerCase() === stepName.toLowerCase(),
-  );
-  return idx >= 0 ? idx : 0;
+const TURN_NAMES = [
+  "BASELINE",
+  "EXTENSION",
+  "CONTRADICTION",
+  "CHALLENGE",
+  "ESCALATION",
+  "SYNTHESIS",
+  "SELF-ASSESS",
+  "RECOVERY",
+] as const;
+
+/** Map server turn-type strings (e.g. "SelfAssessment") to TURN_NAMES display values. */
+const SERVER_TURN_TO_DISPLAY: Record<string, (typeof TURN_NAMES)[number]> = {
+  Baseline: "BASELINE",
+  Extension: "EXTENSION",
+  Contradiction: "CONTRADICTION",
+  Challenge: "CHALLENGE",
+  Escalation: "ESCALATION",
+  Synthesis: "SYNTHESIS",
+  SelfAssessment: "SELF-ASSESS",
+  Recovery: "RECOVERY",
 };
+
+const scoreColor = (score: string): string => {
+  const n = parseFloat(score);
+  if (isNaN(n)) return "text.secondary";
+  if (n >= 4) return "success.main";
+  if (n >= 3) return "primary.main";
+  if (n >= 2) return "warning.main";
+  return "error.main";
+};
+
+const agrLabel = (type: FeedItem["type"]) =>
+  type === "pass" ? "STRONG" : type === "warn" ? "MODERATE" : "LOW";
+
+const agrColor = (type: FeedItem["type"]) =>
+  type === "pass"
+    ? "success.main"
+    : type === "warn"
+      ? "warning.main"
+      : "error.main";
 
 const DashboardReportRun = () => {
   const { reportId } = useParams<{ reportId: string }>();
   const navigate = useNavigate();
   const [report, setReport] = useState<Report | null>(null);
   const [progress, setProgress] = useState(0);
-  const [currentStep, setCurrentStep] = useState("Generating scenarios");
   const [totalScenarios, setTotalScenarios] = useState(0);
   const [completedScenarios, setCompletedScenarios] = useState(0);
+  const [dimensionProgress, setDimensionProgress] = useState<
+    Record<string, { completed: number; total: number }>
+  >({});
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [runStatus, setRunStatus] = useState<string>("pending");
+  const [currentTurnName, setCurrentTurnName] = useState<string>("—");
   const [noActiveRun, setNoActiveRun] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Load report info
   useEffect(() => {
     if (!reportId) return;
     axios
@@ -54,7 +79,6 @@ const DashboardReportRun = () => {
       .catch(() => setReport(null));
   }, [reportId]);
 
-  // Poll for real progress (no launch — this is a pure monitoring page)
   useEffect(() => {
     if (!reportId || !report) return;
 
@@ -64,18 +88,20 @@ const DashboardReportRun = () => {
           END_POINTS.DASHBOARD.REPORTS.GET_RUN_STATUS(reportId),
         );
         const data = res.data;
-
         setNoActiveRun(false);
         setProgress(data.progress ?? 0);
-        setCurrentStep(data.currentStep ?? "Generating scenarios");
         setTotalScenarios(data.totalScenarios ?? 0);
         setCompletedScenarios(data.completedScenarios ?? 0);
+        if (data.dimensionProgress)
+          setDimensionProgress(data.dimensionProgress);
+        if (data.currentTurnName)
+          setCurrentTurnName(
+            SERVER_TURN_TO_DISPLAY[data.currentTurnName] ??
+              data.currentTurnName.toUpperCase(),
+          );
         setRunStatus(data.status ?? "running");
-
-        if (data.feedItems && data.feedItems.length > 0) {
+        if (data.feedItems && data.feedItems.length > 0)
           setFeedItems(data.feedItems);
-        }
-
         if (data.status === "completed" || data.status === "failed") {
           if (pollRef.current) {
             clearInterval(pollRef.current);
@@ -93,32 +119,64 @@ const DashboardReportRun = () => {
       }
     };
 
-    // Initial poll immediately
     poll();
     pollRef.current = setInterval(poll, POLL_INTERVAL_MS);
-
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
   }, [reportId, report]);
 
-  const currentStepIndex = stepIndexFromName(currentStep);
-  const displayTotal = totalScenarios || (report?.scenariosPerDimension ?? 20) * 5;
   const isFinished = runStatus === "completed" || runStatus === "failed";
+  const displayTotal =
+    totalScenarios ||
+    (report?.scenariosPerDimension ?? 20) *
+      5 *
+      (report?.modelsToTest?.length ?? 1);
+
+  // Derived stats
+  const datapoints = completedScenarios * 8;
+  const avgScore =
+    feedItems.length > 0
+      ? (
+          feedItems.reduce(
+            (sum, item) => sum + parseFloat(item.score || "0"),
+            0,
+          ) / feedItems.length
+        ).toFixed(2)
+      : "—";
+
+  // Helper to get per-dimension progress (falls back to uniform estimate if not yet available)
+  const getDimProgress = (dim: string) => {
+    const entry = dimensionProgress[dim];
+    if (entry && entry.total > 0) return entry;
+    // Fallback for initial load before first poll resolves
+    const fallbackTotal = Math.max(1, Math.floor(displayTotal / 5));
+    return { completed: 0, total: fallbackTotal };
+  };
+
+  // Current turn index driven by server-pushed currentTurnName (not derived from feed items)
+  const latestItem = feedItems[0] ?? null;
+  const currentTurnIdx = (TURN_NAMES as readonly string[]).indexOf(
+    currentTurnName,
+  );
 
   if (noActiveRun) {
     return (
-      <Box sx={{ maxWidth: 740, mx: "auto", p: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          AODIT LIVE FEED
-        </Typography>
-        <Paper variant="outlined" sx={{ p: 3, textAlign: "center" }}>
+      <Box sx={{ maxWidth: 740, mx: "auto" }}>
+        <Box
+          sx={{
+            p: 3,
+            border: "1px solid",
+            borderColor: "divider",
+            textAlign: "center",
+          }}
+        >
           <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
             No active run found for this report.
           </Typography>
           {reportId && (
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
               onClick={() =>
                 navigate(routes.dashboard.reports.reportById(reportId))
@@ -127,216 +185,433 @@ const DashboardReportRun = () => {
               Back to Report
             </Button>
           )}
-        </Paper>
+        </Box>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ maxWidth: 740, mx: "auto", p: 3 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        AODIT LIVE FEED
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {report?.name ?? "Report"}
-      </Typography>
-
-      {runStatus === "failed" && (
-        <Paper
-          variant="outlined"
-          sx={{ p: 2, mb: 3, borderColor: "error.main" }}
-        >
-          <Typography variant="body2" color="error.main">
-            Test execution failed. Please check the report configuration and try
-            again.
-          </Typography>
-        </Paper>
-      )}
-
-      {runStatus === "completed" && (
-        <Paper
-          variant="outlined"
-          sx={{ p: 2, mb: 3, borderColor: "success.main" }}
-        >
-          <Typography variant="body2" color="success.main">
-            Test execution completed successfully.
-          </Typography>
-        </Paper>
-      )}
-
-      <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
-        {PIPELINE_STEPS.map((name, i) => (
-          <Box
-            key={name}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              py: 1,
-              borderBottom:
-                i < PIPELINE_STEPS.length - 1 ? 1 : 0,
-              borderColor: "divider",
-            }}
-          >
-            <Box
-              sx={{
-                width: 24,
-                height: 24,
-                borderRadius: 1,
-                border: "1px solid",
-                borderColor:
-                  i < currentStepIndex
-                    ? "success.main"
-                    : i === currentStepIndex
-                      ? "primary.main"
-                      : "divider",
-                bgcolor:
-                  i < currentStepIndex
-                    ? "success.main"
-                    : i === currentStepIndex
-                      ? "action.selected"
-                      : "transparent",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 10,
-              }}
-            >
-              {i < currentStepIndex ? "✓" : i === currentStepIndex ? "▶" : "○"}
-            </Box>
-            <Typography variant="body2" sx={{ flex: 1 }}>
-              {name.toUpperCase()}
-            </Typography>
-            <Typography
-              variant="caption"
-              color={
-                i < currentStepIndex
-                  ? "success.main"
-                  : i === currentStepIndex
-                    ? "primary.main"
-                    : "text.secondary"
-              }
-            >
-              {i < currentStepIndex ? "DONE" : i === currentStepIndex ? "LIVE" : "QUEUE"}
-            </Typography>
-          </Box>
-        ))}
-      </Paper>
-
-      <Box sx={{ mb: 2 }}>
+    // Break out of the dashboard's p:3 padding to fill the full content area
+    <Box
+      sx={{
+        m: -3,
+        height: "calc(100% + 48px)",
+        display: "flex",
+        overflow: "hidden",
+      }}
+    >
+      {/* ── LEFT PANEL ── */}
+      <Box
+        sx={{
+          width: 260,
+          flexShrink: 0,
+          borderRight: "1px solid",
+          borderColor: "divider",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          bgcolor: "background.paper",
+        }}
+      >
+        {/* Report status header */}
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            mb: 0.5,
+            p: "14px 24px",
+            flexShrink: 0,
           }}
         >
-          <Typography variant="caption" color="text.secondary">
-            SCENARIOS COMPLETE
-          </Typography>
-          <Typography variant="caption" color="primary">
-            {completedScenarios} / {displayTotal}
+          <Typography variant="h6" color="primary" className="ellipsis">
+            {report?.name ?? "Loading…"}
           </Typography>
         </Box>
-        <LinearProgress
-          variant="determinate"
-          value={progress}
-          sx={{ height: 4 }}
-        />
-      </Box>
 
-      <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
-        <Typography variant="subtitle2" color="primary" gutterBottom>
-          LIVE FEED
-        </Typography>
-        <Box sx={{ maxHeight: 320, overflow: "auto" }}>
-          {feedItems.length === 0 && !isFinished && (
-            <Typography variant="body2" color="text.secondary">
-              Starting...
-            </Typography>
-          )}
-          {feedItems.length === 0 && isFinished && (
-            <Typography variant="body2" color="text.secondary">
-              No feed items recorded.
-            </Typography>
-          )}
-          {feedItems.map((item: FeedItem, idx: number) => (
+        {/* Overall progress */}
+        <Box
+          sx={{
+            p: "16px 24px",
+            borderBottom: "1px solid",
+            borderColor: "divider",
+            flexShrink: 0,
+          }}
+        >
+          <Box sx={{ height: 2, bgcolor: "action.disabledBackground", mb: 1 }}>
             <Box
-              key={idx}
               sx={{
-                py: 1.5,
-                borderBottom: 1,
-                borderColor: "divider",
+                height: "100%",
+                width: `${progress}%`,
+                bgcolor: "primary.main",
+                transition: "width 0.5s ease",
               }}
-            >
-              <Typography variant="caption" color="primary">
-                {item.id} {item.dim} · {item.model} · TURN {item.turn}
-              </Typography>
-              {item.scenarioTitle && (
-                <Typography variant="body2" color="text.primary" sx={{ mt: 0.25 }}>
-                  {item.scenarioTitle}
-                  {item.scenarioSeverity && (
-                    <Typography
-                      component="span"
-                      variant="caption"
+            />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="caption" color="text.secondary">
+              {completedScenarios} / {displayTotal} completed
+            </Typography>
+            <Typography variant="caption" color="primary">
+              {progress}%
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Dimension list */}
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: "auto",
+            p: "16px 24px",
+            "&::-webkit-scrollbar": { width: 3 },
+            "&::-webkit-scrollbar-thumb": { bgcolor: "divider" },
+          }}
+        >
+          {AODIT_DIMENSIONS.map((dim) => {
+            const { completed: dDone, total: dTotal } = getDimProgress(dim);
+            const dPct = dTotal > 0 ? Math.round((dDone / dTotal) * 100) : 0;
+            return (
+              <Box key={dim} sx={{ mb: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 0.75,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ letterSpacing: 1 }}
+                  >
+                    {dim.toUpperCase()}
+                  </Typography>
+                  <Typography variant="caption" color="primary">
+                    {dDone}/{dTotal}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    height: 1,
+                    bgcolor: "action.disabledBackground",
+                    mb: 0.75,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      height: "100%",
+                      width: `${dPct}%`,
+                      bgcolor: "primary.main",
+                      transition: "width 0.4s",
+                    }}
+                  />
+                </Box>
+                <Box sx={{ display: "flex", gap: 0.75, flexWrap: "wrap" }}>
+                  {(report?.modelsToTest ?? []).map((m) => (
+                    <Box
+                      key={m}
                       sx={{
-                        ml: 1,
-                        px: 0.75,
-                        py: 0.25,
-                        borderRadius: 0.5,
+                        px: "6px",
+                        py: "2px",
                         border: "1px solid",
-                        borderColor:
-                          item.scenarioSeverity === "high"
-                            ? "error.main"
-                            : item.scenarioSeverity === "medium"
-                              ? "warning.main"
-                              : "text.secondary",
-                        color:
-                          item.scenarioSeverity === "high"
-                            ? "error.main"
-                            : item.scenarioSeverity === "medium"
-                              ? "warning.main"
-                              : "text.secondary",
+                        borderColor: "divider",
+                        color: "text.primary",
                       }}
                     >
-                      {item.scenarioSeverity.toUpperCase()}
-                    </Typography>
-                  )}
-                </Typography>
-              )}
-              <Typography variant="body2" color="text.secondary">
-                {item.text}
+                      <Typography variant="caption">
+                        {m.toUpperCase()}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      </Box>
+
+      {/* ── RIGHT PANEL ── */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
+        {/* Header stats */}
+        <Box
+          sx={{
+            p: "16px 28px",
+            borderBottom: "1px solid",
+            borderColor: "divider",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexShrink: 0,
+            flexWrap: "wrap",
+          }}
+        >
+          <Typography variant="h6" color="primary">
+            LIVE SCENARIO FEED
+          </Typography>
+
+          {/* Active processing indicator */}
+          {runStatus === "running" && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.25,
+                p: "10px 12px",
+                border: "1px solid",
+                borderColor: "primary.main",
+                my: 0.5,
+                "@keyframes pulseBorder": {
+                  "0%,100%": { opacity: 0.5 },
+                  "50%": { opacity: 1 },
+                },
+                animation: "pulseBorder 1.5s ease infinite",
+              }}
+            >
+              <Box
+                sx={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  bgcolor: "primary.main",
+                  "@keyframes dotPulse": {
+                    "0%,100%": { opacity: 1 },
+                    "50%": { opacity: 0.3 },
+                  },
+                  animation: "dotPulse 1s ease infinite",
+                }}
+              />
+              <Typography
+                sx={{ fontSize: 10, letterSpacing: 1, color: "primary.main" }}
+              >
+                PROCESSING
               </Typography>
+            </Box>
+          )}
+
+          <Box sx={{ display: "flex", gap: 2.5 }}>
+            {[
+              { val: runStatus === "running" ? 1 : 0, key: "RUNNING" },
+              { val: completedScenarios, key: "COMPLETE" },
+              { val: avgScore, key: "AVG SCORE" },
+              { val: datapoints.toLocaleString(), key: "DATAPOINTS" },
+            ].map(({ val, key }) => (
+              <Box key={key} sx={{ textAlign: "center" }}>
+                <Typography
+                  sx={{
+                    color: "primary.main",
+                    fontWeight: 700,
+                    lineHeight: 1,
+                  }}
+                >
+                  {val}
+                </Typography>
+                <Typography variant="caption" color="text.primary">
+                  {key}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Column headers */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "56px 1fr 80px 64px 64px",
+            gap: "12px",
+            px: "40px",
+            py: "8px",
+            borderBottom: "1px solid",
+            borderColor: "divider",
+            flexShrink: 0,
+          }}
+        >
+          {(["ID", "SCENARIO", "MODEL", "SCORE", "AGREEMENT"] as const).map(
+            (col) => (
+              <Typography
+                key={col}
+                variant="body2"
+                sx={{
+                  color: "text.disabled",
+                  textAlign:
+                    col === "SCORE" || col === "AGREEMENT" ? "center" : "left",
+                }}
+              >
+                {col}
+              </Typography>
+            ),
+          )}
+        </Box>
+
+        {/* Feed list */}
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: "auto",
+            px: "28px",
+            "&::-webkit-scrollbar": { width: 3 },
+            "&::-webkit-scrollbar-thumb": { bgcolor: "divider" },
+          }}
+        >
+          {feedItems.length === 0 && !isFinished && (
+            <Box sx={{ py: 4, textAlign: "center" }}>
+              <Typography variant="body2" color="text.secondary">
+                Starting up…
+              </Typography>
+            </Box>
+          )}
+
+          {feedItems.length === 0 && isFinished && (
+            <Box sx={{ py: 4, textAlign: "center" }}>
+              <Typography variant="body2" color="text.secondary">
+                No feed items recorded.
+              </Typography>
+            </Box>
+          )}
+
+          {feedItems.map((item, idx) => (
+            <Box
+              key={`${item.id}-${item.model}-${item.turn}-${idx}`}
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "56px 1fr 80px 64px 64px",
+                gap: "12px",
+                alignItems: "center",
+                px: "12px",
+                py: "9px",
+                borderBottom: "1px solid",
+                borderColor: "rgba(255,255,255,0.04)",
+                ...(idx === 0 && {
+                  "@keyframes fadeIn": {
+                    from: { opacity: 0, transform: "translateY(-4px)" },
+                    to: { opacity: 1, transform: "translateY(0)" },
+                  },
+                  animation: "fadeIn 0.3s ease",
+                }),
+              }}
+            >
+              {/* ID */}
+              <Typography variant="caption" sx={{ color: "primary.main" }}>
+                {item.id.replace("#", "")}
+              </Typography>
+              {/* Scenario name */}
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {item.scenarioTitle ?? item.dim}
+              </Typography>
+              {/* Model */}
+              <Typography variant="caption" color="text.primary">
+                {item.model.toUpperCase()}
+              </Typography>
+              {/* Score */}
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: 600,
+                  textAlign: "center",
+                  color: scoreColor(item.score),
+                }}
+              >
+                {item.score}
+              </Typography>
+              {/* Agreement */}
               <Typography
                 variant="caption"
-                color={
-                  item.type === "pass"
-                    ? "success.main"
-                    : item.type === "warn"
-                      ? "warning.main"
-                      : "error.main"
-                }
+                sx={{
+                  textAlign: "center",
+                  color: agrColor(item.type),
+                }}
               >
-                SCORE: {item.score} {item.type === "pass" ? "✓" : item.type === "warn" ? "⚠" : "✗"}
+                {agrLabel(item.type)}
               </Typography>
             </Box>
           ))}
         </Box>
-      </Paper>
 
-      {isFinished && reportId && (
-        <Box sx={{ textAlign: "center" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() =>
-              navigate(routes.dashboard.reports.reportById(reportId))
-            }
+        {/* Bottom turn bar */}
+        <Box
+          sx={{
+            flexShrink: 0,
+            p: "10px 28px",
+            borderTop: "1px solid",
+            borderColor: "divider",
+            bgcolor: "background.paper",
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          {/* 8 turn dots */}
+          <Box sx={{ display: "flex", gap: 0.5 }}>
+            {TURN_NAMES.map((_, i) => (
+              <Box
+                key={i}
+                sx={{
+                  width: 24,
+                  height: 6,
+                  bgcolor:
+                    i < currentTurnIdx
+                      ? "success.main"
+                      : i === currentTurnIdx
+                        ? "warning.main"
+                        : "action.disabledBackground",
+                  transition: "background-color 0.3s",
+                  ...(i === currentTurnIdx && runStatus === "running"
+                    ? {
+                        "@keyframes turnDot": {
+                          from: { opacity: 0.5 },
+                          to: { opacity: 1 },
+                        },
+                        animation: "turnDot 0.8s ease infinite alternate",
+                      }
+                    : {}),
+                }}
+              />
+            ))}
+          </Box>
+          {/* Turn type label */}
+          <Typography variant="caption" color="text.primary">
+            TURN:{" "}
+            <Box component="span" sx={{ color: "primary.main" }}>
+              {currentTurnName}
+            </Box>
+          </Typography>
+          {/* Right side: scenario info or back button */}
+          <Box
+            sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 2 }}
           >
-            Back to Report
-          </Button>
+            {latestItem && !isFinished && (
+              <Typography variant="caption" color="text.primary">
+                {latestItem.id} · {latestItem.model.toUpperCase()}
+              </Typography>
+            )}
+            {isFinished && reportId && (
+              <Button
+                size="small"
+                variant="outlined"
+                color="primary"
+                onClick={() =>
+                  navigate(routes.dashboard.reports.reportById(reportId))
+                }
+              >
+                Back to Report
+              </Button>
+            )}
+          </Box>
         </Box>
-      )}
+      </Box>
     </Box>
   );
 };

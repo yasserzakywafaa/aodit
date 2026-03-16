@@ -35,6 +35,8 @@ export interface ReportRun {
   currentStep?: string;
   totalScenarios?: number;
   completedScenarios?: number;
+  dimensionProgress?: Record<string, { completed: number; total: number }>;
+  currentTurnName?: string; // Name of the turn currently being executed (e.g. "Baseline")
   feedItems?: FeedItem[];
   startedAt?: string;
   completedAt?: string;

@@ -165,12 +165,13 @@ const executeScenario = async (params: {
   evaluatorModelId: string;
   reportDescription?: string;
   reportType?: string;
+  onTurnStart?: (turnIndex: number, turnType: string) => Promise<void>;
 }): Promise<{
   turns: TurnResult[];
   rawScore: number;
   selfScore?: number;
 }> => {
-  const { scenario, modelId, evaluatorModelId, reportDescription, reportType } =
+  const { scenario, modelId, evaluatorModelId, reportDescription, reportType, onTurnStart } =
     params;
 
   const conversationHistory: Array<{ role: string; content: string }> = [];
@@ -180,6 +181,11 @@ const executeScenario = async (params: {
   for (let turnIdx = 0; turnIdx < TURN_TYPES.length; turnIdx++) {
     const turnType = TURN_TYPES[turnIdx];
     const turnNumber = turnIdx + 1;
+
+    // Broadcast the current turn before the expensive LLM calls so the UI updates live
+    if (onTurnStart) {
+      await onTurnStart(turnNumber, turnType);
+    }
 
     // --- Generate the user prompt ---
     let userPrompt: string;
@@ -299,20 +305,102 @@ const executeModelRun = async (params: {
   } = params;
 
   const totalScenarios = scenarios.length;
-  let completedScenarios = 0;
-  const feedItems: FeedItem[] = [];
-  const allScenarioResults: ScenarioResult[] = [];
-  const scenarioResultIds: string[] = [];
+  const dimCounters: Record<string, number> = {};
 
-  await updateRunProgress(runId, {
-    status: "running",
-    progress: 5,
-    currentStep: "Running conversations",
-    totalScenarios,
-    completedScenarios: 0,
-  });
+  // Build per-dimension totals from the scenarios list
+  const dimTotals: Record<string, number> = {};
+  for (const s of scenarios) {
+    dimTotals[s.categoryId] = (dimTotals[s.categoryId] ?? 0) + 1;
+  }
+  const dimCompleted: Record<string, number> = {};
+
+  // --- Resume support: load any ScenarioResults already saved for this run ---
+  const existingResults = await getDocumentsByQueryFromDb<ScenarioResult>(
+    { reportRunId: runId } as any,
+    DBCollectionsEnum.scenarioResults,
+  );
+  const completedScenarioIds = new Set(existingResults.map((r) => r.scenarioId));
+  const allScenarioResults: ScenarioResult[] = [...(existingResults as unknown as ScenarioResult[])];
+  const scenarioResultIds: string[] = existingResults.map((r) => String(r._id));
+  let completedScenarios = existingResults.length;
+
+  // Seed dimCompleted from existing results so dimension progress is accurate on resume
+  for (const r of existingResults) {
+    dimCompleted[r.dimensionId] = (dimCompleted[r.dimensionId] ?? 0) + 1;
+  }
+
+  const isResuming = completedScenarios > 0;
+
+  let feedItems: FeedItem[] = [];
+
+  if (isResuming) {
+    // Rebuild feed items from existingResults (already loaded above) so the UI shows
+    // all completed scenarios — not just whatever fragment was saved in the run doc.
+    // Sort ascending by createdAt so we can assign sequential dim-prefixed IDs in order.
+    const scenarioTitleMap = new Map<string, string>(
+      scenarios.map((s) => [String(s._id), s.title ?? ""]),
+    );
+    const sortedByTime = [...existingResults]
+      .filter((r) => r.createdAt)
+      .sort(
+        (a, b) =>
+          new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime(),
+      );
+
+    const localDimCounters: Record<string, number> = {};
+    const DIM_PREFIX: Record<string, string> = {
+      reliability: "R",
+      integrity: "I",
+      judgment: "J",
+      resistance: "T",
+      resilience: "Z",
+    };
+    const allRebuilt: FeedItem[] = sortedByTime.map((r) => {
+      const prefix = DIM_PREFIX[r.dimensionId.toLowerCase()] ?? "X";
+      localDimCounters[prefix] = (localDimCounters[prefix] ?? 0) + 1;
+      const lastTurn = r.turns[r.turns.length - 1];
+      return {
+        id: `${prefix}${localDimCounters[prefix]}`,
+        dim: r.dimensionId.toUpperCase(),
+        model: r.modelName.toUpperCase(),
+        turn: lastTurn?.turnIndex ?? 8,
+        text: lastTurn ? `${lastTurn.turnType} — score ${lastTurn.score}/5` : "",
+        score: String(r.rawScore),
+        type: classifyScore(r.rawScore),
+        scenarioTitle: scenarioTitleMap.get(r.scenarioId) ?? "",
+        scenarioSeverity: r.severity,
+      };
+    });
+
+    // Seed dimCounters so new scenarios after resume continue numbering correctly
+    // (e.g. if last was R12, next will be R13 not R1)
+    Object.assign(dimCounters, localDimCounters);
+
+    // Show all completed scenarios newest-first — no cap on historical data
+    feedItems = allRebuilt.reverse();
+
+    console.log(
+      `[AODIT] Resuming run ${runId}: ${completedScenarios}/${totalScenarios} scenarios already done`,
+    );
+    await updateRunProgress(runId, {
+      status: "running",
+      currentStep: "Resuming conversations",
+      feedItems: [...feedItems], // Push rebuilt feed immediately so UI reflects history
+    });
+  } else {
+    await updateRunProgress(runId, {
+      status: "running",
+      progress: 5,
+      currentStep: "Running conversations",
+      totalScenarios,
+      completedScenarios: 0,
+    });
+  }
 
   for (const scenario of scenarios) {
+    // Skip scenarios already completed in a previous run (resume support)
+    if (completedScenarioIds.has(String(scenario._id))) continue;
+
     try {
       const result = await executeScenario({
         scenario,
@@ -320,6 +408,9 @@ const executeModelRun = async (params: {
         evaluatorModelId,
         reportDescription,
         reportType,
+        onTurnStart: async (_turnIndex, turnType) => {
+          await updateRunProgress(runId, { currentTurnName: turnType });
+        },
       });
 
       // Save ScenarioResult to DB
@@ -349,8 +440,15 @@ const executeModelRun = async (params: {
 
       // Update feed items
       const lastTurn = result.turns[result.turns.length - 1];
+      dimCompleted[scenario.categoryId] = (dimCompleted[scenario.categoryId] ?? 0) + 1;
+
+      const dimPrefix =
+        { reliability: "R", integrity: "I", judgment: "J", resistance: "T", resilience: "Z" }[
+          scenario.categoryId.toLowerCase()
+        ] ?? "X";
+      dimCounters[dimPrefix] = (dimCounters[dimPrefix] ?? 0) + 1;
       const feedItem: FeedItem = {
-        id: `#${String(completedScenarios + 1).padStart(3, "0")}`,
+        id: `${dimPrefix}${dimCounters[dimPrefix]}`,
         dim: scenario.categoryId.toUpperCase(),
         model: modelName.toUpperCase(),
         turn: lastTurn.turnIndex,
@@ -369,11 +467,18 @@ const executeModelRun = async (params: {
         totalScenarios,
       );
 
+      const dimensionProgress = Object.fromEntries(
+        Object.entries(dimTotals).map(([dim, total]) => [
+          dim,
+          { completed: dimCompleted[dim] ?? 0, total },
+        ]),
+      );
       await updateRunProgress(runId, {
         completedScenarios,
         progress,
         currentStep: getProgressStep(progress),
         feedItems: [...feedItems],
+        dimensionProgress,
       });
     } catch (err: any) {
       console.error(
@@ -576,5 +681,59 @@ export const executeReport = async (
     } catch {
       // Best effort
     }
+  }
+};
+
+// ---------------------------------------------------------------------------
+// Startup recovery: resume any runs interrupted by a previous server crash
+// ---------------------------------------------------------------------------
+
+/**
+ * Called once on server startup. Finds all ReportRuns that were left in a
+ * "running" or "pending" state (i.e. the server died mid-execution) and
+ * re-fires executeReport for each affected batch.
+ *
+ * executeModelRun is resume-aware — it queries existing ScenarioResults and
+ * skips scenarios that were already completed, so no work is duplicated.
+ */
+export const resumeStuckRuns = async (): Promise<void> => {
+  const stuckRuns = await getDocumentsByQueryFromDb<ReportRun>(
+    { status: { $in: ["running", "pending"] } } as any,
+    DBCollectionsEnum.reportRuns,
+  );
+
+  if (stuckRuns.length === 0) return;
+
+  console.log(
+    `[AODIT] Found ${stuckRuns.length} stuck run(s) from a previous server instance — resuming...`,
+  );
+
+  // Group runs by their batch (reportId + batchId) so each batch is resumed once
+  const batches = new Map<string, typeof stuckRuns>();
+  for (const run of stuckRuns) {
+    const key = `${run.reportId}:${run.batchId ?? "no-batch"}`;
+    if (!batches.has(key)) batches.set(key, []);
+    batches.get(key)!.push(run);
+  }
+
+  for (const [, runs] of batches) {
+    const { reportId, batchId } = runs[0];
+    const runIds = new Map<string, string>();
+    for (const run of runs) {
+      if (run.modelName && run._id) {
+        runIds.set(run.modelName, String(run._id));
+      }
+    }
+
+    console.log(
+      `[AODIT] Resuming batch ${batchId} for report ${reportId} (${runIds.size} model run(s))`,
+    );
+
+    // Fire-and-forget — executeModelRun will skip already-completed scenarios
+    executeReport(reportId, batchId!, runIds).catch((err) => {
+      console.error(
+        `[AODIT] Failed to resume batch ${batchId}: ${err.message}`,
+      );
+    });
   }
 };

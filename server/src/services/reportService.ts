@@ -156,6 +156,10 @@ const getReportById = async (reportId: string) => {
 };
 
 const deleteReport = async (reportId: string) => {
+  // Cascade: remove all related data before deleting the report itself
+  await database.collection(DBCollectionsEnum.scenarios).deleteMany({ reportId });
+  await database.collection(DBCollectionsEnum.reportRuns).deleteMany({ reportId });
+  await database.collection(DBCollectionsEnum.scenarioResults).deleteMany({ reportId });
   return await deleteDocument(reportId, DBCollectionsEnum.reports);
 };
 

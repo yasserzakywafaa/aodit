@@ -7,14 +7,15 @@ import {
   DBCollectionsEnum,
   getDocumentsByQueryFromDb,
 } from "../../models/mongoDb";
-import { ReportRun } from "../../models/types/reportRun";
-import { Report } from "../../models/types/report";
 import {
   createDocument,
   readDocument,
   updateDocument,
 } from "../../models/mongoDb/crudOperations";
+
 import { ObjectId } from "mongodb";
+import { Report } from "../../models/types/report";
+import { ReportRun } from "../../models/types/reportRun";
 import crypto from "crypto";
 import { executeReport } from "./executionEngine";
 
@@ -68,8 +69,10 @@ export const getLatestRunStatus = async (
   status: string;
   progress: number;
   currentStep: string;
+  currentTurnName?: string;
   totalScenarios: number;
   completedScenarios: number;
+  dimensionProgress: Record<string, { completed: number; total: number }>;
   feedItems: ReportRun["feedItems"];
 } | null> => {
   const runs = await getReportRunsByReportId(reportId);
@@ -92,6 +95,10 @@ export const getLatestRunStatus = async (
   let completedScenarios = 0;
   const allFeedItems: ReportRun["feedItems"] = [];
   let overallStatus: string = "completed";
+  const aggregatedDimProgress: Record<
+    string,
+    { completed: number; total: number }
+  > = {};
 
   for (const run of batchRuns) {
     totalScenarios += run.totalScenarios ?? 0;
@@ -104,26 +111,43 @@ export const getLatestRunStatus = async (
       overallStatus = "failed";
     else if (run.status === "pending" && overallStatus === "completed")
       overallStatus = "pending";
+
+    // Aggregate per-dimension progress across runs
+    if (run.dimensionProgress) {
+      for (const [dim, { completed, total }] of Object.entries(
+        run.dimensionProgress,
+      )) {
+        if (!aggregatedDimProgress[dim]) {
+          aggregatedDimProgress[dim] = { completed: 0, total: 0 };
+        }
+        aggregatedDimProgress[dim].completed += completed;
+        aggregatedDimProgress[dim].total += total;
+      }
+    }
   }
 
-  // Sort feed items by id descending, take latest 8
-  const feedItems = allFeedItems.slice(0, 8);
+  // Pass all feed items through — the run already manages its own window
+  const feedItems = allFeedItems;
 
   const progress =
     totalScenarios > 0
       ? Math.round((completedScenarios / totalScenarios) * 100)
       : 0;
 
+  const runningRun = batchRuns.find((r) => r.status === "running");
   const currentStep =
-    batchRuns.find((r) => r.status === "running")?.currentStep ??
+    runningRun?.currentStep ??
     (overallStatus === "completed" ? "Generating report" : "Pending");
+  const currentTurnName = runningRun?.currentTurnName ?? "—";
 
   return {
     status: overallStatus,
     progress: overallStatus === "completed" ? 100 : progress,
     currentStep,
+    currentTurnName,
     totalScenarios,
     completedScenarios,
+    dimensionProgress: aggregatedDimProgress,
     feedItems,
   };
 };

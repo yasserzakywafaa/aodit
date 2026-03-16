@@ -357,6 +357,8 @@ const executeModelRun = async (params: {
         text: `${lastTurn.turnType} — score ${lastTurn.score}/5`,
         score: String(result.rawScore),
         type: classifyScore(result.rawScore),
+        scenarioTitle: scenario.title ?? "",
+        scenarioSeverity: scenario.severity ?? "",
       };
       feedItems.unshift(feedItem);
       if (feedItems.length > MAX_FEED_ITEMS) feedItems.pop();

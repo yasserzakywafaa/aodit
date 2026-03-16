@@ -16,6 +16,8 @@ export interface FeedItem {
   text: string;
   score: string;
   type: "pass" | "warn" | "fail";
+  scenarioTitle?: string;
+  scenarioSeverity?: string;
 }
 
 export interface ReportRun {

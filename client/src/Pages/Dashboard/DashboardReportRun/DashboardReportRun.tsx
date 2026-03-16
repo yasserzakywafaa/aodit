@@ -272,6 +272,38 @@ const DashboardReportRun = () => {
               <Typography variant="caption" color="primary">
                 {item.id} {item.dim} · {item.model} · TURN {item.turn}
               </Typography>
+              {item.scenarioTitle && (
+                <Typography variant="body2" color="text.primary" sx={{ mt: 0.25 }}>
+                  {item.scenarioTitle}
+                  {item.scenarioSeverity && (
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      sx={{
+                        ml: 1,
+                        px: 0.75,
+                        py: 0.25,
+                        borderRadius: 0.5,
+                        border: "1px solid",
+                        borderColor:
+                          item.scenarioSeverity === "high"
+                            ? "error.main"
+                            : item.scenarioSeverity === "medium"
+                              ? "warning.main"
+                              : "text.secondary",
+                        color:
+                          item.scenarioSeverity === "high"
+                            ? "error.main"
+                            : item.scenarioSeverity === "medium"
+                              ? "warning.main"
+                              : "text.secondary",
+                      }}
+                    >
+                      {item.scenarioSeverity.toUpperCase()}
+                    </Typography>
+                  )}
+                </Typography>
+              )}
               <Typography variant="body2" color="text.secondary">
                 {item.text}
               </Typography>

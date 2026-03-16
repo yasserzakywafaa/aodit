@@ -8,35 +8,36 @@
  * 4. Aggregate scores and finalize the ReportRun
  */
 
-import { ObjectId } from "mongodb";
 import {
   DBCollectionsEnum,
   getDocumentsByQueryFromDb,
 } from "../../models/mongoDb";
+import { FeedItem, ReportRun } from "../../models/types/reportRun";
+import { ScenarioResult, TurnResult } from "../../models/types/scenarioResult";
+import {
+  aggregateDimensionScores,
+  computeCalibrationGap,
+  computeComposite,
+  determineDeploymentVerdict,
+  determineOutlook,
+  getRating,
+} from "./scoring";
+import {
+  buildScenarioGenerationPrompt,
+  buildScoringPrompt,
+  buildSelfScoreExtractionPrompt,
+  buildTurnEscalationPrompt,
+} from "./prompts";
 import {
   createDocument,
   readDocument,
   updateDocument,
 } from "../../models/mongoDb/crudOperations";
+import { resolveEvaluatorModelId, resolveModelId } from "./modelRegistry";
+
+import { ObjectId } from "mongodb";
 import { Report } from "../../models/types/report";
 import { Scenario } from "../../models/types/scenario";
-import { FeedItem, ReportRun } from "../../models/types/reportRun";
-import { ScenarioResult, TurnResult } from "../../models/types/scenarioResult";
-import { resolveModelId, resolveEvaluatorModelId } from "./modelRegistry";
-import {
-  buildScenarioGenerationPrompt,
-  buildTurnEscalationPrompt,
-  buildScoringPrompt,
-  buildSelfScoreExtractionPrompt,
-} from "./prompts";
-import {
-  aggregateDimensionScores,
-  computeComposite,
-  getRating,
-  computeCalibrationGap,
-  determineOutlook,
-  determineDeploymentVerdict,
-} from "./scoring";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 
 // ---------------------------------------------------------------------------
@@ -80,7 +81,7 @@ const callWithRetry = async (
   modelId: string,
   messages: Array<{ role: "system" | "user" | "assistant"; content: string }>,
   jsonMode = false,
-): Promise<string> {
+): Promise<string> => {
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
       return await callModel(modelId, messages, jsonMode);
@@ -102,7 +103,7 @@ const sleep = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const parseJsonSafe = <T,>(text: string, fallback: T): T => {
+const parseJsonSafe = <T>(text: string, fallback: T): T => {
   try {
     // Strip markdown code fences if present
     const cleaned = text
@@ -139,7 +140,7 @@ const updateRunProgress = async (
 const computeProgressPercent = (
   completedScenarios: number,
   totalScenarios: number,
-): number {
+): number => {
   if (totalScenarios === 0) return 0;
   // Reserve 0-5% for setup, 5-90% for scenarios, 90-100% for aggregation
   const scenarioProgress = (completedScenarios / totalScenarios) * 85;
@@ -169,13 +170,8 @@ const executeScenario = async (params: {
   rawScore: number;
   selfScore?: number;
 }> => {
-  const {
-    scenario,
-    modelId,
-    evaluatorModelId,
-    reportDescription,
-    reportType,
-  } = params;
+  const { scenario, modelId, evaluatorModelId, reportDescription, reportType } =
+    params;
 
   const conversationHistory: Array<{ role: string; content: string }> = [];
   const turns: TurnResult[] = [];
@@ -265,8 +261,7 @@ const executeScenario = async (params: {
   }
 
   // Raw score = average of all turn scores
-  const rawScore =
-    turns.reduce((sum, t) => sum + t.score, 0) / turns.length;
+  const rawScore = turns.reduce((sum, t) => sum + t.score, 0) / turns.length;
 
   return {
     turns,
@@ -367,7 +362,10 @@ const executeModelRun = async (params: {
       if (feedItems.length > MAX_FEED_ITEMS) feedItems.pop();
 
       completedScenarios++;
-      const progress = computeProgressPercent(completedScenarios, totalScenarios);
+      const progress = computeProgressPercent(
+        completedScenarios,
+        totalScenarios,
+      );
 
       await updateRunProgress(runId, {
         completedScenarios,
@@ -399,7 +397,10 @@ const executeModelRun = async (params: {
       await createDocument(failedResult, DBCollectionsEnum.scenarioResults);
       completedScenarios++;
 
-      const progress = computeProgressPercent(completedScenarios, totalScenarios);
+      const progress = computeProgressPercent(
+        completedScenarios,
+        totalScenarios,
+      );
       await updateRunProgress(runId, {
         completedScenarios,
         progress,
@@ -428,7 +429,10 @@ const executeModelRun = async (params: {
     return;
   }
 
-  const dimScores = aggregateDimensionScores(completedResults, dimensionWeights);
+  const dimScores = aggregateDimensionScores(
+    completedResults,
+    dimensionWeights,
+  );
   const compositeScore = computeComposite(dimScores);
   const rating = getRating(compositeScore);
   const calibrationGap = computeCalibrationGap(completedResults);
@@ -555,7 +559,9 @@ export const executeReport = async (
       DBCollectionsEnum.reports,
     );
 
-    console.log(`[AODIT] All model runs completed for report ${reportId} — status: ${finalStatus}`);
+    console.log(
+      `[AODIT] All model runs completed for report ${reportId} — status: ${finalStatus}`,
+    );
   } catch (err: any) {
     console.error(`[AODIT] Fatal error in executeReport: ${err.message}`);
     // Mark report as failed on fatal error

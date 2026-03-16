@@ -15,8 +15,8 @@ import type { ScenarioResult } from "src/shared/types/scenarioResult";
 // Constants (mirrored from aoditFramework.ts — no server import needed)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const GOLD = "#C9A84C";
-const NAVY = "#1A2233";
+const GOLD = "#047857";
+const DARK = "#0A0A0A";
 const CREAM = "#F7F5F0";
 const HIGHLIGHT = "#FFFBEB";
 const PASS_GREEN = "#15803D";
@@ -154,7 +154,7 @@ const s = StyleSheet.create({
 
   // Header bar (dark navy across top)
   headerBar: {
-    backgroundColor: NAVY,
+    backgroundColor: DARK,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -186,7 +186,7 @@ const s = StyleSheet.create({
   // Section header
   sectionNum: { color: GOLD, fontSize: 18, fontFamily: "Helvetica-Bold" },
   sectionTitle: {
-    color: NAVY,
+    color: DARK,
     fontSize: 14,
     fontFamily: "Helvetica-Bold",
     marginBottom: 12,
@@ -202,7 +202,7 @@ const s = StyleSheet.create({
   divider: { height: 1, backgroundColor: "#E5E7EB", marginVertical: 12 },
 
   // Headline score box (cover + summary)
-  scoreBox: { backgroundColor: NAVY, flexDirection: "row", marginTop: 24 },
+  scoreBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 24 },
   scoreBoxLeft: {
     padding: 20,
     borderRightColor: GOLD,
@@ -238,7 +238,7 @@ const s = StyleSheet.create({
   metaLabel: { width: 130, color: MID_GRAY, fontSize: 8 },
   metaValue: {
     flex: 1,
-    color: NAVY,
+    color: DARK,
     fontSize: 8,
     fontFamily: "Helvetica-Bold",
   },
@@ -253,7 +253,7 @@ const s = StyleSheet.create({
   },
   statLabel: { color: MID_GRAY, fontSize: 7, letterSpacing: 1 },
   statValue: {
-    color: NAVY,
+    color: DARK,
     fontSize: 14,
     fontFamily: "Helvetica-Bold",
     marginTop: 2,
@@ -264,7 +264,7 @@ const s = StyleSheet.create({
   table: { width: "100%", marginBottom: 12 },
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: NAVY,
+    backgroundColor: DARK,
     paddingVertical: 6,
     paddingHorizontal: 8,
   },
@@ -313,7 +313,7 @@ const s = StyleSheet.create({
     width: 90,
     fontSize: 8,
     fontFamily: "Helvetica-Bold",
-    color: NAVY,
+    color: DARK,
   },
   dimScore: { width: 50, fontSize: 12, fontFamily: "Helvetica-Bold" },
   dimDesc: { flex: 1, fontSize: 7, color: MID_GRAY },
@@ -323,7 +323,7 @@ const s = StyleSheet.create({
   para: { fontSize: 8, color: TEXT, lineHeight: 1.6, marginBottom: 10 },
 
   // Verdict box
-  verdictBox: { backgroundColor: NAVY, flexDirection: "row", marginTop: 16 },
+  verdictBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 16 },
   verdictLeft: {
     padding: 16,
     borderRightColor: GOLD,
@@ -364,7 +364,7 @@ const s = StyleSheet.create({
 
   // Per-dimension section
   dimHeader: {
-    backgroundColor: NAVY,
+    backgroundColor: DARK,
     paddingVertical: 8,
     paddingHorizontal: 12,
     marginTop: 12,
@@ -487,7 +487,7 @@ const CoverPage = ({ report, run }: { report: Report; run: ReportRun }) => {
             style={{
               fontSize: 22,
               fontFamily: "Helvetica-Bold",
-              color: NAVY,
+              color: DARK,
               lineHeight: 1.3,
             }}
           >
@@ -681,7 +681,7 @@ const ExecutiveSummaryPage = ({
             style={{
               fontSize: 10,
               fontFamily: "Helvetica-Bold",
-              color: NAVY,
+              color: DARK,
               flex: 1,
             }}
           >
@@ -832,7 +832,7 @@ const DimensionScoresPage = ({
                     {
                       width: colWidths[1],
                       fontFamily: "Helvetica-Bold",
-                      color: NAVY,
+                      color: DARK,
                     },
                   ]}
                 >
@@ -1067,7 +1067,7 @@ const DimAnalysisBlock = ({
                   style={{
                     fontSize: 11,
                     fontFamily: "Helvetica-Bold",
-                    color: NAVY,
+                    color: DARK,
                     marginTop: 2,
                   }}
                 >
@@ -1518,7 +1518,7 @@ const RatingVerdictPage = ({
                     {
                       width: colW[0],
                       fontFamily: "Helvetica-Bold",
-                      color: isActive ? GOLD : NAVY,
+                      color: isActive ? GOLD : DARK,
                     },
                   ]}
                 >
@@ -1532,7 +1532,7 @@ const RatingVerdictPage = ({
                     s.tableCell,
                     {
                       width: colW[2],
-                      color: isActive ? NAVY : MID_GRAY,
+                      color: isActive ? DARK : MID_GRAY,
                       fontFamily: isActive ? "Helvetica-Bold" : "Helvetica",
                     },
                   ]}

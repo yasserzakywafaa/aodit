@@ -21,7 +21,6 @@ export interface Report {
   executionStatus?: "pending" | "running" | "completed" | "failed" | "scheduled";
   startedAt?: string;
   completedAt?: string;
-  sectorContext?: string;
   scenariosPerDimension?: ScenariosPerDimension;
   dimensionWeights?: DimensionWeights;
   modelsToTest?: string[];

@@ -89,17 +89,26 @@ export const getDashboardReportsDataGridConfig = (
       flex: 1,
       display: "flex",
       description: "Report status",
-      renderCell: (params) => (
-        <Chip
-          label={params.row.status}
-          color={
-            params.row.status === ReportStatus.active ||
-            params.row.status === ReportStatus.completed
-              ? "success"
-              : "default"
-          }
-        />
-      ),
+      renderCell: (params) => {
+        const status = params.row.status;
+        const chipColor: Record<string, "default" | "primary" | "success" | "error" | "info"> = {
+          [ReportStatus.draft]: "default",
+          [ReportStatus.running]: "primary",
+          [ReportStatus.completed]: "success",
+          [ReportStatus.failed]: "error",
+          [ReportStatus.scheduled]: "info",
+          [ReportStatus.active]: "success",
+          [ReportStatus.inactive]: "default",
+        };
+        return (
+          <Chip
+            label={status.toUpperCase()}
+            color={chipColor[status] ?? "default"}
+            size="small"
+            variant="outlined"
+          />
+        );
+      },
     },
     {
       field: "createdAt",

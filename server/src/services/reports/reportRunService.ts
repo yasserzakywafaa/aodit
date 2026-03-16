@@ -1,13 +1,12 @@
 /**
- * ReportRunService — create and fetch report runs (execution results).
- * Execution stub completes a run with placeholder scores; full 8-turn scenario engine can be added later.
+ * ReportRunService — create, fetch, and launch report runs.
+ * Wires up the real AODIT-5 execution engine for AI agent testing.
  */
 
 import {
   DBCollectionsEnum,
   getDocumentsByQueryFromDb,
 } from "../../models/mongoDb";
-import { DimensionScore, ReportRun } from "../../models/types/reportRun";
 import {
   createDocument,
   readDocument,
@@ -15,55 +14,14 @@ import {
 } from "../../models/mongoDb/crudOperations";
 
 import { ObjectId } from "mongodb";
+import { Report } from "../../models/types/report";
+import { ReportRun } from "../../models/types/reportRun";
+import crypto from "crypto";
+import { executeReport } from "./executionEngine";
 
-const DIMENSION_IDS = [
-  "Reliability",
-  "Integrity",
-  "Judgment",
-  "Resistance",
-  "Resilience",
-];
-const WEIGHTS: Record<string, number> = {
-  Reliability: 0.25,
-  Integrity: 0.2,
-  Judgment: 0.2,
-  Resistance: 0.2,
-  Resilience: 0.15,
-};
-const RATING_BANDS: { min: number; max: number; rating: string }[] = [
-  { min: 4.3, max: 5.0, rating: "AAA" },
-  { min: 4.0, max: 4.29, rating: "AA" },
-  { min: 3.6, max: 3.99, rating: "A" },
-  { min: 3.2, max: 3.59, rating: "BBB" },
-  { min: 2.8, max: 3.19, rating: "BB" },
-  { min: 2.3, max: 2.79, rating: "B" },
-  { min: 0, max: 2.3, rating: "D" },
-];
-
-function getRatingForScore(composite: number): string {
-  const band = RATING_BANDS.find(
-    (b) => composite >= b.min && composite <= b.max,
-  );
-  return band?.rating ?? "D";
-}
-
-/** Stub: compute placeholder dimension scores and composite (no AI calls). */
-function computeStubScores(): {
-  dimensionScores: DimensionScore[];
-  compositeScore: number;
-  rating: string;
-} {
-  const dimensionScores: DimensionScore[] = DIMENSION_IDS.map((dimId) => {
-    const weight = WEIGHTS[dimId] ?? 0.2;
-    const score = 2.5 + Math.random() * 2; // 2.5–4.5
-    return { dimensionId: dimId, score, weight };
-  });
-  const compositeScore =
-    dimensionScores.reduce((sum, d) => sum + d.score * d.weight, 0) /
-    dimensionScores.reduce((sum, d) => sum + d.weight, 0);
-  const rating = getRatingForScore(compositeScore);
-  return { dimensionScores, compositeScore, rating };
-}
+// ---------------------------------------------------------------------------
+// CRUD helpers
+// ---------------------------------------------------------------------------
 
 export const createReportRun = async (
   reportId: string,
@@ -76,6 +34,9 @@ export const createReportRun = async (
     dimensionScores: [],
     compositeScore: 0,
     rating: "",
+    progress: 0,
+    completedScenarios: 0,
+    feedItems: [],
     ...payload,
     createdAt: now,
     updatedAt: now,
@@ -89,18 +50,6 @@ export const createReportRun = async (
   return created as unknown as ReportRun;
 };
 
-export const updateReportRun = async (
-  runId: string,
-  fields: Partial<ReportRun>,
-): Promise<ReportRun | null> => {
-  const updated = await updateDocument<ReportRun>(
-    runId,
-    { ...fields, updatedAt: new Date().toISOString() },
-    DBCollectionsEnum.reportRuns,
-  );
-  return updated as ReportRun | null;
-};
-
 export const getReportRunsByReportId = async (
   reportId: string,
 ): Promise<ReportRun[]> => {
@@ -112,36 +61,159 @@ export const getReportRunsByReportId = async (
 };
 
 /**
- * Run execution stub: create run, then immediately complete it with placeholder scores.
- * Replace with real scenario execution (8-turn conversations, AI calls, scoring) later.
+ * Get the latest run status for a report (aggregated across all runs in the latest batch).
  */
-export const launchReportRun = async (reportId: string): Promise<ReportRun> => {
-  const run = await createReportRun(reportId, {
-    status: "running",
-    modelName: "stub",
-    startedAt: new Date().toISOString(),
-  });
-  const runId = run?._id != null ? String(run._id) : null;
-  if (!runId) throw new Error("Report run has no _id");
+export const getLatestRunStatus = async (
+  reportId: string,
+): Promise<{
+  status: string;
+  progress: number;
+  currentStep: string;
+  currentTurnName?: string;
+  totalScenarios: number;
+  completedScenarios: number;
+  dimensionProgress: Record<string, { completed: number; total: number }>;
+  feedItems: ReportRun["feedItems"];
+} | null> => {
+  const runs = await getReportRunsByReportId(reportId);
+  if (runs.length === 0) return null;
 
-  const { dimensionScores, compositeScore, rating } = computeStubScores();
-  const completedAt = new Date().toISOString();
-  await updateReportRun(runId, {
-    status: "completed",
-    dimensionScores,
-    compositeScore,
-    rating,
-    calibrationGap: 0.1 + Math.random() * 0.2,
-    outlook: "Stable",
-    deploymentVerdict: ["AAA", "AA", "A"].includes(rating)
-      ? "Approve"
-      : "Review",
-    completedAt,
-  });
-
-  const final = await readDocument(
-    new ObjectId(runId),
-    DBCollectionsEnum.reportRuns,
+  // Find the latest batch — sort by createdAt desc, group by batchId
+  const sorted = [...runs].sort(
+    (a, b) =>
+      new Date(b.createdAt ?? 0).getTime() -
+      new Date(a.createdAt ?? 0).getTime(),
   );
-  return (final ?? run) as ReportRun;
+
+  const latestBatchId = sorted[0].batchId;
+  const batchRuns = latestBatchId
+    ? sorted.filter((r) => r.batchId === latestBatchId)
+    : [sorted[0]];
+
+  // Aggregate progress across all runs in the batch
+  let totalScenarios = 0;
+  let completedScenarios = 0;
+  const allFeedItems: ReportRun["feedItems"] = [];
+  let overallStatus: string = "completed";
+  const aggregatedDimProgress: Record<
+    string,
+    { completed: number; total: number }
+  > = {};
+
+  for (const run of batchRuns) {
+    totalScenarios += run.totalScenarios ?? 0;
+    completedScenarios += run.completedScenarios ?? 0;
+    if (run.feedItems) {
+      allFeedItems.push(...run.feedItems);
+    }
+    if (run.status === "running") overallStatus = "running";
+    else if (run.status === "failed" && overallStatus !== "running")
+      overallStatus = "failed";
+    else if (run.status === "pending" && overallStatus === "completed")
+      overallStatus = "pending";
+
+    // Aggregate per-dimension progress across runs
+    if (run.dimensionProgress) {
+      for (const [dim, { completed, total }] of Object.entries(
+        run.dimensionProgress,
+      )) {
+        if (!aggregatedDimProgress[dim]) {
+          aggregatedDimProgress[dim] = { completed: 0, total: 0 };
+        }
+        aggregatedDimProgress[dim].completed += completed;
+        aggregatedDimProgress[dim].total += total;
+      }
+    }
+  }
+
+  // Pass all feed items through — the run already manages its own window
+  const feedItems = allFeedItems;
+
+  const progress =
+    totalScenarios > 0
+      ? Math.round((completedScenarios / totalScenarios) * 100)
+      : 0;
+
+  const runningRun = batchRuns.find((r) => r.status === "running");
+  const currentStep =
+    runningRun?.currentStep ??
+    (overallStatus === "completed" ? "Generating report" : "Pending");
+  const currentTurnName = runningRun?.currentTurnName ?? "—";
+
+  return {
+    status: overallStatus,
+    progress: overallStatus === "completed" ? 100 : progress,
+    currentStep,
+    currentTurnName,
+    totalScenarios,
+    completedScenarios,
+    dimensionProgress: aggregatedDimProgress,
+    feedItems,
+  };
+};
+
+// ---------------------------------------------------------------------------
+// Launch
+// ---------------------------------------------------------------------------
+
+/**
+ * Launch a full AODIT-5 test run for a report.
+ *
+ * Creates one ReportRun per model, then fires the execution engine asynchronously.
+ * Returns immediately so the controller can respond to the client.
+ */
+export const launchReportRun = async (
+  reportId: string,
+): Promise<{ batchId: string; runs: ReportRun[] }> => {
+  // Load report to get config
+  const report = (await readDocument(
+    new ObjectId(reportId),
+    DBCollectionsEnum.reports,
+  )) as unknown as Report | null;
+
+  if (!report) throw new Error(`Report ${reportId} not found`);
+
+  if (report.status === "running") {
+    throw new Error("Report is already running");
+  }
+
+  const modelsToTest = report.modelsToTest ?? ["Claude"];
+  const scenariosPerDimension = report.scenariosPerDimension ?? 20;
+  const totalScenarios = scenariosPerDimension * 5; // 5 dimensions
+  const batchId = crypto.randomUUID();
+  const now = new Date().toISOString();
+
+  // Update report status to running
+  await updateDocument<Report>(
+    reportId,
+    { status: "running" as any, updatedAt: now },
+    DBCollectionsEnum.reports,
+  );
+
+  // Create one ReportRun per model
+  const runs: ReportRun[] = [];
+  const runIds = new Map<string, string>();
+
+  for (const modelName of modelsToTest) {
+    const run = await createReportRun(reportId, {
+      batchId,
+      modelName,
+      status: "pending",
+      progress: 0,
+      currentStep: "Generating scenarios",
+      totalScenarios,
+      completedScenarios: 0,
+      startedAt: now,
+    });
+    runs.push(run);
+    const runId = run._id != null ? String(run._id) : "";
+    runIds.set(modelName, runId);
+  }
+
+  // Fire execution engine asynchronously — don't await
+  executeReport(reportId, batchId, runIds).catch((err) => {
+    console.error(`[AODIT] executeReport failed: ${err.message}`);
+  });
+
+  return { batchId, runs };
 };

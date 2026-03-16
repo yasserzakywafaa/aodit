@@ -34,6 +34,7 @@ export enum DBCollectionsEnum {
   reports = "reports",
   scenarios = "scenarios",
   reportRuns = "report_runs",
+  scenarioResults = "scenario_results",
   users = "users",
   lead_subscribers = "lead_subscribers",
 }
@@ -117,6 +118,11 @@ const createIndexes = async () => {
     const reportRuns = database.collection(DBCollectionsEnum.reportRuns);
     await reportRuns.createIndex({ reportId: 1 });
     await reportRuns.createIndex({ createdAt: -1 });
+
+    const scenarioResults = database.collection(DBCollectionsEnum.scenarioResults);
+    await scenarioResults.createIndex({ reportRunId: 1 });
+    await scenarioResults.createIndex({ reportId: 1 });
+    await scenarioResults.createIndex({ createdAt: -1 });
 
     const users = database.collection(DBCollectionsEnum.users);
     await users.createIndex({ email: 1 });

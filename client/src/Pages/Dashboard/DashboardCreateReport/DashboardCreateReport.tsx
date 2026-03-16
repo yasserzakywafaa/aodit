@@ -8,11 +8,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
 import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+
 import { alpha } from "@mui/material/styles";
 import { routes } from "src/application/routes";
 import { useDashboardCreateReportContext } from "./store/Provider";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const DashboardCreateReport = () => {
@@ -39,7 +40,7 @@ const DashboardCreateReport = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!report.name?.trim()) return;
+    if (!report.name?.trim() || !report.description?.trim()) return;
     try {
       const created = await handleCreateReport(report);
       if (created?._id) {
@@ -49,6 +50,15 @@ const DashboardCreateReport = () => {
       console.error("❌ Failed to create report:", error);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      setReport({
+        name: "",
+        description: "",
+      });
+    };
+  }, []);
 
   return (
     <Container sx={{ margin: "0" }}>
@@ -88,7 +98,8 @@ const DashboardCreateReport = () => {
                   rows={4}
                   value={report.description ?? ""}
                   onChange={handleChange}
-                  placeholder="Optional description of the report"
+                  placeholder="Describe the AI agent use case, sector, and risk context (e.g. Banking chatbot handling loan applications)"
+                  required
                   fullWidth
                 />
               </CardContent>
@@ -97,7 +108,7 @@ const DashboardCreateReport = () => {
               type="submit"
               variant="contained"
               color="primary"
-              disabled={!report.name?.trim()}
+              disabled={!report.name?.trim() || !report.description?.trim()}
               sx={{ mt: 3 }}
             >
               Go to Report Config
@@ -135,9 +146,10 @@ const DashboardCreateReport = () => {
                 mb: 2,
               }}
             >
-              After creating your report, you’ll configure scenarios per dimension,
-              dimension weights, and choose which AI models to test and evaluate.
-              You can then run the report and view results in the AODIT Framework.
+              After creating your report, you’ll configure scenarios per
+              dimension, dimension weights, and choose which AI models to test
+              and evaluate. You can then run the report and view results in the
+              AODIT Framework.
             </Typography>
             <Box
               sx={{
@@ -153,10 +165,10 @@ const DashboardCreateReport = () => {
                 variant="body2"
                 sx={{ fontFamily: fontFamilySans, color: "text.secondary" }}
               >
-                Scenarios and weights define how many test cases run per dimension
-                and how each dimension contributes to the composite score. Models
-                to test are the agents you want to evaluate; the evaluator model
-                judges the results.
+                Scenarios and weights define how many test cases run per
+                dimension and how each dimension contributes to the composite
+                score. Models to test are the agents you want to evaluate; the
+                evaluator model judges the results.
               </Typography>
             </Box>
           </Box>

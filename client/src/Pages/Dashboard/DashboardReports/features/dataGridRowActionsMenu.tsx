@@ -12,7 +12,6 @@ import { DashboardReportsGridFields } from "./dataGridConfig";
 import DeleteReportDialog from "./deleteReportDialog";
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { routes } from "src/application/routes";
-import { secondaryColor } from "src/application/shared/themes";
 import { useDashboardReportsContext } from "../store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -72,11 +71,11 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
     <Box display="flex" justifyContent="flex-end" alignItems="center" gap={1}>
       <IconButton
         size="small"
-        color="secondary"
-        sx={{
+        color="primary"
+        sx={(theme) => ({
           borderRadius: "0px",
-          border: `1px solid ${secondaryColor}`,
-        }}
+          border: `1px solid ${theme.palette.primary.main}`,
+        })}
         aria-haspopup="true"
         aria-controls={anchorEl ? "row-actions-menu" : undefined}
         aria-expanded={anchorEl ? "true" : undefined}

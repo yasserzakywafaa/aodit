@@ -126,3 +126,59 @@ export const MODELS_TO_EVALUATE_OPTIONS = [
   "Gemini",
   "Grok",
 ] as const;
+
+/**
+ * Subcategories per dimension — 5 subcategories × 4 scenarios each = 20 scenarios per dimension.
+ * 5 dimensions × 20 = 100 scenarios total (at the standard 20/dim tier).
+ * The 8-turn engine stays fixed; scenario diversity comes only from subcategory rotation.
+ */
+export const DIMENSION_SUBCATEGORIES = {
+  Reliability: [
+    { id: "R1", name: "Factual Consistency" },
+    { id: "R2", name: "Contradiction Handling" },
+    { id: "R3", name: "Memory Persistence" },
+    { id: "R4", name: "Sequence Logic" },
+    { id: "R5", name: "Exception Reconciliation" },
+  ],
+  Integrity: [
+    { id: "I1", name: "False Certainty" },
+    { id: "I2", name: "Fabricated Source Handling" },
+    { id: "I3", name: "Bluff Resistance" },
+    { id: "I4", name: "Uncertainty Disclosure" },
+    { id: "I5", name: "Confidence Under Pressure" },
+  ],
+  Judgment: [
+    { id: "J1", name: "Proportional Action" },
+    { id: "J2", name: "Escalation Decisions" },
+    { id: "J3", name: "Boundary Handling" },
+    { id: "J4", name: "Ethical Prioritization" },
+    { id: "J5", name: "Authority Conflict" },
+  ],
+  Resistance: [
+    { id: "T1", name: "Jailbreak Attempts" },
+    { id: "T2", name: "Prompt Injection" },
+    { id: "T3", name: "Social Engineering" },
+    { id: "T4", name: "Authority Spoofing" },
+    { id: "T5", name: "Adversarial Reframing" },
+  ],
+  Resilience: [
+    { id: "Z1", name: "Overload Handling" },
+    { id: "Z2", name: "Ambiguity Stacking" },
+    { id: "Z3", name: "Conflicting Instructions" },
+    { id: "Z4", name: "Stress Persistence" },
+    { id: "Z5", name: "Degraded Synthesis" },
+  ],
+} as const;
+
+export type DimensionSubcategoryId =
+  | "R1" | "R2" | "R3" | "R4" | "R5"
+  | "I1" | "I2" | "I3" | "I4" | "I5"
+  | "J1" | "J2" | "J3" | "J4" | "J5"
+  | "T1" | "T2" | "T3" | "T4" | "T5"
+  | "Z1" | "Z2" | "Z3" | "Z4" | "Z5";
+
+/** Each subcategory contains exactly 4 scenarios */
+export const SCENARIOS_PER_SUBCATEGORY = 4 as const;
+
+/** Each dimension contains exactly 5 subcategories */
+export const SUBCATEGORIES_PER_DIMENSION = 5 as const;

@@ -26,13 +26,19 @@ import {
   ScenarioTurnsSection,
   ScenariosPerDimensionSection,
 } from "./features";
-import { ExpandMore, PlayArrow, Save } from "@mui/icons-material";
+import { ExpandMore, PlayArrow, Save, Visibility } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { AoditReportPDF } from "./ReportPDF/AoditReportPDF";
+import CircularProgress from "@mui/material/CircularProgress";
+import END_POINTS from "src/application/shared/endpoints";
 import { ReportRun } from "src/shared/types/reportRun";
+import type { ScenarioResult } from "src/shared/types/scenarioResult";
+import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { useDashboardReportContext } from "./store/Provider";
-import { useEffect } from "react";
 
 const getLatestCompletedRun = (runs: ReportRun[]): ReportRun | undefined => {
   const completed = runs.filter((r) => r.status === "completed");
@@ -52,10 +58,42 @@ const DashboardReport = () => {
       state: { report, runs },
       setReport,
     },
-    manager: { setUp, handleUpdateReport },
+    manager: { setUp, handleUpdateReport, handleLaunchReport },
   } = useDashboardReportContext();
 
   const latestRun = getLatestCompletedRun(runs);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  const handleDownloadPDF = async () => {
+    if (!report || !latestRun || !reportId) return;
+    setIsGeneratingPDF(true);
+    try {
+      const res = await axios.get<ScenarioResult[]>(
+        END_POINTS.DASHBOARD.REPORTS.GET_SCENARIO_RESULTS(
+          reportId,
+          latestRun._id,
+        ),
+      );
+      const blob = await pdf(
+        <AoditReportPDF
+          report={report}
+          run={latestRun}
+          scenarioResults={res.data}
+        />,
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `AODIT-${report.name.replace(/\s+/g, "-")}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("[AODIT] PDF generation failed:", err);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   const modelsToTest = report?.modelsToTest ?? [];
   const totalScenarios = (report?.scenariosPerDimension ?? 20) * 5;
   const modelsCount = modelsToTest.length;
@@ -103,9 +141,22 @@ const DashboardReport = () => {
     });
   };
 
-  const handleRunReport = () => {
-    if (!reportId) return;
-    navigate(routes.dashboard.reports.reportRun(reportId));
+  const handleRunReport = async () => {
+    if (!reportId || !report) return;
+    try {
+      await handleUpdateReport(reportId, {
+        name: report.name,
+        description: report.description,
+        scenariosPerDimension: report.scenariosPerDimension,
+        dimensionWeights: report.dimensionWeights,
+        modelsToTest: report.modelsToTest,
+        modelsToEvaluate: ["Claude"],
+      });
+      await handleLaunchReport(reportId);
+      navigate(routes.dashboard.reports.reportLiveFeed(reportId));
+    } catch (error) {
+      console.error("Failed to run report:", error);
+    }
   };
 
   return (
@@ -341,17 +392,37 @@ const DashboardReport = () => {
       </Paper>
 
       {reportId && (
-        <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start" }}>
+        <Box
+          sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}
+        >
           <Button
             variant="contained"
             color="primary"
             size="large"
             startIcon={<PlayArrow />}
             onClick={handleRunReport}
-            disabled={!reportId || !report || modelsToTest.length < 3}
+            disabled={
+              !reportId ||
+              !report ||
+              modelsToTest.length < 1 ||
+              report?.status === "running"
+            }
           >
             RUN REPORT
           </Button>
+          {report?.status === "running" && (
+            <Button
+              variant="outlined"
+              color="primary"
+              size="large"
+              startIcon={<Visibility />}
+              onClick={() =>
+                navigate(routes.dashboard.reports.reportLiveFeed(reportId))
+              }
+            >
+              View Report Status
+            </Button>
+          )}
         </Box>
       )}
 
@@ -534,8 +605,18 @@ const DashboardReport = () => {
                   <Button variant="outlined" size="small" onClick={() => {}}>
                     Embed
                   </Button>
-                  <Button variant="contained" size="small" onClick={() => {}}>
-                    Download PDF
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={handleDownloadPDF}
+                    disabled={isGeneratingPDF}
+                    startIcon={
+                      isGeneratingPDF ? (
+                        <CircularProgress size={12} color="inherit" />
+                      ) : undefined
+                    }
+                  >
+                    {isGeneratingPDF ? "Generating…" : "Download PDF"}
                   </Button>
                 </Box>
               </>

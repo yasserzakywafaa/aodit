@@ -23,8 +23,6 @@ export interface Report {
   executionStatus?: "pending" | "running" | "completed" | "failed" | "scheduled";
   startedAt?: string;
   completedAt?: string;
-  /** Sector context (e.g. "Patient triage, diagnosis support") */
-  sectorContext?: string;
   /** Scenarios per dimension; total scenarios = scenariosPerDimension * 5. Default 20. */
   scenariosPerDimension?: ScenariosPerDimension;
   /** Weights per dimension (must sum to 1). */

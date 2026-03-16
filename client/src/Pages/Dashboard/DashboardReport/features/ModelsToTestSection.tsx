@@ -28,7 +28,8 @@ const ModelsToTestSection = () => {
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-        Select minimum 3 models. Each model runs every scenario independently.
+        Select minimum <strong className="text-underline">1 model</strong> to
+        test. Each model runs every scenario independently.
       </Typography>
       <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", mb: 3 }}>
         {MODELS_TO_TEST_OPTIONS.map((model) => {
@@ -41,7 +42,6 @@ const ModelsToTestSection = () => {
               onClick={() => toggleModelTest(model)}
               sx={{
                 minWidth: 120,
-                // flex: "1 1 90px",
                 py: 1.5,
                 textTransform: "uppercase",
                 fontWeight: 600,

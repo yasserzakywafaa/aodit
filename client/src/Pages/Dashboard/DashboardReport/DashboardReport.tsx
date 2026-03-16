@@ -354,14 +354,21 @@ const DashboardReport = () => {
       </Paper>
 
       {reportId && (
-        <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}>
+        <Box
+          sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}
+        >
           <Button
             variant="contained"
             color="primary"
             size="large"
             startIcon={<PlayArrow />}
             onClick={handleRunReport}
-            disabled={!reportId || !report || modelsToTest.length < 3 || report?.status === "running"}
+            disabled={
+              !reportId ||
+              !report ||
+              modelsToTest.length < 1 ||
+              report?.status === "running"
+            }
           >
             RUN REPORT
           </Button>

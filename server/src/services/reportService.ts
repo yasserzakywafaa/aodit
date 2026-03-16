@@ -168,7 +168,6 @@ const updateReport = async (
       | "description"
       | "reportType"
       | "status"
-      | "sectorContext"
       | "scenariosPerDimension"
       | "dimensionWeights"
       | "modelsToTest"

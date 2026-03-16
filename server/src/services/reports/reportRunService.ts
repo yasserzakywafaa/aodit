@@ -12,6 +12,7 @@ import { Report } from "../../models/types/report";
 import {
   createDocument,
   readDocument,
+  updateDocument,
 } from "../../models/mongoDb/crudOperations";
 import { ObjectId } from "mongodb";
 import crypto from "crypto";
@@ -148,11 +149,22 @@ export const launchReportRun = async (
 
   if (!report) throw new Error(`Report ${reportId} not found`);
 
+  if (report.status === "running") {
+    throw new Error("Report is already running");
+  }
+
   const modelsToTest = report.modelsToTest ?? ["Claude"];
   const scenariosPerDimension = report.scenariosPerDimension ?? 20;
   const totalScenarios = scenariosPerDimension * 5; // 5 dimensions
   const batchId = crypto.randomUUID();
   const now = new Date().toISOString();
+
+  // Update report status to running
+  await updateDocument<Report>(
+    reportId,
+    { status: "running" as any, updatedAt: now },
+    DBCollectionsEnum.reports,
+  );
 
   // Create one ReportRun per model
   const runs: ReportRun[] = [];

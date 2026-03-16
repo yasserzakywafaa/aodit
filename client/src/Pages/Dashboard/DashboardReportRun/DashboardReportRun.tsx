@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   LinearProgress,
   Paper,
   Typography,
@@ -39,7 +40,7 @@ const DashboardReportRun = () => {
   const [completedScenarios, setCompletedScenarios] = useState(0);
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [runStatus, setRunStatus] = useState<string>("pending");
-  const launchedRef = useRef(false);
+  const [noActiveRun, setNoActiveRun] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Load report info
@@ -53,16 +54,7 @@ const DashboardReportRun = () => {
       .catch(() => setReport(null));
   }, [reportId]);
 
-  // Launch the report run
-  useEffect(() => {
-    if (!reportId || launchedRef.current || !report) return;
-    launchedRef.current = true;
-    axios
-      .post(END_POINTS.DASHBOARD.REPORTS.LAUNCH_REPORT(reportId))
-      .catch(() => {});
-  }, [reportId, report]);
-
-  // Poll for real progress
+  // Poll for real progress (no launch — this is a pure monitoring page)
   useEffect(() => {
     if (!reportId || !report) return;
 
@@ -73,6 +65,7 @@ const DashboardReportRun = () => {
         );
         const data = res.data;
 
+        setNoActiveRun(false);
         setProgress(data.progress ?? 0);
         setCurrentStep(data.currentStep ?? "Generating scenarios");
         setTotalScenarios(data.totalScenarios ?? 0);
@@ -88,13 +81,15 @@ const DashboardReportRun = () => {
             clearInterval(pollRef.current);
             pollRef.current = null;
           }
-          // Navigate back to report detail after a short delay
-          setTimeout(() => {
-            navigate(routes.dashboard.reports.reportById(reportId));
-          }, 1500);
         }
-      } catch {
-        // Silently retry on next interval
+      } catch (err: any) {
+        if (err?.response?.status === 404) {
+          setNoActiveRun(true);
+          if (pollRef.current) {
+            clearInterval(pollRef.current);
+            pollRef.current = null;
+          }
+        }
       }
     };
 
@@ -105,15 +100,42 @@ const DashboardReportRun = () => {
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [reportId, report, navigate]);
+  }, [reportId, report]);
 
   const currentStepIndex = stepIndexFromName(currentStep);
   const displayTotal = totalScenarios || (report?.scenariosPerDimension ?? 20) * 5;
+  const isFinished = runStatus === "completed" || runStatus === "failed";
+
+  if (noActiveRun) {
+    return (
+      <Box sx={{ maxWidth: 740, mx: "auto", p: 3 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          AODIT LIVE FEED
+        </Typography>
+        <Paper variant="outlined" sx={{ p: 3, textAlign: "center" }}>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+            No active run found for this report.
+          </Typography>
+          {reportId && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                navigate(routes.dashboard.reports.reportById(reportId))
+              }
+            >
+              Back to Report
+            </Button>
+          )}
+        </Paper>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ maxWidth: 740, mx: "auto", p: 3 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        AODIT RUNNING
+        AODIT LIVE FEED
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         {report?.name ?? "Report"}
@@ -127,6 +149,17 @@ const DashboardReportRun = () => {
           <Typography variant="body2" color="error.main">
             Test execution failed. Please check the report configuration and try
             again.
+          </Typography>
+        </Paper>
+      )}
+
+      {runStatus === "completed" && (
+        <Paper
+          variant="outlined"
+          sx={{ p: 2, mb: 3, borderColor: "success.main" }}
+        >
+          <Typography variant="body2" color="success.main">
+            Test execution completed successfully.
           </Typography>
         </Paper>
       )}
@@ -212,14 +245,19 @@ const DashboardReportRun = () => {
         />
       </Box>
 
-      <Paper variant="outlined" sx={{ p: 2 }}>
+      <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
         <Typography variant="subtitle2" color="primary" gutterBottom>
           LIVE FEED
         </Typography>
         <Box sx={{ maxHeight: 320, overflow: "auto" }}>
-          {feedItems.length === 0 && (
+          {feedItems.length === 0 && !isFinished && (
             <Typography variant="body2" color="text.secondary">
-              Starting…
+              Starting...
+            </Typography>
+          )}
+          {feedItems.length === 0 && isFinished && (
+            <Typography variant="body2" color="text.secondary">
+              No feed items recorded.
             </Typography>
           )}
           {feedItems.map((item: FeedItem, idx: number) => (
@@ -253,6 +291,20 @@ const DashboardReportRun = () => {
           ))}
         </Box>
       </Paper>
+
+      {isFinished && reportId && (
+        <Box sx={{ textAlign: "center" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              navigate(routes.dashboard.reports.reportById(reportId))
+            }
+          >
+            Back to Report
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

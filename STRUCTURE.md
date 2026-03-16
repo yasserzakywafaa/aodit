@@ -66,7 +66,7 @@
     │   │   │   │   │   ├── store/
     │   │   │   │   │   └── DashboardReport.tsx
     │   │   │   │   ├── DashboardReportRun/
-    │   │   │   │   │   └── DashboardReportRun.tsx        ← Run progress page (polls /run-status)
+    │   │   │   │   │   └── DashboardReportRun.tsx        ← Live Feed page (pure monitoring, polls /run-status)
     │   │   │   │   └── DashboardReports/
     │   │   │   │       ├── features/
     │   │   │   │       ├── store/

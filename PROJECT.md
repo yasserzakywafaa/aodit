@@ -19,25 +19,32 @@ This document is the **single source of truth** for what AODIT is, how reports w
 2. **Auth** → Login / Register (Google, LinkedIn, or phone).
 3. **Dashboard** → Overview (e.g. total reports count) and navigation to Reports.
 4. **Reports list** → View all reports; create new report; open a report.
-5. **Create Report** → Set name, description, report type, models to test, models to evaluate with, scenarios per dimension, dimension weights; save as draft.
-6. **Report detail** → View/edit report config (models, weights, scenarios per dimension); click "Launch report".
-7. **Launch / Run** → Server creates one ReportRun per model, fires the execution engine asynchronously. User is navigated to the run progress page.
-8. **Run progress page** → Real-time polling every 3s. Shows pipeline steps (Generating scenarios → Running conversations → Evaluating responses → Calculating scores → Generating report), progress bar, scenarios completed counter, and a live feed of scored turns.
-9. **Execution completes** → Frontend auto-navigates to the report detail page.
-10. **Report detail + run result** → View latest run: dimension scores, composite, rating, calibration gap, outlook, deployment verdict (AODIT framework box).
+5. **Create Report** → Set name and description (required — describes the AI agent use case, sector, and risk context). Navigates to report config page.
+6. **Report detail** → View/edit report config (models to test, models to evaluate with, scenarios per dimension, dimension weights); click "RUN REPORT".
+7. **RUN REPORT** → Frontend saves the config first, then calls launch API. Server sets report status to `running`, creates one ReportRun per model, fires execution engine asynchronously. User is navigated to the Live Feed page.
+8. **Live Feed page** (`/dashboard/reports/:id/live-feed`) → Pure monitoring page with real-time polling every 3s. Shows pipeline steps, progress bar, scenarios completed counter, and a live feed of scored turns. User can refresh and return to this page anytime. On complete/failed, shows "Back to Report" button.
+9. **Report detail (running)** → If report status is `running`, a "View Report Status" button appears to navigate back to the Live Feed page. "RUN REPORT" is disabled while running.
+10. **Execution completes** → Server sets report status to `completed` (or `failed`). Live Feed page stops polling and shows result status.
+11. **Report detail + run result** → View latest run: dimension scores, composite, rating, calibration gap, outlook, deployment verdict (AODIT framework box).
 
 ---
 
 ## Report lifecycle
 
-- **Create (draft)** → User creates a report (name, description, report type, models to test, etc.). Report is stored with status e.g. `draft`. **On create, scenarios are automatically seeded** (N per AODIT dimension, default 20), each with 8 turn templates (Baseline → Recovery).
-- **Optional edit** → User can update report details (models, weights, scenarios per dimension) until it is launched.
-- **Launch / Run** → User clicks "Launch report". The server:
-  1. Loads the report config (models to test, models to evaluate with, dimension weights, sector context).
-  2. Creates one **ReportRun** per model, all sharing a `batchId`, status `pending`.
-  3. Fires the **execution engine** asynchronously (fire-and-forget) — the API responds immediately.
+- **Create (draft)** → User creates a report (name, description — both required). Report is stored with status `draft`. **On create, scenarios are automatically seeded** (N per AODIT dimension, default 20), each with 8 turn templates (Baseline → Recovery).
+- **Configure** → User edits report config (models to test, evaluator model, scenarios per dimension, dimension weights) on the report detail page.
+- **Launch / Run** → User clicks "RUN REPORT". The frontend:
+  1. Saves the current config (PUT update).
+  2. Calls `POST /launch/:reportId`.
+  3. Navigates to the Live Feed page.
+
+  The server:
+  1. Guards against re-launch (rejects if report is already `running`).
+  2. Sets report status to `running`.
+  3. Creates one **ReportRun** per model, all sharing a `batchId`, status `pending`.
+  4. Fires the **execution engine** asynchronously (fire-and-forget) — the API responds immediately.
 - **Execution engine** → For each model, for each scenario:
-  1. **Turn 1 (Baseline):** Judge model generates a realistic user prompt from the scenario description. Prompt is sent to the model under test. Model's response is scored 1–5 by the judge.
+  1. **Turn 1 (Baseline):** Judge model generates a realistic user prompt from the scenario description and the **report description** (used as sector/context). Prompt is sent to the model under test. Model's response is scored 1–5 by the judge.
   2. **Turns 2–8:** Judge generates follow-up user messages (Extension, Contradiction, Challenge, Escalation, Synthesis, SelfAssessment, Recovery). Each turn is sent to the model, and the response is scored.
   3. On **Turn 7 (SelfAssessment):** The model's self-score (1–5) is extracted for calibration gap calculation.
   4. Each completed scenario is saved as a **ScenarioResult** with all 8 turns, scores, and evaluator reasoning.
@@ -49,6 +56,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
   - Calibration gap = |avg self-score − avg evaluator score|.
   - Outlook derived from score consistency, calibration gap, and variance.
   - Deployment verdict derived from rating.
+- **Final status** → After all models finish, the engine reads all run statuses. If all failed → report status `failed`; otherwise → `completed`.
 - **View result** → Report detail page fetches runs; the AODIT framework box shows the **latest completed run** (dimension scores, composite score, rating, calibration gap, outlook, deployment verdict).
 
 ---
@@ -59,6 +67,14 @@ This document is the **single source of truth** for what AODIT is, how reports w
 
 - **Models under test:** The AI models being evaluated (Claude, GPT, Gemini, Grok, Deepseek, Kimi, Llama, Qwen). Each maps to an OpenRouter model ID in the model registry.
 - **Judge/evaluator model:** The model used to generate prompts, escalate turns, and score responses. Default: `openai/gpt-5-mini`. Configurable per report.
+
+### Report description as prompt context
+
+The report's `description` field (required, set at creation) is passed to the execution engine as `reportDescription`. It is injected into:
+- **Scenario generation prompts** — as "Sector context" to ground the generated user prompt in the right domain.
+- **Turn escalation prompts** — as "Sector context" to keep follow-up messages domain-relevant.
+
+If no description is provided (legacy reports), it falls back to "General purpose AI assistant".
 
 ### 8-turn conversation structure
 
@@ -95,7 +111,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
 
 - **What:** One "campaign" of evaluations.
 - **Where:** `server/src/models/types/report.ts`, `client/src/shared/types/report.ts`.
-- **Key fields:** `_id`, `name`, `description`, `status`, `reportType`, `userId`, `modelsToTest` (string[]), `modelsToEvaluate` (string[]), `scenariosPerDimension` (number), `dimensionWeights` (Record), `sectorContext`, `createdAt`, `updatedAt`.
+- **Key fields:** `_id`, `name`, `description` (required — used as sector context for prompts), `status` (draft → running → completed/failed), `reportType`, `userId`, `modelsToTest` (string[]), `modelsToEvaluate` (string[]), `scenariosPerDimension` (number), `dimensionWeights` (Record), `createdAt`, `updatedAt`.
 
 ### Scenario
 
@@ -117,7 +133,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
 
 ### FeedItem
 
-- **What:** A single live-feed entry shown on the progress page.
+- **What:** A single live-feed entry shown on the Live Feed page.
 - **Where:** `server/src/models/types/reportRun.ts`, `client/src/shared/types/reportRun.ts`.
 - **Key fields:** `id` (#001), `dim`, `model`, `turn`, `text`, `score`, `type` (pass | warn | fail).
 
@@ -156,7 +172,7 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 | GET | `/dashboard/reports/get-report-by-id` | `getReportById` | Get single report |
 | PUT | `/dashboard/reports/update/:reportId` | `updateReport` | Update report config |
 | DELETE | `/dashboard/reports/delete/:reportId` | `deleteReport` | Delete report |
-| POST | `/dashboard/reports/launch/:reportId` | `launchReport` | Launch execution (creates runs, fires engine) |
+| POST | `/dashboard/reports/launch/:reportId` | `launchReport` | Guard re-launch, set status running, create runs, fire engine |
 | GET | `/dashboard/reports/:reportId/runs` | `getReportRuns` | Get all runs for a report |
 | GET | `/dashboard/reports/:reportId/run-status` | `getRunStatus` | Poll latest batch progress |
 
@@ -170,12 +186,12 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 - `createReportRun(reportId, payload)` — insert a ReportRun document.
 - `getReportRunsByReportId(reportId)` — fetch all runs for a report.
 - `getLatestRunStatus(reportId)` — aggregate progress across all runs in the latest batch (for polling).
-- `launchReportRun(reportId)` — load report config, create one ReportRun per model (shared `batchId`), fire `executeReport()` asynchronously.
+- `launchReportRun(reportId)` — guard re-launch (rejects if already running), set report status to `running`, load report config, create one ReportRun per model (shared `batchId`), fire `executeReport()` asynchronously.
 
 ### Execution engine
 
 `server/src/services/reports/executionEngine.ts`:
-- `executeReport(reportId, batchId, runIds)` — top-level orchestrator. Loads report + scenarios, runs models sequentially.
+- `executeReport(reportId, batchId, runIds)` — top-level orchestrator. Loads report + scenarios, runs models sequentially. On completion, sets report status to `completed` or `failed`.
 - `executeModelRun(params)` — runs all scenarios for a single model, saves ScenarioResults, updates progress, aggregates scores on completion.
 - `executeScenario(params)` — runs the 8-turn conversation for one scenario, returns turns + rawScore + selfScore.
 
@@ -184,7 +200,7 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 | Module | File | Purpose |
 |--------|------|---------|
 | Model registry | `server/src/services/reports/modelRegistry.ts` | Maps friendly names → OpenRouter model IDs. Default judge: `openai/gpt-5-mini`. |
-| Prompt templates | `server/src/services/reports/prompts.ts` | Builds system+user messages for scenario generation, turn escalation, scoring, and self-score extraction. |
+| Prompt templates | `server/src/services/reports/prompts.ts` | Builds system+user messages for scenario generation, turn escalation, scoring, and self-score extraction. Uses `reportDescription` as sector context. |
 | Scoring & aggregation | `server/src/services/reports/scoring.ts` | Severity-weighted dimension aggregation, composite score, rating bands, calibration gap, outlook, deployment verdict. |
 
 ---
@@ -197,26 +213,36 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ### Routes
 
-`client/src/application/routes.ts` — `dashboard.reports.base`, `dashboard.reports.create`, `dashboard.reports.reportById(id)`, `dashboard.reports.reportRun(id)`.
+`client/src/application/routes.ts`:
+- `dashboard.reports.base` — reports list
+- `dashboard.reports.create` — create report form
+- `dashboard.reports.reportById(id)` — report detail / config
+- `dashboard.reports.reportLiveFeed(id)` — live feed monitoring page (`/dashboard/reports/:id/live-feed`)
 
 ### Pages
 
 | Page | Path | Purpose |
 |------|------|---------|
 | Reports list | `DashboardReports/` | List reports, create button, link to report detail |
-| Create Report | `DashboardCreateReport/` | Form: name, description, type, models, weights; creates report (seeds scenarios) |
-| Report detail | `DashboardReport/` | View/edit config, launch button, AODIT framework box with latest run results |
-| Report run (progress) | `DashboardReportRun/` | Real-time progress polling: pipeline steps, progress bar, live feed |
+| Create Report | `DashboardCreateReport/` | Form: name (required), description (required); creates report (seeds scenarios), navigates to config |
+| Report detail | `DashboardReport/` | View/edit config, Save button, RUN REPORT button (saves config first), "View Report Status" button (when running), AODIT framework box with latest run results |
+| Live Feed | `DashboardReportRun/` | Pure monitoring page: polls run-status every 3s, shows pipeline steps, progress bar, live feed. No launch call — safe to refresh. Shows "Back to Report" when finished. |
 
-### Run progress page (`DashboardReportRun`)
+### Live Feed page (`DashboardReportRun`)
 
-- On mount: loads report info, calls `POST /launch/:reportId`.
-- Polls `GET /:reportId/run-status` every 3 seconds.
+- On mount: loads report info, starts polling `GET /:reportId/run-status` every 3 seconds.
+- **Does NOT call launch** — launch happens from the "RUN REPORT" button on the report detail page.
 - Displays:
   - **Pipeline steps:** 5-step checklist (Generating scenarios → Generating report) with done/live/queue status.
   - **Progress bar:** Scenarios completed / total.
   - **Live feed:** Last 8 scored turn results with pass/warn/fail color coding.
-- On `completed` or `failed`: auto-navigates to report detail page after 1.5s.
+- On `completed` or `failed`: stops polling, shows status message and "Back to Report" button.
+- If no active run found (404): shows "No active run" message with link back to report.
+
+### Report detail page — status-aware buttons
+
+- **RUN REPORT** button: disabled when report status is `running` or when fewer than 3 models are selected.
+- **View Report Status** button: visible only when report status is `running`. Navigates to Live Feed page.
 
 ### Client endpoints
 
@@ -240,14 +266,14 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 | Scoring & aggregation | `server/src/services/reports/scoring.ts` |
 | Execution engine | `server/src/services/reports/executionEngine.ts` |
 | Report CRUD service (incl. scenario seeding) | `server/src/services/reportService.ts` |
-| Report run service (launch + polling) | `server/src/services/reports/reportRunService.ts` |
+| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts` |
 | Dashboard controller | `server/src/controllers/DashboardController.ts` |
 | Dashboard routes | `server/src/routes/dashboardRoutes.ts` |
 | API endpoints (server) | `server/src/models/endpoints.ts` |
 | API endpoints (client) | `client/src/application/shared/endpoints.ts` |
 | Reports list page | `client/src/Pages/Dashboard/DashboardReports/` |
 | Report detail page | `client/src/Pages/Dashboard/DashboardReport/` |
-| Report run progress page | `client/src/Pages/Dashboard/DashboardReportRun/` |
+| Live Feed page | `client/src/Pages/Dashboard/DashboardReportRun/` |
 | Create report page | `client/src/Pages/Dashboard/DashboardCreateReport/` |
 | DB collections & indexes | `server/src/models/mongoDb/index.ts` |
 | OpenRouter client | `server/src/utils/openRouterClient.ts` |

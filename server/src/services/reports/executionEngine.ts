@@ -162,7 +162,7 @@ const executeScenario = async (params: {
   scenario: Scenario;
   modelId: string;
   evaluatorModelId: string;
-  sectorContext?: string;
+  reportDescription?: string;
   reportType?: string;
 }): Promise<{
   turns: TurnResult[];
@@ -173,7 +173,7 @@ const executeScenario = async (params: {
     scenario,
     modelId,
     evaluatorModelId,
-    sectorContext,
+    reportDescription,
     reportType,
   } = params;
 
@@ -192,7 +192,7 @@ const executeScenario = async (params: {
       // Baseline: generate from scenario description
       const genMessages = buildScenarioGenerationPrompt({
         dimension: scenario.categoryId,
-        sectorContext,
+        reportDescription,
         reportType,
         severity: scenario.severity,
         scenarioTitle: scenario.title ?? "",
@@ -205,7 +205,7 @@ const executeScenario = async (params: {
         dimension: scenario.categoryId,
         turnType,
         conversationHistory,
-        sectorContext,
+        reportDescription,
       });
       userPrompt = await callWithRetry(evaluatorModelId, escMessages);
     }
@@ -287,7 +287,7 @@ const executeModelRun = async (params: {
   modelId: string;
   evaluatorModelId: string;
   scenarios: Scenario[];
-  sectorContext?: string;
+  reportDescription?: string;
   reportType?: string;
   dimensionWeights?: Report["dimensionWeights"];
 }): Promise<void> => {
@@ -298,7 +298,7 @@ const executeModelRun = async (params: {
     modelId,
     evaluatorModelId,
     scenarios,
-    sectorContext,
+    reportDescription,
     reportType,
     dimensionWeights,
   } = params;
@@ -323,7 +323,7 @@ const executeModelRun = async (params: {
         scenario,
         modelId,
         evaluatorModelId,
-        sectorContext,
+        reportDescription,
         reportType,
       });
 
@@ -518,7 +518,7 @@ export const executeReport = async (
           modelId,
           evaluatorModelId,
           scenarios: scenarios as unknown as Scenario[],
-          sectorContext: report.sectorContext,
+          reportDescription: report.description,
           reportType: report.reportType,
           dimensionWeights: report.dimensionWeights,
         });
@@ -537,8 +537,36 @@ export const executeReport = async (
       }
     }
 
-    console.log(`[AODIT] All model runs completed for report ${reportId}`);
+    // Determine final report status from all model runs
+    const allRunStatuses: string[] = [];
+    for (const [, runId] of runIds) {
+      const run = await readDocument(
+        new ObjectId(runId),
+        DBCollectionsEnum.reportRuns,
+      );
+      if (run) allRunStatuses.push((run as any).status);
+    }
+    const allFailed = allRunStatuses.every((s) => s === "failed");
+    const finalStatus = allFailed ? "failed" : "completed";
+
+    await updateDocument<Report>(
+      reportId,
+      { status: finalStatus as any, updatedAt: new Date().toISOString() },
+      DBCollectionsEnum.reports,
+    );
+
+    console.log(`[AODIT] All model runs completed for report ${reportId} — status: ${finalStatus}`);
   } catch (err: any) {
     console.error(`[AODIT] Fatal error in executeReport: ${err.message}`);
+    // Mark report as failed on fatal error
+    try {
+      await updateDocument<Report>(
+        reportId,
+        { status: "failed" as any, updatedAt: new Date().toISOString() },
+        DBCollectionsEnum.reports,
+      );
+    } catch {
+      // Best effort
+    }
   }
 };

@@ -38,7 +38,7 @@ const DashboardCreateReport = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!report.name?.trim()) return;
+    if (!report.name?.trim() || !report.description?.trim()) return;
     try {
       const created = await handleCreateReport(report);
       if (created?._id) {
@@ -87,7 +87,8 @@ const DashboardCreateReport = () => {
                   rows={4}
                   value={report.description ?? ""}
                   onChange={handleChange}
-                  placeholder="Optional description of the report"
+                  placeholder="Describe the AI agent use case, sector, and risk context (e.g. Banking chatbot handling loan applications)"
+                  required
                   fullWidth
                 />
               </CardContent>
@@ -96,7 +97,7 @@ const DashboardCreateReport = () => {
               type="submit"
               variant="contained"
               color="primary"
-              disabled={!report.name?.trim()}
+              disabled={!report.name?.trim() || !report.description?.trim()}
               sx={{ mt: 3 }}
             >
               Go to Report Config

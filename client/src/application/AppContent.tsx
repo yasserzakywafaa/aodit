@@ -74,7 +74,7 @@ const DashboardCreateReportPage = lazy(
   () =>
     import("../Pages/Dashboard/DashboardCreateReport/DashboardCreateReport"),
 );
-const DashboardReportRunPage = lazy(
+const DashboardLiveFeedPage = lazy(
   () => import("../Pages/Dashboard/DashboardReportRun/DashboardReportRun"),
 );
 
@@ -148,8 +148,8 @@ const AppContent = () => {
                   />
 
                   <Route
-                    path={routes.dashboard.reports.reportRun(":reportId")}
-                    element={<DashboardReportRunPage />}
+                    path={routes.dashboard.reports.reportLiveFeed(":reportId")}
+                    element={<DashboardLiveFeedPage />}
                   />
 
                   <Route

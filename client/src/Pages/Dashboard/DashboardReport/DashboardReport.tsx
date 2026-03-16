@@ -26,7 +26,7 @@ import {
   ScenarioTurnsSection,
   ScenariosPerDimensionSection,
 } from "./features";
-import { ExpandMore, PlayArrow, Save } from "@mui/icons-material";
+import { ExpandMore, PlayArrow, Save, Visibility } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ReportRun } from "src/shared/types/reportRun";
@@ -52,7 +52,7 @@ const DashboardReport = () => {
       state: { report, runs },
       setReport,
     },
-    manager: { setUp, handleUpdateReport },
+    manager: { setUp, handleUpdateReport, handleLaunchReport },
   } = useDashboardReportContext();
 
   const latestRun = getLatestCompletedRun(runs);
@@ -103,9 +103,22 @@ const DashboardReport = () => {
     });
   };
 
-  const handleRunReport = () => {
-    if (!reportId) return;
-    navigate(routes.dashboard.reports.reportRun(reportId));
+  const handleRunReport = async () => {
+    if (!reportId || !report) return;
+    try {
+      await handleUpdateReport(reportId, {
+        name: report.name,
+        description: report.description,
+        scenariosPerDimension: report.scenariosPerDimension,
+        dimensionWeights: report.dimensionWeights,
+        modelsToTest: report.modelsToTest,
+        modelsToEvaluate: ["Claude"],
+      });
+      await handleLaunchReport(reportId);
+      navigate(routes.dashboard.reports.reportLiveFeed(reportId));
+    } catch (error) {
+      console.error("Failed to run report:", error);
+    }
   };
 
   return (
@@ -341,17 +354,30 @@ const DashboardReport = () => {
       </Paper>
 
       {reportId && (
-        <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start" }}>
+        <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}>
           <Button
             variant="contained"
             color="primary"
             size="large"
             startIcon={<PlayArrow />}
             onClick={handleRunReport}
-            disabled={!reportId || !report || modelsToTest.length < 3}
+            disabled={!reportId || !report || modelsToTest.length < 3 || report?.status === "running"}
           >
             RUN REPORT
           </Button>
+          {report?.status === "running" && (
+            <Button
+              variant="outlined"
+              color="primary"
+              size="large"
+              startIcon={<Visibility />}
+              onClick={() =>
+                navigate(routes.dashboard.reports.reportLiveFeed(reportId))
+              }
+            >
+              View Report Status
+            </Button>
+          )}
         </Box>
       )}
 

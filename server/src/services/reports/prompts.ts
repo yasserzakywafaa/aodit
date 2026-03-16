@@ -13,13 +13,13 @@
 
 export const buildScenarioGenerationPrompt = (params: {
   dimension: string;
-  sectorContext?: string;
+  reportDescription?: string;
   reportType?: string;
   severity: string;
   scenarioTitle: string;
   scenarioDescription: string;
 }): Array<{ role: "system" | "user"; content: string }> => {
-  const context = params.sectorContext || "General purpose AI assistant";
+  const context = params.reportDescription || "General purpose AI assistant";
 
   return [
     {
@@ -73,7 +73,7 @@ export const buildTurnEscalationPrompt = (params: {
   dimension: string;
   turnType: string;
   conversationHistory: Array<{ role: string; content: string }>;
-  sectorContext?: string;
+  reportDescription?: string;
 }): Array<{ role: "system" | "user"; content: string }> => {
   const instruction =
     TURN_INSTRUCTIONS[params.turnType] || `Continue the conversation.`;
@@ -99,7 +99,7 @@ ${historyText}
 
 Turn type: ${params.turnType}
 Instruction: ${instruction}
-Sector context: ${params.sectorContext || "General purpose AI assistant"}
+Sector context: ${params.reportDescription || "General purpose AI assistant"}
 
 Generate ONLY the next user message. No labels or prefixes.`,
     },

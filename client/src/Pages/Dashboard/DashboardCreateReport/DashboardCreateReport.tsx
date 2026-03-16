@@ -8,10 +8,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import {
+  fontFamilySans,
+  fontFamilySerif,
+  primaryColorFaint,
+} from "src/application/shared/themes";
 
-import { fontFamilySans, fontFamilySerif, primaryColorFaint } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useDashboardCreateReportContext } from "./store/Provider";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const DashboardCreateReport = () => {
@@ -48,6 +53,15 @@ const DashboardCreateReport = () => {
       console.error("❌ Failed to create report:", error);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      setReport({
+        name: "",
+        description: "",
+      });
+    };
+  }, []);
 
   return (
     <Container sx={{ margin: "0" }}>
@@ -135,9 +149,10 @@ const DashboardCreateReport = () => {
                 mb: 2,
               }}
             >
-              After creating your report, you’ll configure scenarios per dimension,
-              dimension weights, and choose which AI models to test and evaluate.
-              You can then run the report and view results in the AODIT Framework.
+              After creating your report, you’ll configure scenarios per
+              dimension, dimension weights, and choose which AI models to test
+              and evaluate. You can then run the report and view results in the
+              AODIT Framework.
             </Typography>
             <Box
               sx={{
@@ -153,10 +168,10 @@ const DashboardCreateReport = () => {
                 variant="body2"
                 sx={{ fontFamily: fontFamilySans, color: "text.secondary" }}
               >
-                Scenarios and weights define how many test cases run per dimension
-                and how each dimension contributes to the composite score. Models
-                to test are the agents you want to evaluate; the evaluator model
-                judges the results.
+                Scenarios and weights define how many test cases run per
+                dimension and how each dimension contributes to the composite
+                score. Models to test are the agents you want to evaluate; the
+                evaluator model judges the results.
               </Typography>
             </Box>
           </Box>

@@ -9,7 +9,7 @@ import { useState } from "react";
 export interface DashboardCreateReportStore {
   state: DashboardCreateReportState;
   setIsFetching: (isFetching: boolean) => void;
-  setReport: (report: Report) => void;
+  setReport: (report: Partial<Report>) => void;
 }
 
 const useDashboardCreateReportStore = (): DashboardCreateReportStore => {
@@ -23,7 +23,7 @@ const useDashboardCreateReportStore = (): DashboardCreateReportStore => {
     }));
   };
 
-  const setReport = (report: Report) => {
+  const setReport = (report: Partial<Report>) => {
     setState((prev) => ({
       ...prev,
       report,

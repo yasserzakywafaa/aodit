@@ -548,6 +548,65 @@ const s = StyleSheet.create({
     lineHeight: 1.5,
     fontFamily: "Helvetica-Oblique",
   },
+  transcriptIntro: { marginBottom: 10 },
+  transcriptScenarioBlock: {
+    marginBottom: 12,
+    borderColor: "#CBD5E1",
+    borderWidth: 1,
+    backgroundColor: "#FFFFFF",
+  },
+  transcriptScenarioHeader: {
+    backgroundColor: "#1E3A5F",
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+  },
+  transcriptScenarioHeaderTitle: {
+    color: "#FFFFFF",
+    fontSize: 8,
+    fontFamily: "Helvetica-Bold",
+    lineHeight: 1.35,
+  },
+  transcriptTurnTitle: {
+    fontSize: 8.5,
+    color: "#334155",
+    fontFamily: "Helvetica-Bold",
+    marginTop: 8,
+    marginBottom: 4,
+    paddingHorizontal: 10,
+  },
+  transcriptCardPrompt: {
+    marginHorizontal: 10,
+    marginBottom: 6,
+    backgroundColor: "#E6EEF5",
+    borderColor: "#C8D5E3",
+    borderWidth: 1,
+    padding: 8,
+  },
+  transcriptCardResponse: {
+    marginHorizontal: 10,
+    marginBottom: 8,
+    backgroundColor: "#F8FAFC",
+    borderColor: "#E2E8F0",
+    borderWidth: 1,
+    padding: 8,
+  },
+  transcriptCardLabelPrompt: {
+    fontSize: 8,
+    fontFamily: "Helvetica-Bold",
+    color: "#1F4C73",
+    marginBottom: 3,
+  },
+  transcriptCardLabelResponse: {
+    fontSize: 8,
+    fontFamily: "Helvetica-Bold",
+    color: EMERALD,
+    marginBottom: 3,
+  },
+  transcriptCardText: {
+    fontSize: 8,
+    color: TEXT,
+    lineHeight: 1.45,
+  },
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1828,6 +1887,89 @@ const RatingVerdictPage = ({
   );
 };
 
+const FullTranscriptsPage = ({
+  report,
+  scenarioResults,
+  sectionNum = "06",
+}: {
+  report: Report;
+  scenarioResults: ScenarioResult[];
+  sectionNum?: string;
+}) => {
+  const dimOrder = new Map(DIMENSIONS.map((d, i) => [d.id, i]));
+  const completed = scenarioResults
+    .filter((sr) => sr.status === "completed")
+    .sort((a, b) => {
+      const da = dimOrder.get(a.dimensionId) ?? 999;
+      const db = dimOrder.get(b.dimensionId) ?? 999;
+      if (da !== db) return da - db;
+      return a.scenarioId.localeCompare(b.scenarioId, undefined, {
+        numeric: true,
+      });
+    });
+
+  return (
+    <Page size="A4" style={s.page} wrap>
+      <PageHeader subtitle="FULL SCENARIO TRANSCRIPTS" />
+      <View style={s.body}>
+        <SectionHeading num={sectionNum} title="FULL SCENARIO TRANSCRIPTS" />
+        <Text style={[s.para, s.transcriptIntro]}>
+          Complete turn-by-turn transcripts for all completed scenarios. Each
+          turn shows only the Prompt and AI Response, with the turn name and
+          turn score.
+        </Text>
+
+        {completed.length === 0 ? (
+          <Text style={[s.para, { color: MID_GRAY }]}>
+            No completed scenario transcripts are available for this run.
+          </Text>
+        ) : (
+          completed.map((sr) => (
+            <View
+              key={`${sr._id ?? sr.scenarioId}-${sr.dimensionId}`}
+              style={s.transcriptScenarioBlock}
+            >
+              <View style={s.transcriptScenarioHeader}>
+                <Text style={s.transcriptScenarioHeaderTitle}>
+                  Scenario {sr.scenarioId} · {sr.dimensionId} · Severity:{" "}
+                  {sr.severity.toUpperCase()} · Score: {fmt(sr.rawScore)}
+                </Text>
+              </View>
+
+              {(sr.turns ?? [])
+                .slice()
+                .sort((a, b) => a.turnIndex - b.turnIndex)
+                .map((turn) => (
+                  <View key={`${sr.scenarioId}-${turn.turnIndex}`}>
+                    <Text style={s.transcriptTurnTitle}>
+                      Turn {turn.turnIndex} — {turn.turnType} (Turn score:{" "}
+                      {turn.score})
+                    </Text>
+
+                    <View style={s.transcriptCardPrompt}>
+                      <Text style={s.transcriptCardLabelPrompt}>Prompt</Text>
+                      <Text style={s.transcriptCardText}>{turn.prompt || "—"}</Text>
+                    </View>
+
+                    <View style={s.transcriptCardResponse}>
+                      <Text style={s.transcriptCardLabelResponse}>
+                        AI Response
+                      </Text>
+                      <Text style={s.transcriptCardText}>
+                        {turn.response || "—"}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+            </View>
+          ))
+        )}
+      </View>
+      <PageFooter reportName={report.name} />
+    </Page>
+  );
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Root Document
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1836,32 +1978,45 @@ interface AoditReportPDFProps {
   report: Report;
   run: ReportRun;
   scenarioResults: ScenarioResult[];
+  mode?: "report" | "transcript" | "full";
 }
 
 export const AoditReportPDF = ({
   report,
   run,
   scenarioResults,
+  mode = "report",
 }: AoditReportPDFProps) => (
   <Document
     title={`AODIT Report — ${report.name}`}
     author="Swiss Lab of Intelligence · aodit.ai"
     subject="AODIT-5 AI Evaluation Report"
   >
-    <CoverPage report={report} run={run} scenarioResults={scenarioResults} />
-    <FrameworkOverviewPage report={report} />
-    <ExecutiveSummaryPage
-      report={report}
-      run={run}
-      scenarioResults={scenarioResults}
-    />
-    <DimensionAnalysisPage report={report} run={run} />
-    <CalibrationPage
-      report={report}
-      run={run}
-      scenarioResults={scenarioResults}
-    />
-    <RatingVerdictPage report={report} run={run} />
+    {(mode === "report" || mode === "full") && (
+      <>
+        <CoverPage report={report} run={run} scenarioResults={scenarioResults} />
+        <FrameworkOverviewPage report={report} />
+        <ExecutiveSummaryPage
+          report={report}
+          run={run}
+          scenarioResults={scenarioResults}
+        />
+        <DimensionAnalysisPage report={report} run={run} />
+        <CalibrationPage
+          report={report}
+          run={run}
+          scenarioResults={scenarioResults}
+        />
+        <RatingVerdictPage report={report} run={run} />
+      </>
+    )}
+    {(mode === "transcript" || mode === "full") && (
+      <FullTranscriptsPage
+        report={report}
+        scenarioResults={scenarioResults}
+        sectionNum={mode === "transcript" ? "01" : "06"}
+      />
+    )}
   </Document>
 );
 

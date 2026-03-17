@@ -56,11 +56,18 @@ const DashboardReport = () => {
   } = useDashboardReportContext();
 
   const latestRun = getLatestCompletedRun(runs);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [pdfModeLoading, setPdfModeLoading] = useState<
+    "report" | "transcript" | null
+  >(null);
+  const independentScore = latestRun?.compositeScore;
+  const derivedSelfScore =
+    independentScore != null && latestRun?.calibrationDelta != null
+      ? independentScore + latestRun.calibrationDelta
+      : null;
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async (mode: "report" | "transcript") => {
     if (!report || !latestRun || !reportId) return;
-    setIsGeneratingPDF(true);
+    setPdfModeLoading(mode);
     try {
       const res = await axios.get<ScenarioResult[]>(
         END_POINTS.DASHBOARD.REPORTS.GET_SCENARIO_RESULTS(
@@ -73,18 +80,22 @@ const DashboardReport = () => {
           report={report}
           run={latestRun}
           scenarioResults={res.data}
+          mode={mode}
         />,
       ).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `AODIT-${report.name.replace(/\s+/g, "-")}.pdf`;
+      a.download =
+        mode === "transcript"
+          ? `AODIT-${report.name.replace(/\s+/g, "-")}-Transcript.pdf`
+          : `AODIT-${report.name.replace(/\s+/g, "-")}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error("[AODIT] PDF generation failed:", err);
     } finally {
-      setIsGeneratingPDF(false);
+      setPdfModeLoading(null);
     }
   };
 
@@ -378,45 +389,6 @@ const DashboardReport = () => {
                       </TableCell>
                       <TableCell />
                     </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <strong>Outlook</strong>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography
-                          component="span"
-                          variant="caption"
-                          sx={{
-                            px: 1,
-                            py: 0.5,
-                            borderRadius: 1,
-                            border: 1,
-                            ...(latestRun.outlook === "Stable"
-                              ? {
-                                  color: "success.main",
-                                  borderColor: "success.main",
-                                }
-                              : latestRun.outlook === "Watch"
-                                ? {
-                                    color: "warning.main",
-                                    borderColor: "warning.main",
-                                  }
-                                : latestRun.outlook === "Negative"
-                                  ? {
-                                      color: "error.main",
-                                      borderColor: "error.main",
-                                    }
-                                  : {
-                                      color: "text.secondary",
-                                      borderColor: "divider",
-                                    }),
-                          }}
-                        >
-                          {latestRun.outlook ?? "—"}
-                        </Typography>
-                      </TableCell>
-                      <TableCell />
-                    </TableRow>
                   </TableBody>
                 </Table>
 
@@ -443,7 +415,9 @@ const DashboardReport = () => {
                       <TableCell>
                         {latestRun.compositeScore?.toFixed(2) ?? "—"}
                       </TableCell>
-                      <TableCell>—</TableCell>
+                      <TableCell>
+                        {derivedSelfScore != null ? derivedSelfScore.toFixed(2) : "—"}
+                      </TableCell>
                       <TableCell>
                         {latestRun.calibrationGap != null
                           ? `|Δ| ${latestRun.calibrationGap.toFixed(2)}${
@@ -476,17 +450,37 @@ const DashboardReport = () => {
                   <Button
                     variant="contained"
                     size="large"
-                    onClick={handleDownloadPDF}
-                    disabled={isGeneratingPDF}
+                    onClick={() => handleDownloadPDF("report")}
+                    disabled={pdfModeLoading !== null}
                     startIcon={
-                      isGeneratingPDF ? (
+                      pdfModeLoading === "report" ? (
                         <CircularProgress size={12} color="inherit" />
                       ) : (
                         <PDF />
                       )
                     }
                   >
-                    {isGeneratingPDF ? "Generating…" : "Download PDF"}
+                    {pdfModeLoading === "report"
+                      ? "Generating report…"
+                      : "Download Report PDF"}
+                  </Button>
+
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => handleDownloadPDF("transcript")}
+                    disabled={pdfModeLoading !== null}
+                    startIcon={
+                      pdfModeLoading === "transcript" ? (
+                        <CircularProgress size={12} color="inherit" />
+                      ) : (
+                        <PDF />
+                      )
+                    }
+                  >
+                    {pdfModeLoading === "transcript"
+                      ? "Generating transcript…"
+                      : "Download Transcript PDF"}
                   </Button>
                 </Box>
               </>

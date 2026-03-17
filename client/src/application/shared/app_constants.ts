@@ -45,6 +45,9 @@ const APP_CONSTANTS = {
     process.env.REACT_APP_ENV === "development"
       ? "https://docs-dev.aodit.ai"
       : "https://docs.aodit.ai",
+
+  // Featured report PDF (e.g. AWS S3 presigned or public URI)
+  FEATURED_REPORT_PDF_URL: "",
 };
 
 export default APP_CONSTANTS;

@@ -70,7 +70,7 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
   const userTextContent = generateContactUserPlainText(userEmailData);
 
   const mailOptionsAdmin = {
-    from: `"Aodit.ai" <${sender}>`,
+    from: `"aodit.ai" <${sender}>`,
     to: adminEmail,
     subject: `Rating request${reportOfInterest ? `: ${reportOfInterest}` : ""}`,
     text: adminTextContent,
@@ -79,7 +79,7 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
   };
 
   const mailOptionsUser = {
-    from: `"Aodit.ai" <${sender}>`,
+    from: `"aodit.ai" <${sender}>`,
     to: email,
     subject: "Thank you for contacting us!",
     text: userTextContent,

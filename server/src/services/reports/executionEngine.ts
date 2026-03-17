@@ -22,6 +22,7 @@ import {
   determineOutlook,
   getRating,
 } from "./scoring";
+import { generateExecutiveSummaries } from "./executiveSummaryService";
 import {
   buildScenarioGenerationPrompt,
   buildScoringPrompt,
@@ -546,16 +547,50 @@ const executeModelRun = async (params: {
   const outlook = determineOutlook(dimScores, calibrationGap);
   const deploymentVerdict = determineDeploymentVerdict(rating);
 
+  let executiveSummary: string | undefined;
+  let dimensionScoresToSave = dimScores;
+
+  try {
+    await updateRunProgress(runId, {
+      progress: 95,
+      currentStep: "Generating executive summaries",
+    });
+
+    const summaryResult = await generateExecutiveSummaries({
+      evaluatorModelId,
+      modelName,
+      compositeScore,
+      rating,
+      deploymentVerdict,
+      outlook,
+      totalScenarios,
+      calibrationGap,
+      dimensionScores: dimScores,
+    });
+
+    executiveSummary = summaryResult.overallSummary || undefined;
+    dimensionScoresToSave = dimScores.map((d) => ({
+      ...d,
+      executiveSummary:
+        summaryResult.dimensionSummaries[d.dimensionId]?.trim() || undefined,
+    }));
+  } catch (err: any) {
+    console.warn(
+      `[AODIT] Executive summary generation failed for run ${runId}: ${err.message}. Saving run without summaries.`,
+    );
+  }
+
   await updateRunProgress(runId, {
     status: "completed",
     progress: 100,
     currentStep: "Generating report",
-    dimensionScores: dimScores,
+    dimensionScores: dimensionScoresToSave,
     compositeScore,
     rating,
     calibrationGap,
     outlook,
     deploymentVerdict,
+    executiveSummary,
     scenarioResults: scenarioResultIds,
     completedAt: new Date().toISOString(),
   });

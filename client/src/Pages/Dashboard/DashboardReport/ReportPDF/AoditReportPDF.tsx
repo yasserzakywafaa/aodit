@@ -15,7 +15,7 @@ import type { ScenarioResult } from "src/shared/types/scenarioResult";
 // Constants (mirrored from aoditFramework.ts — no server import needed)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const GOLD = "#047857";
+const EMERALD = "#047857";
 const DARK = "#0A0A0A";
 const CREAM = "#F7F5F0";
 const HIGHLIGHT = "#FFFBEB";
@@ -162,7 +162,7 @@ const s = StyleSheet.create({
     paddingVertical: 12,
   },
   headerBarLeft: {
-    color: GOLD,
+    color: EMERALD,
     fontSize: 13,
     fontFamily: "Helvetica-Bold",
     letterSpacing: 2,
@@ -184,7 +184,7 @@ const s = StyleSheet.create({
   body: { paddingHorizontal: 32, paddingTop: 20 },
 
   // Section header
-  sectionNum: { color: GOLD, fontSize: 18, fontFamily: "Helvetica-Bold" },
+  sectionNum: { color: EMERALD, fontSize: 18, fontFamily: "Helvetica-Bold" },
   sectionTitle: {
     color: DARK,
     fontSize: 14,
@@ -205,14 +205,14 @@ const s = StyleSheet.create({
   scoreBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 24 },
   scoreBoxLeft: {
     padding: 20,
-    borderRightColor: GOLD,
+    borderRightColor: EMERALD,
     borderRightWidth: 3,
     alignItems: "center",
     justifyContent: "center",
-    width: 120,
+    width: 200,
   },
   scoreBoxRating: {
-    color: GOLD,
+    color: EMERALD,
     fontSize: 52,
     fontFamily: "Helvetica-Bold",
     lineHeight: 1,
@@ -224,7 +224,7 @@ const s = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Helvetica-Bold",
   },
-  scoreBoxMeta: { color: GOLD, fontSize: 9 },
+  scoreBoxMeta: { color: EMERALD, fontSize: 9 },
 
   // Metadata table (cover)
   metaTable: { backgroundColor: CREAM, marginTop: 20, marginBottom: 4 },
@@ -326,14 +326,14 @@ const s = StyleSheet.create({
   verdictBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 16 },
   verdictLeft: {
     padding: 16,
-    borderRightColor: GOLD,
+    borderRightColor: EMERALD,
     borderRightWidth: 3,
     justifyContent: "center",
     width: 120,
   },
   verdictLeftLabel: { color: "#9CA3AF", fontSize: 7, letterSpacing: 1 },
   verdictLeftValue: {
-    color: GOLD,
+    color: EMERALD,
     fontSize: 11,
     fontFamily: "Helvetica-Bold",
     marginTop: 4,
@@ -374,7 +374,7 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   dimHeaderText: {
-    color: GOLD,
+    color: EMERALD,
     fontSize: 10,
     fontFamily: "Helvetica-Bold",
     letterSpacing: 1,
@@ -417,13 +417,7 @@ const PageHeader = ({ subtitle }: { subtitle?: string }) => (
   </View>
 );
 
-const PageFooter = ({
-  reportName,
-  page,
-}: {
-  reportName: string;
-  page: number;
-}) => (
+const PageFooter = ({ reportName }: { reportName: string }) => (
   <View style={s.footer} fixed>
     <Text style={s.footerText}>
       AODIT · Swiss Lab of Intelligence · aodit.ai
@@ -494,7 +488,7 @@ const CoverPage = ({ report, run }: { report: Report; run: ReportRun }) => {
             {report.name}
           </Text>
           {report.reportType && (
-            <Text style={{ fontSize: 9, color: GOLD, marginTop: 4 }}>
+            <Text style={{ fontSize: 9, color: EMERALD, marginTop: 4 }}>
               {report.reportType}
             </Text>
           )}
@@ -528,7 +522,7 @@ const CoverPage = ({ report, run }: { report: Report; run: ReportRun }) => {
           <View style={s.scoreBoxLeft}>
             <Text
               style={{
-                color: GOLD,
+                color: EMERALD,
                 fontSize: 7,
                 letterSpacing: 1,
                 marginBottom: 4,
@@ -575,15 +569,176 @@ const CoverPage = ({ report, run }: { report: Report; run: ReportRun }) => {
           legal, regulatory, or financial advice. The AODIT-5 Framework™ is a
           proprietary methodology of the Swiss Lab of Intelligence.
         </Text>
+
+        {/* Contact Us — prominent card */}
+        <View
+          style={{
+            marginTop: 28,
+            backgroundColor: CREAM,
+            borderLeftWidth: 4,
+            borderLeftColor: EMERALD,
+            paddingVertical: 20,
+            paddingHorizontal: 24,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 9,
+              color: EMERALD,
+              letterSpacing: 2,
+              fontFamily: "Helvetica-Bold",
+              marginBottom: 12,
+            }}
+          >
+            CONTACT US
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              color: DARK,
+              fontFamily: "Helvetica-Bold",
+              marginBottom: 10,
+            }}
+          >
+            Swissli AG
+          </Text>
+          <Text
+            style={{
+              fontSize: 10,
+              color: TEXT,
+              lineHeight: 1.7,
+            }}
+          >
+            Murbacherstrasse 19{"\n"}
+            6003 Luzern{"\n"}
+            Phone: +41 76 450 17 73{"\n"}
+            Email: Katharina@swisslii.com
+          </Text>
+        </View>
       </View>
 
-      <PageFooter reportName={report.name} page={1} />
+      <PageFooter reportName={report.name} />
     </Page>
   );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 2: Executive Summary
+// Page 2: AODIT-5 Framework Overview
+// ─────────────────────────────────────────────────────────────────────────────
+
+const FrameworkOverviewPage = ({ report }: { report: Report }) => (
+  <Page size="A4" style={s.page}>
+    <PageHeader subtitle="AODIT-5 FRAMEWORK OVERVIEW" />
+    <View style={s.body}>
+      <SectionHeading num="01" title="AODIT-5 FRAMEWORK" />
+
+      <Text style={s.para}>
+        AODIT-5 is a structured adversarial evaluation framework for large
+        language models. It is designed to surface failure modes that are not
+        visible in standard benchmark-style testing by stressing models across
+        five complementary dimensions: Reliability, Integrity, Judgment,
+        Resistance, and Resilience.
+      </Text>
+
+      <Text style={[s.para, { marginBottom: 6 }]}>
+        Each evaluation run executes a fixed number of adversarial scenarios per
+        dimension, using an 8-turn architecture that moves from baseline
+        behaviour through targeted stressors and recovery. Scores are aggregated
+        with severity-aware weighting and mapped onto a credit-style rating
+        scale (AAA–D) to support deployment decisions in regulated and
+        safety-critical environments.
+      </Text>
+
+      <View style={s.divider} />
+
+      <Text
+        style={{
+          fontSize: 8,
+          fontFamily: "Helvetica-Bold",
+          color: DARK,
+          marginBottom: 6,
+        }}
+      >
+        The Five AODIT-5 Dimensions
+      </Text>
+
+      {DIMENSIONS.map((dim) => (
+        <View key={dim.id} style={{ marginBottom: 6 }}>
+          <Text
+            style={{
+              fontSize: 8,
+              fontFamily: "Helvetica-Bold",
+              color: DARK,
+            }}
+          >
+            {dim.id} ({dim.short})
+          </Text>
+          <Text style={{ fontSize: 8, color: MID_GRAY, lineHeight: 1.5 }}>
+            {dim.question}
+          </Text>
+        </View>
+      ))}
+
+      <View style={[s.divider, { marginTop: 10 }]} />
+
+      <Text
+        style={{
+          fontSize: 8,
+          fontFamily: "Helvetica-Bold",
+          color: DARK,
+          marginBottom: 6,
+        }}
+      >
+        Turn Architecture & Scoring
+      </Text>
+      <Text style={s.para}>
+        Scenarios follow an 8-turn protocol that combines baseline prompts,
+        contradiction, authority pressure, jailbreak-style instructions,
+        overload, and explicit recovery. Each turn is independently scored by an
+        evaluator, with higher weights applied to high-severity failures.
+        Dimension scores feed into a composite score on a 0–5 scale, which is
+        then mapped to the rating bands below.
+      </Text>
+
+      <View style={s.table}>
+        <View style={s.tableHeader}>
+          <Text style={[s.tableHeaderCell, { width: "20%" }]}>RATING</Text>
+          <Text style={[s.tableHeaderCell, { width: "25%" }]}>SCORE RANGE</Text>
+          <Text style={[s.tableHeaderCell, { width: "55%" }]}>
+            DEPLOYMENT VERDICT
+          </Text>
+        </View>
+        {RATING_BANDS.map((band) => (
+          <View key={band.rating} style={s.tableRow}>
+            <Text
+              style={[
+                s.tableCell,
+                { width: "20%", fontFamily: "Helvetica-Bold", color: DARK },
+              ]}
+            >
+              {band.rating}
+            </Text>
+            <Text style={[s.tableCell, { width: "25%" }]}>
+              {fmt(band.min)} – {fmt(band.max)}
+            </Text>
+            <Text
+              style={[
+                s.tableCell,
+                { width: "55%", color: MID_GRAY, lineHeight: 1.4 },
+              ]}
+            >
+              {band.verdict}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </View>
+    <PageFooter reportName={report.name} />
+  </Page>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Page 3: Executive Summary
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ExecutiveSummaryPage = ({
@@ -601,6 +756,11 @@ const ExecutiveSummaryPage = ({
   const calInfo = calibrationLabel(calGap);
   const dimScores = run.dimensionScores ?? [];
 
+  const weakestDim =
+    dimScores.length > 0
+      ? dimScores.reduce((a, b) => (a.score < b.score ? a : b))
+      : null;
+
   const deploymentParagraph = (rating: string): string => {
     const verdicts: Record<string, string> = {
       AAA: "The model demonstrated exceptional performance across all AODIT-5 dimensions, meeting or exceeding thresholds for unrestricted deployment in regulated environments.",
@@ -617,11 +777,34 @@ const ExecutiveSummaryPage = ({
     );
   };
 
+  const overallSummary = (): string => {
+    const rating = run.rating ?? "—";
+    const score = fmt(run.compositeScore ?? 0);
+    if (!weakestDim) {
+      return `The model achieved an overall composite score of ${score} / 5.0 with rating ${rating}, based on ${totalScenarios} adversarial scenarios across the five AODIT-5 dimensions.`;
+    }
+    const weakestLabel =
+      DIMENSIONS.find((d) => d.id === weakestDim.dimensionId)?.id ??
+      weakestDim.dimensionId;
+    return `The model achieved an overall composite score of ${score} / 5.0 with rating ${rating}, showing its strongest performance in most dimensions while highlighting ${weakestLabel} as the primary area for focused improvement. This summary aggregates results from ${totalScenarios} adversarial scenarios using the full AODIT-5 turn architecture.`;
+  };
+
+  const dimensionInsight = (dimId: string, score: number): string => {
+    const type = classify(score);
+    if (type === "pass") {
+      return `Strong performance on ${dimId}, with behaviour generally aligned to AODIT-5 expectations. Maintain current safeguards and include periodic re-testing in high-severity scenarios.`;
+    }
+    if (type === "note") {
+      return `Mixed performance on ${dimId}, with isolated vulnerabilities under stress. Prioritise targeted scenario redesign and fine-tuning to close gaps before high-stakes deployment.`;
+    }
+    return `Material weaknesses on ${dimId}, including frequent failures under adversarial pressure. Hold deployment for this use case and focus remediation on the worst-scoring scenarios before retesting.`;
+  };
+
   return (
     <Page size="A4" style={s.page}>
       <PageHeader />
       <View style={s.body}>
-        <SectionHeading num="01" title="EXECUTIVE SUMMARY" />
+        <SectionHeading num="02" title="EXECUTIVE SUMMARY" />
 
         {/* Stat bar */}
         <View style={s.statBar}>
@@ -662,6 +845,11 @@ const ExecutiveSummaryPage = ({
             </View>
           ))}
         </View>
+
+        {/* Overall narrative summary (from DB when available) */}
+        <Text style={[s.para, { marginBottom: 10 }]}>
+          {run.executiveSummary?.trim() || overallSummary()}
+        </Text>
 
         {/* Deployment verdict highlight */}
         <View
@@ -730,7 +918,10 @@ const ExecutiveSummaryPage = ({
                 >
                   {ds ? fmt(score) : "—"}
                 </Text>
-                <Text style={s.dimDesc}>{dim.question}</Text>
+                <Text style={s.dimDesc}>
+                  {ds?.executiveSummary?.trim() ||
+                    dimensionInsight(dim.id, score)}
+                </Text>
                 <View style={s.dimBadge}>
                   <View
                     style={{
@@ -759,191 +950,17 @@ const ExecutiveSummaryPage = ({
         <View style={s.divider} />
         <Text style={s.para}>{deploymentParagraph(run.rating ?? "")}</Text>
       </View>
-      <PageFooter reportName={report.name} page={2} />
+      <PageFooter reportName={report.name} />
     </Page>
   );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 3: AODIT-5 Dimension Scores Table
+// Page 4: AODIT-5 Dimension Scores Table
 // ─────────────────────────────────────────────────────────────────────────────
 
-const DimensionScoresPage = ({
-  report,
-  run,
-}: {
-  report: Report;
-  run: ReportRun;
-}) => {
-  const dimScores = run.dimensionScores ?? [];
-  const weights = report.dimensionWeights;
-  const lowestDim =
-    dimScores.length > 0
-      ? dimScores.reduce((a, b) => (a.score < b.score ? a : b))
-      : null;
-
-  const colWidths = ["6%", "16%", "44%", "10%", "12%", "12%"];
-
-  return (
-    <Page size="A4" style={s.page}>
-      <PageHeader />
-      <View style={s.body}>
-        <SectionHeading num="02" title="AODIT-5 DIMENSION SCORES" />
-
-        <View style={s.table}>
-          {/* Header */}
-          <View style={s.tableHeader}>
-            {[
-              "#",
-              "DIMENSION",
-              "CORE QUESTION",
-              "WEIGHT",
-              "SCORE",
-              "STATUS",
-            ].map((h, i) => (
-              <Text
-                key={h}
-                style={[s.tableHeaderCell, { width: colWidths[i] }]}
-              >
-                {h}
-              </Text>
-            ))}
-          </View>
-
-          {/* Rows */}
-          {DIMENSIONS.map((dim, idx) => {
-            const ds = dimScores.find((d) => d.dimensionId === dim.id);
-            const score = ds?.score ?? 0;
-            const w = weights?.[dim.id as keyof typeof weights] ?? dim.weight;
-            const type = classify(score);
-            const bs = badgeStyle(type);
-            const isLowest =
-              lowestDim?.dimensionId === dim.id && dimScores.length > 0;
-            const rowStyle = isLowest ? s.tableRowHighlight : s.tableRow;
-
-            return (
-              <View key={dim.id} style={rowStyle}>
-                <Text style={[s.tableCell, { width: colWidths[0] }]}>
-                  {String(idx + 1).padStart(2, "0")}
-                </Text>
-                <Text
-                  style={[
-                    s.tableCell,
-                    {
-                      width: colWidths[1],
-                      fontFamily: "Helvetica-Bold",
-                      color: DARK,
-                    },
-                  ]}
-                >
-                  {dim.id}
-                </Text>
-                <Text
-                  style={[
-                    s.tableCell,
-                    { width: colWidths[2], color: MID_GRAY, lineHeight: 1.4 },
-                  ]}
-                >
-                  {dim.question}
-                </Text>
-                <Text style={[s.tableCell, { width: colWidths[3] }]}>
-                  {Math.round(w * 100)}%
-                </Text>
-                <Text
-                  style={[
-                    s.tableCell,
-                    {
-                      width: colWidths[4],
-                      fontFamily: "Helvetica-Bold",
-                      color:
-                        type === "pass"
-                          ? PASS_GREEN
-                          : type === "note"
-                            ? NOTE_AMBER
-                            : FAIL_RED,
-                    },
-                  ]}
-                >
-                  {ds ? fmt(score) : "—"}
-                </Text>
-                <View style={{ width: colWidths[5] }}>
-                  <View
-                    style={{
-                      backgroundColor: bs.bg,
-                      borderRadius: 2,
-                      alignSelf: "flex-start",
-                    }}
-                  >
-                    <Text style={[s.badge, { color: bs.color }]}>
-                      {bs.label}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-
-        {/* Severity legend */}
-        <View style={{ marginTop: 16 }}>
-          <Text
-            style={{
-              fontSize: 7,
-              color: MID_GRAY,
-              letterSpacing: 1,
-              marginBottom: 8,
-            }}
-          >
-            SEVERITY MULTIPLIER APPLIED
-          </Text>
-          <View style={{ flexDirection: "row", gap: 8 }}>
-            {[
-              { label: "LOW · 1.0×", bg: LIGHT_GRAY, color: MID_GRAY },
-              { label: "MEDIUM · 1.5×", bg: NOTE_BG, color: NOTE_AMBER },
-              { label: "HIGH · 2.0×", bg: FAIL_BG, color: FAIL_RED },
-            ].map((sev) => (
-              <View
-                key={sev.label}
-                style={{
-                  backgroundColor: sev.bg,
-                  paddingHorizontal: 10,
-                  paddingVertical: 6,
-                  borderRadius: 2,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 7,
-                    fontFamily: "Helvetica-Bold",
-                    color: sev.color,
-                  }}
-                >
-                  {sev.label}
-                </Text>
-              </View>
-            ))}
-          </View>
-          <Text
-            style={{
-              fontSize: 7.5,
-              color: MID_GRAY,
-              marginTop: 8,
-              lineHeight: 1.5,
-            }}
-          >
-            Each scenario is assigned a severity tier before execution. Scores
-            are multiplied by the severity weight during dimension aggregation —
-            high-severity failures have greater impact on the final rating.
-          </Text>
-        </View>
-      </View>
-      <PageFooter reportName={report.name} page={3} />
-    </Page>
-  );
-};
-
 // ─────────────────────────────────────────────────────────────────────────────
-// Pages 4–5: Per-Dimension Analysis
+// Pages 5–6: Per-Dimension Analysis
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DimAnalysisBlock = ({
@@ -1273,13 +1290,13 @@ const DimensionAnalysisPage = ({
           );
         })}
       </View>
-      <PageFooter reportName={report.name} page={4} />
+      <PageFooter reportName={report.name} />
     </Page>
   );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 6: Calibration Analysis
+// Page 7: Calibration Analysis
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CalibrationPage = ({
@@ -1442,13 +1459,13 @@ const CalibrationPage = ({
           </View>
         </View>
       </View>
-      <PageFooter reportName={report.name} page={5} />
+      <PageFooter reportName={report.name} />
     </Page>
   );
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 7: Rating Scale & Deployment Verdict
+// Page 8: Rating Scale & Deployment Verdict
 // ─────────────────────────────────────────────────────────────────────────────
 
 const RatingVerdictPage = ({
@@ -1518,7 +1535,7 @@ const RatingVerdictPage = ({
                     {
                       width: colW[0],
                       fontFamily: "Helvetica-Bold",
-                      color: isActive ? GOLD : DARK,
+                      color: isActive ? EMERALD : DARK,
                     },
                   ]}
                 >
@@ -1608,7 +1625,7 @@ const RatingVerdictPage = ({
           constitute legal, regulatory, or financial advice.
         </Text>
       </View>
-      <PageFooter reportName={report.name} page={6} />
+      <PageFooter reportName={report.name} />
     </Page>
   );
 };
@@ -1634,8 +1651,8 @@ export const AoditReportPDF = ({
     subject="AODIT-5 AI Evaluation Report"
   >
     <CoverPage report={report} run={run} />
+    <FrameworkOverviewPage report={report} />
     <ExecutiveSummaryPage report={report} run={run} />
-    <DimensionScoresPage report={report} run={run} />
     <DimensionAnalysisPage
       report={report}
       run={run}

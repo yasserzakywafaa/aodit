@@ -111,7 +111,7 @@ export async function handleLeadMagnetSubscribe(
     });
 
     const mailOptionsUser = {
-      from: `"Aodit.ai" <${sender}>`,
+      from: `"aodit.ai" <${sender}>`,
       to: subscriber.email,
       subject: "You're on the list",
       text: subscriberText,

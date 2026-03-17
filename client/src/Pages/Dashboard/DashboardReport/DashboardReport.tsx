@@ -9,7 +9,6 @@ import {
   Box,
   Button,
   Container,
-  Divider,
   Paper,
   Table,
   TableBody,
@@ -19,13 +18,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  DimensionWeightsSection,
-  ModelsToEvaluateSection,
-  ModelsToTestSection,
-  ScenarioTurnsSection,
-  ScenariosPerDimensionSection,
-} from "./features";
 import { ExpandMore, PlayArrow, Save, Visibility } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -33,6 +25,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AoditReportPDF } from "./ReportPDF/AoditReportPDF";
 import CircularProgress from "@mui/material/CircularProgress";
 import END_POINTS from "src/application/shared/endpoints";
+import PDF from "@mui/icons-material/PictureAsPdf";
+import ReportConfig from "./features/ReportConfig";
 import { ReportRun } from "src/shared/types/reportRun";
 import type { ScenarioResult } from "src/shared/types/scenarioResult";
 import axios from "axios";
@@ -234,29 +228,12 @@ const DashboardReport = () => {
         <Typography
           variant="h5"
           color="primary"
-          fontWeight={600}
-          sx={{ mb: 3 }}
+          sx={{ mb: 3, borderBottom: 1, borderColor: "divider", pb: 2 }}
         >
           Report Config
         </Typography>
 
-        <ScenariosPerDimensionSection />
-
-        <Divider sx={{ mt: 3, mb: 6 }} />
-
-        <DimensionWeightsSection />
-
-        <Divider sx={{ mt: 3, mb: 6 }} />
-
-        <ModelsToTestSection />
-
-        <Divider sx={{ mt: 3, mb: 6 }} />
-
-        <ModelsToEvaluateSection />
-
-        <Divider sx={{ mt: 3, mb: 6 }} />
-
-        <ScenarioTurnsSection />
+        <ReportConfig />
       </Paper>
 
       {/* Estimates bar */}
@@ -428,11 +405,7 @@ const DashboardReport = () => {
 
       {latestRun && (
         <Paper variant="outlined" sx={{ p: 3, mt: 3 }}>
-          <Typography
-            variant="overline"
-            color="primary"
-            sx={{ letterSpacing: 1 }}
-          >
+          <Typography variant="h5" color="primary">
             AODIT Framework™
           </Typography>
           <Box sx={{ borderTop: 1, borderColor: "divider", pt: 2, mt: 1 }}>
@@ -599,21 +572,17 @@ const DashboardReport = () => {
                 </Table>
 
                 <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
-                  <Button variant="outlined" size="small" onClick={() => {}}>
-                    Share
-                  </Button>
-                  <Button variant="outlined" size="small" onClick={() => {}}>
-                    Embed
-                  </Button>
                   <Button
                     variant="contained"
-                    size="small"
+                    size="large"
                     onClick={handleDownloadPDF}
                     disabled={isGeneratingPDF}
                     startIcon={
                       isGeneratingPDF ? (
                         <CircularProgress size={12} color="inherit" />
-                      ) : undefined
+                      ) : (
+                        <PDF />
+                      )
                     }
                   >
                     {isGeneratingPDF ? "Generating…" : "Download PDF"}

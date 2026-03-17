@@ -1,11 +1,8 @@
-/**
- * ReportRun — result of executing all scenarios for a report (one run per model/report).
- */
-
 export interface DimensionScore {
   dimensionId: string;
   score: number;
   weight: number;
+  executiveSummary?: string;
 }
 
 export interface FeedItem {
@@ -33,7 +30,9 @@ export interface ReportRun {
   calibrationGap?: number;
   outlook?: string;
   deploymentVerdict?: string;
-  scenarioResults?: string[]; // ids or embedded summary
+  executiveSummary?: string;
+  scenarioResults?: string[];
+
   // Progress tracking
   progress?: number; // 0-100
   currentStep?: string; // "Generating scenarios" | "Running conversations" | etc.

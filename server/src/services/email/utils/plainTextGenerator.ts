@@ -52,7 +52,7 @@ Great news! Your report "${reportTitle}" has been successfully generated and is 
 Read your report here: ${reportUrl} 
 
 Best regards,
-The Aodit.ai Team
+The aodit.ai Team
   `.trim();
 };
 
@@ -75,7 +75,7 @@ Thank you for reaching out to us. We have received your message and our team wil
     text += `\n\nYour Message:\n${message}`;
   }
 
-  text += `\n\nBest regards,\nThe Aodit.ai Team`;
+  text += `\n\nBest regards,\nThe aodit.ai Team`;
 
   return text;
 };
@@ -102,7 +102,7 @@ ${message || "(none)"}
 Reply to: ${email}
 
 Best regards,
-The Aodit.ai Team
+The aodit.ai Team
   `.trim();
 };
 
@@ -114,11 +114,11 @@ export const generateRegistrationWelcomePlainText = (
 ): string => {
   const { userName } = data;
   return `
-Welcome to Aodit.ai! 🎉
+Welcome to aodit.ai! 🎉
 
 Hello ${userName},
 
-We're thrilled to have you join the Aodit.ai community! You're now ready to create AI agent risk reports in seconds.
+We're thrilled to have you join the aodit.ai community! You're now ready to create AI agent risk reports in seconds.
 
 Getting Started:
 1. Create a new report
@@ -127,7 +127,7 @@ Getting Started:
 4. Share and export your report!
 
 Best regards,
-The Aodit.ai Team
+The aodit.ai Team
   `.trim();
 };
 
@@ -146,7 +146,7 @@ We've received your request. You'll get updates when new ratings publish—quart
 Registered with: ${email}
 
 Best regards,
-The Aodit.ai Team
+The aodit.ai Team
   `.trim();
 };
 
@@ -164,6 +164,6 @@ Email: ${email}
 Subscribed at: ${subscribedAt}
 
 Best regards,
-The Aodit.ai Team
+The aodit.ai Team
   `.trim();
 };

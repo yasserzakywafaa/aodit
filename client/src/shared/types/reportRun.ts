@@ -2,6 +2,8 @@ export interface DimensionScore {
   dimensionId: string;
   score: number;
   weight: number;
+  /** AI-generated: executive summary + actionable insight (2 lines) for PDF. */
+  executiveSummary?: string;
 }
 
 export interface FeedItem {
@@ -29,6 +31,8 @@ export interface ReportRun {
   calibrationGap?: number;
   outlook?: string;
   deploymentVerdict?: string;
+  /** AI-generated: 2–3 line overall summary of the report for PDF. */
+  executiveSummary?: string;
   scenarioResults?: string[];
   // Progress tracking
   progress?: number;

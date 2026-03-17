@@ -1828,9 +1828,6 @@ const RatingVerdictPage = ({
             <Text style={s.verdictRightText}>
               {achievedRating} — {run.deploymentVerdict ?? "—"}
             </Text>
-            <Text style={{ color: "#9CA3AF", fontSize: 8, marginTop: 4 }}>
-              Outlook: {run.outlook ?? "—"} · Issued: {fmtDate(run.completedAt)}
-            </Text>
           </View>
         </View>
 
@@ -1948,7 +1945,9 @@ const FullTranscriptsPage = ({
 
                     <View style={s.transcriptCardPrompt}>
                       <Text style={s.transcriptCardLabelPrompt}>Prompt</Text>
-                      <Text style={s.transcriptCardText}>{turn.prompt || "—"}</Text>
+                      <Text style={s.transcriptCardText}>
+                        {turn.prompt || "—"}
+                      </Text>
                     </View>
 
                     <View style={s.transcriptCardResponse}>
@@ -1994,7 +1993,11 @@ export const AoditReportPDF = ({
   >
     {(mode === "report" || mode === "full") && (
       <>
-        <CoverPage report={report} run={run} scenarioResults={scenarioResults} />
+        <CoverPage
+          report={report}
+          run={run}
+          scenarioResults={scenarioResults}
+        />
         <FrameworkOverviewPage report={report} />
         <ExecutiveSummaryPage
           report={report}

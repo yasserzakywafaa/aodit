@@ -1,11 +1,26 @@
+import {
+  Notify,
+  ToastTypes,
+} from "src/components/shared/Notification/Notification";
 import { alpha, useTheme } from "@mui/material/styles";
 import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import DownloadIcon from "@mui/icons-material/Download";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import END_POINTS from "src/application/shared/endpoints";
+import { Grid } from "@mui/material";
+import PDF from "@mui/icons-material/PictureAsPdf";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { useState } from "react";
 
 const SECTION_LABEL_STYLE = {
   fontFamily: fontFamilySans,
@@ -28,24 +43,133 @@ const SECTION_LABEL_STYLE = {
 };
 
 const FEATURED_REPORT = {
-  label: "Featured Report",
-  title: "2026 - Q1 Frontier AI Risk Ratings",
-  subtitle: "Banking Services Behavioral Security Benchmark",
+  label: "Featured Banking AI Risk Report",
+  title: "2026 Banking AI Risk Assessment",
+  subtitle: "Banking AI Behavioral Security Benchmark",
   description:
-    "Our latest independent evaluation of leading large language models across a standardised 8-turn adversarial banking simulation. Ratings reflect behavioral compliance quality and deployment suitability for live financial environments. Download the full report for methodology, detailed findings, and recommendations.",
-  reportId: "AODIT-2026-Q1-BANKING",
-  ctaLabel: "Download PDF",
+    "Independent evaluation of leading frontier language models across 1,200 multi-turn adversarial banking scenarios covering refunds, card freezing, escalation handling, and policy integrity. Ratings reflect behavioral compliance quality and deployment suitability for regulated financial environments.",
+  reportId: "Banking AI Risk Assessment Report 2026 – AODIT Q1",
+  ctaLabel: "Download Executive Summary",
+};
+
+const FEATURED_FULL_REPORT = {
+  ctaLabel: "Request full Technical Report",
+};
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const TECHNICAL_REPORT_LEAD = {
+  reportOfInterest: "Banking AI Risk Assessment - Full Technical Report",
+  message: "Technical report download lead magnet",
 };
 
 const RatingsSection = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
-  const pdfUrl = APP_CONSTANTS.FEATURED_REPORT_PDF_URL;
-  const hasPdf = Boolean(pdfUrl && pdfUrl.trim());
+  const executiveSummaryUrl = APP_CONSTANTS.FEATURED_REPORT_PDF_URL;
+  const technicalReportUrl = APP_CONSTANTS.FEATURED_TECHNICAL_REPORT_PDF_URL;
+  const hasPdf = Boolean(executiveSummaryUrl && executiveSummaryUrl.trim());
+  const hasTechnicalPdf = Boolean(
+    technicalReportUrl && technicalReportUrl.trim(),
+  );
+
+  const [leadOpen, setLeadOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [nameErr, setNameErr] = useState("");
+  const [companyErr, setCompanyErr] = useState("");
+  const [emailErr, setEmailErr] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const resetLeadForm = () => {
+    setName("");
+    setCompany("");
+    setEmail("");
+    setNameErr("");
+    setCompanyErr("");
+    setEmailErr("");
+  };
 
   const handleDownload = () => {
     if (hasPdf) {
-      window.open(pdfUrl, "_blank", "noopener,noreferrer");
+      window.open(executiveSummaryUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  const openTechnicalLeadDialog = () => {
+    if (!hasTechnicalPdf) return;
+    resetLeadForm();
+    setLeadOpen(true);
+  };
+
+  const closeLeadDialog = () => {
+    if (!submitting) setLeadOpen(false);
+  };
+
+  const validateLeadForm = (): boolean => {
+    let ok = true;
+    if (!name.trim()) {
+      setNameErr("Full name is required");
+      ok = false;
+    } else setNameErr("");
+    if (!company.trim()) {
+      setCompanyErr("Company is required");
+      ok = false;
+    } else setCompanyErr("");
+    const em = email.trim();
+    if (!em) {
+      setEmailErr("Work email is required");
+      ok = false;
+    } else if (!EMAIL_REGEX.test(em)) {
+      setEmailErr("Enter a valid email address");
+      ok = false;
+    } else setEmailErr("");
+    return ok;
+  };
+
+  const handleLeadSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateLeadForm() || !technicalReportUrl) return;
+    setSubmitting(true);
+    try {
+      await axios.post(
+        END_POINTS.CONTACT.SUPPORT,
+        {
+          name: name.trim(),
+          company: company.trim(),
+          email: email.trim(),
+          reportOfInterest: TECHNICAL_REPORT_LEAD.reportOfInterest,
+          message: TECHNICAL_REPORT_LEAD.message,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Custom-Header": new Date().toISOString(),
+          },
+        },
+      );
+      Notify({
+        content: "Thank you — opening the technical report.",
+        type: ToastTypes.Success,
+      });
+      setLeadOpen(false);
+      resetLeadForm();
+      window.open(technicalReportUrl, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        Notify({
+          content: String(error.response.data.message),
+          type: ToastTypes.Error,
+        });
+      } else {
+        Notify({
+          content: "Could not submit. Please try again.",
+          type: ToastTypes.Error,
+        });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -54,6 +178,7 @@ const RatingsSection = () => {
       id="ratings"
       component="section"
       sx={{
+        mt: { xs: 6, md: 12.5 },
         py: { xs: 6, md: 12.5 },
         px: { xs: 3, md: 6 },
         borderTop: (t) => `1px solid ${t.palette.divider}`,
@@ -84,14 +209,12 @@ const RatingsSection = () => {
             color: "text.primary",
           }}
         >
-          2026 AI Agent
-          <br />
-          Risk{" "}
+          2026 Banking AI Agent{" "}
           <Box
             component="em"
             sx={{ fontStyle: "italic", color: "primary.main" }}
           >
-            Ratings
+            Stress Test
           </Box>
         </Typography>
         <Typography
@@ -147,7 +270,7 @@ const RatingsSection = () => {
               color: "primary.main",
             }}
           >
-            Report {FEATURED_REPORT.reportId}
+            {FEATURED_REPORT.reportId}
           </Typography>
           <Typography
             component="h3"
@@ -176,39 +299,110 @@ const RatingsSection = () => {
           >
             {FEATURED_REPORT.subtitle}
           </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            disabled={!hasPdf}
-            onClick={handleDownload}
-            startIcon={<DownloadIcon />}
-            sx={{
-              fontFamily: fontFamilySans,
-              fontSize: 13,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              px: 3.5,
-              py: 1.75,
-              borderRadius: 0,
-              border: "1px solid",
-              borderColor: "primary.main",
-              bgcolor: "primary.main",
-              color: "primary.contrastText",
-              "&:hover": {
-                bgcolor: (t) => alpha(t.palette.primary.main, 0.85),
-                borderColor: "primary.main",
-              },
-              "&.Mui-disabled": {
-                bgcolor: (t) => alpha(t.palette.primary.main, 0.2),
-                color: "text.secondary",
-                borderColor: (t) => alpha(t.palette.primary.main, 0.3),
-              },
-            }}
-          >
-            {hasPdf ? FEATURED_REPORT.ctaLabel : "PDF coming soon"}
-          </Button>
+
+          <Grid container spacing={2}>
+            <Button
+              variant="contained"
+              size="large"
+              disabled={!hasPdf}
+              onClick={handleDownload}
+              startIcon={<PDF />}
+            >
+              {hasPdf ? FEATURED_REPORT.ctaLabel : "PDF coming soon"}
+            </Button>
+
+            <Button
+              variant="outlined"
+              size="large"
+              disabled={!hasTechnicalPdf}
+              onClick={openTechnicalLeadDialog}
+              startIcon={<ChatBubbleIcon />}
+            >
+              {hasTechnicalPdf
+                ? FEATURED_FULL_REPORT.ctaLabel
+                : "PDF coming soon"}
+            </Button>
+          </Grid>
         </Box>
       </Box>
+
+      <Dialog
+        open={leadOpen}
+        onClose={closeLeadDialog}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{ sx: { borderRadius: 0 } }}
+      >
+        <form onSubmit={handleLeadSubmit}>
+          <DialogTitle sx={{ fontFamily: fontFamilySans, fontWeight: 600 }}>
+            Download full technical report
+          </DialogTitle>
+          <DialogContent
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            <Typography variant="body2" color="text.secondary">
+              Enter your details to open the PDF in a new tab.
+            </Typography>
+            <TextField
+              required
+              fullWidth
+              label="Full name"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (nameErr) setNameErr("");
+              }}
+              error={Boolean(nameErr)}
+              helperText={nameErr}
+              disabled={submitting}
+            />
+            <TextField
+              required
+              fullWidth
+              label="Company"
+              value={company}
+              onChange={(e) => {
+                setCompany(e.target.value);
+                if (companyErr) setCompanyErr("");
+              }}
+              error={Boolean(companyErr)}
+              helperText={companyErr}
+              disabled={submitting}
+            />
+            <TextField
+              required
+              fullWidth
+              type="email"
+              label="Work email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailErr) setEmailErr("");
+              }}
+              error={Boolean(emailErr)}
+              helperText={emailErr}
+              disabled={submitting}
+            />
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button onClick={closeLeadDialog} disabled={submitting}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={submitting}
+              startIcon={
+                submitting ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : null
+              }
+            >
+              {submitting ? "Submitting…" : "Open PDF"}
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     </Box>
   );
 };

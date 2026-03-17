@@ -86,8 +86,8 @@ const FeaturesPage = () => {
     >
       <Hero />
       <SubscribeSection variant="compact" />
-      <ReportsSection />
       <RatingsSection />
+      <ReportsSection />
       <MethodologySection />
       <AboutSection />
       <SubscribeSection />

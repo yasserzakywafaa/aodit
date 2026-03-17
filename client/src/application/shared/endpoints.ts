@@ -98,6 +98,10 @@ const END_POINTS = {
         `${publicApiUrl}/api/v1/dashboard/reports/launch/${reportId}`,
       GET_REPORT_RUNS: (reportId: string) =>
         `${publicApiUrl}/api/v1/dashboard/reports/${reportId}/runs`,
+      GET_RUN_STATUS: (reportId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/reports/${reportId}/run-status`,
+      GET_SCENARIO_RESULTS: (reportId: string, runId?: string) =>
+        `${publicApiUrl}/api/v1/dashboard/reports/${reportId}/scenario-results${runId ? `?runId=${runId}` : ""}`,
     },
   },
 };

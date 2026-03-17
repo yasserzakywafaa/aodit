@@ -86,4 +86,19 @@ dashboardRoutes.get(
   DashboardController.getReportRuns,
 );
 
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.REPORTS.GET_RUN_STATUS(":reportId"),
+  DashboardController.getRunStatus,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.REPORTS.GET_SCENARIO_RESULTS(":reportId"),
+  DashboardController.getScenarioResults,
+);
+
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.REPORTS.BACKFILL_DEEP_DIVE(":reportId"),
+  DashboardController.backfillReportDeepDive,
+);
+
 export default dashboardRoutes;

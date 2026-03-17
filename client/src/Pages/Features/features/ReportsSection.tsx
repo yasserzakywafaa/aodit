@@ -1,7 +1,4 @@
-import {
-  fontFamilySans,
-  fontFamilySerif,
-} from "src/application/shared/themes";
+import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -37,7 +34,7 @@ const reportCards = [
   {
     number: "REPORT 01 — LIVE",
     icon: "🌐",
-    title: "Frontier AI Risk Ratings 2026",
+    title: "2026 Banking AI Risk Assessment",
     desc: "How leading frontier models behave under contradiction, pressure, and adversarial manipulation.",
     weights: [
       { name: "RELIABILITY", pct: "25%", fill: 42 },

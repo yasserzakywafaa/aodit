@@ -59,6 +59,10 @@
   //     "resolveJsonModule": true
   //   }
   // },
-  "include": ["src/**/*.ts", "src/models/types/express.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/models/types/express.d.ts",
+    "scripts/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,5 @@
 import { closeDatabase, databaseInit } from "./models/mongoDb";
+import { resumeStuckRuns } from "./services/reports/executionEngine";
 import express, { NextFunction, Request, Response } from "express";
 
 import CONFIG from "./config";
@@ -115,6 +116,8 @@ const startServer = async () => {
   try {
     // Await MongoDB database connection initialization
     await databaseInit();
+    // Resume any runs that were interrupted by a previous server crash/restart
+    await resumeStuckRuns();
     // Await Agenda initialization
     await agendaInit();
 

@@ -10,7 +10,7 @@ import { Report } from "src/shared/types/report";
 import { useApplicationContext } from "src/application/store/Provider";
 
 export interface DashboardCreateReportManager {
-  handleCreateReport: (report: Report) => Promise<Report | undefined>;
+  handleCreateReport: (report: Partial<Report>) => Promise<Report | undefined>;
 }
 
 export const useDashboardCreateReportManager = (
@@ -22,7 +22,9 @@ export const useDashboardCreateReportManager = (
     },
   } = useApplicationContext();
 
-  const handleCreateReport = async (report: Report): Promise<Report | undefined> => {
+  const handleCreateReport = async (
+    report: Partial<Report>,
+  ): Promise<Report | undefined> => {
     if (!auth || !auth.user) {
       throw new Error("User ID is required");
     }

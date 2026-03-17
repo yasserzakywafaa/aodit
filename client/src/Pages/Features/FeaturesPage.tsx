@@ -60,7 +60,7 @@ const FeaturesPage = () => {
   const faqData: FAQItem[] = useMemo(
     () => [
       {
-        question: "What is Aodit.ai?",
+        question: "What is aodit.ai?",
         answer:
           "Aodit is a smart tendering and BOQ (Bill of Quantity) management tool for marketing agencies.",
       },
@@ -86,8 +86,8 @@ const FeaturesPage = () => {
     >
       <Hero />
       <SubscribeSection variant="compact" />
-      <ReportsSection />
       <RatingsSection />
+      <ReportsSection />
       <MethodologySection />
       <AboutSection />
       <SubscribeSection />

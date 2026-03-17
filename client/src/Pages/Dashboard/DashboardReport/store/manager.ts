@@ -81,7 +81,6 @@ export const useDashboardReportManager = (
           name: data.name,
           description: data.description,
           reportType: data.reportType,
-          sectorContext: data.sectorContext,
           scenariosPerDimension: data.scenariosPerDimension,
           dimensionWeights: data.dimensionWeights,
           modelsToTest: data.modelsToTest,

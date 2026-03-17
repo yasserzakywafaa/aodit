@@ -50,9 +50,9 @@ export const sendRegistrationWelcomeEmail = async (
     });
 
     const mailOptions = {
-      from: `"Aodit.ai" <${CONFIG.GMAIL_SENDER ?? CONFIG.EMAIL}>`,
+      from: `"aodit.ai" <${CONFIG.GMAIL_SENDER ?? CONFIG.EMAIL}>`,
       to: user.email,
-      subject: "Welcome to Aodit.ai! 🎉",
+      subject: "Welcome to aodit.ai! 🎉",
       text: textContent,
       html: htmlContent,
     };

@@ -46,6 +46,15 @@ const AODIT_DIMENSIONS = [
   "Resilience",
 ] as const;
 
+// AODIT-5 category codes per dimension (treated as categories, not subcategories).
+const DIMENSION_CATEGORY_CODES: Record<(typeof AODIT_DIMENSIONS)[number], string[]> = {
+  Reliability: ["R1", "R2", "R3", "R4", "R5"],
+  Integrity: ["I1", "I2", "I3", "I4", "I5"],
+  Judgment: ["J1", "J2", "J3", "J4", "J5"],
+  Resistance: ["T1", "T2", "T3", "T4", "T5"],
+  Resilience: ["Z1", "Z2", "Z3", "Z4", "Z5"],
+};
+
 const TURN_TYPES = [
   "Baseline",
   "Extension",
@@ -67,10 +76,18 @@ const seedScenariosForReport = async (
   const perDim = scenariosPerDimension;
 
   for (const dimensionId of AODIT_DIMENSIONS) {
+    const categoryCodes = DIMENSION_CATEGORY_CODES[dimensionId];
+    const perCategory = Math.max(1, Math.floor(perDim / categoryCodes.length));
+
     for (let i = 0; i < perDim; i++) {
+      const categoryIndex = Math.min(
+        categoryCodes.length - 1,
+        Math.floor(i / perCategory),
+      );
       scenarios.push({
         reportId,
         categoryId: dimensionId,
+        categoryCode: categoryCodes[categoryIndex],
         title: `${dimensionId} scenario ${i + 1}`,
         description: `Scenario for ${dimensionId} (${i + 1}/${perDim})`,
         severity: i % 3 === 0 ? "high" : i % 3 === 1 ? "medium" : "low",
@@ -156,6 +173,10 @@ const getReportById = async (reportId: string) => {
 };
 
 const deleteReport = async (reportId: string) => {
+  // Cascade: remove all related data before deleting the report itself
+  await database.collection(DBCollectionsEnum.scenarios).deleteMany({ reportId });
+  await database.collection(DBCollectionsEnum.reportRuns).deleteMany({ reportId });
+  await database.collection(DBCollectionsEnum.scenarioResults).deleteMany({ reportId });
   return await deleteDocument(reportId, DBCollectionsEnum.reports);
 };
 
@@ -168,7 +189,6 @@ const updateReport = async (
       | "description"
       | "reportType"
       | "status"
-      | "sectorContext"
       | "scenariosPerDimension"
       | "dimensionWeights"
       | "modelsToTest"

@@ -9,7 +9,6 @@ import {
   Box,
   Button,
   Container,
-  Divider,
   Paper,
   Table,
   TableBody,
@@ -19,20 +18,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  DimensionWeightsSection,
-  ModelsToEvaluateSection,
-  ModelsToTestSection,
-  ScenarioTurnsSection,
-  ScenariosPerDimensionSection,
-} from "./features";
-import { ExpandMore, PlayArrow, Save } from "@mui/icons-material";
+import { ExpandMore, PlayArrow, Save, Visibility } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { AoditReportPDF } from "./ReportPDF/AoditReportPDF";
+import CircularProgress from "@mui/material/CircularProgress";
+import END_POINTS from "src/application/shared/endpoints";
+import PDF from "@mui/icons-material/PictureAsPdf";
+import ReportConfig from "./features/ReportConfig";
 import { ReportRun } from "src/shared/types/reportRun";
+import type { ScenarioResult } from "src/shared/types/scenarioResult";
+import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { useDashboardReportContext } from "./store/Provider";
-import { useEffect } from "react";
 
 const getLatestCompletedRun = (runs: ReportRun[]): ReportRun | undefined => {
   const completed = runs.filter((r) => r.status === "completed");
@@ -52,10 +52,53 @@ const DashboardReport = () => {
       state: { report, runs },
       setReport,
     },
-    manager: { setUp, handleUpdateReport },
+    manager: { setUp, handleUpdateReport, handleLaunchReport },
   } = useDashboardReportContext();
 
   const latestRun = getLatestCompletedRun(runs);
+  const [pdfModeLoading, setPdfModeLoading] = useState<
+    "report" | "transcript" | null
+  >(null);
+  const independentScore = latestRun?.compositeScore;
+  const derivedSelfScore =
+    independentScore != null && latestRun?.calibrationDelta != null
+      ? independentScore + latestRun.calibrationDelta
+      : null;
+
+  const handleDownloadPDF = async (mode: "report" | "transcript") => {
+    if (!report || !latestRun || !reportId) return;
+    setPdfModeLoading(mode);
+    try {
+      const res = await axios.get<ScenarioResult[]>(
+        END_POINTS.DASHBOARD.REPORTS.GET_SCENARIO_RESULTS(
+          reportId,
+          latestRun._id,
+        ),
+      );
+      const blob = await pdf(
+        <AoditReportPDF
+          report={report}
+          run={latestRun}
+          scenarioResults={res.data}
+          mode={mode}
+        />,
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download =
+        mode === "transcript"
+          ? `AODIT-${report.name.replace(/\s+/g, "-")}-Transcript.pdf`
+          : `AODIT-${report.name.replace(/\s+/g, "-")}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("[AODIT] PDF generation failed:", err);
+    } finally {
+      setPdfModeLoading(null);
+    }
+  };
+
   const modelsToTest = report?.modelsToTest ?? [];
   const totalScenarios = (report?.scenariosPerDimension ?? 20) * 5;
   const modelsCount = modelsToTest.length;
@@ -103,9 +146,22 @@ const DashboardReport = () => {
     });
   };
 
-  const handleRunReport = () => {
-    if (!reportId) return;
-    navigate(routes.dashboard.reports.reportRun(reportId));
+  const handleRunReport = async () => {
+    if (!reportId || !report) return;
+    try {
+      await handleUpdateReport(reportId, {
+        name: report.name,
+        description: report.description,
+        scenariosPerDimension: report.scenariosPerDimension,
+        dimensionWeights: report.dimensionWeights,
+        modelsToTest: report.modelsToTest,
+        modelsToEvaluate: ["Claude"],
+      });
+      await handleLaunchReport(reportId);
+      navigate(routes.dashboard.reports.reportLiveFeed(reportId));
+    } catch (error) {
+      console.error("Failed to run report:", error);
+    }
   };
 
   return (
@@ -179,189 +235,81 @@ const DashboardReport = () => {
       </Accordion>
 
       {/* Report Config */}
-      <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
-        <Typography
-          variant="h5"
-          color="primary"
-          fontWeight={600}
-          sx={{ mb: 3 }}
+
+      {latestRun ? (
+        <Accordion
+          defaultExpanded={false}
+          sx={{ mt: 2, "&:before": { display: "none" } }}
         >
-          Report Config
-        </Typography>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography variant="subtitle1" color="primary" fontWeight={600}>
+              Report Config
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <ReportConfig
+              modelsCount={modelsCount}
+              totalScenarios={totalScenarios}
+              datapoints={datapoints}
+            />
+          </AccordionDetails>
+        </Accordion>
+      ) : (
+        <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
+          <Typography
+            variant="h5"
+            color="primary"
+            sx={{ mb: 3, borderBottom: 1, borderColor: "divider", pb: 2 }}
+          >
+            Report Config
+          </Typography>
 
-        <ScenariosPerDimensionSection />
+          <ReportConfig
+            modelsCount={modelsCount}
+            totalScenarios={totalScenarios}
+            datapoints={datapoints}
+          />
+        </Paper>
+      )}
 
-        <Divider sx={{ mt: 3, mb: 6 }} />
-
-        <DimensionWeightsSection />
-
-        <Divider sx={{ mt: 3, mb: 6 }} />
-
-        <ModelsToTestSection />
-
-        <Divider sx={{ mt: 3, mb: 6 }} />
-
-        <ModelsToEvaluateSection />
-
-        <Divider sx={{ mt: 3, mb: 6 }} />
-
-        <ScenarioTurnsSection />
-      </Paper>
-
-      {/* Estimates bar */}
-      <Paper
-        variant="outlined"
-        sx={{
-          mt: 2,
-          p: 2.5,
-          bgcolor: "background.default",
-          border: "1px solid",
-          borderColor: "primary.main",
-          borderRadius: 1,
-        }}
-      >
+      {reportId && !latestRun && (
         <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "stretch",
-            flexWrap: "nowrap",
-          }}
+          sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}
         >
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              borderRight: "1px solid",
-              borderColor: "primary.main",
-              "&:last-of-type": { borderRight: "none" },
-            }}
-          >
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              {totalScenarios}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: "block",
-                mt: 0.5,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Total scenarios
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              borderRight: "1px solid",
-              borderColor: "primary.main",
-              "&:last-of-type": { borderRight: "none" },
-            }}
-          >
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              {modelsCount}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: "block",
-                mt: 0.5,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Models
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              borderRight: "1px solid",
-              borderColor: "primary.main",
-              "&:last-of-type": { borderRight: "none" },
-            }}
-          >
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              8
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: "block",
-                mt: 0.5,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Turns / scenario
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
-          >
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              {datapoints.toLocaleString()}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: "block",
-                mt: 0.5,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Datapoints
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
-
-      {reportId && (
-        <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start" }}>
           <Button
             variant="contained"
             color="primary"
             size="large"
             startIcon={<PlayArrow />}
             onClick={handleRunReport}
-            disabled={!reportId || !report || modelsToTest.length < 3}
+            disabled={
+              !reportId ||
+              !report ||
+              modelsToTest.length < 1 ||
+              report?.status === "running"
+            }
           >
             RUN REPORT
           </Button>
+          {report?.status === "running" && (
+            <Button
+              variant="outlined"
+              color="primary"
+              size="large"
+              startIcon={<Visibility />}
+              onClick={() =>
+                navigate(routes.dashboard.reports.reportLiveFeed(reportId))
+              }
+            >
+              View Report Status
+            </Button>
+          )}
         </Box>
       )}
 
       {latestRun && (
         <Paper variant="outlined" sx={{ p: 3, mt: 3 }}>
-          <Typography
-            variant="overline"
-            color="primary"
-            sx={{ letterSpacing: 1 }}
-          >
+          <Typography variant="h5" color="primary">
             AODIT Framework™
           </Typography>
           <Box sx={{ borderTop: 1, borderColor: "divider", pt: 2, mt: 1 }}>
@@ -441,45 +389,6 @@ const DashboardReport = () => {
                       </TableCell>
                       <TableCell />
                     </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <strong>Outlook</strong>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography
-                          component="span"
-                          variant="caption"
-                          sx={{
-                            px: 1,
-                            py: 0.5,
-                            borderRadius: 1,
-                            border: 1,
-                            ...(latestRun.outlook === "Stable"
-                              ? {
-                                  color: "success.main",
-                                  borderColor: "success.main",
-                                }
-                              : latestRun.outlook === "Watch"
-                                ? {
-                                    color: "warning.main",
-                                    borderColor: "warning.main",
-                                  }
-                                : latestRun.outlook === "Negative"
-                                  ? {
-                                      color: "error.main",
-                                      borderColor: "error.main",
-                                    }
-                                  : {
-                                      color: "text.secondary",
-                                      borderColor: "divider",
-                                    }),
-                          }}
-                        >
-                          {latestRun.outlook ?? "—"}
-                        </Typography>
-                      </TableCell>
-                      <TableCell />
-                    </TableRow>
                   </TableBody>
                 </Table>
 
@@ -506,21 +415,31 @@ const DashboardReport = () => {
                       <TableCell>
                         {latestRun.compositeScore?.toFixed(2) ?? "—"}
                       </TableCell>
-                      <TableCell>—</TableCell>
+                      <TableCell>
+                        {derivedSelfScore != null ? derivedSelfScore.toFixed(2) : "—"}
+                      </TableCell>
                       <TableCell>
                         {latestRun.calibrationGap != null
-                          ? `${latestRun.calibrationGap >= 0 ? "+" : ""}${latestRun.calibrationGap.toFixed(2)}`
+                          ? `|Δ| ${latestRun.calibrationGap.toFixed(2)}${
+                              latestRun.calibrationDelta != null
+                                ? ` (Δ ${latestRun.calibrationDelta >= 0 ? "+" : ""}${latestRun.calibrationDelta.toFixed(2)})`
+                                : ""
+                            }`
                           : "—"}
                       </TableCell>
                       <TableCell>
                         {latestRun.calibrationGap != null
-                          ? latestRun.calibrationGap <= 0.15
-                            ? "EXCELLENT"
-                            : latestRun.calibrationGap <= 0.35
-                              ? "MILD DRIFT"
-                              : latestRun.calibrationGap <= 0.6
-                                ? "MATERIAL CONCERN"
-                                : "SEVERE OVERCONFIDENCE"
+                          ? (() => {
+                              const mag = latestRun.calibrationGap;
+                              if (mag <= 0.15) return "EXCELLENT";
+                              if (mag <= 0.35) return "MILD DRIFT";
+                              if (mag <= 0.6) return "MATERIAL CONCERN";
+                              if (latestRun.calibrationDelta == null)
+                                return "SEVERE MISCALIBRATION";
+                              return latestRun.calibrationDelta > 0
+                                ? "SEVERE OVERCONFIDENCE"
+                                : "SEVERE UNDERCONFIDENCE";
+                            })()
                           : "—"}
                       </TableCell>
                     </TableRow>
@@ -528,14 +447,40 @@ const DashboardReport = () => {
                 </Table>
 
                 <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
-                  <Button variant="outlined" size="small" onClick={() => {}}>
-                    Share
+                  <Button
+                    variant="contained"
+                    size="large"
+                    onClick={() => handleDownloadPDF("report")}
+                    disabled={pdfModeLoading !== null}
+                    startIcon={
+                      pdfModeLoading === "report" ? (
+                        <CircularProgress size={12} color="inherit" />
+                      ) : (
+                        <PDF />
+                      )
+                    }
+                  >
+                    {pdfModeLoading === "report"
+                      ? "Generating report…"
+                      : "Download Report PDF"}
                   </Button>
-                  <Button variant="outlined" size="small" onClick={() => {}}>
-                    Embed
-                  </Button>
-                  <Button variant="contained" size="small" onClick={() => {}}>
-                    Download PDF
+
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => handleDownloadPDF("transcript")}
+                    disabled={pdfModeLoading !== null}
+                    startIcon={
+                      pdfModeLoading === "transcript" ? (
+                        <CircularProgress size={12} color="inherit" />
+                      ) : (
+                        <PDF />
+                      )
+                    }
+                  >
+                    {pdfModeLoading === "transcript"
+                      ? "Generating transcript…"
+                      : "Download Transcript PDF"}
                   </Button>
                 </Box>
               </>

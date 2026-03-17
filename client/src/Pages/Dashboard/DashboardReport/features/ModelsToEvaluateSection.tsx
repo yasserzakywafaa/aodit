@@ -11,7 +11,7 @@ const ModelsToEvaluateSection = () => {
         Model used to judge the results
       </Typography>
       <Typography variant="body1" fontWeight={500} sx={{ mb: 3 }}>
-        Claude
+        GPT
       </Typography>
     </>
   );

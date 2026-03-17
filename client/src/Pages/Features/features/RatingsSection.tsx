@@ -1,15 +1,11 @@
-import {
-  fontFamilySans,
-  fontFamilySerif,
-} from "src/application/shared/themes";
+import { alpha, useTheme } from "@mui/material/styles";
+import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { alpha, useTheme } from "@mui/material/styles";
 import DownloadIcon from "@mui/icons-material/Download";
+import Typography from "@mui/material/Typography";
 
 const SECTION_LABEL_STYLE = {
   fontFamily: fontFamilySans,
@@ -33,11 +29,11 @@ const SECTION_LABEL_STYLE = {
 
 const FEATURED_REPORT = {
   label: "Featured Report",
-  title: "2026 AI Agent Risk Ratings",
-  subtitle: "Financial Services Behavioral Security Benchmark",
+  title: "2026 - Q1 Frontier AI Risk Ratings",
+  subtitle: "Banking Services Behavioral Security Benchmark",
   description:
-    "Our latest independent evaluation of six leading large language models across a standardised 8-turn adversarial banking simulation. Ratings reflect behavioral compliance quality and deployment suitability for live financial environments. Download the full report for methodology, detailed findings, and recommendations.",
-  reportId: "AIR-2026-FSB",
+    "Our latest independent evaluation of leading large language models across a standardised 8-turn adversarial banking simulation. Ratings reflect behavioral compliance quality and deployment suitability for live financial environments. Download the full report for methodology, detailed findings, and recommendations.",
+  reportId: "AODIT-2026-Q1-BANKING",
   ctaLabel: "Download PDF",
 };
 
@@ -91,7 +87,10 @@ const RatingsSection = () => {
           2026 AI Agent
           <br />
           Risk{" "}
-          <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
+          <Box
+            component="em"
+            sx={{ fontStyle: "italic", color: "primary.main" }}
+          >
             Ratings
           </Box>
         </Typography>

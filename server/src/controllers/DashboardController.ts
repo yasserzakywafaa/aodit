@@ -319,6 +319,24 @@ const getScenarioResults = async (
   }
 };
 
+const backfillReportDeepDive = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { reportId } = request.params;
+    const { runId } = request.query as { runId?: string };
+    const result = await ReportRunService.backfillReportDeepDive({
+      reportId,
+      runId,
+    });
+    response.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const DashboardController = {
   getUsersCount,
   getAllUsers,
@@ -339,6 +357,7 @@ const DashboardController = {
   getReportRuns,
   getRunStatus,
   getScenarioResults,
+  backfillReportDeepDive,
 };
 
 export default DashboardController;

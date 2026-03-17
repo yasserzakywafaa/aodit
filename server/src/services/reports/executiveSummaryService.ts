@@ -4,12 +4,26 @@
  */
 
 import { DimensionScore } from "../../models/types/reportRun";
-import { buildExecutiveSummariesPrompt } from "./prompts";
+import {
+  buildDimensionDeepDivePrompt,
+  buildExecutiveSummariesPrompt,
+} from "./prompts";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 
 export interface ExecutiveSummaryResult {
   overallSummary: string;
   dimensionSummaries: Record<string, string>;
+}
+
+export interface DimensionDeepDiveResult {
+  dimensions: Record<
+    string,
+    {
+      categories: Array<{ id: string; commentary?: string }>;
+      executiveSummary?: string;
+      insights: Array<{ priority: "HIGH" | "MEDIUM" | "LOW"; text: string }>;
+    }
+  >;
 }
 
 const DIMENSION_IDS = [
@@ -19,6 +33,8 @@ const DIMENSION_IDS = [
   "Resistance",
   "Resilience",
 ];
+
+const ALLOWED_PRIORITIES = new Set(["HIGH", "MEDIUM", "LOW"]);
 
 function parseJsonSafe<T>(text: string, fallback: T): T {
   try {
@@ -89,4 +105,81 @@ export async function generateExecutiveSummaries(params: {
   }
 
   return { overallSummary, dimensionSummaries };
+}
+
+export async function generateDimensionDeepDive(params: {
+  evaluatorModelId: string;
+  modelName: string;
+  reportType?: string;
+  dimensions: Array<{
+    dimensionId: string;
+    score: number;
+    categories: Array<{ id: string; name: string; score: number | null }>;
+    evidence: string[];
+  }>;
+}): Promise<DimensionDeepDiveResult> {
+  const messages = buildDimensionDeepDivePrompt({
+    modelName: params.modelName,
+    reportType: params.reportType,
+    dimensions: params.dimensions,
+  });
+
+  const response = await handleOpenRouterAIRequest(
+    params.evaluatorModelId,
+    messages,
+    { max_tokens: 2200, response_format: { type: "json_object" } },
+  );
+
+  const raw =
+    (response.choices?.[0]?.message?.content as string)?.trim() ?? "{}";
+  const parsed = parseJsonSafe<{ dimensions?: Record<string, any> }>(raw, {});
+  const result: DimensionDeepDiveResult = { dimensions: {} };
+
+  const dims = parsed.dimensions;
+  if (!dims || typeof dims !== "object") return result;
+
+  for (const dimId of DIMENSION_IDS) {
+    const dim = dims[dimId];
+    if (!dim || typeof dim !== "object") continue;
+
+    const categories = Array.isArray(dim.categories)
+      ? dim.categories
+          .map((c: any) => ({
+            id: typeof c?.id === "string" ? c.id.trim() : "",
+            commentary:
+              typeof c?.commentary === "string" ? c.commentary.trim() : "",
+          }))
+          .filter((c: { id: string }) => c.id.length > 0)
+      : [];
+
+    const executiveSummary =
+      typeof dim.executiveSummary === "string"
+        ? dim.executiveSummary.trim()
+        : "";
+
+    const insights = Array.isArray(dim.insights)
+      ? dim.insights
+          .map((i: any) => ({
+            priority:
+              typeof i?.priority === "string" ? i.priority.toUpperCase() : "",
+            text: typeof i?.text === "string" ? i.text.trim() : "",
+          }))
+          .filter(
+            (i: { priority: string; text: string }) =>
+              ALLOWED_PRIORITIES.has(i.priority) && i.text.length > 0,
+          )
+          .map((i: { priority: string; text: string }) => ({
+            priority: i.priority as "HIGH" | "MEDIUM" | "LOW",
+            text: i.text,
+          }))
+      : [];
+
+    result.dimensions[dimId] = {
+      categories,
+      executiveSummary: executiveSummary || undefined,
+      insights,
+    };
+  }
+
+  return result;
 }

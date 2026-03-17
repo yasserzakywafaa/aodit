@@ -43,6 +43,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
   2. Sets report status to `running`.
   3. Creates one **ReportRun** per model, all sharing a `batchId`, status `pending`.
   4. Fires the **execution engine** asynchronously (fire-and-forget) — the API responds immediately.
+
 - **Execution engine** → For each model, for each scenario:
   1. **Turn 1 (Baseline):** Judge model generates a realistic user prompt from the scenario description and the **report description** (used as sector/context). Prompt is sent to the model under test. Model's response is scored 1–5 by the judge.
   2. **Turns 2–8:** Judge generates follow-up user messages (Extension, Contradiction, Challenge, Escalation, Synthesis, SelfAssessment, Recovery). Each turn is sent to the model, and the response is scored.
@@ -71,6 +72,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
 ### Report description as prompt context
 
 The report's `description` field (required, set at creation) is passed to the execution engine as `reportDescription`. It is injected into:
+
 - **Scenario generation prompts** — as "Sector context" to ground the generated user prompt in the right domain.
 - **Turn escalation prompts** — as "Sector context" to keep follow-up messages domain-relevant.
 
@@ -78,16 +80,16 @@ If no description is provided (legacy reports), it falls back to "General purpos
 
 ### 8-turn conversation structure
 
-| Turn | Type | Purpose |
-|------|------|---------|
-| 1 | Baseline | Initial realistic user prompt generated from scenario |
-| 2 | Extension | Push for more specifics, concrete details |
-| 3 | Contradiction | Introduce conflicting information |
-| 4 | Challenge | Apply authority/social pressure |
-| 5 | Escalation | Raise real-world stakes (financial, safety, legal) |
-| 6 | Synthesis | Ask for a clean, definitive integrated answer |
-| 7 | SelfAssessment | Model rates itself 1–5 (used for calibration gap) |
-| 8 | Recovery | Point out weakness, give chance to correct |
+| Turn | Type           | Purpose                                               |
+| ---- | -------------- | ----------------------------------------------------- |
+| 1    | Baseline       | Initial realistic user prompt generated from scenario |
+| 2    | Extension      | Push for more specifics, concrete details             |
+| 3    | Contradiction  | Introduce conflicting information                     |
+| 4    | Challenge      | Apply authority/social pressure                       |
+| 5    | Escalation     | Raise real-world stakes (financial, safety, legal)    |
+| 6    | Synthesis      | Ask for a clean, definitive integrated answer         |
+| 7    | SelfAssessment | Model rates itself 1–5 (used for calibration gap)     |
+| 8    | Recovery       | Point out weakness, give chance to correct            |
 
 ### Scoring flow per turn
 
@@ -161,49 +163,49 @@ Full constants and labels: `client/src/shared/constants/aoditFramework.ts`.
 
 ## Scenario structure (100-scenario model)
 
-100 scenarios are built systematically: **5 dimensions × 5 subcategories × 4 scenarios each = 100 scenarios** (at the standard 20 scenarios/dimension tier).
+100 scenarios are built systematically: **5 dimensions × 5 categories × 4 scenarios each = 100 scenarios** (at the standard 20 scenarios/dimension tier).
 
-The **8-turn engine stays fixed**. Scenario diversity comes only from subcategory rotation inside each dimension.
+The **8-turn engine stays fixed**. Scenario diversity comes only from Category rotation inside each dimension.
 
-| Dimension | Subcategory ID | Subcategory Name | Scenarios |
-|-----------|---------------|-----------------|-----------|
-| RELIABILITY | R1 | Factual Consistency | 4 |
-| | R2 | Contradiction Handling | 4 |
-| | R3 | Memory Persistence | 4 |
-| | R4 | Sequence Logic | 4 |
-| | R5 | Exception Reconciliation | 4 |
-| INTEGRITY | I1 | False Certainty | 4 |
-| | I2 | Fabricated Source Handling | 4 |
-| | I3 | Bluff Resistance | 4 |
-| | I4 | Uncertainty Disclosure | 4 |
-| | I5 | Confidence Under Pressure | 4 |
-| JUDGMENT | J1 | Proportional Action | 4 |
-| | J2 | Escalation Decisions | 4 |
-| | J3 | Boundary Handling | 4 |
-| | J4 | Ethical Prioritization | 4 |
-| | J5 | Authority Conflict | 4 |
-| RESISTANCE | T1 | Jailbreak Attempts | 4 |
-| | T2 | Prompt Injection | 4 |
-| | T3 | Social Engineering | 4 |
-| | T4 | Authority Spoofing | 4 |
-| | T5 | Adversarial Reframing | 4 |
-| RESILIENCE | Z1 | Overload Handling | 4 |
-| | Z2 | Ambiguity Stacking | 4 |
-| | Z3 | Conflicting Instructions | 4 |
-| | Z4 | Stress Persistence | 4 |
-| | Z5 | Degraded Synthesis | 4 |
+| Dimension   | Category ID | Category Name              | Scenarios |
+| ----------- | ----------- | -------------------------- | --------- |
+| RELIABILITY | R1          | Factual Consistency        | 4         |
+|             | R2          | Contradiction Handling     | 4         |
+|             | R3          | Memory Persistence         | 4         |
+|             | R4          | Sequence Logic             | 4         |
+|             | R5          | Exception Reconciliation   | 4         |
+| INTEGRITY   | I1          | False Certainty            | 4         |
+|             | I2          | Fabricated Source Handling | 4         |
+|             | I3          | Bluff Resistance           | 4         |
+|             | I4          | Uncertainty Disclosure     | 4         |
+|             | I5          | Confidence Under Pressure  | 4         |
+| JUDGMENT    | J1          | Proportional Action        | 4         |
+|             | J2          | Escalation Decisions       | 4         |
+|             | J3          | Boundary Handling          | 4         |
+|             | J4          | Ethical Prioritization     | 4         |
+|             | J5          | Authority Conflict         | 4         |
+| RESISTANCE  | T1          | Jailbreak Attempts         | 4         |
+|             | T2          | Prompt Injection           | 4         |
+|             | T3          | Social Engineering         | 4         |
+|             | T4          | Authority Spoofing         | 4         |
+|             | T5          | Adversarial Reframing      | 4         |
+| RESILIENCE  | Z1          | Overload Handling          | 4         |
+|             | Z2          | Ambiguity Stacking         | 4         |
+|             | Z3          | Conflicting Instructions   | 4         |
+|             | Z4          | Stress Persistence         | 4         |
+|             | Z5          | Degraded Synthesis         | 4         |
 
-**Subcategory constants:** `client/src/shared/constants/aoditFramework.ts` → `DIMENSION_SUBCATEGORIES`.
+**Category constants:** `client/src/shared/constants/aoditFramework.ts` → `DIMENSION_CATEGORIES`.
 
 ### Severity system
 
 Each scenario is assigned a **severity level before execution**. Once locked, severity cannot change.
 
-| Level | Multiplier | Definition |
-|-------|-----------|------------|
-| Low | 1× | Minor informational consequence |
-| Medium | 1.5× | Operational trust consequence |
-| High | 2× | Financial / legal / safety consequence |
+| Level  | Multiplier | Definition                             |
+| ------ | ---------- | -------------------------------------- |
+| Low    | 1×         | Minor informational consequence        |
+| Medium | 1.5×       | Operational trust consequence          |
+| High   | 2×         | Financial / legal / safety consequence |
 
 Severity is applied during score aggregation: `weightedScore = rawScore × severityMultiplier`. This means high-severity scenarios have more impact on the final dimension score.
 
@@ -215,16 +217,16 @@ Severity is applied during score aggregation: `weightedScore = rawScore × sever
 
 Report CRUD and report-run endpoints live under dashboard routes (`server/src/routes/dashboardRoutes.ts`).
 
-| Method | Endpoint | Handler | Purpose |
-|--------|----------|---------|---------|
-| POST | `/dashboard/reports/create` | `createReport` | Create report + seed scenarios |
-| GET | `/dashboard/reports/get-user-reports` | `getUserReports` | List user's reports |
-| GET | `/dashboard/reports/get-report-by-id` | `getReportById` | Get single report |
-| PUT | `/dashboard/reports/update/:reportId` | `updateReport` | Update report config |
-| DELETE | `/dashboard/reports/delete/:reportId` | `deleteReport` | Delete report |
-| POST | `/dashboard/reports/launch/:reportId` | `launchReport` | Guard re-launch, set status running, create runs, fire engine |
-| GET | `/dashboard/reports/:reportId/runs` | `getReportRuns` | Get all runs for a report |
-| GET | `/dashboard/reports/:reportId/run-status` | `getRunStatus` | Poll latest batch progress |
+| Method | Endpoint                                  | Handler          | Purpose                                                       |
+| ------ | ----------------------------------------- | ---------------- | ------------------------------------------------------------- |
+| POST   | `/dashboard/reports/create`               | `createReport`   | Create report + seed scenarios                                |
+| GET    | `/dashboard/reports/get-user-reports`     | `getUserReports` | List user's reports                                           |
+| GET    | `/dashboard/reports/get-report-by-id`     | `getReportById`  | Get single report                                             |
+| PUT    | `/dashboard/reports/update/:reportId`     | `updateReport`   | Update report config                                          |
+| DELETE | `/dashboard/reports/delete/:reportId`     | `deleteReport`   | Delete report                                                 |
+| POST   | `/dashboard/reports/launch/:reportId`     | `launchReport`   | Guard re-launch, set status running, create runs, fire engine |
+| GET    | `/dashboard/reports/:reportId/runs`       | `getReportRuns`  | Get all runs for a report                                     |
+| GET    | `/dashboard/reports/:reportId/run-status` | `getRunStatus`   | Poll latest batch progress                                    |
 
 ### Report CRUD service
 
@@ -233,6 +235,7 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 ### Report run service
 
 `server/src/services/reports/reportRunService.ts`:
+
 - `createReportRun(reportId, payload)` — insert a ReportRun document.
 - `getReportRunsByReportId(reportId)` — fetch all runs for a report.
 - `getLatestRunStatus(reportId)` — aggregate progress across all runs in the latest batch (for polling).
@@ -241,17 +244,18 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 ### Execution engine
 
 `server/src/services/reports/executionEngine.ts`:
+
 - `executeReport(reportId, batchId, runIds)` — top-level orchestrator. Loads report + scenarios, runs models sequentially. On completion, sets report status to `completed` or `failed`.
 - `executeModelRun(params)` — runs all scenarios for a single model, saves ScenarioResults, updates progress, aggregates scores on completion.
 - `executeScenario(params)` — runs the 8-turn conversation for one scenario, returns turns + rawScore + selfScore.
 
 ### Supporting modules
 
-| Module | File | Purpose |
-|--------|------|---------|
-| Model registry | `server/src/services/reports/modelRegistry.ts` | Maps friendly names → OpenRouter model IDs. Default judge: `openai/gpt-5-mini`. |
-| Prompt templates | `server/src/services/reports/prompts.ts` | Builds system+user messages for scenario generation, turn escalation, scoring, and self-score extraction. Uses `reportDescription` as sector context. |
-| Scoring & aggregation | `server/src/services/reports/scoring.ts` | Severity-weighted dimension aggregation, composite score, rating bands, calibration gap, outlook, deployment verdict. |
+| Module                | File                                           | Purpose                                                                                                                                               |
+| --------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Model registry        | `server/src/services/reports/modelRegistry.ts` | Maps friendly names → OpenRouter model IDs. Default judge: `openai/gpt-5-mini`.                                                                       |
+| Prompt templates      | `server/src/services/reports/prompts.ts`       | Builds system+user messages for scenario generation, turn escalation, scoring, and self-score extraction. Uses `reportDescription` as sector context. |
+| Scoring & aggregation | `server/src/services/reports/scoring.ts`       | Severity-weighted dimension aggregation, composite score, rating bands, calibration gap, outlook, deployment verdict.                                 |
 
 ---
 
@@ -264,6 +268,7 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 ### Routes
 
 `client/src/application/routes.ts`:
+
 - `dashboard.reports.base` — reports list
 - `dashboard.reports.create` — create report form
 - `dashboard.reports.reportById(id)` — report detail / config
@@ -271,12 +276,12 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ### Pages
 
-| Page | Path | Purpose |
-|------|------|---------|
-| Reports list | `DashboardReports/` | List reports, create button, link to report detail |
-| Create Report | `DashboardCreateReport/` | Form: name (required), description (required); creates report (seeds scenarios), navigates to config |
-| Report detail | `DashboardReport/` | View/edit config, Save button, RUN REPORT button (saves config first), "View Report Status" button (when running), AODIT framework box with latest run results |
-| Live Feed | `DashboardReportRun/` | Pure monitoring page: polls run-status every 3s, shows pipeline steps, progress bar, live feed. No launch call — safe to refresh. Shows "Back to Report" when finished. |
+| Page          | Path                     | Purpose                                                                                                                                                                 |
+| ------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Reports list  | `DashboardReports/`      | List reports, create button, link to report detail                                                                                                                      |
+| Create Report | `DashboardCreateReport/` | Form: name (required), description (required); creates report (seeds scenarios), navigates to config                                                                    |
+| Report detail | `DashboardReport/`       | View/edit config, Save button, RUN REPORT button (saves config first), "View Report Status" button (when running), AODIT framework box with latest run results          |
+| Live Feed     | `DashboardReportRun/`    | Pure monitoring page: polls run-status every 3s, shows pipeline steps, progress bar, live feed. No launch call — safe to refresh. Shows "Back to Report" when finished. |
 
 ### Live Feed page (`DashboardReportRun`)
 
@@ -302,33 +307,33 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ## Where to find things
 
-| What | Where |
-|------|--------|
-| Report type (server) | `server/src/models/types/report.ts` |
-| Report type (client) | `client/src/shared/types/report.ts` |
-| ReportRun type (server) | `server/src/models/types/reportRun.ts` |
-| ReportRun type (client) | `client/src/shared/types/reportRun.ts` |
-| ScenarioResult type | `server/src/models/types/scenarioResult.ts` |
-| Scenario type | `server/src/models/types/scenario.ts` |
-| AODIT-5 constants | `client/src/shared/constants/aoditFramework.ts` |
-| Model registry | `server/src/services/reports/modelRegistry.ts` |
-| Prompt templates | `server/src/services/reports/prompts.ts` |
-| Scoring & aggregation | `server/src/services/reports/scoring.ts` |
-| Execution engine | `server/src/services/reports/executionEngine.ts` |
-| Report CRUD service (incl. scenario seeding) | `server/src/services/reportService.ts` |
-| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts` |
-| Dashboard controller | `server/src/controllers/DashboardController.ts` |
-| Dashboard routes | `server/src/routes/dashboardRoutes.ts` |
-| API endpoints (server) | `server/src/models/endpoints.ts` |
-| API endpoints (client) | `client/src/application/shared/endpoints.ts` |
-| Reports list page | `client/src/Pages/Dashboard/DashboardReports/` |
-| Report detail page | `client/src/Pages/Dashboard/DashboardReport/` |
-| Live Feed page | `client/src/Pages/Dashboard/DashboardReportRun/` |
-| Create report page | `client/src/Pages/Dashboard/DashboardCreateReport/` |
-| DB collections & indexes | `server/src/models/mongoDb/index.ts` |
-| OpenRouter client | `server/src/utils/openRouterClient.ts` |
-| App routes | `client/src/application/routes.ts` |
-| App content (route tree) | `client/src/application/AppContent.tsx` |
+| What                                          | Where                                               |
+| --------------------------------------------- | --------------------------------------------------- |
+| Report type (server)                          | `server/src/models/types/report.ts`                 |
+| Report type (client)                          | `client/src/shared/types/report.ts`                 |
+| ReportRun type (server)                       | `server/src/models/types/reportRun.ts`              |
+| ReportRun type (client)                       | `client/src/shared/types/reportRun.ts`              |
+| ScenarioResult type                           | `server/src/models/types/scenarioResult.ts`         |
+| Scenario type                                 | `server/src/models/types/scenario.ts`               |
+| AODIT-5 constants                             | `client/src/shared/constants/aoditFramework.ts`     |
+| Model registry                                | `server/src/services/reports/modelRegistry.ts`      |
+| Prompt templates                              | `server/src/services/reports/prompts.ts`            |
+| Scoring & aggregation                         | `server/src/services/reports/scoring.ts`            |
+| Execution engine                              | `server/src/services/reports/executionEngine.ts`    |
+| Report CRUD service (incl. scenario seeding)  | `server/src/services/reportService.ts`              |
+| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts`   |
+| Dashboard controller                          | `server/src/controllers/DashboardController.ts`     |
+| Dashboard routes                              | `server/src/routes/dashboardRoutes.ts`              |
+| API endpoints (server)                        | `server/src/models/endpoints.ts`                    |
+| API endpoints (client)                        | `client/src/application/shared/endpoints.ts`        |
+| Reports list page                             | `client/src/Pages/Dashboard/DashboardReports/`      |
+| Report detail page                            | `client/src/Pages/Dashboard/DashboardReport/`       |
+| Live Feed page                                | `client/src/Pages/Dashboard/DashboardReportRun/`    |
+| Create report page                            | `client/src/Pages/Dashboard/DashboardCreateReport/` |
+| DB collections & indexes                      | `server/src/models/mongoDb/index.ts`                |
+| OpenRouter client                             | `server/src/utils/openRouterClient.ts`              |
+| App routes                                    | `client/src/application/routes.ts`                  |
+| App content (route tree)                      | `client/src/application/AppContent.tsx`             |
 
 ---
 

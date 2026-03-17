@@ -28,10 +28,34 @@ export interface ReportRun {
   compositeScore: number;
   rating: string; // AAA, AA, A, BBB, BB, B, D
   calibrationGap?: number;
+  /** avgSelfScore - avgEvaluatorScore; negative => underconfidence */
+  calibrationDelta?: number;
   outlook?: string;
   deploymentVerdict?: string;
   executiveSummary?: string;
   scenarioResults?: string[];
+
+  /**
+   * Per-dimension deep-dive data used for PDF reports.
+   * Keys are dimension ids (e.g. "Reliability"), values contain per-category
+   * scores with commentary plus executive summaries and actionable insights.
+   */
+  dimensionDeepDive?: Record<
+    string,
+    {
+      categories: Array<{
+        id: string;
+        name: string;
+        score: number | null;
+        commentary?: string;
+      }>;
+      executiveSummary?: string;
+      insights: Array<{
+        priority: "HIGH" | "MEDIUM" | "LOW";
+        text: string;
+      }>;
+    }
+  >;
 
   // Progress tracking
   progress?: number; // 0-100

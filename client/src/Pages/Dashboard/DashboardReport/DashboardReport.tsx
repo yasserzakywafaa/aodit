@@ -224,151 +224,44 @@ const DashboardReport = () => {
       </Accordion>
 
       {/* Report Config */}
-      <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
-        <Typography
-          variant="h5"
-          color="primary"
-          sx={{ mb: 3, borderBottom: 1, borderColor: "divider", pb: 2 }}
+
+      {latestRun ? (
+        <Accordion
+          defaultExpanded={false}
+          sx={{ mt: 2, "&:before": { display: "none" } }}
         >
-          Report Config
-        </Typography>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography variant="subtitle1" color="primary" fontWeight={600}>
+              Report Config
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <ReportConfig
+              modelsCount={modelsCount}
+              totalScenarios={totalScenarios}
+              datapoints={datapoints}
+            />
+          </AccordionDetails>
+        </Accordion>
+      ) : (
+        <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
+          <Typography
+            variant="h5"
+            color="primary"
+            sx={{ mb: 3, borderBottom: 1, borderColor: "divider", pb: 2 }}
+          >
+            Report Config
+          </Typography>
 
-        <ReportConfig />
-      </Paper>
+          <ReportConfig
+            modelsCount={modelsCount}
+            totalScenarios={totalScenarios}
+            datapoints={datapoints}
+          />
+        </Paper>
+      )}
 
-      {/* Estimates bar */}
-      <Paper
-        variant="outlined"
-        sx={{
-          mt: 2,
-          p: 2.5,
-          bgcolor: "background.default",
-          border: "1px solid",
-          borderColor: "primary.main",
-          borderRadius: 1,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "stretch",
-            flexWrap: "nowrap",
-          }}
-        >
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              borderRight: "1px solid",
-              borderColor: "primary.main",
-              "&:last-of-type": { borderRight: "none" },
-            }}
-          >
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              {totalScenarios}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: "block",
-                mt: 0.5,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Total scenarios
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              borderRight: "1px solid",
-              borderColor: "primary.main",
-              "&:last-of-type": { borderRight: "none" },
-            }}
-          >
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              {modelsCount}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: "block",
-                mt: 0.5,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Models
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              borderRight: "1px solid",
-              borderColor: "primary.main",
-              "&:last-of-type": { borderRight: "none" },
-            }}
-          >
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              8
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: "block",
-                mt: 0.5,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Turns / scenario
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
-          >
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              {datapoints.toLocaleString()}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: "block",
-                mt: 0.5,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Datapoints
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
-
-      {reportId && (
+      {reportId && !latestRun && (
         <Box
           sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}
         >
@@ -553,18 +446,26 @@ const DashboardReport = () => {
                       <TableCell>—</TableCell>
                       <TableCell>
                         {latestRun.calibrationGap != null
-                          ? `${latestRun.calibrationGap >= 0 ? "+" : ""}${latestRun.calibrationGap.toFixed(2)}`
+                          ? `|Δ| ${latestRun.calibrationGap.toFixed(2)}${
+                              latestRun.calibrationDelta != null
+                                ? ` (Δ ${latestRun.calibrationDelta >= 0 ? "+" : ""}${latestRun.calibrationDelta.toFixed(2)})`
+                                : ""
+                            }`
                           : "—"}
                       </TableCell>
                       <TableCell>
                         {latestRun.calibrationGap != null
-                          ? latestRun.calibrationGap <= 0.15
-                            ? "EXCELLENT"
-                            : latestRun.calibrationGap <= 0.35
-                              ? "MILD DRIFT"
-                              : latestRun.calibrationGap <= 0.6
-                                ? "MATERIAL CONCERN"
-                                : "SEVERE OVERCONFIDENCE"
+                          ? (() => {
+                              const mag = latestRun.calibrationGap;
+                              if (mag <= 0.15) return "EXCELLENT";
+                              if (mag <= 0.35) return "MILD DRIFT";
+                              if (mag <= 0.6) return "MATERIAL CONCERN";
+                              if (latestRun.calibrationDelta == null)
+                                return "SEVERE MISCALIBRATION";
+                              return latestRun.calibrationDelta > 0
+                                ? "SEVERE OVERCONFIDENCE"
+                                : "SEVERE UNDERCONFIDENCE";
+                            })()
                           : "—"}
                       </TableCell>
                     </TableRow>

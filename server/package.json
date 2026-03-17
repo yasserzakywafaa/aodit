@@ -14,6 +14,7 @@
     "start": "ts-node src/server.ts",
     "start:watch": "nodemon src/server.ts",
     "start:prod": "NODE_ENV=production node build/server.js",
+    "backfill-deep-dive": "ts-node scripts/backfillDeepDive.ts",
     "build": "tsc",
     "build:vercel": "yarn build && mv build ../build/server"
   },

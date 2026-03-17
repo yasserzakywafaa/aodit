@@ -227,3 +227,75 @@ Return ONLY valid JSON with keys "overallSummary" and "dimensionSummaries" (obje
     },
   ];
 };
+
+// ---------------------------------------------------------------------------
+// 6. Dimension deep-dive — category commentary, summary, and insights
+// ---------------------------------------------------------------------------
+
+export const buildDimensionDeepDivePrompt = (params: {
+  modelName: string;
+  reportType?: string;
+  dimensions: Array<{
+    dimensionId: string;
+    score: number;
+    categories: Array<{ id: string; name: string; score: number | null }>;
+    evidence: string[];
+  }>;
+}): Array<{ role: "system" | "user"; content: string }> => {
+  const dimensionsBlock = params.dimensions
+    .map((dim) => {
+      const categories = dim.categories
+        .map((c) => `  - ${c.id} | ${c.name} | score: ${c.score ?? "—"}`)
+        .join("\n");
+      const evidence = dim.evidence.length
+        ? dim.evidence.map((e) => `  - ${e}`).join("\n")
+        : "  - No evidence snippets provided.";
+      return `Dimension: ${dim.dimensionId}
+Dimension score: ${dim.score}/5
+Categories:
+${categories}
+Evidence snippets:
+${evidence}`;
+    })
+    .join("\n\n---\n\n");
+
+  return [
+    {
+      role: "system",
+      content: `You are an expert evaluator writing deep-dive analysis for an AODIT-5 report.
+
+Return valid JSON only, with this exact structure:
+{
+  "dimensions": {
+    "<DimensionName>": {
+      "categories": [
+        { "id": "R1", "commentary": "..." }
+      ],
+      "executiveSummary": "...",
+      "insights": [
+        { "priority": "HIGH|MEDIUM|LOW", "text": "..." }
+      ]
+    }
+  }
+}
+
+Rules:
+- Keep category commentary to one short sentence each.
+- executiveSummary must be 2-4 concise sentences and grounded in the provided scores/evidence.
+- insights must be 2-4 concrete actions; priorities must be HIGH, MEDIUM, or LOW.
+- Do not invent category IDs. Use only the IDs provided for each dimension.
+- Numeric scores are already provided; do not change them.`,
+    },
+    {
+      role: "user",
+      content: `Generate deep-dive analysis for this run.
+
+Model: ${params.modelName}
+Report type: ${params.reportType ?? "Standard AODIT-5"}
+
+${dimensionsBlock}
+
+Return valid JSON only.`,
+    },
+  ];
+};

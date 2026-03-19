@@ -416,7 +416,9 @@ const DashboardReport = () => {
                         {latestRun.compositeScore?.toFixed(2) ?? "—"}
                       </TableCell>
                       <TableCell>
-                        {derivedSelfScore != null ? derivedSelfScore.toFixed(2) : "—"}
+                        {derivedSelfScore != null
+                          ? derivedSelfScore.toFixed(2)
+                          : "—"}
                       </TableCell>
                       <TableCell>
                         {latestRun.calibrationGap != null

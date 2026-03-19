@@ -105,44 +105,172 @@ const DIMENSIONS = [
   },
 ];
 
-const DIMENSION_CATEGORIES: Record<
-  string,
-  Array<{ id: string; name: string }>
-> = {
+type DimensionCategory = {
+  id: string;
+  name: string;
+  methodologyExplanation: string;
+};
+
+const DIMENSION_CATEGORIES: Record<string, DimensionCategory[]> = {
   Reliability: [
-    { id: "R1", name: "Factual Consistency" },
-    { id: "R2", name: "Contradiction Handling" },
-    { id: "R3", name: "Memory Persistence" },
-    { id: "R4", name: "Sequence Logic" },
-    { id: "R5", name: "Exception Reconciliation" },
+    {
+      id: "R1",
+      name: "Factual Consistency",
+      methodologyExplanation:
+        "Tests whether outputs remain factually stable across repeated prompts and paraphrased requests.",
+    },
+    {
+      id: "R2",
+      name: "Contradiction Handling",
+      methodologyExplanation:
+        "Measures if the model detects and resolves conflicting statements instead of amplifying errors.",
+    },
+    {
+      id: "R3",
+      name: "Memory Persistence",
+      methodologyExplanation:
+        "Assesses whether key constraints and previously established facts are retained across turns.",
+    },
+    {
+      id: "R4",
+      name: "Sequence Logic",
+      methodologyExplanation:
+        "Evaluates the ability to follow ordered instructions and preserve causal reasoning in long flows.",
+    },
+    {
+      id: "R5",
+      name: "Exception Reconciliation",
+      methodologyExplanation:
+        "Checks how well the model integrates edge cases without breaking the main reasoning chain.",
+    },
   ],
   Integrity: [
-    { id: "I1", name: "False Certainty" },
-    { id: "I2", name: "Fabricated Source Handling" },
-    { id: "I3", name: "Bluff Resistance" },
-    { id: "I4", name: "Uncertainty Disclosure" },
-    { id: "I5", name: "Confidence Under Pressure" },
+    {
+      id: "I1",
+      name: "False Certainty",
+      methodologyExplanation:
+        "Probes whether uncertain claims are presented with unjustified confidence.",
+    },
+    {
+      id: "I2",
+      name: "Fabricated Source Handling",
+      methodologyExplanation:
+        "Assesses resistance to inventing citations, references, or authorities under pressure.",
+    },
+    {
+      id: "I3",
+      name: "Bluff Resistance",
+      methodologyExplanation:
+        "Tests if the model avoids pretending expertise when evidence is weak or unavailable.",
+    },
+    {
+      id: "I4",
+      name: "Uncertainty Disclosure",
+      methodologyExplanation:
+        "Measures whether confidence limits are communicated clearly and at the right decision points.",
+    },
+    {
+      id: "I5",
+      name: "Confidence Under Pressure",
+      methodologyExplanation:
+        "Evaluates calibration stability when users apply urgency, authority, or reputational pressure.",
+    },
   ],
   Judgment: [
-    { id: "J1", name: "Proportional Action" },
-    { id: "J2", name: "Escalation Decisions" },
-    { id: "J3", name: "Boundary Handling" },
-    { id: "J4", name: "Ethical Prioritization" },
-    { id: "J5", name: "Authority Conflict" },
+    {
+      id: "J1",
+      name: "Proportional Action",
+      methodologyExplanation:
+        "Checks whether recommended actions match the severity and reversibility of the situation.",
+    },
+    {
+      id: "J2",
+      name: "Escalation Decisions",
+      methodologyExplanation:
+        "Tests the model's ability to escalate high-risk cases to human oversight at the right time.",
+    },
+    {
+      id: "J3",
+      name: "Boundary Handling",
+      methodologyExplanation:
+        "Assesses adherence to policy, legal, and role constraints in ambiguous high-stakes prompts.",
+    },
+    {
+      id: "J4",
+      name: "Ethical Prioritization",
+      methodologyExplanation:
+        "Evaluates trade-off reasoning when safety, fairness, and operational outcomes conflict.",
+    },
+    {
+      id: "J5",
+      name: "Authority Conflict",
+      methodologyExplanation:
+        "Measures resistance to harmful instructions from simulated senior or trusted sources.",
+    },
   ],
   Resistance: [
-    { id: "T1", name: "Jailbreak Attempts" },
-    { id: "T2", name: "Prompt Injection" },
-    { id: "T3", name: "Social Engineering" },
-    { id: "T4", name: "Authority Spoofing" },
-    { id: "T5", name: "Adversarial Reframing" },
+    {
+      id: "T1",
+      name: "Jailbreak Attempts",
+      methodologyExplanation:
+        "Stress-tests defenses against direct attempts to bypass safety and policy controls.",
+    },
+    {
+      id: "T2",
+      name: "Prompt Injection",
+      methodologyExplanation:
+        "Measures susceptibility to malicious embedded instructions that alter intended behavior.",
+    },
+    {
+      id: "T3",
+      name: "Social Engineering",
+      methodologyExplanation:
+        "Evaluates manipulation resistance when trust, urgency, or empathy are exploited.",
+    },
+    {
+      id: "T4",
+      name: "Authority Spoofing",
+      methodologyExplanation:
+        "Checks whether fake credentials or role claims can override established safeguards.",
+    },
+    {
+      id: "T5",
+      name: "Adversarial Reframing",
+      methodologyExplanation:
+        "Tests if harmful requests disguised as benign tasks are correctly reclassified and refused.",
+    },
   ],
   Resilience: [
-    { id: "Z1", name: "Overload Handling" },
-    { id: "Z2", name: "Ambiguity Stacking" },
-    { id: "Z3", name: "Conflicting Instructions" },
-    { id: "Z4", name: "Stress Persistence" },
-    { id: "Z5", name: "Degraded Synthesis" },
+    {
+      id: "Z1",
+      name: "Overload Handling",
+      methodologyExplanation:
+        "Assesses quality retention when prompt complexity and information volume sharply increase.",
+    },
+    {
+      id: "Z2",
+      name: "Ambiguity Stacking",
+      methodologyExplanation:
+        "Measures performance when multiple unclear constraints require explicit clarification strategy.",
+    },
+    {
+      id: "Z3",
+      name: "Conflicting Instructions",
+      methodologyExplanation:
+        "Tests reconciliation logic when directives are incompatible or logically inconsistent.",
+    },
+    {
+      id: "Z4",
+      name: "Stress Persistence",
+      methodologyExplanation:
+        "Evaluates whether response quality degrades under repeated adversarial turn pressure.",
+    },
+    {
+      id: "Z5",
+      name: "Degraded Synthesis",
+      methodologyExplanation:
+        "Checks if coherent summaries can still be produced when prior context quality has degraded.",
+    },
   ],
 };
 
@@ -488,6 +616,40 @@ const s = StyleSheet.create({
 
   // Paragraph
   para: { fontSize: 8, color: TEXT, lineHeight: 1.6, marginBottom: 10 },
+  methodologyMeta: {
+    fontSize: 7.5,
+    color: MID_GRAY,
+    marginBottom: 8,
+    lineHeight: 1.45,
+  },
+  methodologyDimCard: {
+    marginBottom: 10,
+    backgroundColor: CREAM,
+    borderLeftWidth: 4,
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+  },
+  methodologyCategoryRow: {
+    flexDirection: "row",
+    borderTopColor: "#E5E7EB",
+    borderTopWidth: 1,
+    paddingVertical: 5,
+  },
+  methodologyCategoryId: {
+    width: 26,
+    fontSize: 7.5,
+    color: DARK,
+    fontFamily: "Helvetica-Bold",
+    marginRight: 8,
+  },
+  methodologyCategoryBody: { flex: 1 },
+  methodologyCategoryName: {
+    fontSize: 8,
+    color: DARK,
+    fontFamily: "Helvetica-Bold",
+    marginBottom: 2,
+  },
+  methodologyCategoryText: { fontSize: 7.4, color: MID_GRAY, lineHeight: 1.4 },
 
   // Verdict box
   verdictBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 16 },
@@ -831,6 +993,105 @@ const CoverPage = ({
 // Page 2: AODIT-5 Framework Overview
 // ─────────────────────────────────────────────────────────────────────────────
 
+const DimensionSummaryCards = () => (
+  <>
+    {DIMENSIONS.map((dim, i) => {
+      const accent = DIMENSION_ACCENT[i] ?? EMERALD;
+      return (
+        <View
+          key={dim.id}
+          style={{
+            flexDirection: "row",
+            marginBottom: 8,
+            backgroundColor: CREAM,
+            borderLeftWidth: 5,
+            borderLeftColor: accent,
+            paddingVertical: 7,
+            paddingHorizontal: 12,
+            alignItems: "flex-start",
+          }}
+        >
+          <View
+            style={{
+              minWidth: 40,
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 10,
+              backgroundColor: "#FFFFFF",
+              paddingVertical: 6,
+              paddingHorizontal: 6,
+              borderRadius: 4,
+              borderWidth: 1,
+              borderColor: "#E5E7EB",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 10,
+                fontFamily: "Helvetica-Bold",
+                color: accent,
+                letterSpacing: 0.4,
+              }}
+            >
+              {dim.short}
+            </Text>
+          </View>
+          <View style={{ flex: 1, paddingRight: 4 }}>
+            <Text
+              style={{
+                fontSize: 10,
+                fontFamily: "Helvetica-Bold",
+                color: DARK,
+                marginBottom: 3,
+              }}
+            >
+              {dim.id}
+            </Text>
+            <Text style={s.methodologyMeta}>{dim.question}</Text>
+          </View>
+        </View>
+      );
+    })}
+  </>
+);
+
+const DimensionCategoryMethodologyBlock = ({
+  dim,
+  index,
+}: {
+  dim: (typeof DIMENSIONS)[0];
+  index: number;
+}) => {
+  const accent = DIMENSION_ACCENT[index] ?? EMERALD;
+  const categories = DIMENSION_CATEGORIES[dim.id] ?? [];
+  return (
+    <View style={[s.methodologyDimCard, { borderLeftColor: accent }]}>
+      <Text
+        style={{
+          fontSize: 10,
+          color: DARK,
+          fontFamily: "Helvetica-Bold",
+          marginBottom: 3,
+        }}
+      >
+        {dim.id}
+      </Text>
+      <Text style={[s.methodologyMeta, { marginBottom: 6 }]}>{dim.question}</Text>
+      {categories.map((cat) => (
+        <View key={cat.id} style={s.methodologyCategoryRow}>
+          <Text style={s.methodologyCategoryId}>{cat.id}</Text>
+          <View style={s.methodologyCategoryBody}>
+            <Text style={s.methodologyCategoryName}>{cat.name}</Text>
+            <Text style={s.methodologyCategoryText}>
+              {cat.methodologyExplanation}
+            </Text>
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+};
+
 const FrameworkOverviewPage = ({ report }: { report: Report }) => (
   <Page size="A4" style={s.page}>
     <PageHeader subtitle="AODIT-5 FRAMEWORK OVERVIEW" />
@@ -840,103 +1101,35 @@ const FrameworkOverviewPage = ({ report }: { report: Report }) => (
       <Text style={s.para}>
         AODIT-5 is a structured adversarial evaluation framework for large
         language models. It is designed to surface failure modes that are not
-        visible in standard benchmark-style testing by stressing models across
-        five complementary dimensions: Reliability, Integrity, Judgment,
-        Resistance, and Resilience.
+        visible in benchmark-style testing by stressing models across five
+        dimensions: Reliability, Integrity, Judgment, Resistance, and
+        Resilience.
       </Text>
 
       <Text style={[s.para, { marginBottom: 6 }]}>
-        Each evaluation run executes a fixed number of adversarial scenarios per
-        dimension, using an 8-turn architecture that moves from baseline
-        behaviour through targeted stressors and recovery. Scores are aggregated
-        with severity-aware weighting and mapped onto a credit-style rating
-        scale (AAA–D) to support deployment decisions in regulated and
-        safety-critical environments.
+        Each run executes adversarial scenarios using an 8-turn architecture
+        that progresses from baseline behaviour through targeted stressors and
+        recovery. Scoring uses severity-aware weighting and maps results onto a
+        credit-style rating scale (AAA–D).
       </Text>
 
-      {DIMENSIONS.map((dim, i) => {
-        const accent = DIMENSION_ACCENT[i] ?? EMERALD;
-        return (
-          <View
-            key={dim.id}
-            style={{
-              flexDirection: "row",
-              marginBottom: 10,
-              backgroundColor: CREAM,
-              borderLeftWidth: 5,
-              borderLeftColor: accent,
-              paddingVertical: 8,
-              paddingHorizontal: 14,
-              alignItems: "flex-start",
-            }}
-          >
-            <View
-              style={{
-                minWidth: 46,
-                alignItems: "center",
-                justifyContent: "center",
-                marginRight: 12,
-                backgroundColor: "#FFFFFF",
-                paddingVertical: 8,
-                paddingHorizontal: 8,
-                borderRadius: 4,
-                borderWidth: 1,
-                borderColor: "#E5E7EB",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 11,
-                  fontFamily: "Helvetica-Bold",
-                  color: accent,
-                  letterSpacing: 0.5,
-                }}
-              >
-                {dim.short}
-              </Text>
-            </View>
-            <View style={{ flex: 1, paddingRight: 4 }}>
-              <Text
-                style={{
-                  fontSize: 11,
-                  fontFamily: "Helvetica-Bold",
-                  color: DARK,
-                  marginBottom: 5,
-                }}
-              >
-                {dim.id}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 9,
-                  color: MID_GRAY,
-                  lineHeight: 1.55,
-                }}
-              >
-                {dim.question}
-              </Text>
-            </View>
-          </View>
-        );
-      })}
+      <DimensionSummaryCards />
 
-      <View style={[s.divider, { marginTop: 8 }]} />
-
+      <View style={[s.divider, { marginTop: 6, marginBottom: 8 }]} />
       <Text
         style={{
           fontSize: 8,
           fontFamily: "Helvetica-Bold",
           color: DARK,
-          marginBottom: 6,
+          marginBottom: 5,
         }}
       >
         Turn Architecture & Scoring
       </Text>
-      <Text style={s.para}>
-        Scenarios follow an 8-turn protocol. Each turn is independently scored
-        by an evaluator, with higher weights applied to high-severity failures.
-        Dimension scores feed into a composite score on a 0–5 scale, which is
-        then mapped to the rating bands below.
+      <Text style={[s.methodologyMeta, { marginBottom: 8 }]}>
+        Each turn is independently scored. Dimension scores roll into a
+        composite 0–5 score and then into rating bands used for deployment
+        decisions.
       </Text>
 
       <View style={s.table}>
@@ -954,8 +1147,8 @@ const FrameworkOverviewPage = ({ report }: { report: Report }) => (
               key={`${band.rating}-${band.min}`}
               style={{
                 flexDirection: "row",
-                paddingVertical: 8,
-                paddingHorizontal: 10,
+                paddingVertical: 7,
+                paddingHorizontal: 9,
                 backgroundColor: th.bg,
                 borderBottomWidth: 1,
                 borderBottomColor: th.borderColor,
@@ -964,7 +1157,7 @@ const FrameworkOverviewPage = ({ report }: { report: Report }) => (
               <Text
                 style={{
                   width: "20%",
-                  fontSize: 9,
+                  fontSize: 8.5,
                   fontFamily: "Helvetica-Bold",
                   color: th.ratingColor,
                 }}
@@ -974,7 +1167,7 @@ const FrameworkOverviewPage = ({ report }: { report: Report }) => (
               <Text
                 style={{
                   width: "25%",
-                  fontSize: 9,
+                  fontSize: 8.5,
                   fontFamily: "Helvetica-Bold",
                   color: th.textColor,
                 }}
@@ -984,9 +1177,9 @@ const FrameworkOverviewPage = ({ report }: { report: Report }) => (
               <Text
                 style={{
                   width: "55%",
-                  fontSize: 8,
+                  fontSize: 7.5,
                   color: th.textColor,
-                  lineHeight: 1.45,
+                  lineHeight: 1.35,
                 }}
               >
                 {band.verdict}
@@ -1000,8 +1193,46 @@ const FrameworkOverviewPage = ({ report }: { report: Report }) => (
   </Page>
 );
 
+const FrameworkCategoriesPageOne = ({ report }: { report: Report }) => (
+  <Page size="A4" style={s.page}>
+    <PageHeader subtitle="AODIT-5 CATEGORY METHODOLOGY" />
+    <View style={s.body}>
+      <SectionHeading num="01" title="CATEGORY METHODOLOGY (I)" />
+      <Text style={[s.para, { marginBottom: 8 }]}>
+        Each dimension is decomposed into five testing categories. The category
+        definitions below describe what the methodology evaluates before scoring.
+      </Text>
+      {DIMENSIONS.slice(0, 3).map((dim, i) => (
+        <DimensionCategoryMethodologyBlock key={dim.id} dim={dim} index={i} />
+      ))}
+    </View>
+    <PageFooter reportName={report.name} />
+  </Page>
+);
+
+const FrameworkCategoriesPageTwo = ({ report }: { report: Report }) => (
+  <Page size="A4" style={s.page}>
+    <PageHeader subtitle="AODIT-5 CATEGORY METHODOLOGY" />
+    <View style={s.body}>
+      <SectionHeading num="01" title="CATEGORY METHODOLOGY (II)" />
+      <Text style={[s.para, { marginBottom: 8 }]}>
+        These dimensions complete the AODIT-5 methodology and cover adversarial
+        resistance and operational resilience under stress.
+      </Text>
+      {DIMENSIONS.slice(3).map((dim, i) => (
+        <DimensionCategoryMethodologyBlock
+          key={dim.id}
+          dim={dim}
+          index={i + 3}
+        />
+      ))}
+    </View>
+    <PageFooter reportName={report.name} />
+  </Page>
+);
+
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 3: Executive Summary
+// Page 5: Executive Summary
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ExecutiveSummaryPage = ({
@@ -1228,11 +1459,11 @@ const ExecutiveSummaryPage = ({
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 4: AODIT-5 Dimension Scores Table
+// Page 6: AODIT-5 Dimension Scores Table
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Pages 5–6: Per-Dimension Analysis
+// Pages 6–10: Per-Dimension Analysis
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DimensionDeepDiveBlock = ({
@@ -1997,6 +2228,8 @@ export const AoditReportPDF = ({
           scenarioResults={scenarioResults}
         />
         <FrameworkOverviewPage report={report} />
+        <FrameworkCategoriesPageOne report={report} />
+        <FrameworkCategoriesPageTwo report={report} />
         <ExecutiveSummaryPage
           report={report}
           run={run}

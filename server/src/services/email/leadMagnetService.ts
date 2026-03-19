@@ -111,7 +111,7 @@ export async function handleLeadMagnetSubscribe(
     });
 
     const mailOptionsUser = {
-      from: `"aodit.ai" <${sender}>`,
+      from: `Yasser from "aodit.ai" <${sender}>`,
       to: subscriber.email,
       subject: "You're on the list",
       text: subscriberText,
@@ -119,7 +119,7 @@ export async function handleLeadMagnetSubscribe(
     };
 
     const mailOptionsAdmin = {
-      from: sender,
+      from: `Yasser from "aodit.ai" <${sender}>`,
       to: adminEmail,
       subject: "New lead-magnet signup",
       text: adminText,

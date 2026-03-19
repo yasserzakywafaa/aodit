@@ -11,6 +11,7 @@ import {
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import END_POINTS from "src/application/shared/endpoints";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -157,8 +158,17 @@ const SubscribeSection = ({
               size="small"
               disabled={loading}
             />
-            <Button type="submit" variant="contained" disabled={loading}>
-              Subscribe
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={loading}
+              startIcon={
+                loading ? (
+                  <CircularProgress size={12} color="inherit" />
+                ) : undefined
+              }
+            >
+              {loading ? "Requesting" : "Subscribe"}
             </Button>
           </Box>
         </Box>
@@ -256,8 +266,18 @@ const SubscribeSection = ({
             size="small"
             disabled={loading}
           />
-          <Button type="submit" variant="contained" disabled={loading}>
-            Subscribe
+
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={loading}
+            startIcon={
+              loading ? (
+                <CircularProgress size={12} color="inherit" />
+              ) : undefined
+            }
+          >
+            {loading ? "Requesting" : "Subscribe"}
           </Button>
         </Box>
 
@@ -268,7 +288,7 @@ const SubscribeSection = ({
             color: "text.secondary",
           }}
         >
-          For institutional inquiries: contact@aodit.ai
+          For institutional inquiries: katharina@swisslii.com
         </Typography>
       </Box>
     </Box>

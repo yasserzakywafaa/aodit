@@ -816,8 +816,6 @@ const CoverPage = ({
               Murbacherstrasse 19, 6003 Luzern
             </Text>
             {"\n"}
-            Phone: <Text style={{ fontWeight: "bold" }}>+41 76 450 17 73</Text>
-            {"\n"}
             Email:{" "}
             <Text style={{ fontWeight: "bold" }}>katharina@swisslii.com</Text>
           </Text>

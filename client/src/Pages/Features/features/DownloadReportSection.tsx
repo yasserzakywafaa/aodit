@@ -8,14 +8,12 @@ import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import END_POINTS from "src/application/shared/endpoints";
-import { Grid } from "@mui/material";
 import PDF from "@mui/icons-material/PictureAsPdf";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -52,26 +50,18 @@ const FEATURED_REPORT = {
   ctaLabel: "Download Executive Summary",
 };
 
-const FEATURED_FULL_REPORT = {
-  ctaLabel: "Request full Technical Report",
-};
-
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const TECHNICAL_REPORT_LEAD = {
-  reportOfInterest: "Banking AI Risk Assessment - Full Technical Report",
-  message: "Technical report download lead magnet",
+const EXECUTIVE_SUMMARY_LEAD = {
+  reportOfInterest: "Banking AI Risk Assessment - Executive Summary",
+  message: "Executive summary download lead magnet",
 };
 
-const RatingsSection = () => {
+const DownloadReportSection = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const executiveSummaryUrl = APP_CONSTANTS.FEATURED_REPORT_PDF_URL;
-  const technicalReportUrl = APP_CONSTANTS.FEATURED_TECHNICAL_REPORT_PDF_URL;
   const hasPdf = Boolean(executiveSummaryUrl && executiveSummaryUrl.trim());
-  const hasTechnicalPdf = Boolean(
-    technicalReportUrl && technicalReportUrl.trim(),
-  );
 
   const [leadOpen, setLeadOpen] = useState(false);
   const [name, setName] = useState("");
@@ -91,14 +81,8 @@ const RatingsSection = () => {
     setEmailErr("");
   };
 
-  const handleDownload = () => {
-    if (hasPdf) {
-      window.open(executiveSummaryUrl, "_blank", "noopener,noreferrer");
-    }
-  };
-
-  const openTechnicalLeadDialog = () => {
-    if (!hasTechnicalPdf) return;
+  const openExecutiveSummaryLeadDialog = () => {
+    if (!hasPdf) return;
     resetLeadForm();
     setLeadOpen(true);
   };
@@ -130,7 +114,7 @@ const RatingsSection = () => {
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateLeadForm() || !technicalReportUrl) return;
+    if (!validateLeadForm() || !executiveSummaryUrl) return;
     setSubmitting(true);
     try {
       await axios.post(
@@ -139,8 +123,8 @@ const RatingsSection = () => {
           name: name.trim(),
           company: company.trim(),
           email: email.trim(),
-          reportOfInterest: TECHNICAL_REPORT_LEAD.reportOfInterest,
-          message: TECHNICAL_REPORT_LEAD.message,
+          reportOfInterest: EXECUTIVE_SUMMARY_LEAD.reportOfInterest,
+          message: EXECUTIVE_SUMMARY_LEAD.message,
         },
         {
           headers: {
@@ -150,12 +134,12 @@ const RatingsSection = () => {
         },
       );
       Notify({
-        content: "Thank you — opening the technical report.",
+        content: "Thank you — opening the executive summary.",
         type: ToastTypes.Success,
       });
       setLeadOpen(false);
       resetLeadForm();
-      window.open(technicalReportUrl, "_blank", "noopener,noreferrer");
+      window.open(executiveSummaryUrl, "_blank", "noopener,noreferrer");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data?.message) {
         Notify({
@@ -300,29 +284,17 @@ const RatingsSection = () => {
             {FEATURED_REPORT.subtitle}
           </Typography>
 
-          <Grid container spacing={2}>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
             <Button
               variant="contained"
               size="large"
               disabled={!hasPdf}
-              onClick={handleDownload}
+              onClick={openExecutiveSummaryLeadDialog}
               startIcon={<PDF />}
             >
               {hasPdf ? FEATURED_REPORT.ctaLabel : "PDF coming soon"}
             </Button>
-
-            <Button
-              variant="outlined"
-              size="large"
-              disabled={!hasTechnicalPdf}
-              onClick={openTechnicalLeadDialog}
-              startIcon={<ChatBubbleIcon />}
-            >
-              {hasTechnicalPdf
-                ? FEATURED_FULL_REPORT.ctaLabel
-                : "PDF coming soon"}
-            </Button>
-          </Grid>
+          </Box>
         </Box>
       </Box>
 
@@ -335,14 +307,11 @@ const RatingsSection = () => {
       >
         <form onSubmit={handleLeadSubmit}>
           <DialogTitle sx={{ fontFamily: fontFamilySans, fontWeight: 600 }}>
-            Download full technical report
+            Enter your details to get the executive summary
           </DialogTitle>
           <DialogContent
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
-            <Typography variant="body2" color="text.secondary">
-              Enter your details to open the PDF in a new tab.
-            </Typography>
             <TextField
               required
               fullWidth
@@ -398,7 +367,7 @@ const RatingsSection = () => {
                 ) : null
               }
             >
-              {submitting ? "Submitting…" : "Open PDF"}
+              {submitting ? "Submitting…" : "Get executive summary"}
             </Button>
           </DialogActions>
         </form>
@@ -407,4 +376,4 @@ const RatingsSection = () => {
   );
 };
 
-export default RatingsSection;
+export default DownloadReportSection;

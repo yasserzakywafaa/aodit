@@ -112,10 +112,7 @@ const ApplicationBar = () => {
           position="fixed"
           sx={(theme) => ({
             boxShadow: 0,
-            bgcolor:
-              theme.palette.mode === "dark"
-                ? "rgba(10,10,10,0.92)"
-                : "rgba(245,243,239,0.92)",
+            bgcolor: "background.default",
             backgroundImage: "none",
             borderBottom: `1px solid ${theme.palette.divider}`,
             backdropFilter: "blur(12px)",

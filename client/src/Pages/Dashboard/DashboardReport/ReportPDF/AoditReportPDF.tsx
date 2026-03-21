@@ -14,6 +14,7 @@ import {
   View,
 } from "@react-pdf/renderer";
 
+import { EIGHT_TURN_ADVERSARIAL_PROTOCOL } from "src/shared/constants/aoditFramework";
 import type { Report } from "src/shared/types/report";
 import type { ReportRun } from "src/shared/types/reportRun";
 import type { ScenarioResult } from "src/shared/types/scenarioResult";
@@ -24,7 +25,7 @@ import aoditLogo from "src/assets/images/aodit_logo.png";
 // Constants (mirrored from aoditFramework.ts — no server import needed)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const EMERALD = "#047857";
+const GREEN = "#00c278";
 const DARK = "#0A0A0A";
 const CREAM = "#F7F5F0";
 const HIGHLIGHT = "#FFFBEB";
@@ -42,14 +43,14 @@ const TEXT = "#111827";
 const sContactCard = {
   backgroundColor: CREAM,
   borderLeftWidth: 4,
-  borderLeftColor: EMERALD,
+  borderLeftColor: GREEN,
   paddingVertical: 20,
   paddingHorizontal: 24,
 } as const;
 
 const sContactLabel = {
   fontSize: 9,
-  color: EMERALD,
+  color: GREEN,
   letterSpacing: 2,
   fontFamily: "Helvetica-Bold",
   marginBottom: 12,
@@ -321,7 +322,7 @@ const RATING_BAND_ROW_THEME: Record<
 > = {
   AAA: {
     bg: "#D1FAE5",
-    ratingColor: "#047857",
+    ratingColor: "#00c278",
     textColor: "#064E3B",
     borderColor: "#6EE7B7",
   },
@@ -367,7 +368,7 @@ const getRatingBandTheme = (rating: string) =>
   RATING_BAND_ROW_THEME[rating] ?? RATING_BAND_ROW_THEME.D;
 
 const DIMENSION_ACCENT = [
-  "#047857",
+  "#00c278",
   "#0D9488",
   "#CA8A04",
   "#B45309",
@@ -457,7 +458,7 @@ const s = StyleSheet.create({
     paddingVertical: 12,
   },
   headerBarLeft: {
-    color: EMERALD,
+    color: GREEN,
     fontSize: 13,
     fontFamily: "Helvetica-Bold",
     letterSpacing: 2,
@@ -479,7 +480,7 @@ const s = StyleSheet.create({
   body: { paddingHorizontal: 32, paddingTop: 20 },
 
   // Section header
-  sectionNum: { color: EMERALD, fontSize: 18, fontFamily: "Helvetica-Bold" },
+  sectionNum: { color: GREEN, fontSize: 18, fontFamily: "Helvetica-Bold" },
   sectionTitle: {
     color: DARK,
     fontSize: 14,
@@ -500,14 +501,14 @@ const s = StyleSheet.create({
   scoreBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 24 },
   scoreBoxLeft: {
     padding: 20,
-    borderRightColor: EMERALD,
+    borderRightColor: GREEN,
     borderRightWidth: 3,
     alignItems: "center",
     justifyContent: "center",
     width: 200,
   },
   scoreBoxRating: {
-    color: EMERALD,
+    color: GREEN,
     fontSize: 52,
     fontFamily: "Helvetica-Bold",
     lineHeight: 1,
@@ -519,7 +520,7 @@ const s = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Helvetica-Bold",
   },
-  scoreBoxMeta: { color: EMERALD, fontSize: 9 },
+  scoreBoxMeta: { color: GREEN, fontSize: 9 },
 
   // Metadata table (cover)
   metaTable: { backgroundColor: CREAM, marginTop: 20, marginBottom: 4 },
@@ -651,18 +652,51 @@ const s = StyleSheet.create({
   },
   methodologyCategoryText: { fontSize: 7.4, color: MID_GRAY, lineHeight: 1.4 },
 
+  turnProtocolRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  turnProtocolCell: {
+    width: "48.5%",
+    paddingVertical: 5,
+    paddingHorizontal: 7,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    backgroundColor: "#FFFFFF",
+  },
+  turnProtocolTurnId: {
+    fontSize: 6.5,
+    letterSpacing: 0.6,
+    color: GREEN,
+    fontFamily: "Helvetica-Bold",
+    marginBottom: 2,
+  },
+  turnProtocolName: {
+    fontSize: 8,
+    fontFamily: "Helvetica-Bold",
+    color: DARK,
+    marginBottom: 3,
+    lineHeight: 1.2,
+  },
+  turnProtocolDesc: {
+    fontSize: 6.9,
+    color: MID_GRAY,
+    lineHeight: 1.35,
+  },
+
   // Verdict box
   verdictBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 16 },
   verdictLeft: {
     padding: 16,
-    borderRightColor: EMERALD,
+    borderRightColor: GREEN,
     borderRightWidth: 3,
     justifyContent: "center",
     width: 120,
   },
   verdictLeftLabel: { color: "#9CA3AF", fontSize: 7, letterSpacing: 1 },
   verdictLeftValue: {
-    color: EMERALD,
+    color: GREEN,
     fontSize: 11,
     fontFamily: "Helvetica-Bold",
     marginTop: 4,
@@ -761,7 +795,7 @@ const s = StyleSheet.create({
   transcriptCardLabelResponse: {
     fontSize: 8,
     fontFamily: "Helvetica-Bold",
-    color: EMERALD,
+    color: GREEN,
     marginBottom: 3,
   },
   transcriptCardText: {
@@ -852,7 +886,7 @@ const CoverPage = ({
             {report.name}
           </Text>
           {report.reportType && (
-            <Text style={{ fontSize: 9, color: EMERALD, marginTop: 4 }}>
+            <Text style={{ fontSize: 9, color: GREEN, marginTop: 4 }}>
               {report.reportType}
             </Text>
           )}
@@ -886,7 +920,7 @@ const CoverPage = ({
           <View style={s.scoreBoxLeft}>
             <Text
               style={{
-                color: EMERALD,
+                color: GREEN,
                 fontSize: 7,
                 letterSpacing: 1,
                 marginBottom: 4,
@@ -940,7 +974,7 @@ const CoverPage = ({
             marginTop: 120,
             backgroundColor: CREAM,
             borderLeftWidth: 4,
-            borderLeftColor: EMERALD,
+            borderLeftColor: GREEN,
             paddingVertical: 20,
             paddingHorizontal: 24,
           }}
@@ -948,7 +982,7 @@ const CoverPage = ({
           <Text
             style={{
               fontSize: 9,
-              color: EMERALD,
+              color: GREEN,
               letterSpacing: 2,
               fontFamily: "Helvetica-Bold",
               marginBottom: 12,
@@ -996,7 +1030,7 @@ const CoverPage = ({
 const DimensionSummaryCards = () => (
   <>
     {DIMENSIONS.map((dim, i) => {
-      const accent = DIMENSION_ACCENT[i] ?? EMERALD;
+      const accent = DIMENSION_ACCENT[i] ?? GREEN;
       return (
         <View
           key={dim.id}
@@ -1062,7 +1096,7 @@ const DimensionCategoryMethodologyBlock = ({
   dim: (typeof DIMENSIONS)[0];
   index: number;
 }) => {
-  const accent = DIMENSION_ACCENT[index] ?? EMERALD;
+  const accent = DIMENSION_ACCENT[index] ?? GREEN;
   const categories = DIMENSION_CATEGORIES[dim.id] ?? [];
   return (
     <View style={[s.methodologyDimCard, { borderLeftColor: accent }]}>
@@ -1076,7 +1110,9 @@ const DimensionCategoryMethodologyBlock = ({
       >
         {dim.id}
       </Text>
-      <Text style={[s.methodologyMeta, { marginBottom: 6 }]}>{dim.question}</Text>
+      <Text style={[s.methodologyMeta, { marginBottom: 6 }]}>
+        {dim.question}
+      </Text>
       {categories.map((cat) => (
         <View key={cat.id} style={s.methodologyCategoryRow}>
           <Text style={s.methodologyCategoryId}>{cat.id}</Text>
@@ -1193,6 +1229,7 @@ const FrameworkOverviewPage = ({ report }: { report: Report }) => (
   </Page>
 );
 
+// Page 3: Category methodology (I)
 const FrameworkCategoriesPageOne = ({ report }: { report: Report }) => (
   <Page size="A4" style={s.page}>
     <PageHeader subtitle="AODIT-5 CATEGORY METHODOLOGY" />
@@ -1200,7 +1237,8 @@ const FrameworkCategoriesPageOne = ({ report }: { report: Report }) => (
       <SectionHeading num="01" title="CATEGORY METHODOLOGY (I)" />
       <Text style={[s.para, { marginBottom: 8 }]}>
         Each dimension is decomposed into five testing categories. The category
-        definitions below describe what the methodology evaluates before scoring.
+        definitions below describe what the methodology evaluates before
+        scoring.
       </Text>
       {DIMENSIONS.slice(0, 3).map((dim, i) => (
         <DimensionCategoryMethodologyBlock key={dim.id} dim={dim} index={i} />
@@ -1210,6 +1248,7 @@ const FrameworkCategoriesPageOne = ({ report }: { report: Report }) => (
   </Page>
 );
 
+// Page 4: Category methodology (II)
 const FrameworkCategoriesPageTwo = ({ report }: { report: Report }) => (
   <Page size="A4" style={s.page}>
     <PageHeader subtitle="AODIT-5 CATEGORY METHODOLOGY" />
@@ -1232,7 +1271,53 @@ const FrameworkCategoriesPageTwo = ({ report }: { report: Report }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 5: Executive Summary
+// Page 5: 8-Turn Adversarial Protocol
+// ─────────────────────────────────────────────────────────────────────────────
+
+const EightTurnProtocolPage = ({ report }: { report: Report }) => {
+  const pairs: (typeof EIGHT_TURN_ADVERSARIAL_PROTOCOL)[number][][] = [];
+  for (let i = 0; i < EIGHT_TURN_ADVERSARIAL_PROTOCOL.length; i += 2) {
+    pairs.push(EIGHT_TURN_ADVERSARIAL_PROTOCOL.slice(i, i + 2));
+  }
+
+  return (
+    <Page size="A4" style={s.page}>
+      <PageHeader subtitle="8-TURN ADVERSARIAL PROTOCOL" />
+      <View style={s.body}>
+        <SectionHeading num="01" title="8-TURN ADVERSARIAL PROTOCOL" />
+        <Text style={[s.para, { marginBottom: 6 }]}>
+          Every adversarial scenario follows the same eight-turn sequence, from
+          baseline behaviour through targeted stressors and recovery. Each turn
+          is scored independently; results roll into category, dimension, and
+          composite scores on the AODIT-5 scale.
+        </Text>
+
+        {pairs.map((row) => (
+          <View key={row[0].id} style={s.turnProtocolRow}>
+            {row.map((turn) => (
+              <View key={turn.id} style={s.turnProtocolCell}>
+                <Text style={s.turnProtocolTurnId}>{turn.id}</Text>
+                <Text style={s.turnProtocolName}>{turn.name}</Text>
+                <Text style={s.turnProtocolDesc}>{turn.description}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
+
+        <Text style={[s.para, { marginTop: 6, marginBottom: 0 }]}>
+          All turns are independently evaluated, severity-weighted, and
+          aggregated into category, dimension, and composite scores. Calibration
+          bias (self-score vs evaluator score) is separately reported as a
+          governance indicator.
+        </Text>
+      </View>
+      <PageFooter reportName={report.name} />
+    </Page>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Page 6: Executive Summary
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ExecutiveSummaryPage = ({
@@ -1459,11 +1544,11 @@ const ExecutiveSummaryPage = ({
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 6: AODIT-5 Dimension Scores Table
+// Page 7: AODIT-5 Dimension Scores Table
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Pages 6–10: Per-Dimension Analysis
+// Pages 7–11: Per-Dimension Analysis
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DimensionDeepDiveBlock = ({
@@ -1758,7 +1843,7 @@ const DimensionAnalysisPage = ({
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 7: Calibration Analysis
+// Page 12: Calibration Analysis (after five per-dimension pages)
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CalibrationPage = ({
@@ -1934,7 +2019,7 @@ const CalibrationPage = ({
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 8: Rating Scale & Deployment Verdict
+// Page 13: Rating Scale & Deployment Verdict
 // ─────────────────────────────────────────────────────────────────────────────
 
 const RatingVerdictPage = ({
@@ -2008,7 +2093,7 @@ const RatingVerdictPage = ({
                   borderBottomWidth: 1,
                   borderBottomColor: th.borderColor,
                   borderLeftWidth: isActive ? 5 : 0,
-                  borderLeftColor: isActive ? EMERALD : "transparent",
+                  borderLeftColor: isActive ? GREEN : "transparent",
                 }}
               >
                 <Text
@@ -2016,7 +2101,7 @@ const RatingVerdictPage = ({
                     width: colW[0],
                     fontSize: 9,
                     fontFamily: "Helvetica-Bold",
-                    color: isActive ? EMERALD : th.ratingColor,
+                    color: isActive ? GREEN : th.ratingColor,
                   }}
                 >
                   {band.rating}
@@ -2230,6 +2315,7 @@ export const AoditReportPDF = ({
         <FrameworkOverviewPage report={report} />
         <FrameworkCategoriesPageOne report={report} />
         <FrameworkCategoriesPageTwo report={report} />
+        <EightTurnProtocolPage report={report} />
         <ExecutiveSummaryPage
           report={report}
           run={run}

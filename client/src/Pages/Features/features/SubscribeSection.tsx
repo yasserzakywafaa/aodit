@@ -6,7 +6,6 @@ import {
   fontFamilySans,
   fontFamilySerif,
   grey,
-  primaryColor,
 } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
@@ -93,7 +92,7 @@ const SubscribeSection = ({
       minHeight: inputHeight,
       height: inputHeight,
       border: "1px solid",
-      borderColor: primaryColor,
+      // borderColor: primaryColor,
       borderRight: "none",
       color: "text.primary",
       "& fieldset": { border: "none" },
@@ -199,7 +198,8 @@ const SubscribeSection = ({
           textAlign: "center",
           px: { xs: 3, md: 5 },
           py: { xs: 4, md: 6 },
-          border: `1px solid ${primaryColor}`,
+          // border: `1px solid ${primaryColor}`,
+          border: `1px solid`,
           borderLeft: "4px solid",
           borderLeftColor: "primary.main",
         }}

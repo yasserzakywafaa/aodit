@@ -68,6 +68,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 <Button
                   key={id}
                   component="a"
+                  sx={{ color: "text.primary" }}
                   variant="text"
                   onClick={handleOnMenuItemClick(id)}
                 >

@@ -10,10 +10,10 @@ import {
 
 import AboutSection from "./features/AboutSection";
 import ContactSection from "./features/ContactSection";
+import DownloadReportSection from "./features/DownloadReportSection";
 import Hero from "./features/Hero";
 import MethodologySection from "./features/MethodologySection";
 import Page from "src/components/shared/Page/Page";
-import RatingsSection from "./features/RatingsSection";
 import ReportsSection from "./features/ReportsSection";
 import SubscribeSection from "./features/SubscribeSection";
 import { Testimonial } from "src/shared/types/types";
@@ -86,7 +86,7 @@ const FeaturesPage = () => {
     >
       <Hero />
       <SubscribeSection variant="compact" />
-      <RatingsSection />
+      <DownloadReportSection />
       <ReportsSection />
       <MethodologySection />
       <AboutSection />

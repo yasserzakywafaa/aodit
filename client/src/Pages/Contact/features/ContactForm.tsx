@@ -10,8 +10,6 @@ import {
 } from "@mui/material";
 import {
   fontFamilySans,
-  primaryColor,
-  primaryColorDim,
   primaryColorOpaqueTen,
 } from "src/application/shared/themes";
 
@@ -29,14 +27,12 @@ const REPORT_OPTIONS = [
 const inputSx = {
   "& .MuiOutlinedInput-root": {
     bgcolor: primaryColorOpaqueTen,
-    border: "1px solid",
-    borderColor: primaryColorDim,
     fontFamily: fontFamilySans,
     fontSize: 12,
     letterSpacing: "0.5px",
-    "&:hover": { borderColor: primaryColor },
+    "&:hover": { borderColor: "primary.main" },
     "&.Mui-focused": {
-      borderColor: primaryColor,
+      borderColor: "primary.main",
       "& .MuiOutlinedInput-notchedOutline": { border: 0 },
     },
     "& fieldset": { border: 0 },
@@ -158,7 +154,7 @@ const ContactForm = () => {
               fontSize: 11,
               fontWeight: 700,
               letterSpacing: "0.3em",
-              bgcolor: primaryColor,
+              bgcolor: "primary.main",
               color: "background.default",
               border: 0,
               mt: 0.5,

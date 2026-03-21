@@ -1,13 +1,10 @@
-import {
-  fontFamilySans,
-  fontFamilySerif,
-} from "src/application/shared/themes";
+import { alpha, useTheme } from "@mui/material/styles";
+import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { alpha, useTheme } from "@mui/material/styles";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 
 const Hero = () => {
@@ -52,9 +49,9 @@ const Hero = () => {
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         {/* Eyebrow */}
         <Typography
+          variant="body2"
           sx={{
             fontFamily: fontFamilySans,
-            fontSize: 10,
             letterSpacing: "0.25em",
             textTransform: "uppercase",
             color: "primary.main",
@@ -124,12 +121,17 @@ const Hero = () => {
         {/* Buttons */}
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
           <Button
+            size="large"
             variant="contained"
             onClick={() => scrollToSection("ratings")}
           >
             View 2026 Ratings
           </Button>
-          <Button variant="outlined" onClick={() => scrollToSection("contact")}>
+          <Button
+            size="large"
+            variant="outlined"
+            onClick={() => scrollToSection("contact")}
+          >
             Rate Your Agent
           </Button>
         </Box>

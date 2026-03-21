@@ -25,7 +25,7 @@ import aoditLogo from "src/assets/images/aodit_logo.png";
 // Constants (mirrored from aoditFramework.ts — no server import needed)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const EMERALD = "#047857";
+const GREEN = "#00c278";
 const DARK = "#0A0A0A";
 const CREAM = "#F7F5F0";
 const HIGHLIGHT = "#FFFBEB";
@@ -43,14 +43,14 @@ const TEXT = "#111827";
 const sContactCard = {
   backgroundColor: CREAM,
   borderLeftWidth: 4,
-  borderLeftColor: EMERALD,
+  borderLeftColor: GREEN,
   paddingVertical: 20,
   paddingHorizontal: 24,
 } as const;
 
 const sContactLabel = {
   fontSize: 9,
-  color: EMERALD,
+  color: GREEN,
   letterSpacing: 2,
   fontFamily: "Helvetica-Bold",
   marginBottom: 12,
@@ -322,7 +322,7 @@ const RATING_BAND_ROW_THEME: Record<
 > = {
   AAA: {
     bg: "#D1FAE5",
-    ratingColor: "#047857",
+    ratingColor: "#00c278",
     textColor: "#064E3B",
     borderColor: "#6EE7B7",
   },
@@ -368,7 +368,7 @@ const getRatingBandTheme = (rating: string) =>
   RATING_BAND_ROW_THEME[rating] ?? RATING_BAND_ROW_THEME.D;
 
 const DIMENSION_ACCENT = [
-  "#047857",
+  "#00c278",
   "#0D9488",
   "#CA8A04",
   "#B45309",
@@ -458,7 +458,7 @@ const s = StyleSheet.create({
     paddingVertical: 12,
   },
   headerBarLeft: {
-    color: EMERALD,
+    color: GREEN,
     fontSize: 13,
     fontFamily: "Helvetica-Bold",
     letterSpacing: 2,
@@ -480,7 +480,7 @@ const s = StyleSheet.create({
   body: { paddingHorizontal: 32, paddingTop: 20 },
 
   // Section header
-  sectionNum: { color: EMERALD, fontSize: 18, fontFamily: "Helvetica-Bold" },
+  sectionNum: { color: GREEN, fontSize: 18, fontFamily: "Helvetica-Bold" },
   sectionTitle: {
     color: DARK,
     fontSize: 14,
@@ -501,14 +501,14 @@ const s = StyleSheet.create({
   scoreBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 24 },
   scoreBoxLeft: {
     padding: 20,
-    borderRightColor: EMERALD,
+    borderRightColor: GREEN,
     borderRightWidth: 3,
     alignItems: "center",
     justifyContent: "center",
     width: 200,
   },
   scoreBoxRating: {
-    color: EMERALD,
+    color: GREEN,
     fontSize: 52,
     fontFamily: "Helvetica-Bold",
     lineHeight: 1,
@@ -520,7 +520,7 @@ const s = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Helvetica-Bold",
   },
-  scoreBoxMeta: { color: EMERALD, fontSize: 9 },
+  scoreBoxMeta: { color: GREEN, fontSize: 9 },
 
   // Metadata table (cover)
   metaTable: { backgroundColor: CREAM, marginTop: 20, marginBottom: 4 },
@@ -668,7 +668,7 @@ const s = StyleSheet.create({
   turnProtocolTurnId: {
     fontSize: 6.5,
     letterSpacing: 0.6,
-    color: EMERALD,
+    color: GREEN,
     fontFamily: "Helvetica-Bold",
     marginBottom: 2,
   },
@@ -689,14 +689,14 @@ const s = StyleSheet.create({
   verdictBox: { backgroundColor: DARK, flexDirection: "row", marginTop: 16 },
   verdictLeft: {
     padding: 16,
-    borderRightColor: EMERALD,
+    borderRightColor: GREEN,
     borderRightWidth: 3,
     justifyContent: "center",
     width: 120,
   },
   verdictLeftLabel: { color: "#9CA3AF", fontSize: 7, letterSpacing: 1 },
   verdictLeftValue: {
-    color: EMERALD,
+    color: GREEN,
     fontSize: 11,
     fontFamily: "Helvetica-Bold",
     marginTop: 4,
@@ -795,7 +795,7 @@ const s = StyleSheet.create({
   transcriptCardLabelResponse: {
     fontSize: 8,
     fontFamily: "Helvetica-Bold",
-    color: EMERALD,
+    color: GREEN,
     marginBottom: 3,
   },
   transcriptCardText: {
@@ -886,7 +886,7 @@ const CoverPage = ({
             {report.name}
           </Text>
           {report.reportType && (
-            <Text style={{ fontSize: 9, color: EMERALD, marginTop: 4 }}>
+            <Text style={{ fontSize: 9, color: GREEN, marginTop: 4 }}>
               {report.reportType}
             </Text>
           )}
@@ -920,7 +920,7 @@ const CoverPage = ({
           <View style={s.scoreBoxLeft}>
             <Text
               style={{
-                color: EMERALD,
+                color: GREEN,
                 fontSize: 7,
                 letterSpacing: 1,
                 marginBottom: 4,
@@ -974,7 +974,7 @@ const CoverPage = ({
             marginTop: 120,
             backgroundColor: CREAM,
             borderLeftWidth: 4,
-            borderLeftColor: EMERALD,
+            borderLeftColor: GREEN,
             paddingVertical: 20,
             paddingHorizontal: 24,
           }}
@@ -982,7 +982,7 @@ const CoverPage = ({
           <Text
             style={{
               fontSize: 9,
-              color: EMERALD,
+              color: GREEN,
               letterSpacing: 2,
               fontFamily: "Helvetica-Bold",
               marginBottom: 12,
@@ -1030,7 +1030,7 @@ const CoverPage = ({
 const DimensionSummaryCards = () => (
   <>
     {DIMENSIONS.map((dim, i) => {
-      const accent = DIMENSION_ACCENT[i] ?? EMERALD;
+      const accent = DIMENSION_ACCENT[i] ?? GREEN;
       return (
         <View
           key={dim.id}
@@ -1096,7 +1096,7 @@ const DimensionCategoryMethodologyBlock = ({
   dim: (typeof DIMENSIONS)[0];
   index: number;
 }) => {
-  const accent = DIMENSION_ACCENT[index] ?? EMERALD;
+  const accent = DIMENSION_ACCENT[index] ?? GREEN;
   const categories = DIMENSION_CATEGORIES[dim.id] ?? [];
   return (
     <View style={[s.methodologyDimCard, { borderLeftColor: accent }]}>
@@ -2093,7 +2093,7 @@ const RatingVerdictPage = ({
                   borderBottomWidth: 1,
                   borderBottomColor: th.borderColor,
                   borderLeftWidth: isActive ? 5 : 0,
-                  borderLeftColor: isActive ? EMERALD : "transparent",
+                  borderLeftColor: isActive ? GREEN : "transparent",
                 }}
               >
                 <Text
@@ -2101,7 +2101,7 @@ const RatingVerdictPage = ({
                     width: colW[0],
                     fontSize: 9,
                     fontFamily: "Helvetica-Bold",
-                    color: isActive ? EMERALD : th.ratingColor,
+                    color: isActive ? GREEN : th.ratingColor,
                   }}
                 >
                   {band.rating}

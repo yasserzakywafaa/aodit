@@ -36,7 +36,7 @@ const sendRedirectWithCookiesSet = (res: Response, redirectUrl: string) => {
           <img src="${CONFIG.APP_URL}/icons/icon_512x512.png" alt="Logo" style="margin: 0;">
           <h1>Please wait while we sign you in</h1>
           <h2>If you are not redirected, please 
-            <a href="${redirectUrl}" style="color: #047857; text-decoration: underline; text-decoration-color: #fff;">click here</a>
+            <a href="${redirectUrl}" style="color: #00c278; text-decoration: underline; text-decoration-color: #fff;">click here</a>
              to continue.
           </h2>
         </div>

@@ -48,9 +48,7 @@ const APP_CONSTANTS = {
 
   // Featured report PDF (e.g. AWS S3 presigned or public URI)
   FEATURED_REPORT_PDF_URL:
-    "https://aodit.s3.eu-west-2.amazonaws.com/reports/AODIT-Banking-AI-Agent-Stress-Test-2026-Q1.pdf",
-  FEATURED_TECHNICAL_REPORT_PDF_URL:
-    "https://aodit.s3.eu-west-2.amazonaws.com/reports/AODIT-Banking-AI-Agent-Stress-Test-Technical-2026-Q1.pdf",
+    "https://aodit.s3.eu-west-2.amazonaws.com/reports/AODIT-Banking-AI-Risk-Assessment-2026-Q1.pdf",
 };
 
 export default APP_CONSTANTS;

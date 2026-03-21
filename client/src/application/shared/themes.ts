@@ -1,13 +1,14 @@
 import { Theme, createTheme } from "@mui/material/styles";
 
 export const white = "#f8f8f8";
+export const lightGreen = "rgba(239, 245, 241, 1)";
 export const black = "#0A0A0A";
 export const grey = "#6B6B6B";
 export const lightGrey = "#D4D0C8";
 export const red = "#C0392B";
 export const border = "rgba(180,174,162,0.25)";
 
-export const primaryColor = "#047857"; // emerald
+export const primaryColor = "#00c278"; // green
 export const primaryColorOpaqueTen = "rgba(4, 120, 87, 0.1)";
 export const primaryColorOpaqueThirty = "rgba(4, 120, 87, 0.3)";
 export const primaryColorOpaqueFifteen = "rgba(4, 120, 87, 0.15)";
@@ -18,9 +19,6 @@ export const secondaryColor = black;
 
 export const fontFamilySerif = "'Playfair Display', serif";
 export const fontFamilySans = "'Syne', sans-serif";
-export const primaryColorForDarkTheme = primaryColor;
-export const secondaryColorForDarkTheme = secondaryColor;
-export const secondaryColorForLightTheme = primaryColor;
 
 export const defaultBackDropFilterBlur = "blur(12px)";
 const borderRadius = "0px";
@@ -150,8 +148,8 @@ export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: { main: primaryColor },
-    secondary: { main: white },
-    background: { default: white },
+    secondary: { main: lightGreen },
+    background: { default: lightGreen },
     text: { primary: black, secondary: "#000000" },
     divider: primaryColor,
   },

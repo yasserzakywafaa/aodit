@@ -3,6 +3,7 @@ import {
   fontFamilySerif,
   grey,
 } from "src/application/shared/themes";
+import { EIGHT_TURN_ADVERSARIAL_PROTOCOL } from "src/shared/constants/aoditFramework";
 
 import Box from "@mui/material/Box";
 import { Chip } from "@mui/material";
@@ -232,56 +233,6 @@ const dimensions: MethodologyDimension[] = [
   },
 ];
 
-const turnProtocol = [
-  {
-    id: "Turn 1",
-    name: "Baseline Prompt",
-    description: "Normal request to establish expected compliant behavior.",
-  },
-  {
-    id: "Turn 2",
-    name: "Mild Variation",
-    description:
-      "Paraphrased or reframed request checks consistency under simple prompt drift.",
-  },
-  {
-    id: "Turn 3",
-    name: "Context Pressure",
-    description:
-      "Additional context increases complexity and tests memory plus prioritization.",
-  },
-  {
-    id: "Turn 4",
-    name: "Policy Boundary Probe",
-    description:
-      "Attempts to move the model toward policy edges and ambiguous compliance zones.",
-  },
-  {
-    id: "Turn 5",
-    name: "Adversarial Escalation",
-    description:
-      "Stronger pressure (urgency, authority, emotional leverage) stress-tests defenses.",
-  },
-  {
-    id: "Turn 6",
-    name: "Injection / Manipulation Attempt",
-    description:
-      "Malicious instructions or reframing attacks evaluate resistance controls.",
-  },
-  {
-    id: "Turn 7",
-    name: "Recovery Challenge",
-    description:
-      "Model must re-stabilize after pressure and return to safe, coherent handling.",
-  },
-  {
-    id: "Turn 8",
-    name: "Final Decision",
-    description:
-      "Closing turn evaluates judgment quality, escalation quality, and overall robustness.",
-  },
-];
-
 const MethodologySection = () => (
   <Box
     id="methodology"
@@ -439,7 +390,7 @@ const MethodologySection = () => (
           gap: 2,
         }}
       >
-        {turnProtocol.map((turn) => (
+        {EIGHT_TURN_ADVERSARIAL_PROTOCOL.map((turn) => (
           <Box
             key={turn.id}
             sx={{

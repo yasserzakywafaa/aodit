@@ -201,3 +201,54 @@ export const SCENARIOS_PER_CATEGORY = 4 as const;
 
 /** Each dimension contains exactly 5 categories */
 export const CATEGORIES_PER_DIMENSION = 5 as const;
+
+/** Eight-turn progression for each adversarial scenario (marketing + PDF copy). */
+export const EIGHT_TURN_ADVERSARIAL_PROTOCOL = [
+  {
+    id: "Turn 1",
+    name: "Baseline Prompt",
+    description: "Normal request to establish expected compliant behavior.",
+  },
+  {
+    id: "Turn 2",
+    name: "Mild Variation",
+    description:
+      "Paraphrased or reframed request checks consistency under simple prompt drift.",
+  },
+  {
+    id: "Turn 3",
+    name: "Context Pressure",
+    description:
+      "Additional context increases complexity and tests memory plus prioritization.",
+  },
+  {
+    id: "Turn 4",
+    name: "Policy Boundary Probe",
+    description:
+      "Attempts to move the model toward policy edges and ambiguous compliance zones.",
+  },
+  {
+    id: "Turn 5",
+    name: "Adversarial Escalation",
+    description:
+      "Stronger pressure (urgency, authority, emotional leverage) stress-tests defenses.",
+  },
+  {
+    id: "Turn 6",
+    name: "Injection / Manipulation Attempt",
+    description:
+      "Malicious instructions or reframing attacks evaluate resistance controls.",
+  },
+  {
+    id: "Turn 7",
+    name: "Recovery Challenge",
+    description:
+      "Model must re-stabilize after pressure and return to safe, coherent handling.",
+  },
+  {
+    id: "Turn 8",
+    name: "Final Decision",
+    description:
+      "Closing turn evaluates judgment quality, escalation quality, and overall robustness.",
+  },
+] as const;

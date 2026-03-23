@@ -1,7 +1,7 @@
 import { useState, type MouseEvent } from "react";
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { Box, Button, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import EuFlag from "src/assets/images/eu_flag.png";
+// import EuFlag from "src/assets/images/eu_flag.png";
 import SwissFlag from "src/assets/images/switzerland_flag.png";
 
 const COMPLIANCE_ITEMS = [
@@ -11,12 +11,12 @@ const COMPLIANCE_ITEMS = [
     description: "Swiss financial market supervision",
     to: "/compliance/finma",
   },
-  {
-    flag: EuFlag,
-    label: "EU AI Act",
-    description: "European AI regulation framework",
-    to: "/compliance/eu-ai-act",
-  },
+  // {
+  //   flag: EuFlag,
+  //   label: "EU AI Act",
+  //   description: "European AI regulation framework",
+  //   to: "/compliance/eu-ai-act",
+  // },
 ] as const;
 
 const ComplianceDropdown = () => {

@@ -22,6 +22,14 @@ import {
 import type { Report } from "src/shared/types/report";
 import type { ReportRun } from "src/shared/types/reportRun";
 import type { ScenarioResult } from "src/shared/types/scenarioResult";
+import {
+  AODIT_ADDED_VALUE_POINTS,
+  FINMA_ALIGNMENT_DISCLAIMER,
+  FINMA_ALIGNMENT_INTRO,
+  FINMA_ALIGNMENT_ROWS,
+  OTHER_STANDARD_ROWS,
+  OTHER_STANDARDS_INTRO,
+} from "src/shared/constants/regulatoryAlignment";
 // PNG required: react-pdf/PDFKit does not render WebP (logo would be missing in PDF).
 import aoditLogo from "src/assets/images/aodit_logo.png";
 
@@ -195,6 +203,34 @@ const RATING_BAND_ROW_THEME: Record<
 
 const getRatingBandTheme = (rating: string) =>
   RATING_BAND_ROW_THEME[rating] ?? RATING_BAND_ROW_THEME.D;
+
+const alignmentLevelTheme = (level: string) => {
+  if (level === "Strong") {
+    return {
+      bg: PASS_BG,
+      badgeBg: "#BBF7D0",
+      badgeColor: "#166534",
+      textColor: "#14532D",
+      border: "#86EFAC",
+    };
+  }
+  if (level === "Partial") {
+    return {
+      bg: NOTE_BG,
+      badgeBg: "#FDE68A",
+      badgeColor: "#92400E",
+      textColor: "#78350F",
+      border: "#FCD34D",
+    };
+  }
+  return {
+    bg: FAIL_BG,
+    badgeBg: "#FECACA",
+    badgeColor: "#991B1B",
+    textColor: "#7F1D1D",
+    border: "#FCA5A5",
+  };
+};
 
 const DIMENSION_ACCENT = [
   "#00c278",
@@ -631,6 +667,88 @@ const s = StyleSheet.create({
     fontSize: 8,
     color: TEXT,
     lineHeight: 1.45,
+  },
+
+  regulatoryIntro: {
+    fontSize: 8,
+    color: TEXT,
+    lineHeight: 1.5,
+    marginBottom: 8,
+  },
+  regulatoryDisclaimer: {
+    fontSize: 7.5,
+    color: MID_GRAY,
+    lineHeight: 1.45,
+    marginBottom: 10,
+    fontFamily: "Helvetica-Oblique",
+  },
+  regulatoryTableHeader: {
+    flexDirection: "row",
+    backgroundColor: DARK,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+  },
+  regulatoryHeaderCell: {
+    color: "#FFFFFF",
+    fontSize: 7,
+    fontFamily: "Helvetica-Bold",
+    letterSpacing: 0.5,
+  },
+  regulatoryRow: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+  },
+  regulatoryCell: {
+    fontSize: 7.5,
+    color: TEXT,
+    lineHeight: 1.4,
+  },
+  levelBadge: {
+    alignSelf: "flex-start",
+    paddingVertical: 2,
+    paddingHorizontal: 5,
+    borderRadius: 2,
+  },
+  levelBadgeText: {
+    fontSize: 7,
+    fontFamily: "Helvetica-Bold",
+  },
+  legendRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 8,
+    marginBottom: 10,
+  },
+  legendPill: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 2,
+  },
+  legendText: {
+    fontSize: 7,
+    fontFamily: "Helvetica-Bold",
+  },
+  addedValueCard: {
+    marginTop: 10,
+    backgroundColor: CREAM,
+    borderLeftWidth: 4,
+    borderLeftColor: GREEN,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  addedValueTitle: {
+    fontSize: 8.5,
+    fontFamily: "Helvetica-Bold",
+    color: DARK,
+    marginBottom: 6,
+  },
+  addedValueItem: {
+    fontSize: 7.8,
+    color: TEXT,
+    lineHeight: 1.45,
+    marginBottom: 5,
   },
 });
 
@@ -1145,6 +1263,128 @@ const EightTurnProtocolPage = ({ report }: { report: Report }) => {
     </Page>
   );
 };
+
+const RegulatoryFinmaScorecardPage = ({ report }: { report: Report }) => (
+  <Page size="A4" style={s.page}>
+    <PageHeader subtitle="FINMA 08/2024 ALIGNMENT" />
+    <View style={s.body}>
+      <SectionHeading num="01A" title="FINMA GUIDANCE 08/2024 ALIGNMENT SCORECARD" />
+      <Text style={s.regulatoryIntro}>{FINMA_ALIGNMENT_INTRO}</Text>
+      <Text style={s.regulatoryDisclaimer}>{FINMA_ALIGNMENT_DISCLAIMER}</Text>
+
+      <View style={s.regulatoryTableHeader}>
+        <Text style={[s.regulatoryHeaderCell, { width: "25%" }]}>FINMA PRINCIPLE</Text>
+        <Text style={[s.regulatoryHeaderCell, { width: "13%" }]}>AODIT LEVEL</Text>
+        <Text style={[s.regulatoryHeaderCell, { width: "62%" }]}>WHY - HONEST EXPLANATION</Text>
+      </View>
+      {FINMA_ALIGNMENT_ROWS.map((row) => {
+        const th = alignmentLevelTheme(row.level);
+        return (
+          <View
+            key={row.principle}
+            style={[
+              s.regulatoryRow,
+              { backgroundColor: th.bg, borderBottomColor: th.border },
+            ]}
+          >
+            <Text
+              style={[
+                s.regulatoryCell,
+                { width: "25%", fontFamily: "Helvetica-Bold", color: th.textColor },
+              ]}
+            >
+              {row.principle}
+            </Text>
+            <View style={{ width: "13%", paddingRight: 8 }}>
+              <View style={[s.levelBadge, { backgroundColor: th.badgeBg }]}>
+                <Text style={[s.levelBadgeText, { color: th.badgeColor }]}>
+                  {row.level}
+                </Text>
+              </View>
+            </View>
+            <Text style={[s.regulatoryCell, { width: "62%", color: th.textColor }]}>
+              {row.explanation}
+            </Text>
+          </View>
+        );
+      })}
+
+      <View style={s.legendRow}>
+        <View style={[s.legendPill, { backgroundColor: PASS_BG }]}>
+          <Text style={[s.legendText, { color: PASS_GREEN }]}>Strong</Text>
+        </View>
+        <View style={[s.legendPill, { backgroundColor: NOTE_BG }]}>
+          <Text style={[s.legendText, { color: NOTE_AMBER }]}>Partial</Text>
+        </View>
+        <View style={[s.legendPill, { backgroundColor: FAIL_BG }]}>
+          <Text style={[s.legendText, { color: FAIL_RED }]}>Not covered</Text>
+        </View>
+      </View>
+    </View>
+    <PageFooter reportName={report.name} />
+  </Page>
+);
+
+const RegulatoryStandardsAddedValuePage = ({ report }: { report: Report }) => (
+  <Page size="A4" style={s.page}>
+    <PageHeader subtitle="CONCEPTUAL STANDARDS ALIGNMENT" />
+    <View style={s.body}>
+      <SectionHeading num="01B" title="OTHER STANDARDS AND ADDED VALUE" />
+      <Text style={s.regulatoryIntro}>{OTHER_STANDARDS_INTRO}</Text>
+
+      <View style={s.regulatoryTableHeader}>
+        <Text style={[s.regulatoryHeaderCell, { width: "27%" }]}>STANDARD</Text>
+        <Text style={[s.regulatoryHeaderCell, { width: "13%" }]}>LEVEL</Text>
+        <Text style={[s.regulatoryHeaderCell, { width: "60%" }]}>
+          WHAT ALIGNS AND WHAT DOES NOT
+        </Text>
+      </View>
+      {OTHER_STANDARD_ROWS.map((row) => {
+        const th = alignmentLevelTheme(row.level);
+        return (
+          <View
+            key={row.standard}
+            style={[
+              s.regulatoryRow,
+              { backgroundColor: th.bg, borderBottomColor: th.border },
+            ]}
+          >
+            <Text
+              style={[
+                s.regulatoryCell,
+                { width: "27%", fontFamily: "Helvetica-Bold", color: th.textColor },
+              ]}
+            >
+              {row.standard}
+            </Text>
+            <View style={{ width: "13%", paddingRight: 8 }}>
+              <View style={[s.levelBadge, { backgroundColor: th.badgeBg }]}>
+                <Text style={[s.levelBadgeText, { color: th.badgeColor }]}>
+                  {row.level}
+                </Text>
+              </View>
+            </View>
+            <Text style={[s.regulatoryCell, { width: "60%", color: th.textColor }]}>
+              {row.explanation}
+            </Text>
+          </View>
+        );
+      })}
+
+      <View style={s.addedValueCard}>
+        <Text style={s.addedValueTitle}>
+          Three things AODIT adds that no standard currently requires
+        </Text>
+        {AODIT_ADDED_VALUE_POINTS.map((point, idx) => (
+          <Text key={point} style={[s.addedValueItem, idx === 2 ? { marginBottom: 0 } : {}]}>
+            ({idx + 1}) {point}
+          </Text>
+        ))}
+      </View>
+    </View>
+    <PageFooter reportName={report.name} />
+  </Page>
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Page 6: Executive Summary
@@ -2147,6 +2387,8 @@ export const AoditReportPDF = ({
         <FrameworkCategoriesPageOne report={report} />
         <FrameworkCategoriesPageTwo report={report} />
         <EightTurnProtocolPage report={report} />
+        <RegulatoryFinmaScorecardPage report={report} />
+        <RegulatoryStandardsAddedValuePage report={report} />
         <ExecutiveSummaryPage
           report={report}
           run={run}

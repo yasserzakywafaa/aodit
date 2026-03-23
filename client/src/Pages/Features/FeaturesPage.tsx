@@ -10,6 +10,7 @@ import {
 
 import AboutSection from "./features/AboutSection";
 import ContactSection from "./features/ContactSection";
+import ComplianceLogosSection from "./features/ComplianceLogosSection";
 import DownloadReportSection from "./features/DownloadReportSection";
 import Hero from "./features/Hero";
 import MethodologySection from "./features/MethodologySection";
@@ -90,6 +91,7 @@ const FeaturesPage = () => {
       <ReportsSection />
       <MethodologySection />
       <AboutSection />
+      <ComplianceLogosSection />
       <SubscribeSection />
       <ContactSection />
     </Page>

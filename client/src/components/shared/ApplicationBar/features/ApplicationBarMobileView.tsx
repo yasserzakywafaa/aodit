@@ -18,7 +18,7 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 const NAV_LINKS = [
   { id: "reports", label: "Reports" },
   { id: "methodology", label: "Methodology" },
-  { id: "about", label: "Who it's for" },
+  { id: "about", label: "About" },
 ] as const;
 
 interface ApplicationBarMobileViewParams {

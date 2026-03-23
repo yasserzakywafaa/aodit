@@ -1,3 +1,5 @@
+import APP_CONSTANTS from "src/application/shared/app_constants";
+
 export type AlignmentLevel = "Strong" | "Partial" | "Not covered";
 
 export interface FinmaAlignmentRow {
@@ -150,6 +152,5 @@ export const FINMA_OFFICIAL_NOTICE = {
   title: "FINMA Guidance 08/2024 (Official PDF)",
   authority: "Swiss Financial Market Supervisory Authority (FINMA)",
   publishedDate: "18 December 2024",
-  downloadUrl:
-    "https://aodit.s3.eu-west-2.amazonaws.com/files/FINMA_guidance_08_2024.pdf",
+  downloadUrl: APP_CONSTANTS.FINMA_OFFICIAL_NOTICE_PDF_URL,
 };

@@ -3,7 +3,11 @@ import {
   FINMA_ALIGNMENT_DISCLAIMER,
   FINMA_ALIGNMENT_INTRO,
   FINMA_ALIGNMENT_ROWS,
+  FINMA_KEY_PRINCIPLE,
+  FINMA_KILLER_LINE,
+  FINMA_LIFECYCLE_STAGES,
   FINMA_OFFICIAL_NOTICE,
+  FINMA_RISK_IF_NOT_USED,
   OTHER_STANDARDS_INTRO,
   OTHER_STANDARD_ROWS,
 } from "src/shared/constants/regulatoryAlignment";
@@ -46,7 +50,7 @@ const ComplianceFinmaPage = () => {
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "FINMA AI Guidelines",
-      "Overview of FINMA-aligned considerations for AI governance, risk controls, transparency, and model oversight in Swiss financial services.",
+      "Independent behavioral control-layer evidence for FINMA-aligned AI testing, monitoring, and risk decisions in Swiss financial services.",
       routes.compliance.finma,
     );
   }, []);
@@ -68,12 +72,35 @@ const ComplianceFinmaPage = () => {
         </Typography>
 
         <Typography paragraph>{FINMA_ALIGNMENT_INTRO}</Typography>
-        <Typography paragraph color="text.secondary">
-          {FINMA_ALIGNMENT_DISCLAIMER}
-        </Typography>
+
+        <Box my={2.5} sx={{ borderLeft: "4px solid #1D4ED8", pl: 2 }}>
+          <Typography variant="h6" color="primary" gutterBottom>
+            Key principle
+          </Typography>
+          <Typography paragraph sx={{ mb: 1 }}>
+            {FINMA_KEY_PRINCIPLE}
+          </Typography>
+          <Typography paragraph sx={{ fontWeight: 700, mb: 0 }}>
+            {FINMA_KILLER_LINE}
+          </Typography>
+        </Box>
 
         <Box my={2.5}>
-          <Paper>
+          <Typography variant="h6" color="primary" gutterBottom>
+            Where AODIT fits in the lifecycle
+          </Typography>
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            {FINMA_LIFECYCLE_STAGES.map((item) => (
+              <Box key={item.stage} sx={{ mb: 1.5, "&:last-of-type": { mb: 0 } }}>
+                <Typography sx={{ fontWeight: 700 }}>{item.stage}</Typography>
+                <Typography color="text.secondary">{item.useCase}</Typography>
+              </Box>
+            ))}
+          </Paper>
+        </Box>
+
+        <Box my={2.5}>
+          <Paper variant="outlined">
             <Grid
               container
               spacing={2}
@@ -153,7 +180,11 @@ const ComplianceFinmaPage = () => {
 
         <Box my={2.5}>
           <Typography variant="h6" color="primary" gutterBottom>
-            FINMA Guidance 08/2024 — alignment scorecard
+            FINMA Guidance 08/2024 — control evidence scorecard
+          </Typography>
+          <Typography paragraph sx={{ mb: 1.5 }}>
+            Strong indicates direct behavioral evidence coverage. Partial indicates
+            supporting evidence only. Not covered indicates an intentional boundary.
           </Typography>
           <Paper variant="outlined">
             <Table size="small">
@@ -166,7 +197,7 @@ const ComplianceFinmaPage = () => {
                     AODIT level
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700 }}>
-                    Why — honest explanation
+                    Control relevance and explicit boundary
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -195,7 +226,7 @@ const ComplianceFinmaPage = () => {
 
         <Box my={2.5}>
           <Typography variant="h6" color="primary" gutterBottom>
-            Other standards — conceptual alignment
+            Other standards — alignment at the behavioral layer
           </Typography>
           <Typography paragraph>{OTHER_STANDARDS_INTRO}</Typography>
           <Paper variant="outlined">
@@ -209,7 +240,7 @@ const ComplianceFinmaPage = () => {
                     Level
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700 }}>
-                    What aligns and what does not
+                    Behavioral coverage and limits
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -245,6 +276,29 @@ const ComplianceFinmaPage = () => {
               {point}
             </Typography>
           ))}
+        </Box>
+
+        <Box my={2.5}>
+          <Typography variant="h6" color="primary" gutterBottom>
+            What happens if you do not test independently
+          </Typography>
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            {FINMA_RISK_IF_NOT_USED.map((risk) => (
+              <Typography key={risk} paragraph sx={{ mb: 1 }}>
+                {risk}
+              </Typography>
+            ))}
+          </Paper>
+        </Box>
+
+        <Box my={2.5}>
+          <Typography variant="h6" color="primary" gutterBottom>
+            Scope disclaimer
+          </Typography>
+          <Typography paragraph color="text.secondary" sx={{ mb: 0 }}>
+            {FINMA_ALIGNMENT_DISCLAIMER} This is an explicit boundary, not a
+            hidden gap.
+          </Typography>
         </Box>
       </Container>
     </Page>

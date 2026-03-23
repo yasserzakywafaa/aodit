@@ -6,6 +6,14 @@
  */
 
 import {
+  AODIT_ADDED_VALUE_POINTS,
+  FINMA_ALIGNMENT_DISCLAIMER,
+  FINMA_ALIGNMENT_INTRO,
+  FINMA_ALIGNMENT_ROWS,
+  OTHER_STANDARDS_INTRO,
+  OTHER_STANDARD_ROWS,
+} from "src/shared/constants/regulatoryAlignment";
+import {
   DEFAULT_FRAMEWORK_VERSION,
   EIGHT_TURN_ADVERSARIAL_PROTOCOL,
   getFrameworkDefinition,
@@ -22,14 +30,6 @@ import {
 import type { Report } from "src/shared/types/report";
 import type { ReportRun } from "src/shared/types/reportRun";
 import type { ScenarioResult } from "src/shared/types/scenarioResult";
-import {
-  AODIT_ADDED_VALUE_POINTS,
-  FINMA_ALIGNMENT_DISCLAIMER,
-  FINMA_ALIGNMENT_INTRO,
-  FINMA_ALIGNMENT_ROWS,
-  OTHER_STANDARD_ROWS,
-  OTHER_STANDARDS_INTRO,
-} from "src/shared/constants/regulatoryAlignment";
 // PNG required: react-pdf/PDFKit does not render WebP (logo would be missing in PDF).
 import aoditLogo from "src/assets/images/aodit_logo.png";
 
@@ -123,7 +123,7 @@ const RATING_BANDS = [
     min: 4.0,
     max: 4.69,
     rating: "AA",
-    verdict: "Full Deployment with Annual Review",
+    verdict: "Full Deployment with Monitoring",
   },
   {
     min: 3.6,
@@ -886,10 +886,6 @@ const CoverPage = ({
               </Text>
             </View>
             <View>
-              <Text style={s.scoreBoxLabel}>OUTLOOK</Text>
-              <Text style={s.scoreBoxMeta}>{run.outlook ?? "—"}</Text>
-            </View>
-            <View>
               <Text style={s.scoreBoxLabel}>CALIBRATION GAP</Text>
               <Text style={s.scoreBoxMeta}>
                 {fmt(calMag)} (Δ {calDelta >= 0 ? "+" : ""}
@@ -1268,14 +1264,23 @@ const RegulatoryFinmaScorecardPage = ({ report }: { report: Report }) => (
   <Page size="A4" style={s.page}>
     <PageHeader subtitle="FINMA 08/2024 ALIGNMENT" />
     <View style={s.body}>
-      <SectionHeading num="01A" title="FINMA GUIDANCE 08/2024 ALIGNMENT SCORECARD" />
+      <SectionHeading
+        num="01A"
+        title="FINMA GUIDANCE 08/2024 ALIGNMENT SCORECARD"
+      />
       <Text style={s.regulatoryIntro}>{FINMA_ALIGNMENT_INTRO}</Text>
       <Text style={s.regulatoryDisclaimer}>{FINMA_ALIGNMENT_DISCLAIMER}</Text>
 
       <View style={s.regulatoryTableHeader}>
-        <Text style={[s.regulatoryHeaderCell, { width: "25%" }]}>FINMA PRINCIPLE</Text>
-        <Text style={[s.regulatoryHeaderCell, { width: "13%" }]}>AODIT LEVEL</Text>
-        <Text style={[s.regulatoryHeaderCell, { width: "62%" }]}>WHY - HONEST EXPLANATION</Text>
+        <Text style={[s.regulatoryHeaderCell, { width: "25%" }]}>
+          FINMA PRINCIPLE
+        </Text>
+        <Text style={[s.regulatoryHeaderCell, { width: "13%" }]}>
+          AODIT LEVEL
+        </Text>
+        <Text style={[s.regulatoryHeaderCell, { width: "62%" }]}>
+          WHY - HONEST EXPLANATION
+        </Text>
       </View>
       {FINMA_ALIGNMENT_ROWS.map((row) => {
         const th = alignmentLevelTheme(row.level);
@@ -1290,7 +1295,11 @@ const RegulatoryFinmaScorecardPage = ({ report }: { report: Report }) => (
             <Text
               style={[
                 s.regulatoryCell,
-                { width: "25%", fontFamily: "Helvetica-Bold", color: th.textColor },
+                {
+                  width: "25%",
+                  fontFamily: "Helvetica-Bold",
+                  color: th.textColor,
+                },
               ]}
             >
               {row.principle}
@@ -1302,7 +1311,9 @@ const RegulatoryFinmaScorecardPage = ({ report }: { report: Report }) => (
                 </Text>
               </View>
             </View>
-            <Text style={[s.regulatoryCell, { width: "62%", color: th.textColor }]}>
+            <Text
+              style={[s.regulatoryCell, { width: "62%", color: th.textColor }]}
+            >
               {row.explanation}
             </Text>
           </View>
@@ -1352,7 +1363,11 @@ const RegulatoryStandardsAddedValuePage = ({ report }: { report: Report }) => (
             <Text
               style={[
                 s.regulatoryCell,
-                { width: "27%", fontFamily: "Helvetica-Bold", color: th.textColor },
+                {
+                  width: "27%",
+                  fontFamily: "Helvetica-Bold",
+                  color: th.textColor,
+                },
               ]}
             >
               {row.standard}
@@ -1364,7 +1379,9 @@ const RegulatoryStandardsAddedValuePage = ({ report }: { report: Report }) => (
                 </Text>
               </View>
             </View>
-            <Text style={[s.regulatoryCell, { width: "60%", color: th.textColor }]}>
+            <Text
+              style={[s.regulatoryCell, { width: "60%", color: th.textColor }]}
+            >
               {row.explanation}
             </Text>
           </View>
@@ -1376,7 +1393,10 @@ const RegulatoryStandardsAddedValuePage = ({ report }: { report: Report }) => (
           Three things AODIT adds that no standard currently requires
         </Text>
         {AODIT_ADDED_VALUE_POINTS.map((point, idx) => (
-          <Text key={point} style={[s.addedValueItem, idx === 2 ? { marginBottom: 0 } : {}]}>
+          <Text
+            key={point}
+            style={[s.addedValueItem, idx === 2 ? { marginBottom: 0 } : {}]}
+          >
             ({idx + 1}) {point}
           </Text>
         ))}

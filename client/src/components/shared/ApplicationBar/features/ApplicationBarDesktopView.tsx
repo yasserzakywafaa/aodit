@@ -9,6 +9,7 @@ import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import ComplianceDropdown from "src/components/navbar/ComplianceDropdown";
 
 const NAV_LINKS = [
   { id: "reports", label: "Reports" },
@@ -75,6 +76,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                   {label}
                 </Button>
               ))}
+              <ComplianceDropdown />
               <Button
                 component="a"
                 variant="contained"

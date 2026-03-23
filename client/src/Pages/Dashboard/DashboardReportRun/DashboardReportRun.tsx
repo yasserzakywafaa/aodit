@@ -1,8 +1,12 @@
 import { Box, Button, Typography } from "@mui/material";
+import {
+  DEFAULT_FRAMEWORK_VERSION,
+  getFrameworkDefinition,
+  resolveFrameworkVersion,
+} from "src/shared/constants/aoditFramework";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { AODIT_DIMENSIONS } from "src/shared/constants/aoditFramework";
 import END_POINTS from "src/application/shared/endpoints";
 import type { FeedItem } from "src/shared/types/reportRun";
 import type { Report } from "src/shared/types/report";
@@ -10,29 +14,6 @@ import axios from "axios";
 import { routes } from "src/application/routes";
 
 const POLL_INTERVAL_MS = 3000;
-
-const TURN_NAMES = [
-  "BASELINE",
-  "EXTENSION",
-  "CONTRADICTION",
-  "CHALLENGE",
-  "ESCALATION",
-  "SYNTHESIS",
-  "SELF-ASSESS",
-  "RECOVERY",
-] as const;
-
-/** Map server turn-type strings (e.g. "SelfAssessment") to TURN_NAMES display values. */
-const SERVER_TURN_TO_DISPLAY: Record<string, (typeof TURN_NAMES)[number]> = {
-  Baseline: "BASELINE",
-  Extension: "EXTENSION",
-  Contradiction: "CONTRADICTION",
-  Challenge: "CHALLENGE",
-  Escalation: "ESCALATION",
-  Synthesis: "SYNTHESIS",
-  SelfAssessment: "SELF-ASSESS",
-  Recovery: "RECOVERY",
-};
 
 const scoreColor = (score: string): string => {
   const n = parseFloat(score);
@@ -96,7 +77,7 @@ const DashboardReportRun = () => {
           setDimensionProgress(data.dimensionProgress);
         if (data.currentTurnName)
           setCurrentTurnName(
-            SERVER_TURN_TO_DISPLAY[data.currentTurnName] ??
+            serverTurnToDisplay[data.currentTurnName] ??
               data.currentTurnName.toUpperCase(),
           );
         setRunStatus(data.status ?? "running");
@@ -127,10 +108,23 @@ const DashboardReportRun = () => {
   }, [reportId, report]);
 
   const isFinished = runStatus === "completed" || runStatus === "failed";
+  const frameworkVersion = resolveFrameworkVersion(
+    report?.frameworkVersion ? DEFAULT_FRAMEWORK_VERSION : "aodit_v1",
+  );
+  const framework = getFrameworkDefinition(frameworkVersion);
+  const turnDisplayNames = framework.turnProtocol.map((turn) =>
+    turn.name.toUpperCase(),
+  );
+  const serverTurnToDisplay = Object.fromEntries(
+    framework.turnTypes.map((turnType, idx) => [
+      turnType,
+      turnDisplayNames[idx] ?? turnType.toUpperCase(),
+    ]),
+  ) as Record<string, string>;
   const displayTotal =
     totalScenarios ||
     (report?.scenariosPerDimension ?? 20) *
-      5 *
+      framework.dimensions.length *
       (report?.modelsToTest?.length ?? 1);
 
   // Derived stats
@@ -150,13 +144,16 @@ const DashboardReportRun = () => {
     const entry = dimensionProgress[dim];
     if (entry && entry.total > 0) return entry;
     // Fallback for initial load before first poll resolves
-    const fallbackTotal = Math.max(1, Math.floor(displayTotal / 5));
+    const fallbackTotal = Math.max(
+      1,
+      Math.floor(displayTotal / framework.dimensions.length),
+    );
     return { completed: 0, total: fallbackTotal };
   };
 
   // Current turn index driven by server-pushed currentTurnName (not derived from feed items)
   const latestItem = feedItems[0] ?? null;
-  const currentTurnIdx = (TURN_NAMES as readonly string[]).indexOf(
+  const currentTurnIdx = (turnDisplayNames as readonly string[]).indexOf(
     currentTurnName,
   );
 
@@ -264,7 +261,7 @@ const DashboardReportRun = () => {
             "&::-webkit-scrollbar-thumb": { bgcolor: "divider" },
           }}
         >
-          {AODIT_DIMENSIONS.map((dim) => {
+          {framework.dimensions.map((dim) => {
             const { completed: dDone, total: dTotal } = getDimProgress(dim);
             const dPct = dTotal > 0 ? Math.round((dDone / dTotal) * 100) : 0;
             return (
@@ -555,7 +552,7 @@ const DashboardReportRun = () => {
         >
           {/* 8 turn dots */}
           <Box sx={{ display: "flex", gap: 0.5 }}>
-            {TURN_NAMES.map((_, i) => (
+            {turnDisplayNames.map((_, i) => (
               <Box
                 key={i}
                 sx={{

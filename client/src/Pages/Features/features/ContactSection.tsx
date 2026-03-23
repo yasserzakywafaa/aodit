@@ -61,7 +61,7 @@ const ContactSection = () => (
             mb: 4,
           }}
         >
-          Tell us about your agent. We will run it through the AODIT-5 framework
+          Tell us about your agent. We will run it through the AODIT-6 framework
           and deliver an institutional-grade rating report. Enterprise pricing
           from CHF 2,000.
         </Typography>

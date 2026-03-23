@@ -94,8 +94,6 @@ const END_POINTS = {
         `/api/v1/dashboard/reports/${reportId}/run-status`,
       GET_SCENARIO_RESULTS: (reportId: string) =>
         `/api/v1/dashboard/reports/${reportId}/scenario-results`,
-      BACKFILL_DEEP_DIVE: (reportId: string) =>
-        `/api/v1/dashboard/reports/${reportId}/backfill-deep-dive`,
     },
   },
 };

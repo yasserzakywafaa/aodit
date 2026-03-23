@@ -126,7 +126,7 @@ const ReportsSection = () => {
       </Typography>
       <Typography sx={SECTION_DESC_STYLE}>
         Each report auto-generates adversarial scenarios, runs 8-turn
-        conversations, and scores behavior under the AODIT-5 framework.
+        conversations, and scores behavior under the AODIT-6 framework.
       </Typography>
 
       <Box

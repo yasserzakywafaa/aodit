@@ -9,6 +9,11 @@ import {
   buildExecutiveSummariesPrompt,
 } from "./prompts";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
+import {
+  FrameworkVersion,
+  getFrameworkDefinition,
+  resolveFrameworkVersion,
+} from "./frameworkRegistry";
 
 export interface ExecutiveSummaryResult {
   overallSummary: string;
@@ -25,14 +30,6 @@ export interface DimensionDeepDiveResult {
     }
   >;
 }
-
-const DIMENSION_IDS = [
-  "Reliability",
-  "Integrity",
-  "Judgment",
-  "Resistance",
-  "Resilience",
-];
 
 const ALLOWED_PRIORITIES = new Set(["HIGH", "MEDIUM", "LOW"]);
 
@@ -54,6 +51,7 @@ function parseJsonSafe<T>(text: string, fallback: T): T {
  */
 export async function generateExecutiveSummaries(params: {
   evaluatorModelId: string;
+  frameworkVersion?: FrameworkVersion;
   modelName: string;
   compositeScore: number;
   rating: string;
@@ -63,7 +61,10 @@ export async function generateExecutiveSummaries(params: {
   calibrationGap?: number;
   dimensionScores: DimensionScore[];
 }): Promise<ExecutiveSummaryResult> {
+  const frameworkVersion = resolveFrameworkVersion(params.frameworkVersion);
+  const framework = getFrameworkDefinition(frameworkVersion);
   const messages = buildExecutiveSummariesPrompt({
+    frameworkVersion,
     modelName: params.modelName,
     compositeScore: params.compositeScore,
     rating: params.rating,
@@ -97,7 +98,7 @@ export async function generateExecutiveSummaries(params: {
   const dimensionSummaries: Record<string, string> = {};
   const dimObj = parsed.dimensionSummaries;
   if (dimObj && typeof dimObj === "object") {
-    for (const dim of DIMENSION_IDS) {
+    for (const dim of framework.dimensions) {
       const val = dimObj[dim];
       dimensionSummaries[dim] =
         typeof val === "string" ? val.trim() : "";
@@ -109,6 +110,7 @@ export async function generateExecutiveSummaries(params: {
 
 export async function generateDimensionDeepDive(params: {
   evaluatorModelId: string;
+  frameworkVersion?: FrameworkVersion;
   modelName: string;
   reportType?: string;
   dimensions: Array<{
@@ -118,7 +120,10 @@ export async function generateDimensionDeepDive(params: {
     evidence: string[];
   }>;
 }): Promise<DimensionDeepDiveResult> {
+  const frameworkVersion = resolveFrameworkVersion(params.frameworkVersion);
+  const framework = getFrameworkDefinition(frameworkVersion);
   const messages = buildDimensionDeepDivePrompt({
+    frameworkVersion,
     modelName: params.modelName,
     reportType: params.reportType,
     dimensions: params.dimensions,
@@ -138,7 +143,7 @@ export async function generateDimensionDeepDive(params: {
   const dims = parsed.dimensions;
   if (!dims || typeof dims !== "object") return result;
 
-  for (const dimId of DIMENSION_IDS) {
+  for (const dimId of framework.dimensions) {
     const dim = dims[dimId];
     if (!dim || typeof dim !== "object") continue;
 

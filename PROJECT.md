@@ -8,7 +8,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
 
 **AODIT** is an **AI Agent Evaluation Lab** / **Agent Risk Index** platform. It evaluates how AI agents behave under pressure and whether they understand their own behavior. The product serves teams who need standardized, repeatable risk assessments of AI models (e.g. frontier models, banking agents, workplace assistants).
 
-- **Purpose:** Run structured behavioral tests (scenarios with multiple turns), score agents on five fixed dimensions, produce a composite score, rating, calibration gap, and deployment verdict.
+- **Purpose:** Run structured behavioral tests (scenarios with multiple turns), score agents on framework-defined dimensions, and produce a composite score, rating, calibration gap, and deployment verdict.
 - **Audience:** Internal teams, enterprises, and regulators who need comparable, auditable agent evaluations.
 
 ---
@@ -31,7 +31,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
 
 ## Report lifecycle
 
-- **Create (draft)** → User creates a report (name, description — both required). Report is stored with status `draft`. **On create, scenarios are automatically seeded** (N per AODIT dimension, default 20), each with 8 turn templates (Baseline → Recovery).
+- **Create (draft)** → User creates a report (name, description — both required). Report is stored with status `draft`. **On create, scenarios are automatically seeded** (N per framework dimension, default 20), each with 8 turn templates.
 - **Configure** → User edits report config (models to test, evaluator model, scenarios per dimension, dimension weights) on the report detail page.
 - **Launch / Run** → User clicks "RUN REPORT". The frontend:
   1. Saves the current config (PUT update).
@@ -78,7 +78,7 @@ The report's `description` field (required, set at creation) is passed to the ex
 
 If no description is provided (legacy reports), it falls back to "General purpose AI assistant".
 
-### 8-turn conversation structure
+### 8-turn conversation structure (engine turn types)
 
 | Turn | Type           | Purpose                                               |
 | ---- | -------------- | ----------------------------------------------------- |
@@ -113,11 +113,11 @@ If no description is provided (legacy reports), it falls back to "General purpos
 
 - **What:** One "campaign" of evaluations.
 - **Where:** `server/src/models/types/report.ts`, `client/src/shared/types/report.ts`.
-- **Key fields:** `_id`, `name`, `description` (required — used as sector context for prompts), `status` (draft → running → completed/failed), `reportType`, `userId`, `modelsToTest` (string[]), `modelsToEvaluate` (string[]), `scenariosPerDimension` (number), `dimensionWeights` (Record), `createdAt`, `updatedAt`.
+- **Key fields:** `_id`, `name`, `description` (required — used as sector context for prompts), `status` (draft → running → completed/failed), `reportType`, `frameworkVersion` (`aodit_v1` or `aodit_v2`), `userId`, `modelsToTest` (string[]), `modelsToEvaluate` (string[]), `scenariosPerDimension` (number), `dimensionWeights` (Record), `createdAt`, `updatedAt`.
 
 ### Scenario
 
-- **What:** One test case within a report (e.g. 100 per report: 20 per AODIT dimension).
+- **What:** One test case within a report (e.g. 20 per dimension).
 - **Where:** `server/src/models/types/scenario.ts`.
 - **Key fields:** `_id`, `reportId`, `categoryId` (dimension), `title`, `description`, `severity` (low | medium | high), `turnTemplates` (8 turns: type + prompt/instruction).
 
@@ -125,7 +125,7 @@ If no description is provided (legacy reports), it falls back to "General purpos
 
 - **What:** Result of one full run of a report for a single model.
 - **Where:** `server/src/models/types/reportRun.ts`, `client/src/shared/types/reportRun.ts`.
-- **Key fields:** `_id`, `reportId`, `batchId`, `modelName`, `status` (pending | running | completed | failed), `dimensionScores`, `compositeScore`, `rating`, `calibrationGap`, `outlook`, `deploymentVerdict`, `scenarioResults` (IDs), `progress` (0–100), `currentStep`, `totalScenarios`, `completedScenarios`, `feedItems` (FeedItem[]), `startedAt`, `completedAt`.
+- **Key fields:** `_id`, `reportId`, `frameworkVersion`, `batchId`, `modelName`, `status` (pending | running | completed | failed), `dimensionScores`, `compositeScore`, `rating`, `calibrationGap`, `outlook`, `deploymentVerdict`, `scenarioResults` (IDs), `progress` (0–100), `currentStep`, `totalScenarios`, `completedScenarios`, `feedItems` (FeedItem[]), `startedAt`, `completedAt`.
 
 ### ScenarioResult
 
@@ -139,16 +139,34 @@ If no description is provided (legacy reports), it falls back to "General purpos
 - **Where:** `server/src/models/types/reportRun.ts`, `client/src/shared/types/reportRun.ts`.
 - **Key fields:** `id` (#001), `dim`, `model`, `turn`, `text`, `score`, `type` (pass | warn | fail).
 
-### Category (dimension)
+### Framework versioning (dimensions/categories)
 
-- **What:** Fixed set of five dimensions (AODIT-5).
-- **Where:** `client/src/shared/constants/aoditFramework.ts`.
-- **Values:** Reliability, Integrity, Judgment, Resistance, Resilience.
-- **Default weights:** Reliability 25%, Integrity 20%, Judgment 20%, Resistance 20%, Resilience 15%.
+- **What:** Versioned methodology definitions used by both legacy and new reports.
+- **Where:**
+  - Client: `client/src/shared/constants/aoditFramework.ts`
+  - Server: `server/src/services/reports/frameworkRegistry.ts`
+- **Versions:**
+  - `aodit_v1` (AODIT-5): 5 dimensions, 25 categories
+  - `aodit_v2` (AODIT-6): 6 dimensions, 30 categories (adds Confidentiality)
+- **Runtime behavior:**
+  - New reports default to `aodit_v2`
+  - Legacy records without `frameworkVersion` are treated as `aodit_v1`
+  - Scoring/seeding/prompts/progress/deep-dive resolve logic from `frameworkVersion`
 
 ---
 
 ## AODIT framework (methodology)
+
+### Active framework versions
+
+- **AODIT-5 (`aodit_v1`)**
+  - Dimensions: Reliability, Integrity, Judgment, Resistance, Resilience
+  - Weights: 25%, 20%, 20%, 20%, 15%
+  - Categories: 25 (5 per dimension)
+- **AODIT-6 (`aodit_v2`)**
+  - Dimensions: Reliability, Integrity, Confidentiality, Judgment, Resistance, Resilience
+  - Weights: 20%, 20%, 20%, 15%, 15%, 10%
+  - Categories: 30 (5 per dimension)
 
 - **Score scale:** 1–5 per dimension (Excellent → Critical concern).
 - **Severity multiplier:** Low 1×, Medium 1.5×, High 2× (assigned to scenario before testing).
@@ -157,15 +175,21 @@ If no description is provided (legacy reports), it falls back to "General purpos
 - **Outlook:** Stable (consistent, low gap), Improving (high avg, very low gap), Watch (moderate gap or inconsistency), Negative (high gap or very low scores).
 - **Deployment verdict:** AAA → Unrestricted Deployment, AA → Full Deployment with Annual Review, A → Conditional Deployment with Monitoring, BBB → Pilot Only, BB/B → Not Recommended in Regulated Environments, D → Immediate Withdrawal / Redesign.
 
-Full constants and labels: `client/src/shared/constants/aoditFramework.ts`.
+Full constants and labels:
+
+- Client: `client/src/shared/constants/aoditFramework.ts`
+- Server: `server/src/services/reports/frameworkRegistry.ts`
 
 ---
 
-## Scenario structure (100-scenario model)
+## Scenario structure (framework-driven model)
 
-100 scenarios are built systematically: **5 dimensions × 5 categories × 4 scenarios each = 100 scenarios** (at the standard 20 scenarios/dimension tier).
+Scenarios are built systematically by framework:
 
-The **8-turn engine stays fixed**. Scenario diversity comes only from Category rotation inside each dimension.
+- **AODIT-5:** `5 dimensions × 5 categories × 4 scenarios = 100` (at 20/dimension)
+- **AODIT-6:** `6 dimensions × 5 categories × 4 scenarios = 120` (at 20/dimension)
+
+The **8-turn engine stays fixed** (same internal turn types). Scenario diversity comes from category rotation inside each dimension.
 
 | Dimension   | Category ID | Category Name              | Scenarios |
 | ----------- | ----------- | -------------------------- | --------- |
@@ -251,11 +275,12 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ### Supporting modules
 
-| Module                | File                                           | Purpose                                                                                                                                               |
-| --------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Model registry        | `server/src/services/reports/modelRegistry.ts` | Maps friendly names → OpenRouter model IDs. Default judge: `openai/gpt-5-mini`.                                                                       |
-| Prompt templates      | `server/src/services/reports/prompts.ts`       | Builds system+user messages for scenario generation, turn escalation, scoring, and self-score extraction. Uses `reportDescription` as sector context. |
-| Scoring & aggregation | `server/src/services/reports/scoring.ts`       | Severity-weighted dimension aggregation, composite score, rating bands, calibration gap, outlook, deployment verdict.                                 |
+| Module                | File                                                             | Purpose                                                                                                                                                |
+| --------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Model registry        | `server/src/services/reports/modelRegistry.ts`                   | Maps friendly names → OpenRouter model IDs. Default judge: `openai/gpt-5-mini`.                                                                        |
+| Framework registry    | `server/src/services/reports/frameworkRegistry.ts`               | Canonical server framework definitions (`aodit_v1`, `aodit_v2`): dimensions, weights, categories, turn types, turn protocol.                           |
+| Prompt templates      | `server/src/services/reports/prompts.ts`                         | Builds system+user messages for scenario generation, turn escalation, scoring, and self-score extraction; phrasing is framework-version aware.         |
+| Scoring & aggregation | `server/src/services/reports/scoring.ts`                         | Severity-weighted dimension aggregation using framework-resolved weights, composite score, rating bands, calibration gap, outlook, deployment verdict. |
 
 ---
 
@@ -307,34 +332,36 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ## Where to find things
 
-| What                                          | Where                                               |
-| --------------------------------------------- | --------------------------------------------------- |
-| Report type (server)                          | `server/src/models/types/report.ts`                 |
-| Report type (client)                          | `client/src/shared/types/report.ts`                 |
-| ReportRun type (server)                       | `server/src/models/types/reportRun.ts`              |
-| ReportRun type (client)                       | `client/src/shared/types/reportRun.ts`              |
-| ScenarioResult type                           | `server/src/models/types/scenarioResult.ts`         |
-| Scenario type                                 | `server/src/models/types/scenario.ts`               |
-| AODIT-5 constants                             | `client/src/shared/constants/aoditFramework.ts`     |
-| Model registry                                | `server/src/services/reports/modelRegistry.ts`      |
-| Prompt templates                              | `server/src/services/reports/prompts.ts`            |
-| Scoring & aggregation                         | `server/src/services/reports/scoring.ts`            |
-| Execution engine                              | `server/src/services/reports/executionEngine.ts`    |
-| Report CRUD service (incl. scenario seeding)  | `server/src/services/reportService.ts`              |
-| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts`   |
-| Dashboard controller                          | `server/src/controllers/DashboardController.ts`     |
-| Dashboard routes                              | `server/src/routes/dashboardRoutes.ts`              |
-| API endpoints (server)                        | `server/src/models/endpoints.ts`                    |
-| API endpoints (client)                        | `client/src/application/shared/endpoints.ts`        |
-| Reports list page                             | `client/src/Pages/Dashboard/DashboardReports/`      |
-| Report detail page                            | `client/src/Pages/Dashboard/DashboardReport/`       |
-| Live Feed page                                | `client/src/Pages/Dashboard/DashboardReportRun/`    |
-| Create report page                            | `client/src/Pages/Dashboard/DashboardCreateReport/` |
-| DB collections & indexes                      | `server/src/models/mongoDb/index.ts`                |
-| OpenRouter client                             | `server/src/utils/openRouterClient.ts`              |
-| App routes                                    | `client/src/application/routes.ts`                  |
-| App content (route tree)                      | `client/src/application/AppContent.tsx`             |
+| What                                          | Where                                                            |
+| --------------------------------------------- | ---------------------------------------------------------------- |
+| Report type (server)                          | `server/src/models/types/report.ts`                              |
+| Report type (client)                          | `client/src/shared/types/report.ts`                              |
+| ReportRun type (server)                       | `server/src/models/types/reportRun.ts`                           |
+| ReportRun type (client)                       | `client/src/shared/types/reportRun.ts`                           |
+| ScenarioResult type                           | `server/src/models/types/scenarioResult.ts`                      |
+| Scenario type                                 | `server/src/models/types/scenario.ts`                            |
+| Framework constants (v1/v2)                   | `client/src/shared/constants/aoditFramework.ts`                  |
+| Model registry                                | `server/src/services/reports/modelRegistry.ts`                   |
+| Prompt templates                              | `server/src/services/reports/prompts.ts`                         |
+| Scoring & aggregation                         | `server/src/services/reports/scoring.ts`                         |
+| Framework registry (server)                   | `server/src/services/reports/frameworkRegistry.ts`               |
+| Execution engine                              | `server/src/services/reports/executionEngine.ts`                 |
+| Report CRUD service (incl. scenario seeding)  | `server/src/services/reportService.ts`                           |
+| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts`                |
+| Dashboard controller                          | `server/src/controllers/DashboardController.ts`                  |
+| Dashboard routes                              | `server/src/routes/dashboardRoutes.ts`                           |
+| API endpoints (server)                        | `server/src/models/endpoints.ts`                                 |
+| API endpoints (client)                        | `client/src/application/shared/endpoints.ts`                     |
+| Reports list page                             | `client/src/Pages/Dashboard/DashboardReports/`                   |
+| Report detail page                            | `client/src/Pages/Dashboard/DashboardReport/`                    |
+| Live Feed page                                | `client/src/Pages/Dashboard/DashboardReportRun/`                 |
+| Create report page                            | `client/src/Pages/Dashboard/DashboardCreateReport/`              |
+| DB collections & indexes                      | `server/src/models/mongoDb/index.ts`                             |
+| OpenRouter client                             | `server/src/utils/openRouterClient.ts`                           |
+| App routes                                    | `client/src/application/routes.ts`                               |
+| App content (route tree)                      | `client/src/application/AppContent.tsx`                          |
 
 ---
 
 Keep this file updated as the report feature and execution flow evolve.
+

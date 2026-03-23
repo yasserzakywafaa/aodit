@@ -96,9 +96,4 @@ dashboardRoutes.get(
   DashboardController.getScenarioResults,
 );
 
-dashboardRoutes.post(
-  END_POINTS.DASHBOARD.REPORTS.BACKFILL_DEEP_DIVE(":reportId"),
-  DashboardController.backfillReportDeepDive,
-);
-
 export default dashboardRoutes;

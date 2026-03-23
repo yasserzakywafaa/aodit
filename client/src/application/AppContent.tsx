@@ -55,6 +55,12 @@ const PrivacyPolicyPage = lazy(
 const TermsAndConditionsPage = lazy(
   () => import("../Pages/TermsAndConditions/TermsAndConditions"),
 );
+const ComplianceFinmaPage = lazy(
+  () => import("../Pages/Compliance/Finma/ComplianceFinma"),
+);
+const ComplianceEuAiActPage = lazy(
+  () => import("../Pages/Compliance/EuAiAct/ComplianceEuAiAct"),
+);
 
 // Dashboard Layout and Pages
 const DashboardLayout = lazy(
@@ -119,6 +125,14 @@ const AppContent = () => {
             <Route index path={routes.features} element={<FeaturesPage />} />
             <Route path={routes.pricing} element={<PricingPage />} />
             <Route path={routes.contact} element={<ContactPage />} />
+            <Route
+              path={routes.compliance.finma}
+              element={<ComplianceFinmaPage />}
+            />
+            <Route
+              path={routes.compliance.euAiAct}
+              element={<ComplianceEuAiActPage />}
+            />
             <Route
               path={routes.privacyPolicy}
               element={<PrivacyPolicyPage />}

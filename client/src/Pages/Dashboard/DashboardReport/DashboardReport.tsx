@@ -1,8 +1,4 @@
 import {
-  AODIT_DIMENSIONS,
-  DIMENSION_WEIGHTS,
-} from "src/shared/constants/aoditFramework";
-import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
@@ -18,6 +14,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import {
+  DEFAULT_FRAMEWORK_VERSION,
+  getFrameworkDefinition,
+  resolveFrameworkVersion,
+} from "src/shared/constants/aoditFramework";
 import { ExpandMore, PlayArrow, Save, Visibility } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -100,18 +101,23 @@ const DashboardReport = () => {
   };
 
   const modelsToTest = report?.modelsToTest ?? [];
-  const totalScenarios = (report?.scenariosPerDimension ?? 20) * 5;
+  const frameworkVersion = resolveFrameworkVersion(
+    report?.frameworkVersion ? DEFAULT_FRAMEWORK_VERSION : "aodit_v1",
+  );
+  const framework = getFrameworkDefinition(frameworkVersion);
+  const totalScenarios =
+    (report?.scenariosPerDimension ?? 20) * framework.dimensions.length;
   const modelsCount = modelsToTest.length;
   const datapoints = totalScenarios * 8 * Math.max(modelsCount, 1);
   const weightLabels = (
     report?.dimensionWeights
-      ? AODIT_DIMENSIONS.map(
+      ? framework.dimensions.map(
           (d) =>
             `${d.slice(0, 3).toUpperCase()} ${Math.round((report.dimensionWeights?.[d] ?? 0) * 100)}%`,
         )
-      : AODIT_DIMENSIONS.map(
+      : framework.dimensions.map(
           (d) =>
-            `${d.slice(0, 3).toUpperCase()} ${Math.round((DIMENSION_WEIGHTS[d] ?? 0) * 100)}%`,
+            `${d.slice(0, 3).toUpperCase()} ${Math.round((framework.weights[d] ?? 0) * 100)}%`,
         )
   ).join(" · ");
   // // Models to Evaluate: Claude only for now (fixed)
@@ -140,6 +146,7 @@ const DashboardReport = () => {
       name: report.name,
       description: report.description,
       scenariosPerDimension: report.scenariosPerDimension,
+      frameworkVersion,
       dimensionWeights: report.dimensionWeights,
       modelsToTest: report.modelsToTest,
       modelsToEvaluate: ["Claude"],
@@ -153,6 +160,7 @@ const DashboardReport = () => {
         name: report.name,
         description: report.description,
         scenariosPerDimension: report.scenariosPerDimension,
+        frameworkVersion,
         dimensionWeights: report.dimensionWeights,
         modelsToTest: report.modelsToTest,
         modelsToEvaluate: ["Claude"],
@@ -181,7 +189,7 @@ const DashboardReport = () => {
             {report?.name || "Report"}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {totalScenarios} SCENARIOS · 8 TURNS · AODIT-5
+            {totalScenarios} SCENARIOS · 8 TURNS · {framework.marketingLabel}
           </Typography>
           <Typography variant="caption" color="text.secondary">
             {weightLabels}
@@ -319,10 +327,10 @@ const DashboardReport = () => {
                   <TableBody>
                     {(latestRun.dimensionScores?.length
                       ? latestRun.dimensionScores
-                      : AODIT_DIMENSIONS.map((dim) => ({
+                      : framework.dimensions.map((dim) => ({
                           dimensionId: dim,
                           score: 0,
-                          weight: DIMENSION_WEIGHTS[dim] ?? 0,
+                          weight: framework.weights[dim] ?? 0,
                         }))
                     ).map(
                       (row: {
@@ -467,7 +475,7 @@ const DashboardReport = () => {
                       : "Download Report PDF"}
                   </Button>
 
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     size="large"
                     onClick={() => handleDownloadPDF("transcript")}
@@ -483,7 +491,7 @@ const DashboardReport = () => {
                     {pdfModeLoading === "transcript"
                       ? "Generating transcript…"
                       : "Download Transcript PDF"}
-                  </Button>
+                  </Button> */}
                 </Box>
               </>
             ) : (

@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Drawer, MenuItem, Typography } from "@mui/material";
 import {
   LockOpenOutlined,
   MenuOutlined,
@@ -15,6 +8,7 @@ import Logo, { LogoComponentEnum } from "../../Logo";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Authentication } from "src/application/store/state";
+import ComplianceDropdown from "src/components/navbar/ComplianceDropdown";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
@@ -113,7 +107,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   </MenuItem>
                 ))}
 
-                <Divider sx={{ my: 2, width: "80%", mx: "auto" }} />
+                <ComplianceDropdown />
 
                 <MenuItem
                   className="menu-item"

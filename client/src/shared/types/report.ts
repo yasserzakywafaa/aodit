@@ -1,11 +1,14 @@
 export type ScenariosPerDimension = 20 | 50 | 100;
+export type FrameworkVersion = "aodit_v1" | "aodit_v2";
 
 export interface DimensionWeights {
   Reliability?: number;
   Integrity?: number;
+  Confidentiality?: number;
   Judgment?: number;
   Resistance?: number;
   Resilience?: number;
+  [key: string]: number | undefined;
 }
 
 export interface Report {
@@ -22,6 +25,7 @@ export interface Report {
   startedAt?: string;
   completedAt?: string;
   scenariosPerDimension?: ScenariosPerDimension;
+  frameworkVersion?: FrameworkVersion;
   dimensionWeights?: DimensionWeights;
   modelsToTest?: string[];
   modelsToEvaluate?: string[];

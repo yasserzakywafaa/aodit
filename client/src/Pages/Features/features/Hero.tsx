@@ -58,7 +58,7 @@ const Hero = () => {
             mb: 3.5,
           }}
         >
-          // Swiss Lab for Intelligence (Swissli)
+          // Swiss Lab of Intelligence (Swissli)
         </Typography>
 
         {/* Headline */}
@@ -113,7 +113,7 @@ const Hero = () => {
             mb: 6,
           }}
         >
-          AODIT rates any AI agent across five behavioral dimensions using
+          AODIT-6 rates any AI agent across six behavioral dimensions using
           structured adversarial testing. Independent. Institutional.
           Comparable.
         </Typography>

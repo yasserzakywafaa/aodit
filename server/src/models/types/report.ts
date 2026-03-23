@@ -1,11 +1,14 @@
 export type ScenariosPerDimension = 20 | 50 | 100;
+export type FrameworkVersion = "aodit_v1" | "aodit_v2";
 
 export interface DimensionWeights {
   Reliability?: number;
   Integrity?: number;
+  Confidentiality?: number;
   Judgment?: number;
   Resistance?: number;
   Resilience?: number;
+  [key: string]: number | undefined;
 }
 
 export interface Report {
@@ -23,8 +26,10 @@ export interface Report {
   executionStatus?: "pending" | "running" | "completed" | "failed" | "scheduled";
   startedAt?: string;
   completedAt?: string;
-  /** Scenarios per dimension; total scenarios = scenariosPerDimension * 5. Default 20. */
+  /** Scenarios per dimension; total scenarios = scenariosPerDimension * dimensionCount. */
   scenariosPerDimension?: ScenariosPerDimension;
+  /** Framework version that defines dimensions, categories, weights, and turns. */
+  frameworkVersion?: FrameworkVersion;
   /** Weights per dimension (must sum to 1). */
   dimensionWeights?: DimensionWeights;
   /** Model ids/names to run tests on */

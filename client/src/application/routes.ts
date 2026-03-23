@@ -8,7 +8,10 @@ export const routes = {
   features: `/`,
   pricing: `/pricing`,
   howItWorks: `/how-it-works`,
-
+  compliance: {
+    finma: `/compliance/finma`,
+    euAiAct: `/compliance/eu-ai-act`,
+  },
   contact: `/contact`,
   privacyPolicy: `/privacy-policy`,
   termsAndConditions: `/terms-and-conditions`,
@@ -30,7 +33,7 @@ export const routes = {
     base: "/dashboard",
     user: {
       base: "/dashboard/users",
-      profile: "/dashboard/users/profile",
+      profile: "/dashboard/profile",
       userById: (userId: string) => `/dashboard/users/${userId}`,
       userReports: (userId: string) => `/dashboard/users/${userId}/reports`,
     },

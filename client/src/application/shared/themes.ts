@@ -117,7 +117,6 @@ export const theme = createTheme({
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius,
           backgroundImage: "unset",
           border: `1px solid ${primaryColor}`,
         },
@@ -140,6 +139,13 @@ export const theme = createTheme({
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius,
+        },
+      },
+    },
   },
 });
 
@@ -150,7 +156,7 @@ export const lightTheme = createTheme({
     primary: { main: primaryColor },
     secondary: { main: lightGreen },
     background: { default: lightGreen },
-    text: { primary: black, secondary: "#000000" },
+    text: { primary: black, secondary: grey },
     divider: primaryColor,
   },
 });
@@ -162,7 +168,7 @@ export const darkTheme = createTheme({
     primary: { main: primaryColor },
     secondary: { main: white },
     background: { default: black },
-    text: { primary: white, secondary: "#ffffff" },
+    text: { primary: white, secondary: grey },
     divider: primaryColor,
   },
 });

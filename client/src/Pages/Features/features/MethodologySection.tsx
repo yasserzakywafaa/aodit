@@ -1,19 +1,24 @@
 import {
-  fontFamilySans,
-  fontFamilySerif,
-  grey,
-} from "src/application/shared/themes";
-import { EIGHT_TURN_ADVERSARIAL_PROTOCOL } from "src/shared/constants/aoditFramework";
+  DEFAULT_FRAMEWORK_VERSION,
+  getFrameworkDefinition,
+} from "src/shared/constants/aoditFramework";
 
 import Box from "@mui/material/Box";
-import { Chip } from "@mui/material";
-import Divider from "@mui/material/Divider";
+import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
+import { fontFamilySerif } from "src/application/shared/themes";
+
+const framework = getFrameworkDefinition(DEFAULT_FRAMEWORK_VERSION);
+const dimensionCodeByName: Record<string, string> = {
+  Reliability: "R",
+  Integrity: "I",
+  Confidentiality: "C",
+  Judgment: "J",
+  Resistance: "T",
+  Resilience: "Z",
+};
 
 const SECTION_LABEL_STYLE = {
-  fontFamily: fontFamilySans,
-  fontSize: { xs: 12, md: 13 },
-  letterSpacing: "0.2em",
   textTransform: "uppercase" as const,
   color: "primary.main",
   mb: 6,
@@ -21,217 +26,6 @@ const SECTION_LABEL_STYLE = {
   alignItems: "center",
   gap: 2,
 };
-
-type MethodologyCategory = {
-  id: string;
-  name: string;
-  description: string;
-};
-
-type MethodologyDimension = {
-  id: string;
-  code: string;
-  weight: string;
-  question: string;
-  categories: MethodologyCategory[];
-};
-
-const dimensions: MethodologyDimension[] = [
-  {
-    id: "Reliability",
-    code: "R",
-    weight: "25%",
-    question:
-      "Does it maintain accurate outputs under repetition and contradiction?",
-    categories: [
-      {
-        id: "R1",
-        name: "Factual Consistency",
-        description:
-          "Checks whether outputs stay factually stable across repeated and paraphrased prompts.",
-      },
-      {
-        id: "R2",
-        name: "Contradiction Handling",
-        description:
-          "Measures whether conflicting statements are identified and resolved instead of repeated.",
-      },
-      {
-        id: "R3",
-        name: "Memory Persistence",
-        description:
-          "Assesses if key constraints and established facts are retained across turns.",
-      },
-      {
-        id: "R4",
-        name: "Sequence Logic",
-        description:
-          "Evaluates the ability to preserve ordered reasoning in multi-step workflows.",
-      },
-      {
-        id: "R5",
-        name: "Exception Reconciliation",
-        description:
-          "Tests integration of edge cases without breaking the main reasoning path.",
-      },
-    ],
-  },
-  {
-    id: "Integrity",
-    code: "I",
-    weight: "20%",
-    question:
-      "Does it disclose uncertainty and resist fabrication under authority pressure?",
-    categories: [
-      {
-        id: "I1",
-        name: "False Certainty",
-        description:
-          "Flags cases where uncertain claims are presented with unjustified confidence.",
-      },
-      {
-        id: "I2",
-        name: "Fabricated Source Handling",
-        description:
-          "Assesses resistance to inventing citations, references, and authorities.",
-      },
-      {
-        id: "I3",
-        name: "Bluff Resistance",
-        description:
-          "Tests whether the model avoids pretending expertise when evidence is weak.",
-      },
-      {
-        id: "I4",
-        name: "Uncertainty Disclosure",
-        description:
-          "Measures whether confidence limits are explicitly communicated at decision points.",
-      },
-      {
-        id: "I5",
-        name: "Confidence Under Pressure",
-        description:
-          "Evaluates calibration stability under urgency, status pressure, and reputational cues.",
-      },
-    ],
-  },
-  {
-    id: "Judgment",
-    code: "J",
-    weight: "20%",
-    question:
-      "Does it make proportional, ethically sound decisions under escalating stakes?",
-    categories: [
-      {
-        id: "J1",
-        name: "Proportional Action",
-        description:
-          "Checks whether actions match risk severity and reversibility requirements.",
-      },
-      {
-        id: "J2",
-        name: "Escalation Decisions",
-        description:
-          "Tests if high-risk conditions are escalated to human oversight at the right time.",
-      },
-      {
-        id: "J3",
-        name: "Boundary Handling",
-        description:
-          "Assesses adherence to legal, policy, and role constraints in ambiguous prompts.",
-      },
-      {
-        id: "J4",
-        name: "Ethical Prioritization",
-        description:
-          "Evaluates trade-off reasoning when safety and operational outcomes conflict.",
-      },
-      {
-        id: "J5",
-        name: "Authority Conflict",
-        description:
-          "Measures resistance to harmful instructions from simulated authority figures.",
-      },
-    ],
-  },
-  {
-    id: "Resistance",
-    code: "T",
-    weight: "20%",
-    question: "Does it resist jailbreaks, injections, and social engineering?",
-    categories: [
-      {
-        id: "T1",
-        name: "Jailbreak Attempts",
-        description:
-          "Stress-tests defenses against direct attempts to bypass policy and safeguards.",
-      },
-      {
-        id: "T2",
-        name: "Prompt Injection",
-        description:
-          "Measures susceptibility to embedded malicious instructions and context hijacking.",
-      },
-      {
-        id: "T3",
-        name: "Social Engineering",
-        description:
-          "Evaluates resistance to manipulation through urgency, empathy, and trust signals.",
-      },
-      {
-        id: "T4",
-        name: "Authority Spoofing",
-        description:
-          "Checks whether fake credentials can override established safety boundaries.",
-      },
-      {
-        id: "T5",
-        name: "Adversarial Reframing",
-        description:
-          "Tests if harmful goals disguised as benign requests are still blocked.",
-      },
-    ],
-  },
-  {
-    id: "Resilience",
-    code: "Z",
-    weight: "15%",
-    question:
-      "Does it maintain coherence under overload, ambiguity, and conflicting input?",
-    categories: [
-      {
-        id: "Z1",
-        name: "Overload Handling",
-        description:
-          "Assesses quality retention as prompt complexity and information volume increase.",
-      },
-      {
-        id: "Z2",
-        name: "Ambiguity Stacking",
-        description:
-          "Measures performance when several unclear constraints must be resolved together.",
-      },
-      {
-        id: "Z3",
-        name: "Conflicting Instructions",
-        description:
-          "Tests reconciliation logic when directives are incompatible or contradictory.",
-      },
-      {
-        id: "Z4",
-        name: "Stress Persistence",
-        description:
-          "Evaluates whether behavior remains stable across repeated adversarial turns.",
-      },
-      {
-        id: "Z5",
-        name: "Degraded Synthesis",
-        description:
-          "Checks if coherent summaries are produced even after context quality degrades.",
-      },
-    ],
-  },
-];
 
 const MethodologySection = () => (
   <Box
@@ -247,14 +41,15 @@ const MethodologySection = () => (
   >
     <Typography sx={SECTION_LABEL_STYLE}>Evaluation Framework</Typography>
 
-    <Box sx={{ maxWidth: 900, mb: 3 }}>
+    {/*  Overview Section */}
+    <Box sx={{ maxWidth: 960, mb: 3 }}>
       <Typography
         component="h2"
         sx={{
           fontFamily: fontFamilySerif,
           fontSize: {
-            xs: "clamp(1.5rem, 3.5vw, 2.25rem)",
-            md: "clamp(32px, 3.5vw, 50px)",
+            xs: "clamp(2rem, 5.2vw, 2.8rem)",
+            md: "clamp(42px, 5.2vw, 64px)",
           },
           fontWeight: 300,
           lineHeight: 1.1,
@@ -262,29 +57,29 @@ const MethodologySection = () => (
           color: "text.primary",
         }}
       >
-        AODIT-5 methodology.
+        AODIT-6 methodology.
         <br />
         <Box component="em" sx={{ fontStyle: "italic", color: "primary.main" }}>
-          Five dimensions.
+          Six dimensions.
         </Box>
         <br />
-        Twenty-five categories.
+        Thirty categories.
       </Typography>
       <Typography
         sx={{
           color: "text.secondary",
           fontSize: { xs: 18, md: 20 },
           lineHeight: 1.7,
-          maxWidth: 860,
+          maxWidth: 900,
         }}
       >
-        Each model is assessed across five AODIT dimensions: Reliability,
-        Integrity, Judgment, Resistance, and Resilience. Every dimension has
-        five categories (25 total), each scored on a 0.0–5.0 scale and weighted
-        into a composite result.
+        AODIT-6 evaluates AI behavior across six dimensions and five categories
+        per dimension. Results are independently scored on a 0.0–5.0 scale and
+        combined using weighted aggregation to produce a composite rating.
       </Typography>
     </Box>
 
+    {/* Six Dimensions Section */}
     <Box
       sx={{
         display: "grid",
@@ -293,96 +88,95 @@ const MethodologySection = () => (
         mt: 6,
       }}
     >
-      {dimensions.map((dimension) => (
-        <Box
-          key={dimension.id}
-          sx={{
-            bgcolor: "background.default",
-            p: { xs: 3, md: 3.5 },
-            border: "1px solid",
-            borderColor: "divider",
-          }}
-        >
-          <Typography
-            variant="h4"
+      {framework.dimensions.map((dimension) => {
+        const categories = framework.categories[dimension] ?? [];
+        const code =
+          dimensionCodeByName[dimension] ?? dimension[0]?.toUpperCase();
+        const weightPct = Math.round((framework.weights[dimension] ?? 0) * 100);
+        return (
+          <Box
+            key={dimension}
             sx={{
-              fontFamily: fontFamilySerif,
-              color: "primary.main",
-              mb: 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              bgcolor: "background.paper",
+              p: { xs: 2, md: 3.5 },
+              border: "1px solid",
+              borderColor: "primary.main",
             }}
           >
-            {dimension.id}{" "}
-            <Chip
-              size="medium"
-              color="primary"
-              variant="filled"
-              label={`${dimension.code} · ${dimension.weight}`}
-            />
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: grey,
-              lineHeight: 1.65,
-              mb: 2.2,
-            }}
-          >
-            {dimension.question}
-          </Typography>
-          <Box sx={{ borderTop: "1px solid", borderColor: "divider", pt: 2 }}>
-            {dimension.categories.map((category) => (
-              <Box key={category.id} sx={{ mb: 2 }}>
-                <Typography
-                  sx={{
-                    fontFamily: fontFamilySans,
-                    color: "text.primary",
-                    letterSpacing: "0.04em",
-                    mb: 0.8,
-                  }}
-                >
-                  {category.id} · {category.name}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: { xs: 15, md: 16 },
-                    color: grey,
-                    lineHeight: 1.65,
-                  }}
-                >
-                  {category.description}
-                </Typography>
-              </Box>
-            ))}
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+              flexWrap="wrap-reverse"
+            >
+              <Typography variant="h4" color="primary.main">
+                {dimension}
+              </Typography>
+
+              <Chip
+                color="primary"
+                variant="filled"
+                label={`${code} · ${weightPct}%`}
+              />
+            </Box>
+            <Typography
+              sx={{
+                fontSize: { xs: 16, md: 17 },
+                lineHeight: 1.65,
+                mb: 2.2,
+              }}
+            >
+              {framework.dimensionQuestions[dimension] ?? ""}
+            </Typography>
+            <Box sx={{ borderTop: "1px solid", borderColor: "divider", pt: 2 }}>
+              {categories.map((category) => (
+                <Box key={category.id} sx={{ mb: 2 }}>
+                  <Typography
+                    sx={{
+                      color: "text.primary",
+                      mb: 1,
+                    }}
+                  >
+                    {category.id} · {category.name}
+                  </Typography>
+
+                  <Typography color="text.secondary">
+                    {category.methodologyExplanation}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
           </Box>
-        </Box>
-      ))}
+        );
+      })}
     </Box>
 
-    <Divider sx={{ my: 6 }} />
-
-    <Box
-      sx={{
-        mt: 5,
-        p: { xs: 3.5, md: 4.2 },
-        border: "1px solid",
-        borderColor: "divider",
-      }}
-    >
+    {/*  8-Turn Adversarial Protocol Section */}
+    <Box mt={6} p={1}>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        gap={2}
+        mb={2}
+        flexWrap="wrap-reverse"
+      >
+        <Typography color="primary.main" variant="h4">
+          8-Round Adversarial Protocol
+        </Typography>
+      </Box>
       <Typography
         sx={{
-          fontFamily: fontFamilySans,
-          variant: "body1",
-          letterSpacing: "0.2em",
-          textTransform: "uppercase",
-          color: "text.secondary",
           mb: 2,
+          maxWidth: 980,
         }}
       >
-        8-Turn Adversarial Protocol
+        The evaluation process runs eight structured adversarial turns under
+        adversarial pressure to evaluate stability, boundary handling,
+        manipulation resistance, and post-stress recovery.
       </Typography>
+
       <Box
         sx={{
           display: "grid",
@@ -390,7 +184,7 @@ const MethodologySection = () => (
           gap: 2,
         }}
       >
-        {EIGHT_TURN_ADVERSARIAL_PROTOCOL.map((turn) => (
+        {framework.turnProtocol.map((turn) => (
           <Box
             key={turn.id}
             sx={{
@@ -400,54 +194,24 @@ const MethodologySection = () => (
               bgcolor: "background.paper",
             }}
           >
-            <Typography
-              sx={{
-                fontFamily: fontFamilySans,
-                fontSize: { xs: 14, md: 15 },
-                letterSpacing: "0.08em",
-                color: "primary.main",
-                mb: 0.9,
-              }}
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              gap={1}
+              mb={2}
             >
-              {turn.id}
-            </Typography>
-            <Typography
-              sx={{
-                fontFamily: fontFamilySerif,
-                variant: "h3",
-                color: "text.primary",
-                mb: 1,
-                lineHeight: 1.15,
-              }}
-            >
-              {turn.name}
-            </Typography>
-            <Typography
-              sx={{
-                variant: "body1",
-                color: grey,
-                lineHeight: 1.65,
-              }}
-            >
+              <Typography variant="h5">{turn.name}</Typography>
+
+              <Chip color="primary" variant="outlined" label={`${turn.id}`} />
+            </Box>
+
+            <Typography variant="body2" color="text.secondary">
               {turn.description}
             </Typography>
           </Box>
         ))}
       </Box>
-
-      <Typography
-        sx={{
-          mt: 3,
-          fontSize: { xs: 18, md: 20 },
-          color: "text.secondary",
-          lineHeight: 1.72,
-        }}
-      >
-        All turns are independently evaluated, severity-weighted, and aggregated
-        into category, dimension, and composite scores. Calibration bias
-        (self-score vs evaluator score) is separately reported as a governance
-        indicator.
-      </Typography>
     </Box>
   </Box>
 );

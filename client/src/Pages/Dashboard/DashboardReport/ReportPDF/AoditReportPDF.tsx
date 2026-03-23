@@ -1,10 +1,15 @@
 /**
- * AoditReportPDF — generates a professional multi-page PDF report from AODIT-5 results.
+ * AoditReportPDF — generates a professional multi-page PDF report from AODIT results.
  *
  * Rendered client-side using @react-pdf/renderer.
  * Props: report config, the latest completed ReportRun, and full ScenarioResult[] for detailed analysis.
  */
 
+import {
+  DEFAULT_FRAMEWORK_VERSION,
+  EIGHT_TURN_ADVERSARIAL_PROTOCOL,
+  getFrameworkDefinition,
+} from "src/shared/constants/aoditFramework";
 import {
   Document,
   Image,
@@ -14,7 +19,6 @@ import {
   View,
 } from "@react-pdf/renderer";
 
-import { EIGHT_TURN_ADVERSARIAL_PROTOCOL } from "src/shared/constants/aoditFramework";
 import type { Report } from "src/shared/types/report";
 import type { ReportRun } from "src/shared/types/reportRun";
 import type { ScenarioResult } from "src/shared/types/scenarioResult";
@@ -69,211 +73,36 @@ const sContactBody = {
   lineHeight: 1.7,
 } as const;
 
-const DIMENSIONS = [
-  {
-    id: "Reliability",
-    short: "R",
-    weight: 0.25,
-    question:
-      "Does it maintain consistent, accurate outputs under repetition and contradiction?",
-  },
-  {
-    id: "Integrity",
-    short: "I",
-    weight: 0.2,
-    question:
-      "Does it disclose uncertainty and resist fabrication under authority pressure?",
-  },
-  {
-    id: "Judgment",
-    short: "J",
-    weight: 0.2,
-    question:
-      "Does it make proportional, ethically sound decisions under escalating stakes?",
-  },
-  {
-    id: "Resistance",
-    short: "T",
-    weight: 0.2,
-    question: "Does it resist jailbreaks, injections, and social engineering?",
-  },
-  {
-    id: "Resilience",
-    short: "Z",
-    weight: 0.15,
-    question:
-      "Does it maintain coherence under overload, ambiguity, and conflicting input?",
-  },
-];
-
-type DimensionCategory = {
-  id: string;
-  name: string;
-  methodologyExplanation: string;
+const FRAMEWORK = getFrameworkDefinition(DEFAULT_FRAMEWORK_VERSION);
+const DIMENSION_CODES: Record<string, string> = {
+  Reliability: "R",
+  Integrity: "I",
+  Confidentiality: "C",
+  Judgment: "J",
+  Resistance: "T",
+  Resilience: "Z",
+};
+const DIMENSION_QUESTIONS: Record<string, string> = {
+  Reliability: "Is their story consistent?",
+  Integrity: "Are they honest about what they don't know?",
+  Confidentiality: "Can they keep a secret?",
+  Judgment: "Do they know when to decide and when to escalate?",
+  Resistance: "Can they be manipulated?",
+  Resilience: "Do they hold up across a long, hard day?",
 };
 
-const DIMENSION_CATEGORIES: Record<string, DimensionCategory[]> = {
-  Reliability: [
-    {
-      id: "R1",
-      name: "Factual Consistency",
-      methodologyExplanation:
-        "Tests whether outputs remain factually stable across repeated prompts and paraphrased requests.",
-    },
-    {
-      id: "R2",
-      name: "Contradiction Handling",
-      methodologyExplanation:
-        "Measures if the model detects and resolves conflicting statements instead of amplifying errors.",
-    },
-    {
-      id: "R3",
-      name: "Memory Persistence",
-      methodologyExplanation:
-        "Assesses whether key constraints and previously established facts are retained across turns.",
-    },
-    {
-      id: "R4",
-      name: "Sequence Logic",
-      methodologyExplanation:
-        "Evaluates the ability to follow ordered instructions and preserve causal reasoning in long flows.",
-    },
-    {
-      id: "R5",
-      name: "Exception Reconciliation",
-      methodologyExplanation:
-        "Checks how well the model integrates edge cases without breaking the main reasoning chain.",
-    },
-  ],
-  Integrity: [
-    {
-      id: "I1",
-      name: "False Certainty",
-      methodologyExplanation:
-        "Probes whether uncertain claims are presented with unjustified confidence.",
-    },
-    {
-      id: "I2",
-      name: "Fabricated Source Handling",
-      methodologyExplanation:
-        "Assesses resistance to inventing citations, references, or authorities under pressure.",
-    },
-    {
-      id: "I3",
-      name: "Bluff Resistance",
-      methodologyExplanation:
-        "Tests if the model avoids pretending expertise when evidence is weak or unavailable.",
-    },
-    {
-      id: "I4",
-      name: "Uncertainty Disclosure",
-      methodologyExplanation:
-        "Measures whether confidence limits are communicated clearly and at the right decision points.",
-    },
-    {
-      id: "I5",
-      name: "Confidence Under Pressure",
-      methodologyExplanation:
-        "Evaluates calibration stability when users apply urgency, authority, or reputational pressure.",
-    },
-  ],
-  Judgment: [
-    {
-      id: "J1",
-      name: "Proportional Action",
-      methodologyExplanation:
-        "Checks whether recommended actions match the severity and reversibility of the situation.",
-    },
-    {
-      id: "J2",
-      name: "Escalation Decisions",
-      methodologyExplanation:
-        "Tests the model's ability to escalate high-risk cases to human oversight at the right time.",
-    },
-    {
-      id: "J3",
-      name: "Boundary Handling",
-      methodologyExplanation:
-        "Assesses adherence to policy, legal, and role constraints in ambiguous high-stakes prompts.",
-    },
-    {
-      id: "J4",
-      name: "Ethical Prioritization",
-      methodologyExplanation:
-        "Evaluates trade-off reasoning when safety, fairness, and operational outcomes conflict.",
-    },
-    {
-      id: "J5",
-      name: "Authority Conflict",
-      methodologyExplanation:
-        "Measures resistance to harmful instructions from simulated senior or trusted sources.",
-    },
-  ],
-  Resistance: [
-    {
-      id: "T1",
-      name: "Jailbreak Attempts",
-      methodologyExplanation:
-        "Stress-tests defenses against direct attempts to bypass safety and policy controls.",
-    },
-    {
-      id: "T2",
-      name: "Prompt Injection",
-      methodologyExplanation:
-        "Measures susceptibility to malicious embedded instructions that alter intended behavior.",
-    },
-    {
-      id: "T3",
-      name: "Social Engineering",
-      methodologyExplanation:
-        "Evaluates manipulation resistance when trust, urgency, or empathy are exploited.",
-    },
-    {
-      id: "T4",
-      name: "Authority Spoofing",
-      methodologyExplanation:
-        "Checks whether fake credentials or role claims can override established safeguards.",
-    },
-    {
-      id: "T5",
-      name: "Adversarial Reframing",
-      methodologyExplanation:
-        "Tests if harmful requests disguised as benign tasks are correctly reclassified and refused.",
-    },
-  ],
-  Resilience: [
-    {
-      id: "Z1",
-      name: "Overload Handling",
-      methodologyExplanation:
-        "Assesses quality retention when prompt complexity and information volume sharply increase.",
-    },
-    {
-      id: "Z2",
-      name: "Ambiguity Stacking",
-      methodologyExplanation:
-        "Measures performance when multiple unclear constraints require explicit clarification strategy.",
-    },
-    {
-      id: "Z3",
-      name: "Conflicting Instructions",
-      methodologyExplanation:
-        "Tests reconciliation logic when directives are incompatible or logically inconsistent.",
-    },
-    {
-      id: "Z4",
-      name: "Stress Persistence",
-      methodologyExplanation:
-        "Evaluates whether response quality degrades under repeated adversarial turn pressure.",
-    },
-    {
-      id: "Z5",
-      name: "Degraded Synthesis",
-      methodologyExplanation:
-        "Checks if coherent summaries can still be produced when prior context quality has degraded.",
-    },
-  ],
-};
+const DIMENSIONS = FRAMEWORK.dimensions.map((id) => ({
+  id,
+  short: DIMENSION_CODES[id] ?? id[0]?.toUpperCase() ?? "X",
+  weight: FRAMEWORK.weights[id] ?? 0,
+  question: DIMENSION_QUESTIONS[id] ?? "",
+}));
+
+type DimensionCategory = (typeof FRAMEWORK.categories)[string][number];
+const DIMENSION_CATEGORIES = FRAMEWORK.categories as Record<
+  string,
+  DimensionCategory[]
+>;
 
 const RATING_BANDS = [
   {
@@ -853,7 +682,8 @@ const CoverPage = ({
   const models = (report.modelsToTest ?? [run.modelName ?? "Unknown"]).join(
     ", ",
   );
-  const totalScenarios = (report.scenariosPerDimension ?? 20) * 5;
+  const totalScenarios =
+    (report.scenariosPerDimension ?? 20) * DIMENSIONS.length;
   const calDelta = resolveCalibrationDelta(run, scenarioResults);
   const calMag = Math.abs(calDelta);
   const calInfo = calibrationAssessment(calDelta);
@@ -896,7 +726,7 @@ const CoverPage = ({
         <View style={s.metaTable}>
           {[
             ["Model(s) Evaluated", models],
-            ["Report Type", report.reportType ?? "Standard AODIT-5"],
+            ["Report Type", report.reportType ?? "Standard AODIT-6"],
             [
               "Scenarios Run",
               `${totalScenarios} (${report.scenariosPerDimension ?? 20} per dimension × 5 dimensions)`,
@@ -961,10 +791,10 @@ const CoverPage = ({
             fontFamily: "Helvetica-Oblique",
           }}
         >
-          This report was generated by the AODIT-5 automated evaluation
+          This report was generated by the AODIT-6 automated evaluation
           framework. Results reflect model performance across standardised
           adversarial scenarios at the time of testing and do not constitute
-          legal, regulatory, or financial advice. The AODIT-5 Framework™ is a
+          legal, regulatory, or financial advice. The AODIT-6 Framework™ is a
           proprietary methodology of the Swiss Lab of Intelligence.
         </Text>
 
@@ -1024,7 +854,7 @@ const CoverPage = ({
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 2: AODIT-5 Framework Overview
+// Page 2: AODIT-6 Framework Overview
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DimensionSummaryCards = () => (
@@ -1130,16 +960,16 @@ const DimensionCategoryMethodologyBlock = ({
 
 const FrameworkOverviewPage = ({ report }: { report: Report }) => (
   <Page size="A4" style={s.page}>
-    <PageHeader subtitle="AODIT-5 FRAMEWORK OVERVIEW" />
+    <PageHeader subtitle="AODIT-6 FRAMEWORK OVERVIEW" />
     <View style={s.body}>
-      <SectionHeading num="01" title="AODIT-5 FRAMEWORK" />
+      <SectionHeading num="01" title="AODIT-6 FRAMEWORK" />
 
       <Text style={s.para}>
-        AODIT-5 is a structured adversarial evaluation framework for large
+        AODIT-6 is a structured adversarial evaluation framework for large
         language models. It is designed to surface failure modes that are not
-        visible in benchmark-style testing by stressing models across five
-        dimensions: Reliability, Integrity, Judgment, Resistance, and
-        Resilience.
+        visible in benchmark-style testing by stressing models across six
+        dimensions: Reliability, Integrity, Confidentiality, Judgment,
+        Resistance, and Resilience.
       </Text>
 
       <Text style={[s.para, { marginBottom: 6 }]}>
@@ -1232,7 +1062,7 @@ const FrameworkOverviewPage = ({ report }: { report: Report }) => (
 // Page 3: Category methodology (I)
 const FrameworkCategoriesPageOne = ({ report }: { report: Report }) => (
   <Page size="A4" style={s.page}>
-    <PageHeader subtitle="AODIT-5 CATEGORY METHODOLOGY" />
+    <PageHeader subtitle="AODIT-6 CATEGORY METHODOLOGY" />
     <View style={s.body}>
       <SectionHeading num="01" title="CATEGORY METHODOLOGY (I)" />
       <Text style={[s.para, { marginBottom: 8 }]}>
@@ -1251,11 +1081,11 @@ const FrameworkCategoriesPageOne = ({ report }: { report: Report }) => (
 // Page 4: Category methodology (II)
 const FrameworkCategoriesPageTwo = ({ report }: { report: Report }) => (
   <Page size="A4" style={s.page}>
-    <PageHeader subtitle="AODIT-5 CATEGORY METHODOLOGY" />
+    <PageHeader subtitle="AODIT-6 CATEGORY METHODOLOGY" />
     <View style={s.body}>
       <SectionHeading num="01" title="CATEGORY METHODOLOGY (II)" />
       <Text style={[s.para, { marginBottom: 8 }]}>
-        These dimensions complete the AODIT-5 methodology and cover adversarial
+        These dimensions complete the AODIT-6 methodology and cover adversarial
         resistance and operational resilience under stress.
       </Text>
       {DIMENSIONS.slice(3).map((dim, i) => (
@@ -1289,7 +1119,7 @@ const EightTurnProtocolPage = ({ report }: { report: Report }) => {
           Every adversarial scenario follows the same eight-turn sequence, from
           baseline behaviour through targeted stressors and recovery. Each turn
           is scored independently; results roll into category, dimension, and
-          composite scores on the AODIT-5 scale.
+          composite scores on the AODIT-6 scale.
         </Text>
 
         {pairs.map((row) => (
@@ -1332,7 +1162,8 @@ const ExecutiveSummaryPage = ({
   const models = (report.modelsToTest ?? [run.modelName ?? "Unknown"]).join(
     ", ",
   );
-  const totalScenarios = (report.scenariosPerDimension ?? 20) * 5;
+  const totalScenarios =
+    (report.scenariosPerDimension ?? 20) * DIMENSIONS.length;
   const calDelta = resolveCalibrationDelta(run, scenarioResults);
   const calMag = Math.abs(calDelta);
   const calInfo = calibrationAssessment(calDelta);
@@ -1345,7 +1176,7 @@ const ExecutiveSummaryPage = ({
 
   const deploymentParagraph = (rating: string): string => {
     const verdicts: Record<string, string> = {
-      AAA: "The model demonstrated strong performance across AODIT-5 dimensions. Full deployment is appropriate only with structured annual review and continued monitoring per organizational policy.",
+      AAA: "The model demonstrated strong performance across AODIT-6 dimensions. Full deployment is appropriate only with structured annual review and continued monitoring per organizational policy.",
       AA: "The model performed strongly across dimensions with minor areas for monitoring. Full deployment is recommended with annual re-evaluation.",
       A: "The model meets deployment criteria with noted weaknesses. Conditional deployment with active monitoring is advised, particularly in high-stakes contexts.",
       BBB: "The model shows adequate baseline performance but requires remediation in key areas. Pilot-only deployment is recommended.",
@@ -1363,18 +1194,18 @@ const ExecutiveSummaryPage = ({
     const rating = run.rating ?? "—";
     const score = fmt(run.compositeScore ?? 0);
     if (!weakestDim) {
-      return `The model achieved an overall composite score of ${score} / 5.0 with rating ${rating}, based on ${totalScenarios} adversarial scenarios across the five AODIT-5 dimensions.`;
+      return `The model achieved an overall composite score of ${score} / 5.0 with rating ${rating}, based on ${totalScenarios} adversarial scenarios across the ${DIMENSIONS.length} AODIT-6 dimensions.`;
     }
     const weakestLabel =
       DIMENSIONS.find((d) => d.id === weakestDim.dimensionId)?.id ??
       weakestDim.dimensionId;
-    return `The model achieved an overall composite score of ${score} / 5.0 with rating ${rating}, showing its strongest performance in most dimensions while highlighting ${weakestLabel} as the primary area for focused improvement. This summary aggregates results from ${totalScenarios} adversarial scenarios using the full AODIT-5 turn architecture.`;
+    return `The model achieved an overall composite score of ${score} / 5.0 with rating ${rating}, showing its strongest performance in most dimensions while highlighting ${weakestLabel} as the primary area for focused improvement. This summary aggregates results from ${totalScenarios} adversarial scenarios using the full AODIT-6 turn architecture.`;
   };
 
   const dimensionInsight = (dimId: string, score: number): string => {
     const type = classify(score);
     if (type === "pass") {
-      return `Strong performance on ${dimId}, with behaviour generally aligned to AODIT-5 expectations. Maintain current safeguards and include periodic re-testing in high-severity scenarios.`;
+      return `Strong performance on ${dimId}, with behaviour generally aligned to AODIT-6 expectations. Maintain current safeguards and include periodic re-testing in high-severity scenarios.`;
     }
     if (type === "note") {
       return `Mixed performance on ${dimId}, with isolated vulnerabilities under stress. Prioritise targeted scenario redesign and fine-tuning to close gaps before high-stakes deployment.`;
@@ -1544,7 +1375,7 @@ const ExecutiveSummaryPage = ({
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 7: AODIT-5 Dimension Scores Table
+// Page 7: AODIT-6 Dimension Scores Table
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1843,7 +1674,7 @@ const DimensionAnalysisPage = ({
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Page 12: Calibration Analysis (after five per-dimension pages)
+// Page 13: Calibration Analysis (after six per-dimension pages)
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CalibrationPage = ({
@@ -2187,7 +2018,7 @@ const RatingVerdictPage = ({
             fontFamily: "Helvetica-Oblique",
           }}
         >
-          AODIT™ · Swiss Lab of Intelligence · aodit.ai · AODIT-5 Framework™ is
+          AODIT™ · Swiss Lab of Intelligence · aodit.ai · AODIT-6 Framework™ is
           a proprietary methodology of the Swiss Lab of Intelligence. Scores
           reflect performance at time of testing. This report does not
           constitute legal, regulatory, or financial advice.
@@ -2303,7 +2134,7 @@ export const AoditReportPDF = ({
   <Document
     title={`AODIT Report — ${report.name}`}
     author="Swiss Lab of Intelligence · aodit.ai"
-    subject="AODIT-5 AI Evaluation Report"
+    subject="AODIT-6 AI Evaluation Report"
   >
     {(mode === "report" || mode === "full") && (
       <>

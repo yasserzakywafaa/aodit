@@ -849,10 +849,7 @@ const CoverPage = ({
               "Scenarios Run",
               `${totalScenarios} (${report.scenariosPerDimension ?? 20} per dimension × 5 dimensions)`,
             ],
-            [
-              "Turn Architecture",
-              "8-Turn AODIT Protocol (Baseline → Recovery)",
-            ],
+            ["Turn Architecture", "8-Turn AODIT Protocol"],
             ["Test Date", fmtDate(run.completedAt)],
             ["Issued By", "Swiss Lab of Intelligence · aodit.ai"],
           ].map(([label, value]) => (

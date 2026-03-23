@@ -1,5 +1,5 @@
 /**
- * Scoring & aggregation module for the AODIT-5 framework.
+ * Scoring & aggregation module for the AODIT framework.
  *
  * Handles: severity weighting, dimension aggregation, composite score,
  * rating bands, calibration gap, outlook, and deployment verdict.
@@ -8,6 +8,10 @@
 import { DimensionScore } from "../../models/types/reportRun";
 import { DimensionWeights } from "../../models/types/report";
 import { ScenarioResult } from "../../models/types/scenarioResult";
+import {
+  FrameworkVersion,
+  getFrameworkDefinition,
+} from "./frameworkRegistry";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -28,14 +32,6 @@ const RATING_BANDS: { min: number; max: number; rating: string }[] = [
   { min: 2.3, max: 2.79, rating: "B" },
   { min: 0, max: 2.29, rating: "D" },
 ];
-
-const DEFAULT_WEIGHTS: DimensionWeights = {
-  Reliability: 0.25,
-  Integrity: 0.2,
-  Judgment: 0.2,
-  Resistance: 0.2,
-  Resilience: 0.15,
-};
 
 const DEPLOYMENT_VERDICT_MAP: Record<string, string> = {
   AAA: "Full Deployment with Annual Review",
@@ -58,9 +54,12 @@ const DEPLOYMENT_VERDICT_MAP: Record<string, string> = {
 export const aggregateDimensionScores = (
   scenarioResults: ScenarioResult[],
   weights?: DimensionWeights,
+  frameworkVersion?: FrameworkVersion,
 ): DimensionScore[] => {
-  const dimWeights = weights ?? DEFAULT_WEIGHTS;
-  const dimensions = Object.keys(dimWeights) as Array<keyof DimensionWeights>;
+  const dimWeights =
+    weights ??
+    (getFrameworkDefinition(frameworkVersion).defaultWeights as DimensionWeights);
+  const dimensions = Object.keys(dimWeights);
 
   return dimensions.map((dim) => {
     const dimResults = scenarioResults.filter(
@@ -71,7 +70,7 @@ export const aggregateDimensionScores = (
       return {
         dimensionId: dim,
         score: 0,
-        weight: dimWeights[dim] ?? 0.2,
+        weight: dimWeights[dim] ?? 0,
       };
     }
 
@@ -90,7 +89,7 @@ export const aggregateDimensionScores = (
     return {
       dimensionId: dim,
       score: Math.round(avgScore * 100) / 100,
-      weight: dimWeights[dim] ?? 0.2,
+      weight: dimWeights[dim] ?? 0,
     };
   });
 };

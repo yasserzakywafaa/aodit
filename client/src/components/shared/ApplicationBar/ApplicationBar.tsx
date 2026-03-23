@@ -67,11 +67,17 @@ const ApplicationBar = () => {
   const handleOnMenuItemClick = (sectionId: string) => () => {
     switch (sectionId) {
       case "reports":
-        scrollToSection("ratings");
-        break;
       case "ratings":
       case "methodology":
       case "about":
+        navigate(`${routes.features}#${sectionId}`);
+        break;
+      case "compliance/finma":
+        navigate(routes.compliance.finma);
+        break;
+      case "compliance/eu-ai-act":
+        navigate(routes.compliance.euAiAct);
+        break;
       case "subscribe":
         if (location.pathname === routes.features) {
           scrollToSection(sectionId);

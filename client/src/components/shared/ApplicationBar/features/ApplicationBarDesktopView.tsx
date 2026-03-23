@@ -4,6 +4,7 @@ import Logo, { LogoComponentEnum } from "../../Logo";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Authentication } from "src/application/store/state";
+import ComplianceDropdown from "src/components/navbar/ComplianceDropdown";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
@@ -13,7 +14,7 @@ import useDeviceSize from "src/shared/hooks/useDeviceSize";
 const NAV_LINKS = [
   { id: "reports", label: "Reports" },
   { id: "methodology", label: "Methodology" },
-  { id: "about", label: "Who it's for" },
+  { id: "about", label: "About" },
 ] as const;
 
 interface ApplicationBarDesktopViewParams {
@@ -75,6 +76,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                   {label}
                 </Button>
               ))}
+              <ComplianceDropdown />
               <Button
                 component="a"
                 variant="contained"

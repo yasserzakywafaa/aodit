@@ -16,67 +16,38 @@ import {
   Report,
   ScenariosPerDimension,
   DimensionWeights,
+  FrameworkVersion,
 } from "src/models/types/report";
 import { Scenario } from "src/models/types/scenario";
+import {
+  DEFAULT_FRAMEWORK_VERSION,
+  getFrameworkDefinition,
+  resolveFrameworkVersion,
+} from "./reports/frameworkRegistry";
 
 const DEFAULT_SCENARIOS_PER_DIMENSION: ScenariosPerDimension = 20;
-const DEFAULT_DIMENSION_WEIGHTS: DimensionWeights = {
-  Reliability: 0.25,
-  Integrity: 0.2,
-  Judgment: 0.2,
-  Resistance: 0.2,
-  Resilience: 0.15,
-};
 
-function sumWeights(weights: DimensionWeights): number {
-  return (
-    (weights.Reliability ?? 0) +
-    (weights.Integrity ?? 0) +
-    (weights.Judgment ?? 0) +
-    (weights.Resistance ?? 0) +
-    (weights.Resilience ?? 0)
-  );
+function sumWeights(weights: DimensionWeights, dimensions: string[]): number {
+  return dimensions.reduce((sum, dim) => sum + (weights[dim] ?? 0), 0);
 }
 
-const AODIT_DIMENSIONS = [
-  "Reliability",
-  "Integrity",
-  "Judgment",
-  "Resistance",
-  "Resilience",
-] as const;
-
-// AODIT-5 category codes per dimension (treated as categories, not subcategories).
-const DIMENSION_CATEGORY_CODES: Record<(typeof AODIT_DIMENSIONS)[number], string[]> = {
-  Reliability: ["R1", "R2", "R3", "R4", "R5"],
-  Integrity: ["I1", "I2", "I3", "I4", "I5"],
-  Judgment: ["J1", "J2", "J3", "J4", "J5"],
-  Resistance: ["T1", "T2", "T3", "T4", "T5"],
-  Resilience: ["Z1", "Z2", "Z3", "Z4", "Z5"],
-};
-
-const TURN_TYPES = [
-  "Baseline",
-  "Extension",
-  "Contradiction",
-  "Challenge",
-  "Escalation",
-  "Synthesis",
-  "SelfAssessment",
-  "Recovery",
-];
-
-/** Seed scenariosPerDimension * 5 scenarios for a new report. */
+/** Seed scenariosPerDimension * dimensionCount scenarios for a new report. */
 const seedScenariosForReport = async (
   reportId: string,
   scenariosPerDimension: ScenariosPerDimension = DEFAULT_SCENARIOS_PER_DIMENSION,
+  frameworkVersion?: FrameworkVersion,
 ): Promise<void> => {
   const now = new Date().toISOString();
   const scenarios: Omit<Scenario, "_id">[] = [];
   const perDim = scenariosPerDimension;
+  const framework = getFrameworkDefinition(
+    resolveFrameworkVersion(frameworkVersion, DEFAULT_FRAMEWORK_VERSION),
+  );
 
-  for (const dimensionId of AODIT_DIMENSIONS) {
-    const categoryCodes = DIMENSION_CATEGORY_CODES[dimensionId];
+  for (const dimensionId of framework.dimensions) {
+    const categoryCodes = (framework.dimensionCategories[dimensionId] ?? []).map(
+      (category) => category.id,
+    );
     const perCategory = Math.max(1, Math.floor(perDim / categoryCodes.length));
 
     for (let i = 0; i < perDim; i++) {
@@ -92,7 +63,7 @@ const seedScenariosForReport = async (
         description: `Scenario for ${dimensionId} (${i + 1}/${perDim})`,
         severity: i % 3 === 0 ? "high" : i % 3 === 1 ? "medium" : "low",
         scenarioType: "universal",
-        turnTemplates: TURN_TYPES.map((type, idx) => ({
+        turnTemplates: framework.turnTypes.map((type, idx) => ({
           turnIndex: idx + 1,
           type,
           instruction: `Turn ${idx + 1}: ${type}`,
@@ -125,16 +96,27 @@ const createReport = async (data: any): Promise<Report> => {
   const now = new Date().toISOString();
   const scenariosPerDimension: ScenariosPerDimension =
     data.scenariosPerDimension ?? DEFAULT_SCENARIOS_PER_DIMENSION;
+  const frameworkVersion = resolveFrameworkVersion(
+    data.frameworkVersion,
+    DEFAULT_FRAMEWORK_VERSION,
+  );
+  const framework = getFrameworkDefinition(frameworkVersion);
   const dimensionWeights: DimensionWeights =
-    data.dimensionWeights ?? DEFAULT_DIMENSION_WEIGHTS;
+    data.dimensionWeights ??
+    (framework.defaultWeights as unknown as DimensionWeights);
 
-  if (dimensionWeights && Math.abs(sumWeights(dimensionWeights) - 1) > 0.001) {
+  if (
+    dimensionWeights &&
+    Math.abs(sumWeights(dimensionWeights, framework.dimensions as string[]) - 1) >
+      0.001
+  ) {
     throw new Error("Dimension weights must sum to 1 (100%)");
   }
 
   const payload = {
     ...data,
     scenariosPerDimension,
+    frameworkVersion,
     dimensionWeights,
     createdAt: data.createdAt || now,
     updatedAt: data.updatedAt || now,
@@ -142,7 +124,11 @@ const createReport = async (data: any): Promise<Report> => {
   delete payload._id;
   const insertedId = await createDocument(payload, DBCollectionsEnum.reports);
   const reportIdStr = (insertedId as ObjectId).toString();
-  await seedScenariosForReport(reportIdStr, scenariosPerDimension);
+  await seedScenariosForReport(
+    reportIdStr,
+    scenariosPerDimension,
+    frameworkVersion,
+  );
   const report = await readDocument(
     insertedId as ObjectId,
     DBCollectionsEnum.reports,
@@ -190,36 +176,62 @@ const updateReport = async (
       | "reportType"
       | "status"
       | "scenariosPerDimension"
+      | "frameworkVersion"
       | "dimensionWeights"
       | "modelsToTest"
       | "modelsToEvaluate"
     >
   >,
 ): Promise<Report | null> => {
-  if (data.dimensionWeights && Math.abs(sumWeights(data.dimensionWeights) - 1) > 0.001) {
+  const current = (await getReportById(reportId)) as Report | null;
+  const defaultFrameworkVersion: FrameworkVersion =
+    current?.frameworkVersion ?? "aodit_v1";
+  const effectiveFrameworkVersion = resolveFrameworkVersion(
+    data.frameworkVersion ?? current?.frameworkVersion,
+    defaultFrameworkVersion,
+  );
+  const framework = getFrameworkDefinition(effectiveFrameworkVersion);
+
+  if (
+    data.dimensionWeights &&
+    Math.abs(sumWeights(data.dimensionWeights, framework.dimensions as string[]) - 1) >
+      0.001
+  ) {
     throw new Error("Dimension weights must sum to 1 (100%)");
   }
 
-  const current = (await getReportById(reportId)) as Report | null;
   const scenariosPerDimensionChanged =
     data.scenariosPerDimension != null &&
     current?.scenariosPerDimension != null &&
     data.scenariosPerDimension !== current.scenariosPerDimension;
+  const frameworkVersionChanged =
+    data.frameworkVersion != null &&
+    data.frameworkVersion !== (current?.frameworkVersion ?? "aodit_v1");
 
-  if (scenariosPerDimensionChanged) {
+  if (scenariosPerDimensionChanged || frameworkVersionChanged) {
     await deleteScenariosByReportId(reportId);
   }
 
   const now = new Date().toISOString();
-  const payload = { ...data, updatedAt: now };
+  const payload = {
+    ...data,
+    frameworkVersion: effectiveFrameworkVersion,
+    updatedAt: now,
+  };
   const updated = await updateDocument<Report>(
     reportId,
     payload,
     DBCollectionsEnum.reports,
   );
 
-  if (scenariosPerDimensionChanged && data.scenariosPerDimension != null) {
-    await seedScenariosForReport(reportId, data.scenariosPerDimension);
+  if (scenariosPerDimensionChanged || frameworkVersionChanged) {
+    await seedScenariosForReport(
+      reportId,
+      data.scenariosPerDimension ??
+        current?.scenariosPerDimension ??
+        DEFAULT_SCENARIOS_PER_DIMENSION,
+      effectiveFrameworkVersion,
+    );
   }
 
   return updated as unknown as Report | null;

@@ -1,10 +1,8 @@
-import {
-  fontFamilySans,
-  fontFamilySerif,
-} from "src/application/shared/themes";
+import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import ContactForm from "src/Pages/Contact/features/ContactForm";
+import Typography from "@mui/material/Typography";
 
 const SECTION_EYEBROW_STYLE = {
   fontSize: 9,
@@ -42,7 +40,10 @@ const ContactSection = () => (
           component="h2"
           sx={{
             fontFamily: fontFamilySerif,
-            fontSize: { xs: "clamp(1.75rem, 4vw, 2.5rem)", md: "clamp(36px, 4vw, 56px)" },
+            fontSize: {
+              xs: "clamp(1.75rem, 4vw, 2.5rem)",
+              md: "clamp(36px, 4vw, 56px)",
+            },
             fontWeight: 700,
             lineHeight: 1.1,
             mb: 2.5,
@@ -61,9 +62,8 @@ const ContactSection = () => (
             mb: 4,
           }}
         >
-          Tell us about your agent. We will run it through the AODIT-5 framework
-          and deliver an institutional-grade rating report. Enterprise pricing
-          from CHF 2,000.
+          Tell us about your agent. We will run it through the AODIT-6 framework
+          and deliver an institutional-grade rating report.
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
           {[

@@ -49,6 +49,8 @@ const APP_CONSTANTS = {
   // Featured report PDF (e.g. AWS S3 presigned or public URI)
   FEATURED_REPORT_PDF_URL:
     "https://aodit.s3.eu-west-2.amazonaws.com/reports/AODIT-Banking-AI-Risk-Assessment-2026-Q1.pdf",
+  FINMA_OFFICIAL_NOTICE_PDF_URL:
+    "https://www.finma.ch/en/~/media/finma/dokumente/dokumentencenter/myfinma/4dokumentation/finma-aufsichtsmitteilungen/20241218-finma-aufsichtsmitteilung-08-2024.pdf?sc_lang=en&hash=AA85AC0A19240FFFA14E4692BF385651",
 };
 
 export default APP_CONSTANTS;

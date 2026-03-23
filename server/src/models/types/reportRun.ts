@@ -20,6 +20,7 @@ export interface FeedItem {
 export interface ReportRun {
   _id?: string;
   reportId: string;
+  frameworkVersion?: "aodit_v1" | "aodit_v2";
   batchId?: string; // All runs from the same launch share a batchId
   modelId?: string;
   modelName?: string;

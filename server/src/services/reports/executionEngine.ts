@@ -1,5 +1,5 @@
 /**
- * Execution engine — orchestrates real AI agent testing for AODIT-5.
+ * Execution engine — orchestrates real AI agent testing for AODIT.
  *
  * Flow:
  * 1. Load report config + scenarios from DB
@@ -27,6 +27,11 @@ import {
   generateExecutiveSummaries,
 } from "./executiveSummaryService";
 import {
+  FrameworkVersion,
+  getFrameworkDefinition,
+  resolveFrameworkVersion,
+} from "./frameworkRegistry";
+import {
   buildScenarioGenerationPrompt,
   buildScoringPrompt,
   buildSelfScoreExtractionPrompt,
@@ -48,61 +53,9 @@ import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
 // Constants
 // ---------------------------------------------------------------------------
 
-const TURN_TYPES = [
-  "Baseline",
-  "Extension",
-  "Contradiction",
-  "Challenge",
-  "Escalation",
-  "Synthesis",
-  "SelfAssessment",
-  "Recovery",
-];
-
 const MAX_FEED_ITEMS = 8;
 const MAX_RETRIES = 3;
 const RETRY_BASE_DELAY_MS = 2000;
-
-const DIMENSION_CATEGORIES: Record<
-  string,
-  Array<{ id: string; name: string }>
-> = {
-  Reliability: [
-    { id: "R1", name: "Factual Consistency" },
-    { id: "R2", name: "Contradiction Handling" },
-    { id: "R3", name: "Memory Persistence" },
-    { id: "R4", name: "Sequence Logic" },
-    { id: "R5", name: "Exception Reconciliation" },
-  ],
-  Integrity: [
-    { id: "I1", name: "False Certainty" },
-    { id: "I2", name: "Fabricated Source Handling" },
-    { id: "I3", name: "Bluff Resistance" },
-    { id: "I4", name: "Uncertainty Disclosure" },
-    { id: "I5", name: "Confidence Under Pressure" },
-  ],
-  Judgment: [
-    { id: "J1", name: "Proportional Action" },
-    { id: "J2", name: "Escalation Decisions" },
-    { id: "J3", name: "Boundary Handling" },
-    { id: "J4", name: "Ethical Prioritization" },
-    { id: "J5", name: "Authority Conflict" },
-  ],
-  Resistance: [
-    { id: "T1", name: "Jailbreak Attempts" },
-    { id: "T2", name: "Prompt Injection" },
-    { id: "T3", name: "Social Engineering" },
-    { id: "T4", name: "Authority Spoofing" },
-    { id: "T5", name: "Adversarial Reframing" },
-  ],
-  Resilience: [
-    { id: "Z1", name: "Overload Handling" },
-    { id: "Z2", name: "Ambiguity Stacking" },
-    { id: "Z3", name: "Conflicting Instructions" },
-    { id: "Z4", name: "Stress Persistence" },
-    { id: "Z5", name: "Degraded Synthesis" },
-  ],
-};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -167,7 +120,10 @@ const classifyScore = (score: number): "pass" | "warn" | "fail" => {
   return "fail";
 };
 
-const getCategoryCodeFromScenario = (scenario?: Scenario): string | undefined => {
+const getCategoryCodeFromScenario = (
+  scenario: Scenario | undefined,
+  dimensionCategories: Record<string, Array<{ id: string; name: string }>>,
+): string | undefined => {
   if (!scenario) return undefined;
   if (scenario.categoryCode?.trim()) return scenario.categoryCode.trim();
 
@@ -178,7 +134,7 @@ const getCategoryCodeFromScenario = (scenario?: Scenario): string | undefined =>
   const dim = scenario.categoryId;
   const match = title.match(/scenario\s+(\d+)/i);
   const scenarioIndex = match ? Number(match[1]) : NaN;
-  const categoryDefs = DIMENSION_CATEGORIES[dim] ?? [];
+  const categoryDefs = dimensionCategories[dim] ?? [];
   if (!Number.isFinite(scenarioIndex) || scenarioIndex <= 0 || !categoryDefs.length) {
     return undefined;
   }
@@ -240,10 +196,12 @@ const getProgressStep = (progress: number): string => {
 // Core: Run a single scenario (8 turns)
 // ---------------------------------------------------------------------------
 
-const executeScenario = async (params: {
+export const executeScenario = async (params: {
   scenario: Scenario;
   modelId: string;
   evaluatorModelId: string;
+  frameworkVersion: FrameworkVersion;
+  turnTypes: readonly string[];
   reportDescription?: string;
   reportType?: string;
   onTurnStart?: (turnIndex: number, turnType: string) => Promise<void>;
@@ -252,15 +210,23 @@ const executeScenario = async (params: {
   rawScore: number;
   selfScore?: number;
 }> => {
-  const { scenario, modelId, evaluatorModelId, reportDescription, reportType, onTurnStart } =
-    params;
+  const {
+    scenario,
+    modelId,
+    evaluatorModelId,
+    frameworkVersion,
+    turnTypes,
+    reportDescription,
+    reportType,
+    onTurnStart,
+  } = params;
 
   const conversationHistory: Array<{ role: string; content: string }> = [];
   const turns: TurnResult[] = [];
   let selfScore: number | undefined;
 
-  for (let turnIdx = 0; turnIdx < TURN_TYPES.length; turnIdx++) {
-    const turnType = TURN_TYPES[turnIdx];
+  for (let turnIdx = 0; turnIdx < turnTypes.length; turnIdx++) {
+    const turnType = turnTypes[turnIdx];
     const turnNumber = turnIdx + 1;
 
     // Broadcast the current turn before the expensive LLM calls so the UI updates live
@@ -275,6 +241,7 @@ const executeScenario = async (params: {
       // Baseline: generate from scenario description
       const genMessages = buildScenarioGenerationPrompt({
         dimension: scenario.categoryId,
+        frameworkVersion,
         reportDescription,
         reportType,
         severity: scenario.severity,
@@ -287,6 +254,7 @@ const executeScenario = async (params: {
       const escMessages = buildTurnEscalationPrompt({
         dimension: scenario.categoryId,
         turnType,
+        frameworkVersion,
         conversationHistory,
         reportDescription,
       });
@@ -308,6 +276,7 @@ const executeScenario = async (params: {
     const scoreMessages = buildScoringPrompt({
       dimension: scenario.categoryId,
       turnType,
+      frameworkVersion,
       prompt: userPrompt,
       response: modelResponse,
       conversationHistory,
@@ -365,6 +334,7 @@ const executeModelRun = async (params: {
   reportId: string;
   runId: string;
   batchId: string;
+  frameworkVersion: FrameworkVersion;
   modelName: string;
   modelId: string;
   evaluatorModelId: string;
@@ -376,6 +346,7 @@ const executeModelRun = async (params: {
   const {
     reportId,
     runId,
+    frameworkVersion,
     modelName,
     modelId,
     evaluatorModelId,
@@ -384,6 +355,7 @@ const executeModelRun = async (params: {
     reportType,
     dimensionWeights,
   } = params;
+  const framework = getFrameworkDefinition(frameworkVersion);
 
   const totalScenarios = scenarios.length;
   const dimCounters: Record<string, number> = {};
@@ -432,6 +404,7 @@ const executeModelRun = async (params: {
     const DIM_PREFIX: Record<string, string> = {
       reliability: "R",
       integrity: "I",
+      confidentiality: "C",
       judgment: "J",
       resistance: "T",
       resilience: "Z",
@@ -487,6 +460,8 @@ const executeModelRun = async (params: {
         scenario,
         modelId,
         evaluatorModelId,
+        frameworkVersion,
+        turnTypes: framework.turnTypes,
         reportDescription,
         reportType,
         onTurnStart: async (_turnIndex, turnType) => {
@@ -524,7 +499,14 @@ const executeModelRun = async (params: {
       dimCompleted[scenario.categoryId] = (dimCompleted[scenario.categoryId] ?? 0) + 1;
 
       const dimPrefix =
-        { reliability: "R", integrity: "I", judgment: "J", resistance: "T", resilience: "Z" }[
+        {
+          reliability: "R",
+          integrity: "I",
+          confidentiality: "C",
+          judgment: "J",
+          resistance: "T",
+          resilience: "Z",
+        }[
           scenario.categoryId.toLowerCase()
         ] ?? "X";
       dimCounters[dimPrefix] = (dimCounters[dimPrefix] ?? 0) + 1;
@@ -620,6 +602,7 @@ const executeModelRun = async (params: {
   const dimScores = aggregateDimensionScores(
     completedResults,
     dimensionWeights,
+    frameworkVersion,
   );
   const compositeScore = computeComposite(dimScores);
   const rating = getRating(compositeScore);
@@ -641,6 +624,7 @@ const executeModelRun = async (params: {
 
     const summaryResult = await generateExecutiveSummaries({
       evaluatorModelId,
+      frameworkVersion,
       modelName,
       compositeScore,
       rating,
@@ -734,13 +718,16 @@ const executeModelRun = async (params: {
 
     for (const dimScore of dimScores) {
       const dimId = dimScore.dimensionId;
-      const categoryDefs = DIMENSION_CATEGORIES[dimId] ?? [];
+      const categoryDefs = framework.dimensionCategories[dimId] ?? [];
       const dimResults = completedResults.filter((r) => r.dimensionId === dimId);
 
       const categoryTotals = new Map<string, { sum: number; count: number }>();
       for (const result of dimResults) {
         const scenario = scenariosById.get(result.scenarioId);
-        const code = getCategoryCodeFromScenario(scenario);
+        const code = getCategoryCodeFromScenario(
+          scenario,
+          framework.dimensionCategories,
+        );
         if (!code) continue;
         const prev = categoryTotals.get(code) ?? { sum: 0, count: 0 };
         prev.sum += result.rawScore;
@@ -776,6 +763,7 @@ const executeModelRun = async (params: {
     try {
       const aiDeepDive = await generateDimensionDeepDive({
         evaluatorModelId,
+        frameworkVersion,
         modelName,
         reportType,
         dimensions: deepDiveInput,
@@ -836,7 +824,7 @@ const executeModelRun = async (params: {
 // ---------------------------------------------------------------------------
 
 /**
- * Execute the full AODIT-5 test run for a report.
+ * Execute the full AODIT test run for a report.
  * Creates one ReportRun per model, runs them sequentially, and updates progress.
  *
  * This function is designed to be called fire-and-forget (don't await in the controller).
@@ -878,6 +866,10 @@ export const executeReport = async (
 
     const evaluatorModelId = resolveEvaluatorModelId(report.modelsToEvaluate);
     const modelsToTest = report.modelsToTest ?? ["Claude"];
+    const frameworkVersion = resolveFrameworkVersion(
+      report.frameworkVersion,
+      "aodit_v1",
+    );
 
     console.log(
       `[AODIT] Starting execution: ${modelsToTest.length} models × ${scenarios.length} scenarios, judge: ${evaluatorModelId}`,
@@ -895,12 +887,14 @@ export const executeReport = async (
           reportId,
           runId,
           batchId,
+          frameworkVersion,
           modelName,
           modelId,
           evaluatorModelId,
           scenarios: scenarios as unknown as Scenario[],
           reportDescription: report.description,
-          reportType: report.reportType,
+          reportType:
+            report.reportType ?? getFrameworkDefinition(frameworkVersion).marketingLabel,
           dimensionWeights: report.dimensionWeights,
         });
 

@@ -16,10 +16,10 @@ const SECTION_LABEL_STYLE = {
 };
 
 const stats = [
-  { num: "5", label: "Rating Dimensions" },
+  { num: "6", label: "Rating Dimensions" },
   { num: "100", label: "Adversarial Scenarios" },
-  { num: "25", label: "Attack Categories" },
-  { num: "8", label: "Conversation Turns" },
+  { num: "30", label: "Attack Categories" },
+  { num: "8", label: "Adversarial Turns" },
 ];
 
 const coverage = [

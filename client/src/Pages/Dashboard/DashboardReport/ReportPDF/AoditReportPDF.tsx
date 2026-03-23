@@ -847,7 +847,7 @@ const CoverPage = ({
             ["Report Type", report.reportType ?? "Standard AODIT-6"],
             [
               "Scenarios Run",
-              `${totalScenarios} (${report.scenariosPerDimension ?? 20} per dimension × 5 dimensions)`,
+              `${totalScenarios} (${report.scenariosPerDimension ?? 20} per dimension × ${DIMENSIONS.length} dimensions)`,
             ],
             ["Turn Architecture", "8-Turn AODIT Protocol"],
             ["Test Date", fmtDate(run.completedAt)],

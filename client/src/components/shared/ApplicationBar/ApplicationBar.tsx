@@ -18,9 +18,11 @@ import { useState } from "react";
 
 export interface PagesMatch {
   isFeaturesPage: boolean;
-  isReportsPage: boolean;
-  isPricingPage: boolean;
   isContactPage: boolean;
+  isMethodologyPage: boolean;
+  isFinmaPage: boolean;
+  isSecurityPage: boolean;
+  isAboutPage: boolean;
   isPrivacyPolicy: boolean;
   isTermsOfService: boolean;
   isDashboardPage: boolean;
@@ -52,11 +54,13 @@ const ApplicationBar = () => {
   const isAppBarVisible = true;
   const pagesMatch: PagesMatch = {
     isFeaturesPage: !!useMatch(routes.features),
-    isPricingPage: !!useMatch(routes.pricing),
     isContactPage: !!useMatch(routes.contact),
+    isMethodologyPage: !!useMatch(routes.methodology),
+    isFinmaPage: !!useMatch(routes.compliance.finma),
+    isSecurityPage: !!useMatch(routes.security),
+    isAboutPage: !!useMatch(routes.about),
     isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
     isTermsOfService: !!useMatch(routes.termsAndConditions),
-    isReportsPage: !!useMatch(routes.dashboard.reports.base),
     isDashboardPage: location.pathname.startsWith(routes.dashboard.base),
   };
 
@@ -64,36 +68,31 @@ const ApplicationBar = () => {
     setIsDrawerOpen(isOpen);
   };
 
-  const handleOnMenuItemClick = (sectionId: string) => () => {
+  const handleOnMenuItemClick = (sectionId: string) => {
     switch (sectionId) {
-      case "reports":
-      case "ratings":
-      case "methodology":
-      case "about":
-        navigate(`${routes.features}#${sectionId}`);
+      case "home":
+        navigate(routes.features);
         break;
-      case "compliance/finma":
+      case "methodology":
+        navigate(routes.methodology);
+        break;
+      case "security":
+        navigate(routes.security);
+        break;
+      case "about":
+        navigate(routes.about);
+        break;
+      case "compliance-finma":
         navigate(routes.compliance.finma);
         break;
-      case "compliance/eu-ai-act":
+      case "compliance-eu-ai-act":
         navigate(routes.compliance.euAiAct);
         break;
-      case "subscribe":
-        if (location.pathname === routes.features) {
-          scrollToSection(sectionId);
-        } else {
-          navigate(`${routes.features}#${sectionId}`);
-        }
-        break;
-      case "pricing":
-        navigate(routes.pricing);
-        break;
       case "contact":
-        if (location.pathname === routes.features) {
-          scrollToSection("contact");
-        } else {
-          navigate(`${routes.features}#contact`);
-        }
+        navigate(routes.contact);
+        break;
+      case "request-evaluation":
+        navigate(routes.contact);
         break;
       case "install":
         setIsInstallAppDialogOpen(true);
@@ -106,7 +105,7 @@ const ApplicationBar = () => {
         navigate(routes.dashboard.reports.create);
         break;
       default:
-        scrollToSection(sectionId);
+        scrollToSection("hero");
     }
     setIsDrawerOpen(false);
   };

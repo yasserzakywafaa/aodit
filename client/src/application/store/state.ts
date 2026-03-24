@@ -48,8 +48,8 @@ export const getThemePreference = (user?: User | null): PaletteMode => {
     APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME
   ) as PaletteMode;
 
-  // Default to "dark" if nothing is found
-  return storedTheme || "dark";
+  // Default to "light" if nothing is found
+  return storedTheme || "light";
 };
 
 export const getApplicationInitialState = (): ApplicationInitialState => {

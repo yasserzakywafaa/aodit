@@ -1,9 +1,9 @@
 import { Theme, createTheme } from "@mui/material/styles";
 
-export const white = "#f8f8f8";
-export const lightGreen = "rgba(239, 245, 241, 1)";
+export const white = "#FFFFFF";
+export const lightGreen = "#F7F8FA";
 export const black = "#0A0A0A";
-export const grey = "#6B6B6B";
+export const grey = "#5A6370";
 export const lightGrey = "#D4D0C8";
 export const red = "#C0392B";
 export const border = "rgba(180,174,162,0.25)";
@@ -15,10 +15,10 @@ export const primaryColorOpaqueFifteen = "rgba(4, 120, 87, 0.15)";
 export const primaryColorOpaqueEight = "rgba(4, 120, 87, 0.08)";
 export const primaryColorDim = "rgba(4, 120, 87, 0.2)";
 export const primaryColorFaint = "rgba(4, 120, 87, 0.06)";
-export const secondaryColor = black;
+export const secondaryColor = "#1B2A4A"; // institutional navy
 
 export const fontFamilySerif = "'Playfair Display', serif";
-export const fontFamilySans = "'Syne', sans-serif";
+export const fontFamilySans = "'Inter', sans-serif";
 
 export const defaultBackDropFilterBlur = "blur(12px)";
 const borderRadius = "0px";
@@ -59,22 +59,23 @@ export const theme = createTheme({
     primary: {
       main: primaryColor,
     },
-    secondary: { main: white },
+    secondary: { main: secondaryColor },
     error: { main: red },
   },
   typography: {
     fontFamily: fontFamilySans,
     h1: {
       fontFamily: fontFamilySerif,
-      fontWeight: 300,
+      fontWeight: 700,
       letterSpacing: "-0.02em",
     },
     h2: {
       fontFamily: fontFamilySerif,
-      fontWeight: 300,
+      fontWeight: 600,
       letterSpacing: "-0.01em",
     },
-    h3: { fontFamily: fontFamilySerif, fontWeight: 400 },
+    h3: { fontFamily: fontFamilySerif, fontWeight: 500 },
+    h4: { fontFamily: fontFamilySerif, fontWeight: 500 },
   },
   components: {
     MuiButton: {
@@ -144,6 +145,9 @@ export const theme = createTheme({
         root: {
           borderRadius,
         },
+        outlined: {
+          boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        },
       },
     },
   },
@@ -154,10 +158,10 @@ export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: { main: primaryColor },
-    secondary: { main: lightGreen },
-    background: { default: lightGreen },
-    text: { primary: black, secondary: grey },
-    divider: primaryColor,
+    secondary: { main: secondaryColor },
+    background: { default: white },
+    text: { primary: secondaryColor, secondary: grey },
+    divider: "rgba(27, 42, 74, 0.12)",
   },
 });
 
@@ -169,6 +173,6 @@ export const darkTheme = createTheme({
     secondary: { main: white },
     background: { default: black },
     text: { primary: white, secondary: grey },
-    divider: primaryColor,
+    divider: "rgba(255, 255, 255, 0.12)",
   },
 });

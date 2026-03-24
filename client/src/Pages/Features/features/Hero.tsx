@@ -1,140 +1,100 @@
-import { alpha, useTheme } from "@mui/material/styles";
-import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+import {
+  ArrowForward,
+  CloudOffOutlined,
+  LockOutlined,
+  VerifiedUserOutlined,
+} from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+  alpha,
+} from "@mui/material";
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import { scrollToSection } from "src/shared/utils/scrollTo";
+import { primaryColor } from "src/application/shared/themes";
+import { routes } from "src/application/routes";
+import { useNavigate } from "react-router-dom";
+
+const HERO_BULLETS = [
+  {
+    icon: <LockOutlined sx={{ fontSize: 18 }} />,
+    text: "Fully on-premise, airgapped deployment",
+  },
+  {
+    icon: <CloudOffOutlined sx={{ fontSize: 18 }} />,
+    text: "No access to client data or outputs",
+  },
+  {
+    icon: <VerifiedUserOutlined sx={{ fontSize: 18 }} />,
+    text: "Independent behavioral evaluation (not self-assessment)",
+  },
+];
 
 const Hero = () => {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
-  const gridOpacity = isDark ? 0.09 : 0.04;
-  const accent = theme.palette.primary.main;
+  const navigate = useNavigate();
 
   return (
     <Box
-      id="hero"
+      component="section"
       sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        position: "relative",
-        overflow: "hidden",
-        py: { xs: 6, md: 10 },
-        px: { xs: 3, md: 6 },
+        pt: { xs: 10, md: 14 },
+        pb: { xs: 8, md: 12 },
+        px: { xs: 3, md: 0 },
+        backgroundImage: `
+        linear-gradient(${alpha(primaryColor, 0.1)} 1px, transparent 1px),
+        linear-gradient(90deg, ${alpha(primaryColor, 0.1)} 1px, transparent 1px)
+      `,
+        backgroundSize: "80px 80px",
       }}
     >
-      {/* Grid overlay — stronger in dark mode so lines are visible */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: -1,
-          pointerEvents: "none",
-          backgroundColor: "transparent",
-          backgroundImage: `
-            linear-gradient(${alpha(accent, gridOpacity)} 1px, transparent 1px),
-            linear-gradient(90deg, ${alpha(accent, gridOpacity)} 1px, transparent 1px)
-          `,
-          backgroundSize: "80px 80px",
-        }}
-      />
-
-      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-        {/* Eyebrow */}
+      <Container maxWidth="md">
         <Typography
-          variant="body2"
+          variant="h1"
           sx={{
-            fontFamily: fontFamilySans,
-            letterSpacing: "0.25em",
-            textTransform: "uppercase",
-            color: "primary.main",
-            mb: 3.5,
-          }}
-        >
-          // Swiss Lab of Intelligence (Swissli)
-        </Typography>
-
-        {/* Headline */}
-        <Typography
-          component="h1"
-          sx={{
-            fontFamily: fontFamilySerif,
-            fontSize: {
-              xs: "clamp(2.25rem, 6vw, 4rem)",
-              md: "clamp(52px, 8vw, 120px)",
-            },
-            fontWeight: 900,
-            lineHeight: 0.92,
-            letterSpacing: "-0.02em",
+            fontSize: { xs: "2.2rem", sm: "2.8rem", md: "3.2rem" },
+            lineHeight: 1.12,
+            mb: 3,
             color: "text.primary",
-            mb: 4,
+            letterSpacing: "-0.02em",
           }}
         >
-          How Does Your
-          <br />
-          AI Agent Behave
-          <br />
-          Under{" "}
-          <Box
-            component="span"
-            sx={{
-              color: "primary.main",
-              position: "relative",
-              display: "inline-block",
-              "&::after": {
-                content: '""',
-                position: "absolute",
-                bottom: "-8px",
-                left: 0,
-                right: 0,
-                height: "3px",
-                background: "primary.main",
-                transform: "scaleX(1)",
-              },
-            }}
-          >
-            Pressure?
-          </Box>
+          Independent AI Agent Evaluation for Banks and Financial Institutions
         </Typography>
-
-        {/* Body */}
         <Typography
           sx={{
-            maxWidth: 560,
-            fontSize: 16,
-            lineHeight: 1.8,
-            mb: 6,
+            fontSize: { xs: 16, md: 18 },
+            color: "text.secondary",
+            mb: 4,
+            maxWidth: 620,
+            lineHeight: 1.75,
           }}
         >
-          AODIT-6 rates any AI agent across six behavioral dimensions using
-          structured adversarial testing. Independent. Institutional.
-          Comparable.
+          Evidence how your AI behaves under stress — before regulators,
+          auditors, or clients do.
         </Typography>
 
-        {/* Buttons */}
-        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-          <Button
-            size="large"
-            variant="contained"
-            onClick={() => scrollToSection("ratings")}
-          >
-            View 2026 Ratings
-          </Button>
-          <Button
-            size="large"
-            variant="outlined"
-            onClick={() => scrollToSection("contact")}
-          >
-            Rate Your Agent
-          </Button>
-        </Box>
+        <Stack spacing={1.5} sx={{ mb: 4 }}>
+          {HERO_BULLETS.map(({ icon, text }) => (
+            <Stack key={text} direction="row" alignItems="center" gap={1.5}>
+              <Box sx={{ color: primaryColor, display: "flex" }}>{icon}</Box>
+              <Typography sx={{ fontSize: 15, color: "text.primary" }}>
+                {text}
+              </Typography>
+            </Stack>
+          ))}
+        </Stack>
+
+        <Button
+          variant="contained"
+          size="large"
+          endIcon={<ArrowForward />}
+          onClick={() => navigate(routes.contact)}
+          sx={{ px: 4, py: 1.2 }}
+        >
+          Request Evaluation
+        </Button>
       </Container>
     </Box>
   );

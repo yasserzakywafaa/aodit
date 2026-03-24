@@ -54,12 +54,32 @@ const ContactPage = () => {
       <Container
         className="contact-container"
         sx={{
-          pt: 4,
-          pb: 4,
+          pt: 6,
+          pb: 6,
         }}
       >
-        <Typography variant="h4" component="h1" color="primary" gutterBottom>
+        <Typography
+          variant="h3"
+          component="h1"
+          sx={{
+            fontSize: { xs: "1.75rem", md: "2.25rem" },
+            mb: 1,
+          }}
+        >
           Contact Us
+        </Typography>
+        <Typography
+          color="text.secondary"
+          sx={{ mb: 1, lineHeight: 1.7 }}
+        >
+          For evaluation inquiries, security documentation requests (NDA
+          required), or general questions about AODIT.
+        </Typography>
+        <Typography
+          color="text.secondary"
+          sx={{ mb: 4, fontSize: 14 }}
+        >
+          We typically respond within one business day.
         </Typography>
 
         <Grid container spacing={5}>

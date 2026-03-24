@@ -20,33 +20,12 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { useState } from "react";
 
-const SECTION_LABEL_STYLE = {
-  fontFamily: fontFamilySans,
-  fontSize: 10,
-  letterSpacing: "0.2em",
-  textTransform: "uppercase" as const,
-  color: "primary.main",
-  mb: 6,
-  display: "flex",
-  alignItems: "center",
-  gap: 2,
-  "&::after": {
-    content: '""',
-    flex: 1,
-    maxWidth: 60,
-    height: 1,
-    bgcolor: "primary.main",
-    opacity: 0.4,
-  },
-};
-
 const FEATURED_REPORT = {
-  label: "Featured Banking AI Risk Report",
-  title: "2026 Banking AI Risk Assessment",
-  subtitle: "Banking AI Behavioral Security Benchmark",
+  title: "2026 Banking AI Risk Report",
+  subtitle:
+    "AODIT evaluated leading AI systems across multi-turn adversarial scenarios covering customer interactions, fraud handling, and escalation behavior.",
   description:
-    "Independent evaluation of leading frontier language models across 1,200 multi-turn adversarial banking scenarios covering refunds, card freezing, escalation handling, and policy integrity. Ratings reflect behavioral compliance quality and deployment suitability for regulated financial environments.",
-  reportId: "Banking AI Risk Assessment Report 2026 – AODIT Q1",
+    "Independent evaluation of AI agent behavior under adversarial banking scenarios aligned with FINMA expectations.",
   ctaLabel: "Download Executive Summary",
 };
 
@@ -158,63 +137,11 @@ const DownloadReportSection = () => {
   };
 
   return (
-    <Box
-      id="ratings"
-      component="section"
-      sx={{
-        mt: { xs: 6, md: 12.5 },
-        py: { xs: 6, md: 12.5 },
-        px: { xs: 3, md: 6 },
-        borderTop: (t) => `1px solid ${t.palette.divider}`,
-        bgcolor: "background.paper",
-      }}
-    >
-      <Typography sx={SECTION_LABEL_STYLE}>{FEATURED_REPORT.label}</Typography>
-
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { md: "1fr 1fr" },
-          gap: { md: 6 },
-          mb: 6,
-        }}
-      >
-        <Typography
-          component="h2"
-          sx={{
-            fontFamily: fontFamilySerif,
-            fontSize: {
-              xs: "clamp(1.75rem, 4vw, 2.5rem)",
-              md: "clamp(36px, 4vw, 56px)",
-            },
-            fontWeight: 300,
-            lineHeight: 1.1,
-            letterSpacing: "-0.01em",
-            color: "text.primary",
-          }}
-        >
-          2026 Banking AI Agent{" "}
-          <Box
-            component="em"
-            sx={{ fontStyle: "italic", color: "primary.main" }}
-          >
-            Stress Test
-          </Box>
-        </Typography>
-        <Typography
-          sx={{
-            color: "text.secondary",
-            fontSize: 15,
-            lineHeight: 1.75,
-            pt: 1,
-          }}
-        >
-          {FEATURED_REPORT.description}
-        </Typography>
-      </Box>
-
+    <>
       {/* Featured report card */}
       <Box
+        id="ratings"
+        component="section"
         sx={{
           position: "relative",
           overflow: "hidden",
@@ -246,17 +173,6 @@ const DownloadReportSection = () => {
           }}
         >
           <Typography
-            sx={{
-              fontFamily: fontFamilySans,
-              fontSize: 10,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "primary.main",
-            }}
-          >
-            {FEATURED_REPORT.reportId}
-          </Typography>
-          <Typography
             component="h3"
             sx={{
               fontFamily: fontFamilySerif,
@@ -272,6 +188,18 @@ const DownloadReportSection = () => {
           >
             {FEATURED_REPORT.title}
           </Typography>
+
+          <Typography
+            sx={{
+              color: "text.secondary",
+              fontSize: 15,
+              lineHeight: 1.75,
+              pt: 1,
+            }}
+          >
+            {FEATURED_REPORT.description}
+          </Typography>
+
           <Typography
             sx={{
               fontFamily: fontFamilySans,
@@ -372,7 +300,7 @@ const DownloadReportSection = () => {
           </DialogActions>
         </form>
       </Dialog>
-    </Box>
+    </>
   );
 };
 

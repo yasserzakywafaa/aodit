@@ -17,10 +17,11 @@ export const createOrganizationSchemaForSite = (aggregateRating?: {
   const organization: any = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Aodit",
+    name: "Swiss Lab of Intelligence (SwissLI AG)",
     url: baseUrl,
     logo: getImageUrl("/icons/icon_512x512.png"),
-    description: "AI-powered projects creation platform.",
+    description:
+      "Independent AI agent evaluation platform for financial institutions.",
     sameAs: [
       // Add social media links if available
       // "https://twitter.com/aodit",
@@ -28,7 +29,7 @@ export const createOrganizationSchemaForSite = (aggregateRating?: {
     ],
     contactPoint: {
       "@type": "ContactPoint",
-      contactType: "Customer Service",
+      contactType: "Sales and Security Inquiries",
       url: getAbsoluteUrl("/contact"),
     },
   };
@@ -59,8 +60,8 @@ export const createSoftwareApplicationSchema = (
   const application: any = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Aodit",
-    applicationCategory: "ContentManagementApplication",
+    name: "AODIT",
+    applicationCategory: "SecurityApplication",
     operatingSystem: "Web",
     offers: {
       "@type": "Offer",
@@ -69,7 +70,7 @@ export const createSoftwareApplicationSchema = (
       availability: "https://schema.org/InStock",
     },
     description:
-      "AI-powered project creation platform that generates stunning projects in seconds. Create single projects or launch comprehensive campaigns with ease.",
+      "Independent AI agent evaluation platform for banks and financial institutions.",
     url: baseUrl,
     screenshot: getImageUrl("/icons/icon_512x512.png"),
   };

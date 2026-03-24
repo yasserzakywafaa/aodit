@@ -8,17 +8,24 @@ import Logo, { LogoComponentEnum } from "../../Logo";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Authentication } from "src/application/store/state";
-import ComplianceDropdown from "src/components/navbar/ComplianceDropdown";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
+import { routes } from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
-  { id: "reports", label: "Reports" },
-  { id: "methodology", label: "Methodology" },
-  { id: "about", label: "About" },
+  { id: "home", label: "Home", route: routes.features },
+  { id: "methodology", label: "Methodology", route: routes.methodology },
+  {
+    id: "compliance-finma",
+    label: "Compliance",
+    route: routes.compliance.finma,
+  },
+  { id: "security", label: "Security", route: routes.security },
+  { id: "about", label: "About", route: routes.about },
+  { id: "contact", label: "Contact", route: routes.contact },
 ] as const;
 
 interface ApplicationBarMobileViewParams {
@@ -30,7 +37,7 @@ interface ApplicationBarMobileViewParams {
   handleToggleLoginModal: () => void;
   handleToggleRegisterModal: () => void;
   setIsInstallAppDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleOnMenuItemClick: (sectionId: string) => () => void;
+  handleOnMenuItemClick: (sectionId: string) => void;
 }
 
 const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
@@ -44,6 +51,12 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
     handleOnMenuItemClick,
   } = props;
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+
+  const handleOnMenuItemClickEvent =
+    (sectionId: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      handleOnMenuItemClick(sectionId);
+    };
 
   return (
     <>
@@ -87,36 +100,39 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
               }}
             >
               <Box>
-                <MenuItem
-                  className="menu-item"
-                  onClick={handleOnMenuItemClick("reports")}
-                >
-                  <Typography variant="body1" color="primary">
-                    Reports
-                  </Typography>
-                </MenuItem>
-                {NAV_LINKS.map(({ id, label }) => (
-                  <MenuItem
-                    key={id}
-                    className="menu-item"
-                    onClick={handleOnMenuItemClick(id)}
-                  >
-                    <Typography variant="body1" color="text.primary">
-                      {label}
-                    </Typography>
-                  </MenuItem>
+                {NAV_LINKS.map((item) => (
+                  <>
+                    {/* TODO: Uncomment this when EU AI Act is live */}
+                    {/* {id === "compliance-finma" ? (
+                      <MenuItem>
+                        <ComplianceDropdown />
+                      </MenuItem>
+                    ) : ( */}
+                    <MenuItem
+                      key={item.id}
+                      component="a"
+                      href={item.route}
+                      onClick={handleOnMenuItemClickEvent(item.id)}
+                    >
+                      <Typography variant="body2" color="text.primary">
+                        {item.label}
+                      </Typography>
+                    </MenuItem>
+                    {/* // )} */}
+                  </>
                 ))}
 
-                <ComplianceDropdown />
-
-                <MenuItem
-                  className="menu-item"
-                  onClick={handleOnMenuItemClick("contact")}
-                >
-                  <Typography variant="body1" color="primary">
-                    Get your agent rated
-                  </Typography>
-                </MenuItem>
+                <Box sx={{ mt: 2, px: 2 }}>
+                  <Button
+                    component="a"
+                    href={routes.contact}
+                    variant="contained"
+                    fullWidth
+                    onClick={handleOnMenuItemClickEvent("request-evaluation")}
+                  >
+                    Request Evaluation
+                  </Button>
+                </Box>
               </Box>
 
               <Box marginBottom="1rem">

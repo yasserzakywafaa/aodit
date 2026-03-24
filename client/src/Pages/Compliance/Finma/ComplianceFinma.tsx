@@ -49,7 +49,7 @@ const ComplianceFinmaPage = () => {
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "FINMA AI Guidelines",
+      "FINMA AI Guidance 08/2024 Explained (Switzerland)",
       "Independent behavioral control-layer evidence for FINMA-aligned AI testing, monitoring, and risk decisions in Swiss financial services.",
       routes.compliance.finma,
     );
@@ -59,17 +59,45 @@ const ComplianceFinmaPage = () => {
 
   return (
     <Page
-      title="FINMA AI Guidelines | Aodit"
+      title="FINMA AI Guidance 08/2024 Explained (Switzerland) | AODIT"
       className="compliance-finma-page"
       isLoading={false}
     >
-      <Container sx={{ mt: 3, pb: 6 }}>
-        <Typography variant="h4" gutterBottom>
+      <Container sx={{ mt: 6, pb: 6 }}>
+        <Typography
+          variant="h3"
+          sx={{
+            fontSize: { xs: "1.75rem", md: "2.25rem" },
+            mb: 1,
+          }}
+        >
           FINMA AI Guidelines
         </Typography>
-        <Typography variant="subtitle1" color="primary" gutterBottom>
+        <Typography
+          variant="subtitle1"
+          color="primary"
+          sx={{ fontWeight: 600, mb: 2 }}
+        >
           Swiss financial market supervision
         </Typography>
+
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            mb: 3,
+            bgcolor: "rgba(10, 110, 79, 0.04)",
+            borderLeft: "3px solid",
+            borderLeftColor: "primary.main",
+          }}
+        >
+          <Typography
+            sx={{ fontSize: 14, color: "text.secondary", lineHeight: 1.6 }}
+          >
+            For CROs, compliance officers, and model risk teams evaluating
+            independent AI testing evidence against FINMA requirements.
+          </Typography>
+        </Paper>
 
         <Typography paragraph>{FINMA_ALIGNMENT_INTRO}</Typography>
 
@@ -91,7 +119,10 @@ const ComplianceFinmaPage = () => {
           </Typography>
           <Paper variant="outlined" sx={{ p: 2 }}>
             {FINMA_LIFECYCLE_STAGES.map((item) => (
-              <Box key={item.stage} sx={{ mb: 1.5, "&:last-of-type": { mb: 0 } }}>
+              <Box
+                key={item.stage}
+                sx={{ mb: 1.5, "&:last-of-type": { mb: 0 } }}
+              >
                 <Typography sx={{ fontWeight: 700 }}>{item.stage}</Typography>
                 <Typography color="text.secondary">{item.useCase}</Typography>
               </Box>
@@ -183,8 +214,9 @@ const ComplianceFinmaPage = () => {
             FINMA Guidance 08/2024 — control evidence scorecard
           </Typography>
           <Typography paragraph sx={{ mb: 1.5 }}>
-            Strong indicates direct behavioral evidence coverage. Partial indicates
-            supporting evidence only. Not covered indicates an intentional boundary.
+            Strong indicates direct behavioral evidence coverage. Partial
+            indicates supporting evidence only. Not covered indicates an
+            intentional boundary.
           </Typography>
           <Paper variant="outlined">
             <Table size="small">
@@ -202,8 +234,14 @@ const ComplianceFinmaPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {FINMA_ALIGNMENT_ROWS.map((row) => (
-                  <TableRow key={row.principle}>
+                {FINMA_ALIGNMENT_ROWS.map((row, index) => (
+                  <TableRow
+                    key={row.principle}
+                    sx={{
+                      bgcolor:
+                        index % 2 === 0 ? "transparent" : "rgba(0,0,0,0.02)",
+                    }}
+                  >
                     <TableCell sx={{ verticalAlign: "top", fontWeight: 600 }}>
                       {row.principle}
                     </TableCell>
@@ -245,8 +283,14 @@ const ComplianceFinmaPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {OTHER_STANDARD_ROWS.map((row) => (
-                  <TableRow key={row.standard}>
+                {OTHER_STANDARD_ROWS.map((row, index) => (
+                  <TableRow
+                    key={row.standard}
+                    sx={{
+                      bgcolor:
+                        index % 2 === 0 ? "transparent" : "rgba(0,0,0,0.02)",
+                    }}
+                  >
                     <TableCell sx={{ verticalAlign: "top", fontWeight: 600 }}>
                       {row.standard}
                     </TableCell>

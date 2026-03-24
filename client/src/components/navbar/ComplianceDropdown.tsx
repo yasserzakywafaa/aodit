@@ -3,19 +3,20 @@ import { ExpandMoreRounded } from "@mui/icons-material";
 import { Box, Button, Menu, MenuItem, Stack, Typography } from "@mui/material";
 // import EuFlag from "src/assets/images/eu_flag.png";
 import SwissFlag from "src/assets/images/switzerland_flag.png";
+import { routes } from "src/application/routes";
 
 const COMPLIANCE_ITEMS = [
   {
     flag: SwissFlag,
     label: "FINMA AI Guidelines",
     description: "Swiss financial market supervision",
-    to: "/compliance/finma",
+    to: routes.compliance.finma,
   },
   // {
   //   flag: EuFlag,
   //   label: "EU AI Act",
   //   description: "European AI regulation framework",
-  //   to: "/compliance/eu-ai-act",
+  //   to: routes.compliance.euAiAct,
   // },
 ] as const;
 
@@ -43,17 +44,10 @@ const ComplianceDropdown = () => {
         aria-haspopup="menu"
         onClick={handleOpen}
         color="inherit"
-        sx={{
-          color: "text.primary",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 0.75,
-          textTransform: "none",
-        }}
+        variant="text"
+        sx={{ padding: 0 }}
       >
-        <Typography variant="button" sx={{ fontWeight: 500 }}>
-          Compliance
-        </Typography>
+        <Typography variant="body2">Compliance</Typography>
         <ExpandMoreRounded
           sx={{
             transition: "transform 150ms ease",
@@ -83,15 +77,13 @@ const ComplianceDropdown = () => {
                 <Typography
                   className="compliance-item-label"
                   variant="body2"
-                  sx={{
-                    fontWeight: 600,
-                    color: "text.primary",
-                    transition: "color 150ms ease",
-                  }}
+                  color="text.primary"
+                  fontWeight={600}
+                  sx={{ transition: "color 150ms ease" }}
                 >
                   {item.label}
                 </Typography>
-                <Typography variant="caption" sx={{ color: "text.primary" }}>
+                <Typography variant="caption" color="text.primary">
                   {item.description}
                 </Typography>
               </Box>

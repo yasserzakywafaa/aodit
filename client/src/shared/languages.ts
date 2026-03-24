@@ -20,7 +20,7 @@ export enum SupportedLanguages {
 }
 
 export const Languages: Language[] = [
-  { name: "English", value: SupportedLanguages.en, fontFamily: "Syne" },
+  { name: "English", value: SupportedLanguages.en, fontFamily: "Inter" },
   { name: "Arabic", value: SupportedLanguages.ar },
   { name: "Spanish", value: SupportedLanguages.es },
   { name: "French", value: SupportedLanguages.fr },

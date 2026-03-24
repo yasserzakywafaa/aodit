@@ -1,72 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <!-- Main Pages -->
-   <url>
-      <loc>https://www.aodit.ai/</loc>
-      <lastmod>2025-02-03T12:02:21.758Z</lastmod>
-      <priority>1.0</priority>
-   </url>
-   <url>
-      <loc>https://www.aodit.ai/#reports</loc>
-      <lastmod>2025-02-03T12:02:21.758Z</lastmod>
-      <priority>1.0</priority>
-   </url>
-   <url>
-      <loc>https://www.aodit.ai/#ratings</loc>
-      <lastmod>2025-02-03T12:02:21.758Z</lastmod>
-      <priority>1.0</priority>
-   </url>
-   <url>
-      <loc>https://www.aodit.ai/#methodology</loc>
-      <lastmod>2025-02-03T12:02:21.758Z</lastmod>
-      <priority>1.0</priority>
-   </url>
-   <url>
-      <loc>https://www.aodit.ai/#about</loc>
-      <lastmod>2025-02-03T12:02:21.758Z</lastmod>
-      <priority>1.0</priority>
-   </url>
-
-      <url>
-      <loc>https://www.aodit.ai/login</loc>
-      <lastmod>2026-03-23T12:02:21.758Z</lastmod>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://www.aodit.ai/register</loc>
-      <lastmod>2026-03-23T12:02:21.758Z</lastmod>
-      <priority>0.7</priority>
-   </url>
-   <!-- End of Main Pages -->
-
-   <!-- Compliance Pages -->
-   <url>
-      <loc>https://www.aodit.ai/compliance/finma</loc>
-      <lastmod>2026-03-23T12:02:21.758Z</lastmod>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://www.aodit.ai/compliance/eu-ai-act</loc>
-      <lastmod>2026-03-23T12:02:21.758Z</lastmod>
-      <priority>0.7</priority>
-   </url>
-   <!-- End of Compliance Pages -->
-
-   <!-- Legal Pages -->
-   <url>
-      <loc>https://www.aodit.ai/contact</loc>
-      <lastmod>2025-02-03T12:02:21.758Z</lastmod>
-      <priority>0.7</priority>
-   </url>
-   <url>
-      <loc>https://www.aodit.ai/privacy-policy</loc>
-      <lastmod>2025-02-03T12:02:21.758Z</lastmod>
-      <priority>0.6</priority>
-   </url>
-   <url>
-      <loc>https://www.aodit.ai/terms-and-conditions</loc>
-      <lastmod>2025-02-03T12:02:21.758Z</lastmod>
-      <priority>0.6</priority>
-   </url>
-   <!-- End of Legal Pages -->
+  <url>
+    <loc>https://www.aodit.ai/</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/ai-agent-testing-methodology</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/finma-ai-guidance-switzerland</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/security-on-premise-ai</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/about-swissli</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/contact</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/privacy-policy</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/terms-and-conditions</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/compliance/finma</loc>
+    <lastmod>2026-03-24T00:00:00.000Z</lastmod>
+    <priority>0.4</priority>
+  </url>
 </urlset>

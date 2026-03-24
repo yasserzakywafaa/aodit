@@ -38,7 +38,7 @@ const SecurityPage = () => {
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "On-Premise AI Evaluation Security",
-      "Security architecture and data handling model for AODIT on-premise deployment in regulated financial institutions.",
+      "Security architecture and data handling model for AODIT on-premise deployment in regulated fintechs and insurance companies.",
       routes.security,
     );
   }, []);
@@ -47,7 +47,7 @@ const SecurityPage = () => {
 
   return (
     <Page
-      title="On-Premise AI Evaluation for Financial Institutions | AODIT"
+      title="On-Premise AI Evaluation for Fintechs and Insurance companies | AODIT"
       className="security-page"
       isLoading={false}
     >

@@ -34,7 +34,10 @@ import DownloadReportSection from "./features/DownloadReportSection";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import { alpha } from "@mui/material/styles";
+import euHostedImgDark from "src/assets/images/eu_hosted_black_text.webp";
+import euHostedImgLight from "src/assets/images/eu_hosted_white_text.webp";
 import { routes } from "src/application/routes";
+import swissMadeImg from "src/assets/images/swiss_made.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +46,7 @@ const FeaturesPage = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching },
+      state: { isFetching, themeMode },
     },
   } = useApplicationContext();
 
@@ -55,7 +58,7 @@ const FeaturesPage = () => {
     () =>
       createWebPageSchema(
         "AI Agent Evaluation for Banks",
-        "Independent AI agent evaluation for financial institutions with on-premise deployment and no client data access by default.",
+        "Independent AI agent evaluation for fintechs and insurance companies with on-premise deployment and no client data access by default.",
         routes.features,
       ),
     [],
@@ -114,6 +117,21 @@ const FeaturesPage = () => {
               requirements.
             </Typography>
           </Stack>
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            flexWrap="wrap"
+            gap={2}
+            mt={4}
+          >
+            <Box
+              component="img"
+              src={themeMode === "dark" ? euHostedImgLight : euHostedImgDark}
+              alt="EU Hosted (EU AI Act Ready)"
+            />
+            <Box component="img" src={swissMadeImg} alt="Swiss Made Software" />
+          </Stack>
         </Container>
       </Box>
 
@@ -143,7 +161,17 @@ const FeaturesPage = () => {
               color: "text.primary",
             }}
           >
-            Where AODIT fits in your AI lifecycle
+            Where{" "}
+            <Typography
+              component="span"
+              color="primary.main"
+              sx={{
+                fontSize: { xs: "1.5rem", md: "1.85rem" },
+              }}
+            >
+              aodit
+            </Typography>{" "}
+            fits in your AI lifecycle
           </Typography>
           <Paper variant="outlined" sx={{ overflow: "hidden" }}>
             <Table>
@@ -272,7 +300,10 @@ const FeaturesPage = () => {
             <Typography
               sx={{ fontWeight: 600, mb: 1.5, color: "text.primary" }}
             >
-              AODIT does not:
+              <Typography component="span" color="primary.main">
+                aodit
+              </Typography>{" "}
+              does not:
             </Typography>
             <List sx={{ listStyleType: "none", p: 0 }}>
               {[
@@ -348,7 +379,10 @@ const FeaturesPage = () => {
             <Typography
               sx={{ fontWeight: 600, color: "text.primary", lineHeight: 1.75 }}
             >
-              AODIT provides that independent evidence layer.
+              <Typography component="span" color="primary.main">
+                aodit
+              </Typography>{" "}
+              provides that independent evidence layer.
             </Typography>
           </Paper>
         </Container>

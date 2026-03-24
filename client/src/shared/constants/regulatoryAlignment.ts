@@ -15,7 +15,7 @@ export interface StandardAlignmentRow {
 }
 
 export const FINMA_ALIGNMENT_INTRO =
-  "Published 18 December 2024, FINMA Guidance 08/2024 is the primary Swiss regulatory anchor for AI in financial institutions. AODIT is the independent behavioral control layer used to evidence how AI agents perform under stress.";
+  "Published 18 December 2024, FINMA Guidance 08/2024 is the primary Swiss regulatory anchor for AI in fintechs and insurance companies. AODIT is the independent behavioral control layer used to evidence how AI agents perform under stress.";
 
 export const FINMA_ALIGNMENT_DISCLAIMER =
   "AODIT does not certify compliance and does not replace the institution's governance or compliance program. It provides independent behavioral evidence required to demonstrate that controls work in practice.";

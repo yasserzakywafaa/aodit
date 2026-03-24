@@ -35,7 +35,7 @@ const FOOTER_SECTIONS = [
     links: [
       { label: "Privacy Policy", href: routes.privacyPolicy },
       { label: "Terms & Conditions", href: routes.termsAndConditions },
-      { label: "Data Processing Agreement", href: routes.contact },
+      { label: "Data Processing Agreement", href: routes.dataProcessingAgreement },
     ],
   },
 ] as const;

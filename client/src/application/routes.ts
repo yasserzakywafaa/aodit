@@ -18,6 +18,7 @@ export const routes = {
   contact: `/contact`,
   privacyPolicy: `/privacy-policy`,
   termsAndConditions: `/terms-and-conditions`,
+  dataProcessingAgreement: `/data-processing-agreement`,
   logout: `/logout`,
   // Auth
   auth: {

@@ -58,6 +58,12 @@ const PrivacyPolicyPage = lazy(
 const TermsAndConditionsPage = lazy(
   () => import("../Pages/TermsAndConditions/TermsAndConditions"),
 );
+const DataProcessingAgreementPage = lazy(
+  () =>
+    import(
+      "../Pages/DataProcessingAgreement/DataProcessingAgreement"
+    ),
+);
 const ComplianceFinmaPage = lazy(
   () => import("../Pages/Compliance/Finma/ComplianceFinma"),
 );
@@ -146,6 +152,10 @@ const AppContent = () => {
             <Route
               path={routes.termsAndConditions}
               element={<TermsAndConditionsPage />}
+            />
+            <Route
+              path={routes.dataProcessingAgreement}
+              element={<DataProcessingAgreementPage />}
             />
 
             {state.auth.isAuthenticated && !!state.auth.user ? (

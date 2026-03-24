@@ -37,7 +37,7 @@ const MethodologyPage = () => {
 
   return (
     <Page
-      title="AI Agent Testing Methodology for Financial Institutions | AODIT"
+      title="AI Agent Testing Methodology for Fintechs and Insurance companies | AODIT"
       className="methodology-page"
       isLoading={false}
     >

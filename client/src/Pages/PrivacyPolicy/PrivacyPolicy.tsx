@@ -6,15 +6,56 @@ import {
   Link,
   List,
   ListItem,
-  ListItemText,
   Typography,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
+import { fontFamilySerif, primaryColor } from "src/application/shared/themes";
 
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+
+const BulletList = ({ items }: { items: string[] }) => (
+  <List sx={{ pl: 2, py: 0.5 }}>
+    {items.map((item) => (
+      <ListItem
+        key={item}
+        sx={{ display: "list-item", listStyleType: "'•  '", py: 0.25, px: 0 }}
+      >
+        <Typography
+          sx={{ fontSize: 15, lineHeight: 1.7, color: "text.primary" }}
+        >
+          {item}
+        </Typography>
+      </ListItem>
+    ))}
+  </List>
+);
+
+const SectionHeading = ({
+  number,
+  title,
+}: {
+  number: string;
+  title: string;
+}) => (
+  <Typography
+    variant="h5"
+    sx={{
+      fontFamily: fontFamilySerif,
+      fontSize: { xs: "1.2rem", md: "1.35rem" },
+      color: "text.primary",
+      mb: 2,
+      mt: 5,
+    }}
+  >
+    <Box component="span" sx={{ color: primaryColor, mr: 1 }}>
+      {number}.
+    </Box>
+    {title}
+  </Typography>
+);
 
 const PrivacyPolicyPage = () => {
   const navigate = useNavigate();
@@ -26,225 +67,585 @@ const PrivacyPolicyPage = () => {
       navigate(route);
     };
 
-  // Generate WebPage schema for SEO
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "Privacy Policy",
-      "This Privacy Policy describes Our policies and procedures on the collection, use, and disclosure of your information when you use the Service and tells you about your privacy rights and how the law protects you.",
+      "Privacy Policy of Swiss Lab of Intelligence AG (SwissLI AG) describing how personal data is processed in connection with the AODIT platform.",
       routes.privacyPolicy,
-      new Date("01/07/2024"),
+      new Date("03/01/2026"),
     );
   }, []);
 
-  // Inject Schema.org structured data
   useSchemaOrg(webPageSchema, "privacy-policy-webpage-schema");
 
   return (
     <Page
-      title="Privacy Policy | Aodit"
+      title="Privacy Policy | AODIT"
       className="privacy-policy-page"
       isLoading={false}
     >
-      <Container sx={{ mt: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Privacy Policy
-        </Typography>
-        <Typography variant="subtitle1" color="primary" gutterBottom>
-          Last updated:{" "}
-          <span className="bold">
-            {new Date("01/07/2024").toLocaleDateString("en-GB", {
-              dateStyle: "short",
-            })}
-          </span>
-        </Typography>
-        <Typography paragraph>
-          This Privacy Policy describes Our policies and procedures on the
-          collection, use, and disclosure of your information when you use the
-          Service and tells you about your privacy rights and how the law
-          protects you.
-        </Typography>
-        <Typography paragraph>
-          We use your Personal data to provide and improve the Service. By using
-          the Service, you agree to the collection and use of information in
-          accordance with this Privacy Policy.
-        </Typography>
-
-        <Box my={4}>
-          <Typography variant="h5" color="primary" gutterBottom>
-            Interpretation and Definitions
+      {/* Hero */}
+      <Box
+        sx={{
+          pt: { xs: 10, md: 13 },
+          pb: { xs: 4, md: 6 },
+          px: { xs: 3, md: 0 },
+          borderBottom: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        <Container maxWidth="md">
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: primaryColor,
+              fontWeight: 700,
+              fontSize: 13,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              mb: 2,
+            }}
+          >
+            Legal
           </Typography>
-
-          <Typography variant="h6" color="primary">
-            Interpretation
+          <Typography
+            variant="h1"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: { xs: "2rem", sm: "2.4rem", md: "2.6rem" },
+              lineHeight: 1.15,
+              mb: 2,
+              color: "text.primary",
+            }}
+          >
+            Privacy Policy
           </Typography>
-          <Typography paragraph>
-            The words of which the initial letter is capitalized have meanings
-            defined under the following conditions. The following definitions
-            shall have the same meaning regardless of whether they appear in
-            singular or in plural.
+          <Typography sx={{ fontSize: 15, color: "text.secondary", mb: 1 }}>
+            Last updated: March 2026
           </Typography>
-
-          <Typography variant="h6" color="primary">
-            Definitions
+          <Typography sx={{ fontSize: 15, color: "text.secondary" }}>
+            Swiss Lab of Intelligence (SwissLI AG)
+            <br />
+            Murbacherstrasse 19, 6003 Luzern, Switzerland
           </Typography>
-          <List>
-            <ListItem>
-              <ListItemText
-                primary="Account"
-                secondary="A unique account created for you to access Our Service or parts of Our Service."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Affiliate"
-                secondary="An entity that controls, is controlled by or is under common control with a party."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Company" secondary="Refers to Aodit." />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Cookies"
-                secondary="Small files placed on your computer or device by a website, containing the details of your browsing history on that website."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Country" secondary="Switzerland" />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Device"
-                secondary="Any device that can access the Service such as a computer, a cellphone or a digital tablet."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Personal Data"
-                secondary="Any information that relates to an identified or identifiable individual."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Service"
-                secondary="Refers to the web application."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Service Provider"
-                secondary="Any natural or legal person who processes the data on behalf of the Company."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Usage Data"
-                secondary="Data collected automatically, either generated by the use of the Service or from the Service infrastructure itself."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Website"
-                secondary={
-                  <Link
-                    href={routes.features}
-                    onClick={handleLinkClick(routes.features)}
-                  >
-                    {window.location.origin}
-                  </Link>
-                }
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="You"
-                secondary="The individual accessing or using the Service, or the company, or other legal entity on behalf of which such individual is accessing or using the Service."
-              />
-            </ListItem>
-          </List>
-        </Box>
+        </Container>
+      </Box>
 
-        <Box my={4}>
-          <Typography variant="h5" color="primary" gutterBottom>
-            Collecting and Using your Personal Data
+      {/* Content */}
+      <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 3, md: 0 } }}>
+        <Container maxWidth="md">
+          {/* 1. Controller */}
+          <SectionHeading number="1" title="Controller" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Swiss Lab of Intelligence AG (&ldquo;SwissLI AG&rdquo;,
+            &ldquo;we&rdquo;, &ldquo;us&rdquo;) is the controller of personal
+            data processed in connection with its website and business
+            activities.
+          </Typography>
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            For data protection inquiries, including data subject requests:{" "}
+            <Link href="mailto:privacy@swissli.ai">privacy@swissli.ai</Link>
           </Typography>
 
-          <Typography variant="h6" color="primary">
-            Types of Data Collected
+          {/* 2. Scope of this Policy */}
+          <SectionHeading number="2" title="Scope of this Policy" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            This Privacy Policy describes how SwissLI AG processes personal data
+            in relation to:
           </Typography>
-          <Typography variant="subtitle1">Personal Data</Typography>
-          <Typography paragraph>
-            While using Our Service, We may ask you to provide Us with certain
-            personally identifiable information that can be used to contact or
-            identify you. Personally identifiable information may include, but
-            is not limited to:
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemText primary="First name and last name" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Usage Data" />
-            </ListItem>
-          </List>
-
-          <Typography variant="subtitle1">Usage Data</Typography>
-          <Typography paragraph>
-            Usage Data is collected automatically when using the Service.
-          </Typography>
-          <Typography paragraph>
-            Usage Data may include information such as your Device's Internet
-            Protocol address (e.g. IP address), browser type, browser version,
-            the pages of Our Service that you visit, the time and date of your
-            visit, the time spent on those pages, unique device identifiers and
-            other diagnostic data.
-          </Typography>
-          <Typography paragraph>
-            When you access the Service by or through a mobile device, We may
-            collect certain information automatically, including, but not
-            limited to, the type of mobile device you use, your mobile device
-            unique ID, the IP address of your mobile device, your mobile
-            operating system, the type of mobile Internet browser you use,
-            unique device identifiers and other diagnostic data.
-          </Typography>
-          <Typography paragraph>
-            We may also collect information that your browser sends whenever you
-            visit Our Service or when you access the Service by or through a
-            mobile device.
+          <BulletList
+            items={[
+              "The website www.aodit.ai",
+              "Client onboarding, contracting, and communication",
+              "Optional support or analysis services",
+            ]}
+          />
+          <Typography
+            paragraph
+            sx={{ fontSize: 15, lineHeight: 1.75, fontWeight: 600 }}
+          >
+            The AODIT platform itself is designed to operate without requiring
+            SwissLI AG to access client AI system data.
           </Typography>
 
-          <Typography variant="subtitle1">
-            Tracking Technologies and Cookies
+          {/* 3. Core Principle */}
+          <SectionHeading
+            number="3"
+            title="Core Principle — Data Sovereignty"
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            AODIT is designed as an on-premise evaluation system. This means:
           </Typography>
-          <Typography paragraph>
-            We use Cookies and similar tracking technologies to track the
-            activity on Our Service and store certain information. Tracking
-            technologies used are beacons, tags, and scripts to collect and
-            track information and to improve and analyze Our Service. The
-            technologies We use may include:
+          <BulletList
+            items={[
+              "AI agent inputs, outputs, and logs remain within the Client's infrastructure",
+              "SwissLI AG does not receive, store, or process client AI system data by default",
+              "No client AI data is transferred to SwissLI AG systems unless explicitly provided by the Client",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG acts as an independent evaluation provider, not as a
+            processor of client AI workloads.
           </Typography>
-          <List>
-            <ListItem>
-              <ListItemText
-                primary="Cookies or Browser Cookies"
-                secondary="A cookie is a small file placed on your Device. you can instruct your browser to refuse all Cookies or to indicate when a Cookie is being sent."
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Web Beacons"
-                secondary="Certain sections of Our Service and Our emails may contain small electronic files known as web beacons."
-              />
-            </ListItem>
-          </List>
-          <Typography paragraph>
-            Cookies can be "Persistent" or "Session" Cookies. Persistent Cookies
-            remain on your personal computer or mobile device when you go
-            offline, while Session Cookies are deleted as soon as you close your
-            web browser.
+
+          {/* 3A. No Data Processor Role */}
+          <SectionHeading number="3A" title="No Data Processor Role" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG does not act as a data processor for client AI system
+            data in the ordinary course of its services. Unless explicitly
+            agreed:
           </Typography>
-        </Box>
-      </Container>
+          <BulletList
+            items={[
+              "SwissLI AG does not process personal data on behalf of the Client",
+              "SwissLI AG does not host or operate Client systems",
+              "SwissLI AG does not access production environments",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Where limited processing may occur (e.g. optional analysis), this is
+            governed by a separate agreement (e.g. Data Processing Agreement).
+          </Typography>
+
+          {/* 4. Access to Client Data */}
+          <SectionHeading number="4" title="Access to Client Data" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            AODIT is designed to operate without requiring direct access to live
+            production systems. SwissLI AG:
+          </Typography>
+          <BulletList
+            items={[
+              "Does not access AI agent outputs or transcripts by default",
+              "Does not store or replicate client AI data",
+              "Does not use client data for training or development",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            If access is required:
+          </Typography>
+          <BulletList
+            items={[
+              "It is explicitly approved by the Client",
+              "Limited in scope and duration",
+              "Technically controlled",
+              "Logged where applicable",
+            ]}
+          />
+
+          {/* 5. Development vs Client Environments */}
+          <SectionHeading
+            number="5"
+            title="Development vs Client Environments"
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG develops evaluation methodologies using controlled
+            environments, which may include cloud-based language models.
+            However:
+          </Typography>
+          <BulletList
+            items={[
+              "No client data is used in development or testing",
+              "Client-specific evaluations are executed within client-controlled infrastructure",
+              "External systems and models have no visibility into client environments",
+            ]}
+          />
+
+          {/* 6. Categories of Personal Data Processed */}
+          <SectionHeading
+            number="6"
+            title="Categories of Personal Data Processed"
+          />
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: "1.05rem",
+              color: "text.primary",
+              mb: 1.5,
+              mt: 3,
+            }}
+          >
+            6.1 Website and Communication
+          </Typography>
+          <BulletList
+            items={[
+              "Name",
+              "Email address",
+              "Company information",
+              "Technical data (e.g. IP address, browser type)",
+            ]}
+          />
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: "1.05rem",
+              color: "text.primary",
+              mb: 1.5,
+              mt: 3,
+            }}
+          >
+            6.2 Client Relationship Management
+          </Typography>
+          <BulletList
+            items={[
+              "Contact details of client representatives",
+              "Contracts, billing information, and communication records",
+            ]}
+          />
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: "1.05rem",
+              color: "text.primary",
+              mb: 1.5,
+              mt: 3,
+            }}
+          >
+            6.3 Documents Provided by Clients (Optional)
+          </Typography>
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Clients may voluntarily provide documents (e.g. reports or outputs)
+            for analysis. Such documents:
+          </Typography>
+          <BulletList
+            items={[
+              "Are not required for AODIT operation",
+              "Are handled within SwissLI AG's secured environment",
+              "Remain under client control",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG does not process end-user data generated within client AI
+            systems.
+          </Typography>
+
+          {/* 7. Legal Basis for Processing */}
+          <SectionHeading number="7" title="Legal Basis for Processing" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG processes personal data based on:
+          </Typography>
+          <BulletList
+            items={[
+              "Contract performance",
+              "Legitimate interest (business communication and operations)",
+              "Consent (where applicable)",
+              "Legal obligations",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            In accordance with:
+          </Typography>
+          <BulletList
+            items={[
+              "Swiss Federal Act on Data Protection (nDSG)",
+              "EU General Data Protection Regulation (GDPR), where applicable",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG applies principles of data minimisation and processes
+            only personal data necessary for the stated purposes.
+          </Typography>
+
+          {/* 8. Use of Google Workspace */}
+          <SectionHeading number="8" title="Use of Google Workspace" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG uses Google Workspace (including Gmail, Google Drive, and
+            Google Sheets) for business communication and document management.
+            This includes:
+          </Typography>
+          <BulletList
+            items={[
+              "Email communication",
+              "Storage of business documents",
+              "Analysis of documents voluntarily shared by clients",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Data processed within Google Workspace is subject to Google&apos;s
+            security and data protection measures. SwissLI AG does not transfer
+            client AI system data to Google systems.
+          </Typography>
+
+          {/* 8A. No Use for Training */}
+          <SectionHeading
+            number="8A"
+            title="No Use for Training or Cross-Client Reuse"
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG does not use client-provided data for:
+          </Typography>
+          <BulletList
+            items={[
+              "Training machine learning models",
+              "Fine-tuning models",
+              "Improving third-party models",
+              "Benchmarking one client against another using identifiable client data",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG may use generalized, anonymized, and
+            non-client-identifiable learnings to refine its methodologies,
+            taxonomies, and scenario design, provided that no client
+            confidential information, personal data, or client-identifiable
+            materials are disclosed or reused across clients.
+          </Typography>
+
+          {/* 9. Data Sharing */}
+          <SectionHeading number="9" title="Data Sharing" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG does not sell personal data. Limited sharing may occur
+            with:
+          </Typography>
+          <BulletList
+            items={[
+              "Infrastructure providers (e.g. Google Workspace)",
+              "Professional advisors (legal, financial)",
+              "Regulatory authorities where required by law",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG maintains a limited set of infrastructure providers
+            necessary for business operations. A list of key subprocessors may
+            be provided upon request. Client AI system data is not shared
+            externally.
+          </Typography>
+
+          {/* 10. International Data Transfers */}
+          <SectionHeading number="10" title="International Data Transfers" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG operates primarily in Switzerland. Where third-party
+            providers are used, data may be processed outside Switzerland. Such
+            transfers are safeguarded through:
+          </Typography>
+          <BulletList
+            items={["Adequacy decisions", "Standard contractual clauses"]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Client AI system data remains within client-controlled
+            infrastructure.
+          </Typography>
+
+          {/* 11. Cookies and Analytics */}
+          <SectionHeading number="11" title="Cookies and Analytics" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            The website uses cookies to ensure functionality and improve user
+            experience.
+          </Typography>
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: "1.05rem",
+              color: "text.primary",
+              mb: 1.5,
+              mt: 3,
+            }}
+          >
+            11.1 Essential Cookies
+          </Typography>
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Used for:
+          </Typography>
+          <BulletList items={["Website operation", "Security"]} />
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: "1.05rem",
+              color: "text.primary",
+              mb: 1.5,
+              mt: 3,
+            }}
+          >
+            11.2 Analytics Cookies (Google Analytics)
+          </Typography>
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG uses Google Analytics to understand website usage. Google
+            Analytics may collect:
+          </Typography>
+          <BulletList
+            items={[
+              "Anonymized IP address",
+              "Device and browser information",
+              "Pages visited and interaction data",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            This data does not directly identify individuals.
+          </Typography>
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: "1.05rem",
+              color: "text.primary",
+              mb: 1.5,
+              mt: 3,
+            }}
+          >
+            11.3 Cookie Consent
+          </Typography>
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Analytics cookies are activated only after user consent via a cookie
+            banner. Users can:
+          </Typography>
+          <BulletList
+            items={["Accept or reject cookies", "Withdraw consent at any time"]}
+          />
+
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: "1.05rem",
+              color: "text.primary",
+              mb: 1.5,
+              mt: 3,
+            }}
+          >
+            11.4 Additional Information
+          </Typography>
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Further information on Google&apos;s data processing:{" "}
+            <Link
+              href="https://policies.google.com/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              https://policies.google.com/privacy
+            </Link>
+          </Typography>
+
+          {/* 12. Data Retention */}
+          <SectionHeading number="12" title="Data Retention" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG retains personal data as follows:
+          </Typography>
+          <BulletList
+            items={[
+              "Client relationship data (contracts, communication, billing): up to 10 years",
+              "Contact data provided voluntarily: retained as long as necessary",
+              "Website analytics data: up to 12 months",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG does not retain AI system data.
+          </Typography>
+
+          {/* 13. Security Measures */}
+          <SectionHeading number="13" title="Security Measures" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG implements appropriate technical and organisational
+            measures, including:
+          </Typography>
+          <BulletList
+            items={[
+              "Encryption of communications (e.g. TLS)",
+              "Restricted access controls based on least-privilege principles",
+              "Strong authentication controls, including multi-factor authentication (MFA)",
+              "Controlled access to internal systems and documents",
+              "Use of secure infrastructure providers (e.g. Google Workspace)",
+              "Logging of administrative access where applicable",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG maintains internal documentation covering its security,
+            development, and operational practices. Such documentation may be
+            made available to clients upon reasonable request as part of vendor
+            due diligence processes.
+          </Typography>
+
+          {/* 13A. Incident Handling */}
+          <SectionHeading number="13A" title="Incident Handling" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            SwissLI AG maintains procedures for handling security incidents
+            affecting systems or data under its control. Where legally required,
+            SwissLI AG will notify affected parties or authorities of relevant
+            incidents and cooperate in appropriate remediation steps.
+          </Typography>
+
+          {/* 14. Your Rights */}
+          <SectionHeading number="14" title="Your Rights" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            Under applicable law, you have the right to:
+          </Typography>
+          <BulletList
+            items={[
+              "Access your personal data",
+              "Request correction or deletion",
+              "Object to processing",
+              "Withdraw consent",
+            ]}
+          />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            You may lodge a complaint with:
+            <br />
+            Swiss Federal Data Protection and Information Commissioner (FDPIC)
+            <br />
+            <Link
+              href="https://www.edoeb.admin.ch"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              www.edoeb.admin.ch
+            </Link>
+          </Typography>
+
+          {/* 15. Changes to this Policy */}
+          <SectionHeading number="15" title="Changes to this Policy" />
+          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            This Privacy Policy may be updated from time to time. The latest
+            version is available at:{" "}
+            <Link
+              href={routes.privacyPolicy}
+              onClick={handleLinkClick(routes.privacyPolicy)}
+            >
+              www.aodit.ai/privacy
+            </Link>
+          </Typography>
+
+          {/* 16. Contact */}
+          <Box
+            sx={{
+              mt: 6,
+              pt: 4,
+              borderTop: "1px solid",
+              borderColor: "divider",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontFamily: fontFamilySerif,
+                mb: 2,
+                color: "text.primary",
+              }}
+            >
+              Contact
+            </Typography>
+            <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+              Swiss Lab of Intelligence AG
+              <br />
+              Murbacherstrasse 19
+              <br />
+              6003 Luzern
+              <br />
+              Switzerland
+            </Typography>
+            <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
+              Email:{" "}
+              <Link href="mailto:privacy@swissli.ai">privacy@swissli.ai</Link>
+            </Typography>
+          </Box>
+        </Container>
+      </Box>
     </Page>
   );
 };

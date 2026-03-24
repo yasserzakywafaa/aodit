@@ -60,7 +60,8 @@ const Hero = () => {
             letterSpacing: "-0.02em",
           }}
         >
-          Independent AI Agent Evaluation for Banks and Financial Institutions
+          Independent AI Agent Evaluation for Banks and Fintechs and Insurance
+          companies
         </Typography>
         <Typography
           sx={{

@@ -21,7 +21,7 @@ export const createOrganizationSchemaForSite = (aggregateRating?: {
     url: baseUrl,
     logo: getImageUrl("/icons/icon_512x512.png"),
     description:
-      "Independent AI agent evaluation platform for financial institutions.",
+      "Independent AI agent evaluation platform for fintechs and insurance companies.",
     sameAs: [
       // Add social media links if available
       // "https://twitter.com/aodit",
@@ -70,7 +70,7 @@ export const createSoftwareApplicationSchema = (
       availability: "https://schema.org/InStock",
     },
     description:
-      "Independent AI agent evaluation platform for banks and financial institutions.",
+      "Independent AI agent evaluation platform for banks and fintechs and insurance companies.",
     url: baseUrl,
     screenshot: getImageUrl("/icons/icon_512x512.png"),
   };

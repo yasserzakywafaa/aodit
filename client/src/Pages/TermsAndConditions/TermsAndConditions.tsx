@@ -119,7 +119,7 @@ const TermsAndConditions = () => {
             Terms &amp; Conditions
           </Typography>
           <Typography sx={{ fontSize: 15, color: "text.secondary", mb: 1 }}>
-            Version 1.4 — March 2026
+            Last updated: March 2026
           </Typography>
           <Typography sx={{ fontSize: 15, color: "text.secondary" }}>
             Swiss Lab of Intelligence (SwissLI AG)

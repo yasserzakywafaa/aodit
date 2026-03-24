@@ -172,7 +172,7 @@ export const darkTheme = createTheme({
     primary: { main: primaryColor },
     secondary: { main: white },
     background: { default: black },
-    text: { primary: white, secondary: grey },
+    text: { primary: white, secondary: white },
     divider: "rgba(255, 255, 255, 0.12)",
   },
 });

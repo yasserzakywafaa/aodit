@@ -6,18 +6,19 @@ export const externalLinks = {
 
 export const routes = {
   features: `/`,
+  methodology: `/ai-agent-testing-methodology`,
+  security: `/security-on-premise-ai`,
+  about: `/about-swissli`,
   pricing: `/pricing`,
-  howItWorks: `/how-it-works`,
   compliance: {
-    finma: `/compliance/finma`,
-    euAiAct: `/compliance/eu-ai-act`,
+    // Keep legacy paths available for compatibility during migration.
+    finma: `/compliance/finma-ai-guidance-switzerland`,
+    euAiAct: `/compliance/eu-ai-act-europe`,
   },
   contact: `/contact`,
   privacyPolicy: `/privacy-policy`,
   termsAndConditions: `/terms-and-conditions`,
   logout: `/logout`,
-  unauthorized: `/unauthorized`,
-  notfound: `/notfound`,
   // Auth
   auth: {
     login: "/login",

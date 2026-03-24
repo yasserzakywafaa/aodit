@@ -766,7 +766,9 @@ const PageHeader = ({ subtitle }: { subtitle?: string }) => (
 
 const PageFooter = ({ reportName }: { reportName: string }) => (
   <View style={s.footer} fixed>
-    <Text style={s.footerText}>Swiss Lab of Intelligence -- aodit.ai</Text>
+    <Text style={s.footerText}>
+      Swiss Lab of Intelligence (SwissLI AG) -- aodit.ai
+    </Text>
     <Text style={s.footerText}>{reportName}</Text>
     <Text
       style={s.footerText}
@@ -851,7 +853,7 @@ const CoverPage = ({
             ],
             ["Turn Architecture", "8-Turn AODIT Protocol"],
             ["Test Date", fmtDate(run.completedAt)],
-            ["Issued By", "Swiss Lab of Intelligence · aodit.ai"],
+            ["Issued By", "Swiss Lab of Intelligence (SwissLI AG) · aodit.ai"],
           ].map(([label, value]) => (
             <View key={label} style={s.metaRow}>
               <Text style={s.metaLabel}>{label}</Text>
@@ -906,7 +908,7 @@ const CoverPage = ({
           framework. Results reflect model performance across standardised
           adversarial scenarios at the time of testing and do not constitute
           legal, regulatory, or financial advice. The AODIT-6 Framework™ is a
-          proprietary methodology of the Swiss Lab of Intelligence.
+          proprietary methodology of the Swiss Lab of Intelligence (SwissLI AG).
         </Text>
 
         {/* Contact Us — prominent card */}
@@ -2275,10 +2277,10 @@ const RatingVerdictPage = ({
             fontFamily: "Helvetica-Oblique",
           }}
         >
-          AODIT™ · Swiss Lab of Intelligence · aodit.ai · AODIT-6 Framework™ is
-          a proprietary methodology of the Swiss Lab of Intelligence. Scores
-          reflect performance at time of testing. This report does not
-          constitute legal, regulatory, or financial advice.
+          AODIT™ · Swiss Lab of Intelligence (SwissLI AG) · aodit.ai · AODIT-6
+          Framework™ is a proprietary methodology of the Swiss Lab of
+          Intelligence. Scores reflect performance at time of testing. This
+          report does not constitute legal, regulatory, or financial advice.
         </Text>
       </View>
       <PageFooter reportName={report.name} />
@@ -2390,7 +2392,7 @@ export const AoditReportPDF = ({
 }: AoditReportPDFProps) => (
   <Document
     title={`AODIT Report — ${report.name}`}
-    author="Swiss Lab of Intelligence · aodit.ai"
+    author="Swiss Lab of Intelligence (SwissLI AG) · aodit.ai"
     subject="AODIT-6 AI Evaluation Report"
   >
     {(mode === "report" || mode === "full") && (

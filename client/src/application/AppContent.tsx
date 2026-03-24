@@ -5,11 +5,11 @@ import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
-import { ThemeProvider } from "@mui/material/styles";
 import CustomCursor from "src/components/shared/CustomCursor/CustomCursor";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
 import NotFoundPage from "../Pages/NotFound/NotFound";
+import { ThemeProvider } from "@mui/material/styles";
 import { getApplicationInitialState } from "./store/state";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { removeLocalStorageAuthItems } from "src/shared/utils/localstorage";
@@ -36,6 +36,9 @@ const ResetAndRedirectHome = () => {
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const PricingPage = lazy(() => import("../Pages/Pricing/Pricing"));
+const MethodologyPage = lazy(() => import("../Pages/Methodology/Methodology"));
+const SecurityPage = lazy(() => import("../Pages/Security/Security"));
+const AboutPage = lazy(() => import("../Pages/About/About"));
 
 const LoginPage = lazy(() => import("../Pages/Login"));
 const RegisterPage = lazy(() => import("../Pages/Register"));
@@ -123,8 +126,9 @@ const AppContent = () => {
 
             {/* Public Routes */}
             <Route index path={routes.features} element={<FeaturesPage />} />
-            <Route path={routes.pricing} element={<PricingPage />} />
-            <Route path={routes.contact} element={<ContactPage />} />
+            <Route path={routes.methodology} element={<MethodologyPage />} />
+            <Route path={routes.security} element={<SecurityPage />} />
+            <Route path={routes.about} element={<AboutPage />} />
             <Route
               path={routes.compliance.finma}
               element={<ComplianceFinmaPage />}
@@ -133,6 +137,8 @@ const AppContent = () => {
               path={routes.compliance.euAiAct}
               element={<ComplianceEuAiActPage />}
             />
+            <Route path={routes.pricing} element={<PricingPage />} />
+            <Route path={routes.contact} element={<ContactPage />} />
             <Route
               path={routes.privacyPolicy}
               element={<PrivacyPolicyPage />}

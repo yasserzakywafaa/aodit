@@ -4,17 +4,23 @@ import Logo, { LogoComponentEnum } from "../../Logo";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Authentication } from "src/application/store/state";
-import ComplianceDropdown from "src/components/navbar/ComplianceDropdown";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
+import { routes } from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
-  { id: "reports", label: "Reports" },
-  { id: "methodology", label: "Methodology" },
-  { id: "about", label: "About" },
+  { id: "methodology", label: "Methodology", route: routes.methodology },
+  {
+    id: "compliance-finma",
+    label: "Compliance",
+    route: routes.compliance.finma,
+  },
+  { id: "security", label: "Security", route: routes.security },
+  { id: "about", label: "About", route: routes.about },
+  { id: "contact", label: "Contact", route: routes.contact },
 ] as const;
 
 interface ApplicationBarDesktopViewParams {
@@ -23,7 +29,7 @@ interface ApplicationBarDesktopViewParams {
   handleToggleLoginModal: () => void;
   handleToggleRegisterModal: () => void;
   setIsInstallAppDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleOnMenuItemClick: (sectionId: string) => () => void;
+  handleOnMenuItemClick: (sectionId: string) => void;
 }
 
 const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
@@ -43,6 +49,12 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
     },
   };
 
+  const handleOnMenuItemClickEvent =
+    (sectionId: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      handleOnMenuItemClick(sectionId);
+    };
+
   return (
     <>
       {!isTablet && (
@@ -60,36 +72,36 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               sx={{
                 display: { xs: "none", md: "flex" },
                 alignItems: "center",
-                gap: 5,
+                gap: 4,
               }}
             >
               <Logo variant="small" component={LogoComponentEnum.ANCHOR} />
 
-              {NAV_LINKS.map(({ id, label }) => (
-                <Button
-                  key={id}
-                  component="a"
-                  sx={{ color: "text.primary" }}
-                  variant="text"
-                  onClick={handleOnMenuItemClick(id)}
-                >
-                  {label}
-                </Button>
+              {NAV_LINKS.map((item) => (
+                <>
+                  {/* TODO: Uncomment this when EU AI Act is live */}
+                  {/* {id === "compliance-finma" ? (
+                    <ComplianceDropdown />
+                  ) : ( */}
+                  <Button
+                    key={item.id}
+                    component="a"
+                    href={item.route}
+                    sx={{ color: "text.primary", fontSize: 14 }}
+                    variant="text"
+                    onClick={handleOnMenuItemClickEvent(item.id)}
+                  >
+                    {item.label}
+                  </Button>
+                  {/* // )} */}
+                </>
               ))}
-              <ComplianceDropdown />
-              <Button
-                component="a"
-                variant="contained"
-                onClick={handleOnMenuItemClick("contact")}
-              >
-                Get your agent rated
-              </Button>
             </Box>
           </Box>
 
           <Box
             sx={{
-              gap: 0.5,
+              gap: 1,
               alignItems: "center",
               display: { xs: "none", md: "flex" },
             }}
@@ -130,6 +142,17 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 </>
               )
             )}
+
+            <Button
+              component="a"
+              href={routes.contact}
+              variant="contained"
+              size="small"
+              onClick={handleOnMenuItemClickEvent("request-evaluation")}
+              sx={{ ml: 1 }}
+            >
+              Request Evaluation
+            </Button>
 
             <MenuItem sx={{ ...buttonHoverStyleSecondary }}>
               <SettingsMenuButton

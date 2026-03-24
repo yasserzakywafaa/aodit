@@ -10,13 +10,13 @@ export const createContactPageSchema = (): object => {
   return {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    name: "Contact Us",
+    name: "Contact SwissLI AG",
     description:
-      "Get in touch with Aodit team. We're here to help you with any questions about our AI-powered project creation platform.",
+      "Contact SwissLI AG for independent AI agent evaluation inquiries in regulated financial environments.",
     url: contactUrl,
     mainEntity: {
       "@type": "Organization",
-      name: "Aodit",
+      name: "Swiss Lab of Intelligence (SwissLI AG)",
       url: getAbsoluteUrl(""),
     },
   };

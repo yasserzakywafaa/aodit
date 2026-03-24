@@ -1,7 +1,7 @@
 # https://www.robotstxt.org/robotstxt.html
 
 # Sitemap location
-Sitemap: https://www.aodit.ai/sitemap.xml
+Sitemap: https://www.aodit.ai/sitemaps/sitemap.xml
 
 # Block specific robots from accessing certain parts
 User-agent: BadBot
@@ -10,6 +10,10 @@ Disallow: /
 User-agent: *
 Disallow: /dashboard/
 Allow: /
-Allow: /contact/
-Allow: /privacy-policy/
-Allow: /terms-and-conditions/
+Allow: /ai-agent-testing-methodology
+Allow: /finma-ai-guidance-switzerland
+Allow: /security-on-premise-ai
+Allow: /about-swissli
+Allow: /contact
+Allow: /privacy-policy
+Allow: /terms-and-conditions

@@ -24,30 +24,17 @@
   font-display: swap;
 }
 
-// Syne (sans-serif – body / UI); weights 400, 500, 700
+// Inter (sans-serif – body / UI); variable font covers all weights
 @font-face {
-  font-family: "Syne";
-  src: url("../fonts/Syne/Syne-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Syne";
-  src: url("../fonts/Syne/Syne-Medium.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Syne";
-  src: url("../fonts/Syne/Syne-Bold.ttf") format("truetype");
-  font-weight: 700;
+  font-family: "Inter";
+  src: url("../fonts/Inter/Inter-VariableFont_opsz,wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
-$font-family-base: "Syne", sans-serif;
+$font-family-base: "Inter", sans-serif;
 $font-family-serif: "Playfair Display", serif;
 
 body {

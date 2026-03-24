@@ -12,20 +12,29 @@ import {
   OTHER_STANDARD_ROWS,
 } from "src/shared/constants/regulatoryAlignment";
 import {
+  ArrowForward,
+  CheckCircleOutline,
+  FormatQuoteRounded,
+  WarningAmberRounded,
+} from "@mui/icons-material";
+import {
   Box,
   Button,
   Chip,
   Container,
   Grid,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   Typography,
+  alpha,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
+import { fontFamilySerif, primaryColor } from "src/application/shared/themes";
 
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import Page from "src/components/shared/Page/Page";
@@ -33,6 +42,8 @@ import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
 import finmaLogo from "src/assets/images/finma_logo.png";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const levelChipSx = (level: string) => {
   if (level === "Strong") {
@@ -44,12 +55,35 @@ const levelChipSx = (level: string) => {
   return { backgroundColor: "#FEE2E2", color: "#991B1B", fontWeight: 700 };
 };
 
+const sectionSx = {
+  py: { xs: 5, md: 7 },
+  px: { xs: 3, md: 0 },
+};
+
+const altBgSx = {
+  ...sectionSx,
+  bgcolor: "rgba(0,0,0,0.015)",
+};
+
+const tableHeaderSx = {
+  fontWeight: 700,
+  fontSize: 13,
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.04em",
+  color: "text.secondary",
+  borderBottom: `2px solid ${primaryColor}`,
+  py: 1.5,
+};
+
 const ComplianceFinmaPage = () => {
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const hasOfficialPdfLink = Boolean(FINMA_OFFICIAL_NOTICE.downloadUrl?.trim());
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "FINMA AI Guidelines",
+      "FINMA AI Guidance 08/2024 Explained (Switzerland)",
       "Independent behavioral control-layer evidence for FINMA-aligned AI testing, monitoring, and risk decisions in Swiss financial services.",
       routes.compliance.finma,
     );
@@ -59,79 +93,226 @@ const ComplianceFinmaPage = () => {
 
   return (
     <Page
-      title="FINMA AI Guidelines | Aodit"
+      title="FINMA AI Guidance 08/2024 Explained (Switzerland) | AODIT"
       className="compliance-finma-page"
       isLoading={false}
     >
-      <Container sx={{ mt: 3, pb: 6 }}>
-        <Typography variant="h4" gutterBottom>
-          FINMA AI Guidelines
-        </Typography>
-        <Typography variant="subtitle1" color="primary" gutterBottom>
-          Swiss financial market supervision
-        </Typography>
-
-        <Typography paragraph>{FINMA_ALIGNMENT_INTRO}</Typography>
-
-        <Box my={2.5} sx={{ borderLeft: "4px solid #1D4ED8", pl: 2 }}>
-          <Typography variant="h6" color="primary" gutterBottom>
-            Key principle
+      {/* ===== HERO ===== */}
+      <Box
+        component="section"
+        sx={{
+          pt: { xs: 10, md: 13 },
+          pb: { xs: 6, md: 9 },
+          px: { xs: 3, md: 0 },
+          borderBottom: `1px solid`,
+          borderColor: "divider",
+        }}
+      >
+        <Container maxWidth="md">
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: primaryColor,
+              fontWeight: 700,
+              fontSize: 13,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              mb: 2,
+            }}
+          >
+            Regulatory Alignment
           </Typography>
-          <Typography paragraph sx={{ mb: 1 }}>
-            {FINMA_KEY_PRINCIPLE}
+          <Typography
+            variant="h1"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: { xs: "2rem", sm: "2.5rem", md: "2.8rem" },
+              lineHeight: 1.15,
+              mb: 2,
+              color: "text.primary",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            FINMA AI Guidance 08/2024
           </Typography>
-          <Typography paragraph sx={{ fontWeight: 700, mb: 0 }}>
-            {FINMA_KILLER_LINE}
+          <Typography
+            sx={{
+              fontSize: { xs: 16, md: 18 },
+              color: "text.secondary",
+              mb: 4,
+              maxWidth: 600,
+              lineHeight: 1.7,
+            }}
+          >
+            How AODIT maps to Swiss financial market supervision requirements
+            for AI in regulated institutions.
           </Typography>
-        </Box>
 
-        <Box my={2.5}>
-          <Typography variant="h6" color="primary" gutterBottom>
-            Where AODIT fits in the lifecycle
-          </Typography>
-          <Paper variant="outlined" sx={{ p: 2 }}>
-            {FINMA_LIFECYCLE_STAGES.map((item) => (
-              <Box key={item.stage} sx={{ mb: 1.5, "&:last-of-type": { mb: 0 } }}>
-                <Typography sx={{ fontWeight: 700 }}>{item.stage}</Typography>
-                <Typography color="text.secondary">{item.useCase}</Typography>
-              </Box>
-            ))}
-          </Paper>
-        </Box>
-
-        <Box my={2.5}>
-          <Paper variant="outlined">
-            <Grid
-              container
-              spacing={2}
-              width="100%"
-              justifyContent="space-between"
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 2.5,
+              borderLeft: `3px solid ${primaryColor}`,
+              bgcolor: alpha(primaryColor, 0.04),
+              maxWidth: 580,
+            }}
+          >
+            <Typography
+              sx={{ fontSize: 14, color: "text.secondary", lineHeight: 1.65 }}
             >
-              <Grid size={{ xs: 12, sm: 8 }} sx={{ p: { xs: 2, md: 3 } }}>
-                <Box display="flex" alignItems="center" gap={1.5} mb={1}>
+              For CROs, compliance officers, and model risk teams evaluating
+              independent AI testing evidence against FINMA requirements.
+            </Typography>
+          </Paper>
+        </Container>
+      </Box>
+
+      {/* ===== INTRO + KEY PRINCIPLE ===== */}
+      <Box component="section" sx={sectionSx}>
+        <Container maxWidth="md">
+          <Typography
+            sx={{ fontSize: 16, lineHeight: 1.8, color: "text.primary", mb: 4 }}
+          >
+            {FINMA_ALIGNMENT_INTRO}
+          </Typography>
+
+          <Paper
+            elevation={0}
+            sx={{
+              p: { xs: 3, md: 4 },
+              bgcolor: alpha(primaryColor, 0.04),
+              border: `1px solid ${alpha(primaryColor, 0.15)}`,
+            }}
+          >
+            <Stack direction="row" alignItems="flex-start" gap={1.5} mb={1.5}>
+              <FormatQuoteRounded
+                sx={{ color: primaryColor, fontSize: 28, mt: 0.25 }}
+              />
+              <Typography
+                variant="h6"
+                sx={{ fontFamily: fontFamilySerif, color: "text.primary" }}
+              >
+                Key Principle
+              </Typography>
+            </Stack>
+            <Typography sx={{ fontSize: 15, lineHeight: 1.75, mb: 1.5 }}>
+              {FINMA_KEY_PRINCIPLE}
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: 15,
+                fontWeight: 700,
+                color: "text.primary",
+                fontStyle: "italic",
+              }}
+            >
+              {FINMA_KILLER_LINE}
+            </Typography>
+          </Paper>
+        </Container>
+      </Box>
+
+      {/* ===== LIFECYCLE ===== */}
+      <Box component="section" sx={altBgSx}>
+        <Container maxWidth="md">
+          <Typography
+            variant="h4"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: { xs: "1.4rem", md: "1.65rem" },
+              mb: 4,
+              color: "text.primary",
+            }}
+          >
+            Where AODIT Fits in the Lifecycle
+          </Typography>
+          <Grid container spacing={2}>
+            {FINMA_LIFECYCLE_STAGES.map((item, index) => (
+              <Grid key={item.stage} size={{ xs: 12, sm: 6 }}>
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    p: 2.5,
+                    height: "100%",
+                    borderTop: `3px solid ${primaryColor}`,
+                    transition: "box-shadow 0.2s",
+                    "&:hover": {
+                      boxShadow: `0 4px 20px ${alpha(primaryColor, 0.1)}`,
+                    },
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      color: primaryColor,
+                      mb: 0.75,
+                    }}
+                  >
+                    Phase {index + 1}
+                  </Typography>
+                  <Typography sx={{ fontWeight: 700, fontSize: 15, mb: 1 }}>
+                    {item.stage}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: 14,
+                      color: "text.secondary",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {item.useCase}
+                  </Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* ===== OFFICIAL DOCUMENT ===== */}
+      <Box component="section" sx={sectionSx}>
+        <Container maxWidth="md">
+          <Paper
+            variant="outlined"
+            sx={{
+              overflow: "hidden",
+            }}
+          >
+            <Grid container spacing={0}>
+              <Grid size={{ xs: 12, sm: 8 }} sx={{ p: { xs: 3, md: 4 } }}>
+                <Stack direction="row" alignItems="center" gap={1.5} mb={1.5}>
                   <PictureAsPdfRoundedIcon
-                    sx={{ color: "primary.main", fontSize: 28 }}
+                    sx={{ color: primaryColor, fontSize: 26 }}
                   />
                   <Typography
                     variant="h6"
-                    color="primary"
-                    sx={{ fontWeight: 700 }}
+                    sx={{
+                      fontFamily: fontFamilySerif,
+                      fontWeight: 600,
+                      color: "text.primary",
+                    }}
                   >
-                    Official FINMA source document
+                    Official FINMA Source Document
                   </Typography>
-                </Box>
-                <Typography sx={{ fontWeight: 600, mb: 0.75 }}>
+                </Stack>
+                <Typography sx={{ fontWeight: 600, mb: 0.5, fontSize: 15 }}>
                   {FINMA_OFFICIAL_NOTICE.title}
                 </Typography>
                 <Typography
                   variant="body2"
                   color="text.secondary"
-                  sx={{ mb: 2 }}
+                  sx={{ mb: 2.5 }}
                 >
                   {FINMA_OFFICIAL_NOTICE.authority} · Published{" "}
                   {FINMA_OFFICIAL_NOTICE.publishedDate}
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 2 }}>
+                <Typography
+                  variant="body2"
+                  sx={{ mb: 3, color: "text.secondary", lineHeight: 1.6 }}
+                >
                   For transparency and audit-readiness, use the official FINMA
                   notice as the primary regulatory source.
                 </Typography>
@@ -139,7 +320,6 @@ const ComplianceFinmaPage = () => {
                   variant="contained"
                   component="a"
                   color="primary"
-                  size="large"
                   startIcon={<DownloadRoundedIcon />}
                   href={
                     hasOfficialPdfLink
@@ -149,158 +329,426 @@ const ComplianceFinmaPage = () => {
                   target={hasOfficialPdfLink ? "_blank" : undefined}
                   rel={hasOfficialPdfLink ? "noopener noreferrer" : undefined}
                   disabled={!hasOfficialPdfLink}
+                  sx={{ px: 3, py: 1 }}
                 >
                   {hasOfficialPdfLink
-                    ? "Download official FINMA PDF"
+                    ? "Download Official FINMA PDF"
                     : "Download link coming soon"}
                 </Button>
               </Grid>
-
               <Grid
-                size={{ xs: 12, sm: 3 }}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
+                size={{ xs: 12, sm: 4 }}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  bgcolor: alpha(primaryColor, 0.03),
+                  p: 3,
+                }}
               >
                 <img
                   src={finmaLogo}
                   alt={FINMA_OFFICIAL_NOTICE.title}
                   style={{
-                    width: "80%",
-                    height: "80%",
-                    objectFit: "cover",
+                    width: "70%",
+                    maxWidth: 160,
+                    height: "auto",
+                    objectFit: "contain",
                   }}
-                  height={100}
-                  width={100}
                 />
               </Grid>
             </Grid>
           </Paper>
-        </Box>
+        </Container>
+      </Box>
 
-        <Box my={2.5}>
-          <Typography variant="h6" color="primary" gutterBottom>
-            FINMA Guidance 08/2024 — control evidence scorecard
+      {/* ===== FINMA SCORECARD TABLE ===== */}
+      <Box component="section" sx={altBgSx}>
+        <Container maxWidth="md">
+          <Typography
+            variant="h4"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: { xs: "1.4rem", md: "1.65rem" },
+              mb: 1.5,
+              color: "text.primary",
+            }}
+          >
+            FINMA Guidance 08/2024 — Control Evidence Scorecard
           </Typography>
-          <Typography paragraph sx={{ mb: 1.5 }}>
-            Strong indicates direct behavioral evidence coverage. Partial indicates
-            supporting evidence only. Not covered indicates an intentional boundary.
+          <Typography
+            sx={{
+              fontSize: 14,
+              color: "text.secondary",
+              mb: 3,
+              lineHeight: 1.6,
+            }}
+          >
+            <strong>Strong</strong> indicates direct behavioral evidence
+            coverage. <strong>Partial</strong> indicates supporting evidence
+            only. <strong>Not covered</strong> indicates an intentional
+            boundary.
           </Typography>
-          <Paper variant="outlined">
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 700, width: "24%" }}>
-                    FINMA principle
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700, width: "14%" }}>
-                    AODIT level
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700 }}>
-                    Control relevance and explicit boundary
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {FINMA_ALIGNMENT_ROWS.map((row) => (
-                  <TableRow key={row.principle}>
-                    <TableCell sx={{ verticalAlign: "top", fontWeight: 600 }}>
+          {isMobile ? (
+            <Stack spacing={2}>
+              {FINMA_ALIGNMENT_ROWS.map((row) => (
+                <Paper
+                  key={row.principle}
+                  variant="outlined"
+                  sx={{ p: 2.5, borderLeft: `3px solid ${primaryColor}` }}
+                >
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={1.5}
+                  >
+                    <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
                       {row.principle}
+                    </Typography>
+                    <Chip
+                      size="small"
+                      label={row.level}
+                      sx={levelChipSx(row.level)}
+                    />
+                  </Stack>
+                  <Typography
+                    sx={{
+                      fontSize: 13,
+                      lineHeight: 1.65,
+                      color: "text.secondary",
+                    }}
+                  >
+                    {row.explanation}
+                  </Typography>
+                </Paper>
+              ))}
+            </Stack>
+          ) : (
+            <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ ...tableHeaderSx, width: "24%" }}>
+                      FINMA Principle
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: "top" }}>
-                      <Chip
-                        size="small"
-                        label={row.level}
-                        sx={levelChipSx(row.level)}
-                      />
+                    <TableCell sx={{ ...tableHeaderSx, width: "14%" }}>
+                      AODIT Level
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: "top" }}>
-                      {row.explanation}
+                    <TableCell sx={tableHeaderSx}>
+                      Control Relevance &amp; Boundary
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Paper>
-        </Box>
+                </TableHead>
+                <TableBody>
+                  {FINMA_ALIGNMENT_ROWS.map((row, index) => (
+                    <TableRow
+                      key={row.principle}
+                      sx={{
+                        bgcolor:
+                          index % 2 === 0 ? "transparent" : "rgba(0,0,0,0.02)",
+                        "&:last-child td": { borderBottom: 0 },
+                      }}
+                    >
+                      <TableCell
+                        sx={{
+                          verticalAlign: "top",
+                          fontWeight: 600,
+                          fontSize: 14,
+                        }}
+                      >
+                        {row.principle}
+                      </TableCell>
+                      <TableCell sx={{ verticalAlign: "top" }}>
+                        <Chip
+                          size="small"
+                          label={row.level}
+                          sx={levelChipSx(row.level)}
+                        />
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          verticalAlign: "top",
+                          fontSize: 14,
+                          lineHeight: 1.6,
+                          color: "text.secondary",
+                        }}
+                      >
+                        {row.explanation}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Paper>
+          )}
+        </Container>
+      </Box>
 
-        <Box my={2.5}>
-          <Typography variant="h6" color="primary" gutterBottom>
-            Other standards — alignment at the behavioral layer
+      {/* ===== OTHER STANDARDS TABLE ===== */}
+      <Box component="section" sx={sectionSx}>
+        <Container maxWidth="md">
+          <Typography
+            variant="h4"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: { xs: "1.4rem", md: "1.65rem" },
+              mb: 1.5,
+              color: "text.primary",
+            }}
+          >
+            Other Standards — Alignment at the Behavioral Layer
           </Typography>
-          <Typography paragraph>{OTHER_STANDARDS_INTRO}</Typography>
-          <Paper variant="outlined">
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 700, width: "26%" }}>
-                    Standard
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700, width: "14%" }}>
-                    Level
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700 }}>
-                    Behavioral coverage and limits
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {OTHER_STANDARD_ROWS.map((row) => (
-                  <TableRow key={row.standard}>
-                    <TableCell sx={{ verticalAlign: "top", fontWeight: 600 }}>
+          <Typography
+            sx={{
+              fontSize: 15,
+              color: "text.secondary",
+              mb: 3,
+              lineHeight: 1.7,
+            }}
+          >
+            {OTHER_STANDARDS_INTRO}
+          </Typography>
+          {isMobile ? (
+            <Stack spacing={2}>
+              {OTHER_STANDARD_ROWS.map((row) => (
+                <Paper
+                  key={row.standard}
+                  variant="outlined"
+                  sx={{ p: 2.5, borderLeft: `3px solid ${primaryColor}` }}
+                >
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={1.5}
+                  >
+                    <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
                       {row.standard}
+                    </Typography>
+                    <Chip
+                      size="small"
+                      label={row.level}
+                      sx={{ ...levelChipSx(row.level), ml: 1, flexShrink: 0 }}
+                    />
+                  </Stack>
+                  <Typography
+                    sx={{
+                      fontSize: 13,
+                      lineHeight: 1.65,
+                      color: "text.secondary",
+                    }}
+                  >
+                    {row.explanation}
+                  </Typography>
+                </Paper>
+              ))}
+            </Stack>
+          ) : (
+            <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ ...tableHeaderSx, width: "26%" }}>
+                      Standard
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: "top" }}>
-                      <Chip
-                        size="small"
-                        label={row.level}
-                        sx={levelChipSx(row.level)}
-                      />
+                    <TableCell sx={{ ...tableHeaderSx, width: "14%" }}>
+                      Level
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: "top" }}>
-                      {row.explanation}
+                    <TableCell sx={tableHeaderSx}>
+                      Behavioral Coverage &amp; Limits
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Paper>
-        </Box>
+                </TableHead>
+                <TableBody>
+                  {OTHER_STANDARD_ROWS.map((row, index) => (
+                    <TableRow
+                      key={row.standard}
+                      sx={{
+                        bgcolor:
+                          index % 2 === 0 ? "transparent" : "rgba(0,0,0,0.02)",
+                        "&:last-child td": { borderBottom: 0 },
+                      }}
+                    >
+                      <TableCell
+                        sx={{
+                          verticalAlign: "top",
+                          fontWeight: 600,
+                          fontSize: 14,
+                        }}
+                      >
+                        {row.standard}
+                      </TableCell>
+                      <TableCell sx={{ verticalAlign: "top" }}>
+                        <Chip
+                          size="small"
+                          label={row.level}
+                          sx={levelChipSx(row.level)}
+                        />
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          verticalAlign: "top",
+                          fontSize: 14,
+                          lineHeight: 1.6,
+                          color: "text.secondary",
+                        }}
+                      >
+                        {row.explanation}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Paper>
+          )}
+        </Container>
+      </Box>
 
-        <Box my={2.5} sx={{ borderLeft: "4px solid #10B981", pl: 2 }}>
-          <Typography variant="h6" color="primary" gutterBottom>
-            Three things AODIT adds that no standard currently requires
+      {/* ===== AODIT ADDED VALUE ===== */}
+      <Box component="section" sx={altBgSx}>
+        <Container maxWidth="md">
+          <Typography
+            variant="h4"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: { xs: "1.4rem", md: "1.65rem" },
+              mb: 3,
+              color: "text.primary",
+            }}
+          >
+            Three Things AODIT Adds That No Standard Currently Requires
           </Typography>
-          {AODIT_ADDED_VALUE_POINTS.map((point) => (
-            <Typography key={point} paragraph sx={{ mb: 1 }}>
-              {point}
-            </Typography>
-          ))}
-        </Box>
-
-        <Box my={2.5}>
-          <Typography variant="h6" color="primary" gutterBottom>
-            What happens if you do not test independently
-          </Typography>
-          <Paper variant="outlined" sx={{ p: 2 }}>
-            {FINMA_RISK_IF_NOT_USED.map((risk) => (
-              <Typography key={risk} paragraph sx={{ mb: 1 }}>
-                {risk}
-              </Typography>
+          <Stack spacing={2}>
+            {AODIT_ADDED_VALUE_POINTS.map((point) => (
+              <Stack
+                key={point}
+                direction="row"
+                alignItems="flex-start"
+                gap={1.5}
+              >
+                <CheckCircleOutline
+                  sx={{ color: primaryColor, fontSize: 20, mt: 0.25 }}
+                />
+                <Typography
+                  sx={{ fontSize: 15, lineHeight: 1.7, color: "text.primary" }}
+                >
+                  {point}
+                </Typography>
+              </Stack>
             ))}
-          </Paper>
-        </Box>
+          </Stack>
+        </Container>
+      </Box>
 
-        <Box my={2.5}>
-          <Typography variant="h6" color="primary" gutterBottom>
-            Scope disclaimer
+      {/* ===== RISK IF NOT USED ===== */}
+      <Box component="section" sx={sectionSx}>
+        <Container maxWidth="md">
+          <Stack direction="row" alignItems="center" gap={1.5} mb={3}>
+            <WarningAmberRounded sx={{ color: "#D97706", fontSize: 26 }} />
+            <Typography
+              variant="h4"
+              sx={{
+                fontFamily: fontFamilySerif,
+                fontSize: { xs: "1.4rem", md: "1.65rem" },
+                color: "text.primary",
+              }}
+            >
+              What Happens If You Do Not Test Independently
+            </Typography>
+          </Stack>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: { xs: 2.5, md: 3.5 },
+              borderLeft: `3px solid #D97706`,
+            }}
+          >
+            <Stack spacing={1.5}>
+              {FINMA_RISK_IF_NOT_USED.map((risk) => (
+                <Typography
+                  key={risk}
+                  sx={{
+                    fontSize: 14,
+                    lineHeight: 1.7,
+                    color: "text.secondary",
+                  }}
+                >
+                  • {risk}
+                </Typography>
+              ))}
+            </Stack>
+          </Paper>
+        </Container>
+      </Box>
+
+      {/* ===== SCOPE DISCLAIMER ===== */}
+      <Box component="section" sx={{ ...altBgSx, pb: { xs: 3, md: 4 } }}>
+        <Container maxWidth="md">
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: fontFamilySerif,
+              mb: 1.5,
+              color: "text.primary",
+            }}
+          >
+            Scope Disclaimer
           </Typography>
-          <Typography paragraph color="text.secondary" sx={{ mb: 0 }}>
+          <Typography
+            sx={{ fontSize: 14, color: "text.secondary", lineHeight: 1.7 }}
+          >
             {FINMA_ALIGNMENT_DISCLAIMER} This is an explicit boundary, not a
             hidden gap.
           </Typography>
-        </Box>
-      </Container>
+        </Container>
+      </Box>
+
+      {/* ===== CTA ===== */}
+      <Box
+        component="section"
+        sx={{
+          py: { xs: 6, md: 8 },
+          px: { xs: 3, md: 0 },
+          bgcolor: alpha(primaryColor, 0.04),
+          borderTop: `2px solid ${primaryColor}`,
+          textAlign: "center",
+        }}
+      >
+        <Container maxWidth="sm">
+          <Typography
+            variant="h4"
+            sx={{
+              fontFamily: fontFamilySerif,
+              fontSize: { xs: "1.5rem", md: "1.75rem" },
+              mb: 2,
+              color: "text.primary",
+            }}
+          >
+            Ready to Evaluate Your AI Agents?
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: 15,
+              color: "text.secondary",
+              mb: 4,
+              lineHeight: 1.7,
+            }}
+          >
+            Request an evaluation to see how AODIT maps to your institution's
+            FINMA compliance requirements.
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            endIcon={<ArrowForward />}
+            onClick={() => navigate(routes.contact)}
+            sx={{ px: 4, py: 1.2 }}
+          >
+            Request Evaluation
+          </Button>
+        </Container>
+      </Box>
     </Page>
   );
 };

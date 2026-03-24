@@ -138,6 +138,25 @@ const Page = (params: PageProps) => {
   }, [title]);
 
   useEffect(() => {
+    const baseUrl = APP_CONSTANTS.APP_URL || window.location.origin;
+    const canonicalUrl = `${baseUrl}${location.pathname}`;
+
+    const canonicalLink = document.querySelector(
+      "link[rel='canonical']",
+    ) as HTMLLinkElement | null;
+    if (canonicalLink) {
+      canonicalLink.setAttribute("href", canonicalUrl);
+    }
+
+    const ogUrlMeta = document.querySelector(
+      "meta[property='og:url']",
+    ) as HTMLMetaElement | null;
+    if (ogUrlMeta) {
+      ogUrlMeta.setAttribute("content", canonicalUrl);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
     // Prevent scrolling while page is loading
     const htmlNode = document.getElementsByTagName("html")[0];
     if (isPageLoading) htmlNode.style.overflow = "hidden";

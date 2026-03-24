@@ -4,21 +4,40 @@ import Logo, { LogoComponentEnum } from "../Logo";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { fontFamilySans } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
-const FOOTER_LINKS = [
-  { id: "ratings", label: "Ratings", href: `${routes.features}#ratings` },
+const FOOTER_SECTIONS = [
   {
-    id: "methodology",
-    label: "Methodology",
-    href: `${routes.features}#methodology`,
+    title: "Product",
+    links: [
+      { label: "Methodology", href: routes.methodology },
+      { label: "Security Architecture", href: routes.security },
+    ],
   },
-  { id: "about", label: "About", href: `${routes.features}#about` },
-  { id: "subscribe", label: "Contact", href: `${routes.features}#subscribe` },
+  {
+    title: "Compliance",
+    links: [{ label: "FINMA Guidance", href: routes.compliance.finma }],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: routes.about },
+      { label: "Contact", href: routes.contact },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", href: routes.privacyPolicy },
+      { label: "Terms & Conditions", href: routes.termsAndConditions },
+      { label: "Data Processing Agreement", href: routes.contact },
+    ],
+  },
 ] as const;
 
 const Footer = () => {
@@ -29,70 +48,99 @@ const Footer = () => {
     navigate(href);
   };
 
+  const linkStyle = {
+    fontFamily: fontFamilySans,
+    fontSize: 13,
+    color: "text.secondary",
+    textDecoration: "none",
+    display: "block",
+    mb: 1,
+    "&:hover": { color: "text.primary" },
+  };
+
   return (
     <Container
       className="footer"
       maxWidth={false}
       sx={{
-        py: 5,
+        py: 6,
         px: { xs: 3, md: 6 },
         borderTop: "1px solid",
         borderColor: "divider",
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        justifyContent: "space-between",
-        alignItems: { xs: "center", md: "center" },
-        gap: 3,
       }}
     >
-      <Box
-        component="span"
-        sx={{
-          fontFamily: fontFamilySans,
-          fontSize: 12,
-          letterSpacing: "0.15em",
-          color: "text.secondary",
-        }}
-      >
-        <Logo variant="full" component={LogoComponentEnum.ANCHOR} />
-      </Box>
-
-      <Box sx={{ display: "flex", gap: 4 }}>
-        {FOOTER_LINKS.map(({ id, label, href }) => (
-          <Link
-            key={id}
-            href={href}
-            onClick={handleSectionClick(href)}
+      <Grid container spacing={4}>
+        {/* Logo + Address */}
+        <Grid size={{ xs: 12, md: 3 }}>
+          <Box sx={{ mb: 2 }}>
+            <Logo variant="full" component={LogoComponentEnum.ANCHOR} />
+          </Box>
+          <Typography
             sx={{
               fontFamily: fontFamilySans,
-              fontSize: 10,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
+              fontSize: 12,
               color: "text.secondary",
-              textDecoration: "none",
-              "&:hover": { color: "text.primary" },
+              lineHeight: 1.8,
             }}
           >
-            {label}
-          </Link>
-        ))}
-      </Box>
+            Swiss Lab of Intelligence (SwissLI AG)
+            <br />
+            Murbacherstrasse 19
+            <br />
+            6003 Luzern
+            <br />
+            Switzerland
+          </Typography>
+        </Grid>
 
+        {/* Footer sections */}
+        {FOOTER_SECTIONS.map(({ title, links }) => (
+          <Grid key={title} size={{ xs: 6, sm: 3, md: 2 }}>
+            <Typography
+              sx={{
+                fontFamily: fontFamilySans,
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "text.primary",
+                mb: 2,
+              }}
+            >
+              {title}
+            </Typography>
+            {links.map(({ label, href }) => (
+              <Link
+                key={label}
+                href={href}
+                onClick={handleSectionClick(href)}
+                sx={linkStyle}
+              >
+                {label}
+              </Link>
+            ))}
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Disclaimer */}
       <Typography
         sx={{
           fontFamily: fontFamilySans,
-          fontSize: 9,
-          letterSpacing: "0.08em",
+          fontSize: 11,
           color: "text.secondary",
-          maxWidth: 320,
-          textAlign: { xs: "center", md: "right" },
-          lineHeight: 1.6,
+          mt: 5,
+          pt: 3,
+          borderTop: "1px solid",
+          borderColor: "divider",
+          lineHeight: 1.7,
+          maxWidth: 700,
         }}
       >
-        Not affiliated with any Service, Inc. Rating nomenclature adapted for
-        illustrative analytical purposes only. Does not constitute financial,
-        legal, or regulatory advice. © {new Date().getFullYear()} Swiss Lab for
-        Intelligence (Swissli).
+        AODIT is an independent AI evaluation framework. SwissLI AG is not
+        affiliated with FINMA or any regulatory authority. Evaluation results
+        are advisory and do not constitute regulatory approval or legal advice.
+        &copy; 2026 Swiss Lab of Intelligence (SwissLI AG)
       </Typography>
     </Container>
   );

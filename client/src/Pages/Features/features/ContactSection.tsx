@@ -1,4 +1,7 @@
-import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+import {
+  fontFamilyInter,
+  fontFamilyPlayfairDisplay,
+} from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import ContactForm from "src/Pages/Contact/features/ContactForm";
@@ -9,7 +12,7 @@ const SECTION_EYEBROW_STYLE = {
   letterSpacing: "0.25em",
   color: "primary.main",
   mb: 2,
-  fontFamily: fontFamilySans,
+  fontFamily: fontFamilyInter,
 };
 
 const ContactSection = () => (
@@ -39,7 +42,7 @@ const ContactSection = () => (
         <Typography
           component="h2"
           sx={{
-            fontFamily: fontFamilySerif,
+            fontFamily: fontFamilyPlayfairDisplay,
             fontSize: {
               xs: "clamp(1.75rem, 4vw, 2.5rem)",
               md: "clamp(36px, 4vw, 56px)",

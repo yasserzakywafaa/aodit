@@ -6,7 +6,7 @@ import {
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
-import { fontFamilySerif } from "src/application/shared/themes";
+import { fontFamilyPlayfairDisplay } from "src/application/shared/themes";
 
 const framework = getFrameworkDefinition(DEFAULT_FRAMEWORK_VERSION);
 const dimensionCodeByName: Record<string, string> = {
@@ -46,7 +46,7 @@ const MethodologySection = () => (
       <Typography
         component="h2"
         sx={{
-          fontFamily: fontFamilySerif,
+          fontFamily: fontFamilyPlayfairDisplay,
           fontSize: {
             xs: "clamp(2rem, 5.2vw, 2.8rem)",
             md: "clamp(42px, 5.2vw, 64px)",

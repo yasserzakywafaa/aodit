@@ -233,7 +233,7 @@ const SecurityPage = () => {
                     color: "text.primary",
                   }}
                 >
-                  Client-controlled access (optional)
+                  Client-controlled access
                 </Typography>
                 <Typography
                   color="text.secondary"
@@ -346,7 +346,7 @@ const SecurityPage = () => {
                   Swiss governance
                 </Typography>
                 <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
-                  SwissLI AG is a Swiss company headquartered in Luzerne and
+                  SwissLI AG is a Swiss company headquartered in Luzern and
                   governed by Swiss law. AODIT is designed for Swiss banking
                   secrecy and FINMA-regulated deployment expectations.
                 </Typography>

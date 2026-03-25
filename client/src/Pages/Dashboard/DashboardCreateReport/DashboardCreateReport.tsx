@@ -8,7 +8,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+import {
+  fontFamilyInter,
+  fontFamilyPlayfairDisplay,
+} from "src/application/shared/themes";
 
 import { alpha } from "@mui/material/styles";
 import { routes } from "src/application/routes";
@@ -129,7 +132,7 @@ const DashboardCreateReport = () => {
             <Typography
               variant="h6"
               sx={{
-                fontFamily: fontFamilySerif,
+                fontFamily: fontFamilyPlayfairDisplay,
                 color: "primary.main",
                 mb: 2,
                 letterSpacing: "0.02em",
@@ -140,7 +143,7 @@ const DashboardCreateReport = () => {
             <Typography
               variant="body1"
               sx={{
-                fontFamily: fontFamilySans,
+                fontFamily: fontFamilyInter,
                 color: "text.secondary",
                 lineHeight: 1.7,
                 mb: 2,
@@ -163,7 +166,7 @@ const DashboardCreateReport = () => {
             >
               <Typography
                 variant="body2"
-                sx={{ fontFamily: fontFamilySans, color: "text.secondary" }}
+                sx={{ fontFamily: fontFamilyInter, color: "text.secondary" }}
               >
                 Scenarios and weights define how many test cases run per
                 dimension and how each dimension contributes to the composite

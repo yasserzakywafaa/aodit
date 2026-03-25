@@ -3,7 +3,10 @@ import {
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
 import { alpha, useTheme } from "@mui/material/styles";
-import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+import {
+  fontFamilyInter,
+  fontFamilyPlayfairDisplay,
+} from "src/application/shared/themes";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import Box from "@mui/material/Box";
@@ -175,7 +178,7 @@ const DownloadReportSection = () => {
           <Typography
             component="h3"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: {
                 xs: "clamp(1.5rem, 4vw, 2.25rem)",
                 md: "clamp(28px, 3vw, 40px)",
@@ -202,7 +205,7 @@ const DownloadReportSection = () => {
 
           <Typography
             sx={{
-              fontFamily: fontFamilySans,
+              fontFamily: fontFamilyInter,
               fontSize: 14,
               color: "text.secondary",
               lineHeight: 1.65,
@@ -234,7 +237,7 @@ const DownloadReportSection = () => {
         PaperProps={{ sx: { borderRadius: 0 } }}
       >
         <form onSubmit={handleLeadSubmit}>
-          <DialogTitle sx={{ fontFamily: fontFamilySans, fontWeight: 600 }}>
+          <DialogTitle sx={{ fontFamily: fontFamilyInter, fontWeight: 600 }}>
             Enter your details to get the executive summary
           </DialogTitle>
           <DialogContent

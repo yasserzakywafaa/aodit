@@ -24,7 +24,7 @@ const DIFFERENTIATORS = [
     icon: <LocationOnOutlined sx={{ fontSize: 28, color: primaryColor }} />,
     title: "Swiss",
     description:
-      "Headquartered in Luzerne, governed by Swiss law. Designed for Swiss banking secrecy and FINMA-regulated deployment expectations.",
+      "Headquartered in Luzern, governed by Swiss law. Designed for Swiss banking secrecy and FINMA-regulated deployment expectations.",
   },
   {
     icon: <SecurityOutlined sx={{ fontSize: 28, color: primaryColor }} />,
@@ -78,7 +78,7 @@ const AboutPage = () => {
             sx={{ maxWidth: 750, lineHeight: 1.7, fontSize: 17, mb: 2 }}
           >
             Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI
-            lab founded in 2021 and headquartered in Luzerne. The lab focuses on
+            lab founded in 2021 and headquartered in Luzern. The lab focuses on
             building and evaluating AI systems with a strong focus on real-world
             behavior, safety, and system performance.
           </Typography>

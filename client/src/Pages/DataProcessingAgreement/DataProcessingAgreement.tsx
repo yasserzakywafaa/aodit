@@ -7,7 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
-import { fontFamilySerif, primaryColor } from "src/application/shared/themes";
+import {
+  fontFamilyPlayfairDisplay,
+  primaryColor,
+} from "src/application/shared/themes";
 
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
@@ -41,7 +44,7 @@ const SectionHeading = ({
   <Typography
     variant="h5"
     sx={{
-      fontFamily: fontFamilySerif,
+      fontFamily: fontFamilyPlayfairDisplay,
       fontSize: { xs: "1.2rem", md: "1.35rem" },
       color: "text.primary",
       mb: 2,
@@ -68,7 +71,7 @@ const DataProcessingAgreementPage = () => {
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "Data Processing Agreement (DPA)",
-      "Data Processing Agreement governing the processing of personal data by Swiss Lab of Intelligence AG (SwissLI AG) on behalf of AODIT clients.",
+      "Data Processing Agreement governing the processing of personal data by Swiss Lab of Intelligence (SwissLI AG) on behalf of AODIT clients.",
       routes.dataProcessingAgreement,
       new Date("03/01/2026"),
     );
@@ -109,7 +112,7 @@ const DataProcessingAgreementPage = () => {
           <Typography
             variant="h1"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: { xs: "2rem", sm: "2.4rem", md: "2.6rem" },
               lineHeight: 1.15,
               mb: 2,
@@ -136,7 +139,7 @@ const DataProcessingAgreementPage = () => {
           <SectionHeading number="1" title="Purpose and Applicability" />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             This Data Processing Agreement (&ldquo;DPA&rdquo;) governs the
-            processing of personal data by Swiss Lab of Intelligence AG
+            processing of personal data by Swiss Lab of Intelligence
             (&ldquo;SwissLI AG&rdquo;, &ldquo;Processor&rdquo;) on behalf of the
             Client (&ldquo;Controller&rdquo;).
           </Typography>
@@ -204,7 +207,7 @@ const DataProcessingAgreementPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -223,7 +226,7 @@ const DataProcessingAgreementPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -450,7 +453,7 @@ const DataProcessingAgreementPage = () => {
             <Typography
               variant="h6"
               sx={{
-                fontFamily: fontFamilySerif,
+                fontFamily: fontFamilyPlayfairDisplay,
                 mb: 2,
                 color: "text.primary",
               }}

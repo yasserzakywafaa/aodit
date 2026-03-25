@@ -23,7 +23,7 @@ import {
   useSchemaOrg,
 } from "src/shared/utils/schemaOrg";
 import {
-  fontFamilySerif,
+  fontFamilyPlayfairDisplay,
   primaryColor,
   primaryColorOpaqueEight,
 } from "src/application/shared/themes";
@@ -34,8 +34,7 @@ import DownloadReportSection from "./features/DownloadReportSection";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import { alpha } from "@mui/material/styles";
-import euHostedImgDark from "src/assets/images/eu_hosted_black_text.webp";
-import euHostedImgLight from "src/assets/images/eu_hosted_white_text.webp";
+import euHostedImg from "src/assets/images/eu_hosted.webp";
 import { routes } from "src/application/routes";
 import swissMadeImg from "src/assets/images/swiss_made.webp";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -46,7 +45,7 @@ const FeaturesPage = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, themeMode },
+      state: { isFetching },
     },
   } = useApplicationContext();
 
@@ -94,7 +93,7 @@ const FeaturesPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: { xs: "1.5rem", md: "1.85rem" },
               mb: 2.5,
               color: "text.primary",
@@ -127,7 +126,7 @@ const FeaturesPage = () => {
           >
             <Box
               component="img"
-              src={themeMode === "dark" ? euHostedImgLight : euHostedImgDark}
+              src={euHostedImg}
               alt="EU Hosted (EU AI Act Ready)"
             />
             <Box component="img" src={swissMadeImg} alt="Swiss Made Software" />
@@ -155,7 +154,7 @@ const FeaturesPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: { xs: "1.5rem", md: "1.85rem" },
               mb: 3,
               color: "text.primary",
@@ -244,7 +243,7 @@ const FeaturesPage = () => {
             <Typography
               variant="h4"
               sx={{
-                fontFamily: fontFamilySerif,
+                fontFamily: fontFamilyPlayfairDisplay,
                 fontSize: { xs: "1.5rem", md: "1.85rem" },
                 mb: 2,
                 color: "text.primary",
@@ -283,7 +282,7 @@ const FeaturesPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: { xs: "1.5rem", md: "1.85rem" },
               mb: 2,
               color: "text.primary",
@@ -353,7 +352,7 @@ const FeaturesPage = () => {
             <Typography
               variant="h4"
               sx={{
-                fontFamily: fontFamilySerif,
+                fontFamily: fontFamilyPlayfairDisplay,
                 fontSize: { xs: "1.5rem", md: "1.85rem" },
                 mb: 2.5,
                 color: "text.primary",
@@ -407,7 +406,7 @@ const FeaturesPage = () => {
           <Typography
             variant="h3"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: { xs: "1.75rem", md: "2.5rem" },
               mb: 2,
               color: "text.primary",

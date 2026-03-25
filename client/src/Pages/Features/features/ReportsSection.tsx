@@ -1,4 +1,7 @@
-import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+import {
+  fontFamilyInter,
+  fontFamilyPlayfairDisplay,
+} from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -10,11 +13,11 @@ const SECTION_EYEBROW_STYLE = {
   letterSpacing: "0.25em",
   color: "primary.main",
   mb: 2,
-  fontFamily: fontFamilySans,
+  fontFamily: fontFamilyInter,
 };
 
 const SECTION_TITLE_STYLE = {
-  fontFamily: fontFamilySerif,
+  fontFamily: fontFamilyPlayfairDisplay,
   fontSize: { xs: "clamp(1.5rem, 4vw, 2.5rem)", md: "clamp(36px, 5vw, 64px)" },
   fontWeight: 700,
   lineHeight: 1.05,
@@ -176,7 +179,7 @@ const ReportsSection = () => {
                 letterSpacing: "0.2em",
                 color: "text.secondary",
                 mb: 2.5,
-                fontFamily: fontFamilySans,
+                fontFamily: fontFamilyInter,
               }}
             >
               {card.number}
@@ -185,7 +188,7 @@ const ReportsSection = () => {
             <Typography
               component="h3"
               sx={{
-                fontFamily: fontFamilySerif,
+                fontFamily: fontFamilyPlayfairDisplay,
                 fontSize: 22,
                 fontWeight: 700,
                 lineHeight: 1.2,
@@ -228,7 +231,7 @@ const ReportsSection = () => {
                       letterSpacing: "0.1em",
                       color: "text.secondary",
                       width: 60,
-                      fontFamily: fontFamilySans,
+                      fontFamily: fontFamilyInter,
                     }}
                   >
                     {w.name}
@@ -259,7 +262,7 @@ const ReportsSection = () => {
                       color: "primary.main",
                       width: 28,
                       textAlign: "right",
-                      fontFamily: fontFamilySans,
+                      fontFamily: fontFamilyInter,
                     }}
                   >
                     {w.pct}
@@ -276,7 +279,7 @@ const ReportsSection = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
-                fontFamily: fontFamilySans,
+                fontFamily: fontFamilyInter,
                 transition: "transform 0.2s",
                 "&::after": { content: '"→"' },
               }}
@@ -309,7 +312,7 @@ const ReportsSection = () => {
               fontSize: 10,
               letterSpacing: "0.2em",
               color: "text.secondary",
-              fontFamily: fontFamilySans,
+              fontFamily: fontFamilyInter,
             }}
           >
             CUSTOM REPORT

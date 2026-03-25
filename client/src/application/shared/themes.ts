@@ -17,15 +17,15 @@ export const primaryColorDim = "rgba(4, 120, 87, 0.2)";
 export const primaryColorFaint = "rgba(4, 120, 87, 0.06)";
 export const secondaryColor = "#1B2A4A"; // institutional navy
 
-export const fontFamilySerif = "'Playfair Display', serif";
-export const fontFamilySans = "'Inter', sans-serif";
+export const fontFamilyPlayfairDisplay = "'Playfair Display', serif";
+export const fontFamilyInter = "'Inter', sans-serif";
 
 export const defaultBackDropFilterBlur = "blur(12px)";
 const borderRadius = "0px";
 
 export const buttonStyle = {
   textTransform: "capitalize" as const,
-  fontFamily: fontFamilySans,
+  fontFamily: fontFamilyInter,
   border: `1px solid ${primaryColor}`,
   borderRadius,
   "&:hover": {
@@ -63,19 +63,19 @@ export const theme = createTheme({
     error: { main: red },
   },
   typography: {
-    fontFamily: fontFamilySans,
+    fontFamily: fontFamilyInter,
     h1: {
-      fontFamily: fontFamilySerif,
+      fontFamily: fontFamilyPlayfairDisplay,
       fontWeight: 700,
       letterSpacing: "-0.02em",
     },
     h2: {
-      fontFamily: fontFamilySerif,
+      fontFamily: fontFamilyPlayfairDisplay,
       fontWeight: 600,
       letterSpacing: "-0.01em",
     },
-    h3: { fontFamily: fontFamilySerif, fontWeight: 500 },
-    h4: { fontFamily: fontFamilySerif, fontWeight: 500 },
+    h3: { fontFamily: fontFamilyPlayfairDisplay, fontWeight: 500 },
+    h4: { fontFamily: fontFamilyPlayfairDisplay, fontWeight: 500 },
   },
   components: {
     MuiButton: {

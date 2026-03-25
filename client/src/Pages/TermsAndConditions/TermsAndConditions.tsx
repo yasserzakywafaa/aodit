@@ -7,7 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
-import { fontFamilySerif, primaryColor } from "src/application/shared/themes";
+import {
+  fontFamilyPlayfairDisplay,
+  primaryColor,
+} from "src/application/shared/themes";
 
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
@@ -41,7 +44,7 @@ const SectionHeading = ({
   <Typography
     variant="h5"
     sx={{
-      fontFamily: fontFamilySerif,
+      fontFamily: fontFamilyPlayfairDisplay,
       fontSize: { xs: "1.2rem", md: "1.35rem" },
       color: "text.primary",
       mb: 2,
@@ -109,7 +112,7 @@ const TermsAndConditions = () => {
           <Typography
             variant="h1"
             sx={{
-              fontFamily: fontFamilySerif,
+              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: { xs: "2rem", sm: "2.4rem", md: "2.6rem" },
               lineHeight: 1.15,
               mb: 2,
@@ -527,7 +530,7 @@ const TermsAndConditions = () => {
             <Typography
               variant="h6"
               sx={{
-                fontFamily: fontFamilySerif,
+                fontFamily: fontFamilyPlayfairDisplay,
                 mb: 2,
                 color: "text.primary",
               }}

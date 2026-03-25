@@ -15,15 +15,12 @@ const FOOTER_SECTIONS = [
     title: "Product",
     links: [
       { label: "Methodology", href: routes.methodology },
-      { label: "Security Architecture", href: routes.security },
+      { label: "Security", href: routes.security },
     ],
   },
   {
     title: "Compliance",
-    links: [
-      { label: "FINMA Guidance", href: routes.compliance.finma },
-      { label: "Security", href: routes.security },
-    ],
+    links: [{ label: "FINMA Guidance", href: routes.compliance.finma }],
   },
   {
     title: "Company",

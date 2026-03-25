@@ -76,6 +76,8 @@ export const theme = createTheme({
     },
     h3: { fontFamily: fontFamilyPlayfairDisplay, fontWeight: 500 },
     h4: { fontFamily: fontFamilyPlayfairDisplay, fontWeight: 500 },
+    h5: { fontFamily: fontFamilyPlayfairDisplay },
+    h6: { fontFamily: fontFamilyPlayfairDisplay },
   },
   components: {
     MuiButton: {

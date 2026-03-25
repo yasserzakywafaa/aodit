@@ -1,5 +1,4 @@
 import {
-  fontFamilyInter,
   fontFamilyPlayfairDisplay,
 } from "src/application/shared/themes";
 
@@ -13,7 +12,6 @@ const SECTION_EYEBROW_STYLE = {
   letterSpacing: "0.25em",
   color: "primary.main",
   mb: 2,
-  fontFamily: fontFamilyInter,
 };
 
 const SECTION_TITLE_STYLE = {
@@ -179,7 +177,6 @@ const ReportsSection = () => {
                 letterSpacing: "0.2em",
                 color: "text.secondary",
                 mb: 2.5,
-                fontFamily: fontFamilyInter,
               }}
             >
               {card.number}
@@ -231,7 +228,6 @@ const ReportsSection = () => {
                       letterSpacing: "0.1em",
                       color: "text.secondary",
                       width: 60,
-                      fontFamily: fontFamilyInter,
                     }}
                   >
                     {w.name}
@@ -262,7 +258,6 @@ const ReportsSection = () => {
                       color: "primary.main",
                       width: 28,
                       textAlign: "right",
-                      fontFamily: fontFamilyInter,
                     }}
                   >
                     {w.pct}
@@ -279,7 +274,6 @@ const ReportsSection = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
-                fontFamily: fontFamilyInter,
                 transition: "transform 0.2s",
                 "&::after": { content: '"→"' },
               }}
@@ -312,7 +306,6 @@ const ReportsSection = () => {
               fontSize: 10,
               letterSpacing: "0.2em",
               color: "text.secondary",
-              fontFamily: fontFamilyInter,
             }}
           >
             CUSTOM REPORT

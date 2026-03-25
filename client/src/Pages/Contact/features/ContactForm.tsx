@@ -9,7 +9,6 @@ import {
   TextField,
 } from "@mui/material";
 import {
-  fontFamilyInter,
   primaryColorOpaqueTen,
 } from "src/application/shared/themes";
 
@@ -27,7 +26,6 @@ const REPORT_OPTIONS = [
 const inputSx = {
   "& .MuiOutlinedInput-root": {
     bgcolor: primaryColorOpaqueTen,
-    fontFamily: fontFamilyInter,
     fontSize: 12,
     letterSpacing: "0.5px",
     "&:hover": { borderColor: "primary.main" },
@@ -37,7 +35,6 @@ const inputSx = {
     },
     "& fieldset": { border: 0 },
   },
-  "& .MuiInputLabel-outlined": { fontFamily: fontFamilyInter },
 };
 
 const ContactForm = () => {
@@ -114,7 +111,6 @@ const ContactForm = () => {
               displayEmpty
               renderValue={(v) => v || ""}
               sx={{
-                fontFamily: fontFamilyInter,
                 fontSize: 12,
                 "& .MuiOutlinedInput-notchedOutline": { border: 0 },
               }}
@@ -150,7 +146,6 @@ const ContactForm = () => {
             sx={{
               width: "100%",
               py: 2,
-              fontFamily: fontFamilyInter,
               fontSize: 11,
               fontWeight: 700,
               letterSpacing: "0.3em",

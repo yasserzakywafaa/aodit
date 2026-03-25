@@ -38,7 +38,7 @@ const SecurityPage = () => {
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "On-Premise AI Evaluation Security",
-      "Security architecture and data handling model for AODIT on-premise deployment in regulated fintechs and insurance companies.",
+      "Security architecture and data handling model for aodit on-premise deployment in regulated fintechs and insurance companies.",
       routes.security,
     );
   }, []);
@@ -47,7 +47,7 @@ const SecurityPage = () => {
 
   return (
     <Page
-      title="On-Premise AI Evaluation for Fintechs and Insurance companies | AODIT"
+      title="On-Premise AI Evaluation for Fintechs and Insurance companies | aodit"
       className="security-page"
       isLoading={false}
     >
@@ -75,9 +75,16 @@ const SecurityPage = () => {
             color="text.secondary"
             sx={{ mb: 4, maxWidth: 750, lineHeight: 1.7, fontSize: 17 }}
           >
-            AODIT is deployed fully within client infrastructure. No data leaves
-            your environment. SwissLI AG has no access to AI agent inputs,
-            outputs, or logs by default.
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            is deployed fully within client infrastructure. No data leaves your
+            environment. SwissLI AG has no access to AI agent inputs, outputs,
+            or logs by default.
           </Typography>
 
           {/* Deployment flow */}
@@ -130,7 +137,14 @@ const SecurityPage = () => {
                     sx={{ fontSize: 28, color: primaryColor, mb: 1 }}
                   />
                   <Typography sx={{ fontWeight: 600, color: "text.primary" }}>
-                    AODIT Evaluation
+                    <Typography
+                      component="span"
+                      fontSize="inherit"
+                      color="primary.main"
+                    >
+                      aodit
+                    </Typography>{" "}
+                    Evaluation
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Runs inside your environment
@@ -217,11 +231,17 @@ const SecurityPage = () => {
                   Development and testing environments
                 </Typography>
                 <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
-                  AODIT evaluation frameworks and adversarial scenarios are
-                  developed in controlled environments. No client data is ever
-                  used in development or testing. All client-specific
-                  evaluations are executed exclusively within client on-premise
-                  infrastructure.
+                  <Typography
+                    component="span"
+                    fontSize="inherit"
+                    color="primary.main"
+                  >
+                    aodit
+                  </Typography>{" "}
+                  evaluation frameworks and adversarial scenarios are developed
+                  in controlled environments. No client data is ever used in
+                  development or testing. All client-specific evaluations are
+                  executed exclusively within client on-premise infrastructure.
                 </Typography>
 
                 <Typography
@@ -347,8 +367,16 @@ const SecurityPage = () => {
                 </Typography>
                 <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
                   SwissLI AG is a Swiss company headquartered in Luzern and
-                  governed by Swiss law. AODIT is designed for Swiss banking
-                  secrecy and FINMA-regulated deployment expectations.
+                  governed by Swiss law.{" "}
+                  <Typography
+                    component="span"
+                    fontSize="inherit"
+                    color="primary.main"
+                  >
+                    aodit
+                  </Typography>{" "}
+                  is designed for Swiss banking secrecy and FINMA-regulated
+                  deployment expectations.
                 </Typography>
               </Paper>
             </Grid>

@@ -68,17 +68,15 @@ const ContactPage = () => {
         >
           Contact Us
         </Typography>
-        <Typography
-          color="text.secondary"
-          sx={{ mb: 1, lineHeight: 1.7 }}
-        >
+        <Typography color="text.secondary" sx={{ mb: 1, lineHeight: 1.7 }}>
           For evaluation inquiries, security documentation requests (NDA
-          required), or general questions about AODIT.
+          required), or general questions about{" "}
+          <Typography component="span" fontSize="inherit" color="primary.main">
+            aodit
+          </Typography>{" "}
+          .
         </Typography>
-        <Typography
-          color="text.secondary"
-          sx={{ mb: 4, fontSize: 14 }}
-        >
+        <Typography color="text.secondary" sx={{ mb: 4, fontSize: 14 }}>
           We typically respond within one business day.
         </Typography>
 

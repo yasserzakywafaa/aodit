@@ -17,7 +17,7 @@ export interface ScenarioResult {
   reportId: string;
   scenarioId: string; // Links to the Scenario
   modelName: string; // The model being tested
-  dimensionId: string; // Which AODIT dimension
+  dimensionId: string; // Which aodit dimension
   severity: "low" | "medium" | "high";
   turns: TurnResult[];
   rawScore: number; // Average of turn scores (1-5)

@@ -205,7 +205,6 @@ const DownloadReportSection = () => {
 
           <Typography
             sx={{
-              fontFamily: fontFamilyInter,
               fontSize: 14,
               color: "text.secondary",
               lineHeight: 1.65,

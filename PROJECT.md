@@ -1,12 +1,12 @@
-# AODIT — Project logic and flow
+# aodit — Project logic and flow
 
-This document is the **single source of truth** for what AODIT is, how reports work, and where to find things in the codebase.
+This document is the **single source of truth** for what aodit is, how reports work, and where to find things in the codebase.
 
 ---
 
-## What is AODIT?
+## What is aodit?
 
-**AODIT** is an **AI Agent Evaluation Lab** / **Agent Risk Index** platform. It evaluates how AI agents behave under pressure and whether they understand their own behavior. The product serves teams who need standardized, repeatable risk assessments of AI models (e.g. frontier models, banking agents, workplace assistants).
+**aodit** is an **AI Agent Evaluation Lab** / **Agent Risk Index** platform. It evaluates how AI agents behave under pressure and whether they understand their own behavior. The product serves teams who need standardized, repeatable risk assessments of AI models (e.g. frontier models, banking agents, workplace assistants).
 
 - **Purpose:** Run structured behavioral tests (scenarios with multiple turns), score agents on framework-defined dimensions, and produce a composite score, rating, calibration gap, and deployment verdict.
 - **Audience:** Internal teams, enterprises, and regulators who need comparable, auditable agent evaluations.
@@ -25,7 +25,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
 8. **Live Feed page** (`/dashboard/reports/:id/live-feed`) → Pure monitoring page with real-time polling every 3s. Shows pipeline steps, progress bar, scenarios completed counter, and a live feed of scored turns. User can refresh and return to this page anytime. On complete/failed, shows "Back to Report" button.
 9. **Report detail (running)** → If report status is `running`, a "View Report Status" button appears to navigate back to the Live Feed page. "RUN REPORT" is disabled while running.
 10. **Execution completes** → Server sets report status to `completed` (or `failed`). Live Feed page stops polling and shows result status.
-11. **Report detail + run result** → View latest run: dimension scores, composite, rating, calibration gap, outlook, deployment verdict (AODIT framework box).
+11. **Report detail + run result** → View latest run: dimension scores, composite, rating, calibration gap, outlook, deployment verdict (aodit framework box).
 
 ---
 
@@ -58,7 +58,7 @@ This document is the **single source of truth** for what AODIT is, how reports w
   - Outlook derived from score consistency, calibration gap, and variance.
   - Deployment verdict derived from rating.
 - **Final status** → After all models finish, the engine reads all run statuses. If all failed → report status `failed`; otherwise → `completed`.
-- **View result** → Report detail page fetches runs; the AODIT framework box shows the **latest completed run** (dimension scores, composite score, rating, calibration gap, outlook, deployment verdict).
+- **View result** → Report detail page fetches runs; the aodit framework box shows the **latest completed run** (dimension scores, composite score, rating, calibration gap, outlook, deployment verdict).
 
 ---
 
@@ -155,7 +155,7 @@ If no description is provided (legacy reports), it falls back to "General purpos
 
 ---
 
-## AODIT framework (methodology)
+## aodit framework (methodology)
 
 ### Active framework versions
 
@@ -275,12 +275,12 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ### Supporting modules
 
-| Module                | File                                                             | Purpose                                                                                                                                                |
-| --------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Model registry        | `server/src/services/reports/modelRegistry.ts`                   | Maps friendly names → OpenRouter model IDs. Default judge: `openai/gpt-5-mini`.                                                                        |
-| Framework registry    | `server/src/services/reports/frameworkRegistry.ts`               | Canonical server framework definitions (`aodit_v1`, `aodit_v2`): dimensions, weights, categories, turn types, turn protocol.                           |
-| Prompt templates      | `server/src/services/reports/prompts.ts`                         | Builds system+user messages for scenario generation, turn escalation, scoring, and self-score extraction; phrasing is framework-version aware.         |
-| Scoring & aggregation | `server/src/services/reports/scoring.ts`                         | Severity-weighted dimension aggregation using framework-resolved weights, composite score, rating bands, calibration gap, outlook, deployment verdict. |
+| Module                | File                                               | Purpose                                                                                                                                                |
+| --------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Model registry        | `server/src/services/reports/modelRegistry.ts`     | Maps friendly names → OpenRouter model IDs. Default judge: `openai/gpt-5-mini`.                                                                        |
+| Framework registry    | `server/src/services/reports/frameworkRegistry.ts` | Canonical server framework definitions (`aodit_v1`, `aodit_v2`): dimensions, weights, categories, turn types, turn protocol.                           |
+| Prompt templates      | `server/src/services/reports/prompts.ts`           | Builds system+user messages for scenario generation, turn escalation, scoring, and self-score extraction; phrasing is framework-version aware.         |
+| Scoring & aggregation | `server/src/services/reports/scoring.ts`           | Severity-weighted dimension aggregation using framework-resolved weights, composite score, rating bands, calibration gap, outlook, deployment verdict. |
 
 ---
 
@@ -305,7 +305,7 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 | ------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Reports list  | `DashboardReports/`      | List reports, create button, link to report detail                                                                                                                      |
 | Create Report | `DashboardCreateReport/` | Form: name (required), description (required); creates report (seeds scenarios), navigates to config                                                                    |
-| Report detail | `DashboardReport/`       | View/edit config, Save button, RUN REPORT button (saves config first), "View Report Status" button (when running), AODIT framework box with latest run results          |
+| Report detail | `DashboardReport/`       | View/edit config, Save button, RUN REPORT button (saves config first), "View Report Status" button (when running), aodit framework box with latest run results          |
 | Live Feed     | `DashboardReportRun/`    | Pure monitoring page: polls run-status every 3s, shows pipeline steps, progress bar, live feed. No launch call — safe to refresh. Shows "Back to Report" when finished. |
 
 ### Live Feed page (`DashboardReportRun`)
@@ -332,36 +332,35 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ## Where to find things
 
-| What                                          | Where                                                            |
-| --------------------------------------------- | ---------------------------------------------------------------- |
-| Report type (server)                          | `server/src/models/types/report.ts`                              |
-| Report type (client)                          | `client/src/shared/types/report.ts`                              |
-| ReportRun type (server)                       | `server/src/models/types/reportRun.ts`                           |
-| ReportRun type (client)                       | `client/src/shared/types/reportRun.ts`                           |
-| ScenarioResult type                           | `server/src/models/types/scenarioResult.ts`                      |
-| Scenario type                                 | `server/src/models/types/scenario.ts`                            |
-| Framework constants (v1/v2)                   | `client/src/shared/constants/aoditFramework.ts`                  |
-| Model registry                                | `server/src/services/reports/modelRegistry.ts`                   |
-| Prompt templates                              | `server/src/services/reports/prompts.ts`                         |
-| Scoring & aggregation                         | `server/src/services/reports/scoring.ts`                         |
-| Framework registry (server)                   | `server/src/services/reports/frameworkRegistry.ts`               |
-| Execution engine                              | `server/src/services/reports/executionEngine.ts`                 |
-| Report CRUD service (incl. scenario seeding)  | `server/src/services/reportService.ts`                           |
-| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts`                |
-| Dashboard controller                          | `server/src/controllers/DashboardController.ts`                  |
-| Dashboard routes                              | `server/src/routes/dashboardRoutes.ts`                           |
-| API endpoints (server)                        | `server/src/models/endpoints.ts`                                 |
-| API endpoints (client)                        | `client/src/application/shared/endpoints.ts`                     |
-| Reports list page                             | `client/src/Pages/Dashboard/DashboardReports/`                   |
-| Report detail page                            | `client/src/Pages/Dashboard/DashboardReport/`                    |
-| Live Feed page                                | `client/src/Pages/Dashboard/DashboardReportRun/`                 |
-| Create report page                            | `client/src/Pages/Dashboard/DashboardCreateReport/`              |
-| DB collections & indexes                      | `server/src/models/mongoDb/index.ts`                             |
-| OpenRouter client                             | `server/src/utils/openRouterClient.ts`                           |
-| App routes                                    | `client/src/application/routes.ts`                               |
-| App content (route tree)                      | `client/src/application/AppContent.tsx`                          |
+| What                                          | Where                                               |
+| --------------------------------------------- | --------------------------------------------------- |
+| Report type (server)                          | `server/src/models/types/report.ts`                 |
+| Report type (client)                          | `client/src/shared/types/report.ts`                 |
+| ReportRun type (server)                       | `server/src/models/types/reportRun.ts`              |
+| ReportRun type (client)                       | `client/src/shared/types/reportRun.ts`              |
+| ScenarioResult type                           | `server/src/models/types/scenarioResult.ts`         |
+| Scenario type                                 | `server/src/models/types/scenario.ts`               |
+| Framework constants (v1/v2)                   | `client/src/shared/constants/aoditFramework.ts`     |
+| Model registry                                | `server/src/services/reports/modelRegistry.ts`      |
+| Prompt templates                              | `server/src/services/reports/prompts.ts`            |
+| Scoring & aggregation                         | `server/src/services/reports/scoring.ts`            |
+| Framework registry (server)                   | `server/src/services/reports/frameworkRegistry.ts`  |
+| Execution engine                              | `server/src/services/reports/executionEngine.ts`    |
+| Report CRUD service (incl. scenario seeding)  | `server/src/services/reportService.ts`              |
+| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts`   |
+| Dashboard controller                          | `server/src/controllers/DashboardController.ts`     |
+| Dashboard routes                              | `server/src/routes/dashboardRoutes.ts`              |
+| API endpoints (server)                        | `server/src/models/endpoints.ts`                    |
+| API endpoints (client)                        | `client/src/application/shared/endpoints.ts`        |
+| Reports list page                             | `client/src/Pages/Dashboard/DashboardReports/`      |
+| Report detail page                            | `client/src/Pages/Dashboard/DashboardReport/`       |
+| Live Feed page                                | `client/src/Pages/Dashboard/DashboardReportRun/`    |
+| Create report page                            | `client/src/Pages/Dashboard/DashboardCreateReport/` |
+| DB collections & indexes                      | `server/src/models/mongoDb/index.ts`                |
+| OpenRouter client                             | `server/src/utils/openRouterClient.ts`              |
+| App routes                                    | `client/src/application/routes.ts`                  |
+| App content (route tree)                      | `client/src/application/AppContent.tsx`             |
 
 ---
 
 Keep this file updated as the report feature and execution flow evolve.
-

@@ -1,17 +1,15 @@
 /**
- * Scoring & aggregation module for the AODIT framework.
+ * Scoring & aggregation module for the aodit framework.
  *
  * Handles: severity weighting, dimension aggregation, composite score,
  * rating bands, calibration gap, outlook, and deployment verdict.
  */
 
+import { FrameworkVersion, getFrameworkDefinition } from "./frameworkRegistry";
+
 import { DimensionScore } from "../../models/types/reportRun";
 import { DimensionWeights } from "../../models/types/report";
 import { ScenarioResult } from "../../models/types/scenarioResult";
-import {
-  FrameworkVersion,
-  getFrameworkDefinition,
-} from "./frameworkRegistry";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -58,7 +56,8 @@ export const aggregateDimensionScores = (
 ): DimensionScore[] => {
   const dimWeights =
     weights ??
-    (getFrameworkDefinition(frameworkVersion).defaultWeights as DimensionWeights);
+    (getFrameworkDefinition(frameworkVersion)
+      .defaultWeights as DimensionWeights);
   const dimensions = Object.keys(dimWeights);
 
   return dimensions.map((dim) => {

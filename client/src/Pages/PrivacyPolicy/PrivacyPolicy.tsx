@@ -9,12 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
-import {
-  fontFamilyPlayfairDisplay,
-  primaryColor,
-} from "src/application/shared/themes";
 
 import Page from "src/components/shared/Page/Page";
+import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +43,6 @@ const SectionHeading = ({
   <Typography
     variant="h5"
     sx={{
-      fontFamily: fontFamilyPlayfairDisplay,
       fontSize: { xs: "1.2rem", md: "1.35rem" },
       color: "text.primary",
       mb: 2,
@@ -73,7 +69,7 @@ const PrivacyPolicyPage = () => {
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "Privacy Policy",
-      "Privacy Policy of Swiss Lab of Intelligence (SwissLI AG) describing how personal data is processed in connection with the AODIT platform.",
+      "Privacy Policy of Swiss Lab of Intelligence (SwissLI AG) describing how personal data is processed in connection with the aodit platform.",
       routes.privacyPolicy,
       new Date("03/01/2026"),
     );
@@ -83,7 +79,7 @@ const PrivacyPolicyPage = () => {
 
   return (
     <Page
-      title="Privacy Policy | AODIT"
+      title="Privacy Policy | aodit"
       className="privacy-policy-page"
       isLoading={false}
     >
@@ -114,7 +110,6 @@ const PrivacyPolicyPage = () => {
           <Typography
             variant="h1"
             sx={{
-              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: { xs: "2rem", sm: "2.4rem", md: "2.6rem" },
               lineHeight: 1.15,
               mb: 2,
@@ -167,8 +162,16 @@ const PrivacyPolicyPage = () => {
             paragraph
             sx={{ fontSize: 15, lineHeight: 1.75, fontWeight: 600 }}
           >
-            The AODIT platform itself is designed to operate without requiring
-            SwissLI AG to access client AI system data.
+            The{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            platform itself is designed to operate without requiring SwissLI AG
+            to access client AI system data.
           </Typography>
 
           {/* 3. Core Principle */}
@@ -176,8 +179,15 @@ const PrivacyPolicyPage = () => {
             number="3"
             title="Core Principle — Data Sovereignty"
           />
-          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            AODIT is designed as an on-premise evaluation system. This means:
+          <Typography sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            is designed as an on-premise evaluation system. This means:
           </Typography>
           <BulletList
             items={[
@@ -213,7 +223,14 @@ const PrivacyPolicyPage = () => {
           {/* 4. Access to Client Data */}
           <SectionHeading number="4" title="Access to Client Data" />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            AODIT is designed to operate without requiring direct access to live
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            is designed to operate without requiring direct access to live
             production systems. SwissLI AG:
           </Typography>
           <BulletList
@@ -261,7 +278,6 @@ const PrivacyPolicyPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -282,7 +298,6 @@ const PrivacyPolicyPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -301,7 +316,6 @@ const PrivacyPolicyPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -442,7 +456,6 @@ const PrivacyPolicyPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -459,7 +472,6 @@ const PrivacyPolicyPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -486,7 +498,6 @@ const PrivacyPolicyPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -506,7 +517,6 @@ const PrivacyPolicyPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilyPlayfairDisplay,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -626,7 +636,6 @@ const PrivacyPolicyPage = () => {
             <Typography
               variant="h6"
               sx={{
-                fontFamily: fontFamilyPlayfairDisplay,
                 mb: 2,
                 color: "text.primary",
               }}

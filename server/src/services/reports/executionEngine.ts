@@ -1,5 +1,5 @@
 /**
- * Execution engine — orchestrates real AI agent testing for AODIT.
+ * Execution engine — orchestrates real AI agent testing for aodit.
  *
  * Flow:
  * 1. Load report config + scenarios from DB
@@ -13,6 +13,11 @@ import {
   getDocumentsByQueryFromDb,
 } from "../../models/mongoDb";
 import { FeedItem, ReportRun } from "../../models/types/reportRun";
+import {
+  FrameworkVersion,
+  getFrameworkDefinition,
+  resolveFrameworkVersion,
+} from "./frameworkRegistry";
 import { ScenarioResult, TurnResult } from "../../models/types/scenarioResult";
 import {
   aggregateDimensionScores,
@@ -22,15 +27,6 @@ import {
   determineOutlook,
   getRating,
 } from "./scoring";
-import {
-  generateDimensionDeepDive,
-  generateExecutiveSummaries,
-} from "./executiveSummaryService";
-import {
-  FrameworkVersion,
-  getFrameworkDefinition,
-  resolveFrameworkVersion,
-} from "./frameworkRegistry";
 import {
   buildScenarioGenerationPrompt,
   buildScoringPrompt,
@@ -42,6 +38,10 @@ import {
   readDocument,
   updateDocument,
 } from "../../models/mongoDb/crudOperations";
+import {
+  generateDimensionDeepDive,
+  generateExecutiveSummaries,
+} from "./executiveSummaryService";
 import { resolveEvaluatorModelId, resolveModelId } from "./modelRegistry";
 
 import { ObjectId } from "mongodb";
@@ -89,7 +89,7 @@ const callWithRetry = async (
 
       const delay = RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
       console.warn(
-        `[AODIT] Retry ${attempt + 1}/${MAX_RETRIES} for ${modelId}: ${err.message}. Waiting ${delay}ms`,
+        `[aodit] Retry ${attempt + 1}/${MAX_RETRIES} for ${modelId}: ${err.message}. Waiting ${delay}ms`,
       );
       await sleep(delay);
     }
@@ -135,7 +135,11 @@ const getCategoryCodeFromScenario = (
   const match = title.match(/scenario\s+(\d+)/i);
   const scenarioIndex = match ? Number(match[1]) : NaN;
   const categoryDefs = dimensionCategories[dim] ?? [];
-  if (!Number.isFinite(scenarioIndex) || scenarioIndex <= 0 || !categoryDefs.length) {
+  if (
+    !Number.isFinite(scenarioIndex) ||
+    scenarioIndex <= 0 ||
+    !categoryDefs.length
+  ) {
     return undefined;
   }
 
@@ -149,12 +153,18 @@ const getCategoryCodeFromScenario = (
   return categoryDefs[categoryIndex]?.id;
 };
 
-const buildDimensionEvidence = (results: ScenarioResult[], maxItems = 6): string[] => {
+const buildDimensionEvidence = (
+  results: ScenarioResult[],
+  maxItems = 6,
+): string[] => {
   const sorted = [...results].sort((a, b) => a.rawScore - b.rawScore);
   return sorted.slice(0, maxItems).map((r) => {
     const recovery = r.turns.find((t) => t.turnType === "Recovery");
     const lastTurn = r.turns[r.turns.length - 1];
-    const snippet = (recovery?.response || lastTurn?.response || "").slice(0, 220);
+    const snippet = (recovery?.response || lastTurn?.response || "").slice(
+      0,
+      220,
+    );
     return `scenario:${r.scenarioId.slice(-6)} severity:${r.severity} score:${r.rawScore.toFixed(2)} snippet:${snippet}`;
   });
 };
@@ -372,8 +382,12 @@ const executeModelRun = async (params: {
     { reportRunId: runId } as any,
     DBCollectionsEnum.scenarioResults,
   );
-  const completedScenarioIds = new Set(existingResults.map((r) => r.scenarioId));
-  const allScenarioResults: ScenarioResult[] = [...(existingResults as unknown as ScenarioResult[])];
+  const completedScenarioIds = new Set(
+    existingResults.map((r) => r.scenarioId),
+  );
+  const allScenarioResults: ScenarioResult[] = [
+    ...(existingResults as unknown as ScenarioResult[]),
+  ];
   const scenarioResultIds: string[] = existingResults.map((r) => String(r._id));
   let completedScenarios = existingResults.length;
 
@@ -418,7 +432,9 @@ const executeModelRun = async (params: {
         dim: r.dimensionId.toUpperCase(),
         model: r.modelName.toUpperCase(),
         turn: lastTurn?.turnIndex ?? 8,
-        text: lastTurn ? `${lastTurn.turnType} — score ${lastTurn.score}/5` : "",
+        text: lastTurn
+          ? `${lastTurn.turnType} — score ${lastTurn.score}/5`
+          : "",
         score: String(r.rawScore),
         type: classifyScore(r.rawScore),
         scenarioTitle: scenarioTitleMap.get(r.scenarioId) ?? "",
@@ -434,7 +450,7 @@ const executeModelRun = async (params: {
     feedItems = allRebuilt.reverse();
 
     console.log(
-      `[AODIT] Resuming run ${runId}: ${completedScenarios}/${totalScenarios} scenarios already done`,
+      `[aodit] Resuming run ${runId}: ${completedScenarios}/${totalScenarios} scenarios already done`,
     );
     await updateRunProgress(runId, {
       status: "running",
@@ -496,7 +512,8 @@ const executeModelRun = async (params: {
 
       // Update feed items
       const lastTurn = result.turns[result.turns.length - 1];
-      dimCompleted[scenario.categoryId] = (dimCompleted[scenario.categoryId] ?? 0) + 1;
+      dimCompleted[scenario.categoryId] =
+        (dimCompleted[scenario.categoryId] ?? 0) + 1;
 
       const dimPrefix =
         {
@@ -506,9 +523,7 @@ const executeModelRun = async (params: {
           judgment: "J",
           resistance: "T",
           resilience: "Z",
-        }[
-          scenario.categoryId.toLowerCase()
-        ] ?? "X";
+        }[scenario.categoryId.toLowerCase()] ?? "X";
       dimCounters[dimPrefix] = (dimCounters[dimPrefix] ?? 0) + 1;
       const feedItem: FeedItem = {
         id: `${dimPrefix}${dimCounters[dimPrefix]}`,
@@ -545,7 +560,7 @@ const executeModelRun = async (params: {
       });
     } catch (err: any) {
       console.error(
-        `[AODIT] Scenario ${scenario._id} failed for ${modelName}: ${err.message}`,
+        `[aodit] Scenario ${scenario._id} failed for ${modelName}: ${err.message}`,
       );
       // Save failed scenario result
       const now = new Date().toISOString();
@@ -644,9 +659,7 @@ const executeModelRun = async (params: {
 
     // Build simple per-category deep-dive data from completed results.
     try {
-      const scenariosById = new Map(
-        scenarios.map((s) => [String(s._id), s]),
-      );
+      const scenariosById = new Map(scenarios.map((s) => [String(s._id), s]));
 
       const byDimension: ReportRun["dimensionDeepDive"] = {};
 
@@ -698,12 +711,12 @@ const executeModelRun = async (params: {
       dimensionDeepDive = byDimension;
     } catch (deepDiveErr: any) {
       console.warn(
-        `[AODIT] Failed to build dimensionDeepDive for run ${runId}: ${deepDiveErr.message}`,
+        `[aodit] Failed to build dimensionDeepDive for run ${runId}: ${deepDiveErr.message}`,
       );
     }
   } catch (err: any) {
     console.warn(
-      `[AODIT] Executive summary generation failed for run ${runId}: ${err.message}. Saving run without summaries.`,
+      `[aodit] Executive summary generation failed for run ${runId}: ${err.message}. Saving run without summaries.`,
     );
   }
 
@@ -719,7 +732,9 @@ const executeModelRun = async (params: {
     for (const dimScore of dimScores) {
       const dimId = dimScore.dimensionId;
       const categoryDefs = framework.dimensionCategories[dimId] ?? [];
-      const dimResults = completedResults.filter((r) => r.dimensionId === dimId);
+      const dimResults = completedResults.filter(
+        (r) => r.dimensionId === dimId,
+      );
 
       const categoryTotals = new Map<string, { sum: number; count: number }>();
       for (const result of dimResults) {
@@ -775,7 +790,9 @@ const executeModelRun = async (params: {
 
         byDimension[dim.dimensionId] = {
           categories: byDimension[dim.dimensionId]?.categories.map((c) => {
-            const commentary = ai.categories.find((ac) => ac.id === c.id)?.commentary;
+            const commentary = ai.categories.find(
+              (ac) => ac.id === c.id,
+            )?.commentary;
             return {
               ...c,
               commentary: commentary || undefined,
@@ -790,14 +807,14 @@ const executeModelRun = async (params: {
       }
     } catch (aiErr: any) {
       console.warn(
-        `[AODIT] Dimension deep-dive AI generation failed for run ${runId}: ${aiErr.message}. Saving score-only deep dive.`,
+        `[aodit] Dimension deep-dive AI generation failed for run ${runId}: ${aiErr.message}. Saving score-only deep dive.`,
       );
     }
 
     dimensionDeepDive = byDimension;
   } catch (deepDiveErr: any) {
     console.warn(
-      `[AODIT] Failed to build dimensionDeepDive for run ${runId}: ${deepDiveErr.message}`,
+      `[aodit] Failed to build dimensionDeepDive for run ${runId}: ${deepDiveErr.message}`,
     );
   }
 
@@ -824,7 +841,7 @@ const executeModelRun = async (params: {
 // ---------------------------------------------------------------------------
 
 /**
- * Execute the full AODIT test run for a report.
+ * Execute the full aodit test run for a report.
  * Creates one ReportRun per model, runs them sequentially, and updates progress.
  *
  * This function is designed to be called fire-and-forget (don't await in the controller).
@@ -842,7 +859,7 @@ export const executeReport = async (
     )) as unknown as Report | null;
 
     if (!report) {
-      console.error(`[AODIT] Report ${reportId} not found`);
+      console.error(`[aodit] Report ${reportId} not found`);
       return;
     }
 
@@ -853,7 +870,7 @@ export const executeReport = async (
     );
 
     if (!scenarios || scenarios.length === 0) {
-      console.error(`[AODIT] No scenarios found for report ${reportId}`);
+      console.error(`[aodit] No scenarios found for report ${reportId}`);
       for (const [, runId] of runIds) {
         await updateRunProgress(runId, {
           status: "failed",
@@ -872,7 +889,7 @@ export const executeReport = async (
     );
 
     console.log(
-      `[AODIT] Starting execution: ${modelsToTest.length} models × ${scenarios.length} scenarios, judge: ${evaluatorModelId}`,
+      `[aodit] Starting execution: ${modelsToTest.length} models × ${scenarios.length} scenarios, judge: ${evaluatorModelId}`,
     );
 
     // Execute models sequentially to manage rate limits
@@ -894,14 +911,15 @@ export const executeReport = async (
           scenarios: scenarios as unknown as Scenario[],
           reportDescription: report.description,
           reportType:
-            report.reportType ?? getFrameworkDefinition(frameworkVersion).marketingLabel,
+            report.reportType ??
+            getFrameworkDefinition(frameworkVersion).marketingLabel,
           dimensionWeights: report.dimensionWeights,
         });
 
-        console.log(`[AODIT] Completed model run: ${modelName}`);
+        console.log(`[aodit] Completed model run: ${modelName}`);
       } catch (err: any) {
         console.error(
-          `[AODIT] Model run failed for ${modelName}: ${err.message}`,
+          `[aodit] Model run failed for ${modelName}: ${err.message}`,
         );
         await updateRunProgress(runId, {
           status: "failed",
@@ -931,10 +949,10 @@ export const executeReport = async (
     );
 
     console.log(
-      `[AODIT] All model runs completed for report ${reportId} — status: ${finalStatus}`,
+      `[aodit] All model runs completed for report ${reportId} — status: ${finalStatus}`,
     );
   } catch (err: any) {
-    console.error(`[AODIT] Fatal error in executeReport: ${err.message}`);
+    console.error(`[aodit] Fatal error in executeReport: ${err.message}`);
     // Mark report as failed on fatal error
     try {
       await updateDocument<Report>(
@@ -969,7 +987,7 @@ export const resumeStuckRuns = async (): Promise<void> => {
   if (stuckRuns.length === 0) return;
 
   console.log(
-    `[AODIT] Found ${stuckRuns.length} stuck run(s) from a previous server instance — resuming...`,
+    `[aodit] Found ${stuckRuns.length} stuck run(s) from a previous server instance — resuming...`,
   );
 
   // Group runs by their batch (reportId + batchId) so each batch is resumed once
@@ -990,13 +1008,13 @@ export const resumeStuckRuns = async (): Promise<void> => {
     }
 
     console.log(
-      `[AODIT] Resuming batch ${batchId} for report ${reportId} (${runIds.size} model run(s))`,
+      `[aodit] Resuming batch ${batchId} for report ${reportId} (${runIds.size} model run(s))`,
     );
 
     // Fire-and-forget — executeModelRun will skip already-completed scenarios
     executeReport(reportId, batchId!, runIds).catch((err) => {
       console.error(
-        `[AODIT] Failed to resume batch ${batchId}: ${err.message}`,
+        `[aodit] Failed to resume batch ${batchId}: ${err.message}`,
       );
     });
   }

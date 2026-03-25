@@ -177,7 +177,7 @@
     │   │   │   │   ├── leadMagnetService.ts
     │   │   │   │   ├── registrationEmailService.ts
     │   │   │   │   └── types.ts
-    │   │   │   ├── reports/                              ← AODIT execution engine
+    │   │   │   ├── reports/                              ← aodit execution engine
     │   │   │   │   ├── executionEngine.ts                ← Orchestrator: scenarios × turns × models
     │   │   │   │   ├── modelRegistry.ts                  ← Model name → OpenRouter ID mapping
     │   │   │   │   ├── prompts.ts                        ← Prompt templates (generation, escalation, scoring)

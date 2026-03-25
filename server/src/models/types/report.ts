@@ -19,11 +19,16 @@ export interface Report {
   updatedAt: string;
   description?: string;
   documents?: string[];
-  /** AODIT report type (e.g. "Frontier AI Risk 2026", "AI Banking Agent Risk") */
+  /** aodit report type (e.g. "Frontier AI Risk 2026", "AI Banking Agent Risk") */
   reportType?: string;
   /** Owner user id */
   userId?: string;
-  executionStatus?: "pending" | "running" | "completed" | "failed" | "scheduled";
+  executionStatus?:
+    | "pending"
+    | "running"
+    | "completed"
+    | "failed"
+    | "scheduled";
   startedAt?: string;
   completedAt?: string;
   /** Scenarios per dimension; total scenarios = scenariosPerDimension * dimensionCount. */

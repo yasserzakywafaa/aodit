@@ -54,7 +54,7 @@ const LoginPage = () => {
   }
 
   return (
-    <Page title="Login | AODIT">
+    <Page title="Login | aodit">
       <Container
         sx={{
           display: "flex",

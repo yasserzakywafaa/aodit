@@ -60,7 +60,7 @@ export const createSoftwareApplicationSchema = (
   const application: any = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "AODIT",
+    name: "aodit",
     applicationCategory: "SecurityApplication",
     operatingSystem: "Web",
     offers: {

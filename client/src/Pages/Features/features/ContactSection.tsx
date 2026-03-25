@@ -1,5 +1,4 @@
 import {
-  fontFamilyInter,
   fontFamilyPlayfairDisplay,
 } from "src/application/shared/themes";
 
@@ -12,7 +11,6 @@ const SECTION_EYEBROW_STYLE = {
   letterSpacing: "0.25em",
   color: "primary.main",
   mb: 2,
-  fontFamily: fontFamilyInter,
 };
 
 const ContactSection = () => (

@@ -89,12 +89,12 @@ const DashboardReport = () => {
       a.href = url;
       a.download =
         mode === "transcript"
-          ? `AODIT-${report.name.replace(/\s+/g, "-")}-Transcript.pdf`
-          : `AODIT-${report.name.replace(/\s+/g, "-")}.pdf`;
+          ? `aodit-${report.name.replace(/\s+/g, "-")}-Transcript.pdf`
+          : `aodit-${report.name.replace(/\s+/g, "-")}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("[AODIT] PDF generation failed:", err);
+      console.error("[aodit] PDF generation failed:", err);
     } finally {
       setPdfModeLoading(null);
     }
@@ -318,7 +318,14 @@ const DashboardReport = () => {
       {latestRun && (
         <Paper variant="outlined" sx={{ p: 3, mt: 3 }}>
           <Typography variant="h5" color="primary">
-            AODIT Framework™
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            Framework™
           </Typography>
           <Box sx={{ borderTop: 1, borderColor: "divider", pt: 2, mt: 1 }}>
             {latestRun ? (

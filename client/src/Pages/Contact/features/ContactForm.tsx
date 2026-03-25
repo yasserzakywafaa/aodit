@@ -55,6 +55,7 @@ const ContactForm = () => {
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <TextField
+            required
             fullWidth
             name="company"
             placeholder="Company"
@@ -77,11 +78,12 @@ const ContactForm = () => {
         </Grid>
         <Grid size={12}>
           <TextField
+            required
             fullWidth
             multiline
             rows={3}
             name="message"
-            placeholder="Describe your AI agent or use case (optional)"
+            placeholder="Describe your AI agent or use case"
             value={state.contactForm.message}
             onChange={handleChange("message")}
             sx={inputSx}

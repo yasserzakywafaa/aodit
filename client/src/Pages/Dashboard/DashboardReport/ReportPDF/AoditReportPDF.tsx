@@ -955,8 +955,7 @@ const CoverPage = ({
               Murbacherstrasse 19, 6003 Luzern
             </Text>
             {"\n"}
-            Email:{" "}
-            <Text style={{ fontWeight: "bold" }}>katharina@swisslii.com</Text>
+            Email: <Text style={{ fontWeight: "bold" }}>info@aodit.ai</Text>
           </Text>
         </View>
       </View>

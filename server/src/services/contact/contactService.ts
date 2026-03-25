@@ -12,14 +12,13 @@ export interface ContactFormState {
   name: string;
   company?: string;
   email: string;
-  reportOfInterest?: string;
   message: string;
 }
 
 type ContactSupportParams = ContactFormState;
 
 export const handleContactSupport = async (props: ContactSupportParams) => {
-  const { name, company, email, reportOfInterest, message } = props;
+  const { name, company, email, message } = props;
 
   const transporter = await createOAuth2Transporter();
 
@@ -28,7 +27,6 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
     name,
     company,
     email,
-    reportOfInterest,
     message,
     appUrl: CONFIG.APP_URL,
   };
@@ -72,7 +70,7 @@ export const handleContactSupport = async (props: ContactSupportParams) => {
   const mailOptionsAdmin = {
     from: `Yasser from "aodit.ai" <${sender}>`,
     to: adminEmail,
-    subject: `Rating request${reportOfInterest ? `: ${reportOfInterest}` : ""}`,
+    subject: `Contact request`,
     text: adminTextContent,
     html: adminHtmlContent,
     replyTo: email,

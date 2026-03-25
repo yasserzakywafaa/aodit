@@ -2,10 +2,7 @@ import {
   Notify,
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
-import {
-  fontFamilyPlayfairDisplay,
-  grey,
-} from "src/application/shared/themes";
+import { fontFamilyPlayfairDisplay, grey } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -283,7 +280,7 @@ const SubscribeSection = ({
             color: "text.secondary",
           }}
         >
-          For institutional inquiries: katharina@swisslii.com
+          For institutional inquiries: info@aodit.ai
         </Typography>
       </Box>
     </Box>

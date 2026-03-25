@@ -31,7 +31,6 @@ export interface ContactAdminEmailData extends BaseEmailData {
   name: string;
   company?: string;
   email: string;
-  reportOfInterest?: string;
   message: string;
 }
 

@@ -37,7 +37,7 @@ const MethodologyPage = () => {
 
   return (
     <Page
-      title="AI Agent Testing Methodology for Fintechs and Insurance companies | AODIT"
+      title="AI Agent Testing Methodology for Fintechs and Insurance companies | aodit"
       className="methodology-page"
       isLoading={false}
     >
@@ -79,8 +79,15 @@ const MethodologyPage = () => {
             color="text.secondary"
             sx={{ maxWidth: 800, mb: 2, lineHeight: 1.7, fontSize: 17 }}
           >
-            AODIT evaluates how AI agents behave under stress, contradiction,
-            and adversarial pressure. The framework is designed for risk,
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            evaluates how AI agents behave under stress, contradiction, and
+            adversarial pressure. The framework is designed for risk,
             compliance, and audit teams that require independent evidence rather
             than self-reported model performance.
           </Typography>
@@ -278,8 +285,15 @@ const MethodologyPage = () => {
             Independent by design
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 3, lineHeight: 1.7 }}>
-            AODIT is an independent evaluation layer. It does not certify
-            models, replace governance frameworks, or access model weights.
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            is an independent evaluation layer. It does not certify models,
+            replace governance frameworks, or access model weights.
           </Typography>
           <Button variant="contained" onClick={() => navigate(routes.contact)}>
             Request Evaluation

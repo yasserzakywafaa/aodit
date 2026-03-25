@@ -7,9 +7,9 @@ import {
   Typography,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
-import { fontFamilySerif, primaryColor } from "src/application/shared/themes";
 
 import Page from "src/components/shared/Page/Page";
+import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -41,7 +41,6 @@ const SectionHeading = ({
   <Typography
     variant="h5"
     sx={{
-      fontFamily: fontFamilySerif,
       fontSize: { xs: "1.2rem", md: "1.35rem" },
       color: "text.primary",
       mb: 2,
@@ -68,7 +67,7 @@ const DataProcessingAgreementPage = () => {
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "Data Processing Agreement (DPA)",
-      "Data Processing Agreement governing the processing of personal data by Swiss Lab of Intelligence AG (SwissLI AG) on behalf of AODIT clients.",
+      "Data Processing Agreement governing the processing of personal data by Swiss Lab of Intelligence (SwissLI AG) on behalf of AODIT clients.",
       routes.dataProcessingAgreement,
       new Date("03/01/2026"),
     );
@@ -78,7 +77,7 @@ const DataProcessingAgreementPage = () => {
 
   return (
     <Page
-      title="Data Processing Agreement | AODIT"
+      title="Data Processing Agreement | aodit"
       className="dpa-page"
       isLoading={false}
     >
@@ -109,7 +108,6 @@ const DataProcessingAgreementPage = () => {
           <Typography
             variant="h1"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "2rem", sm: "2.4rem", md: "2.6rem" },
               lineHeight: 1.15,
               mb: 2,
@@ -136,7 +134,7 @@ const DataProcessingAgreementPage = () => {
           <SectionHeading number="1" title="Purpose and Applicability" />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             This Data Processing Agreement (&ldquo;DPA&rdquo;) governs the
-            processing of personal data by Swiss Lab of Intelligence AG
+            processing of personal data by Swiss Lab of Intelligence
             (&ldquo;SwissLI AG&rdquo;, &ldquo;Processor&rdquo;) on behalf of the
             Client (&ldquo;Controller&rdquo;).
           </Typography>
@@ -144,7 +142,14 @@ const DataProcessingAgreementPage = () => {
             paragraph
             sx={{ fontSize: 15, lineHeight: 1.75, fontWeight: 600 }}
           >
-            AODIT is designed to operate without processing personal data.
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            is designed to operate without processing personal data.
           </Typography>
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             Accordingly:
@@ -164,9 +169,17 @@ const DataProcessingAgreementPage = () => {
               "SwissLI AG acts as Processor, only where applicable",
             ]}
           />
-          <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            In standard AODIT deployments, SwissLI AG does not act as a
-            processor of personal data.
+          <Typography sx={{ fontSize: 15, lineHeight: 1.75 }}>
+            In standard{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            deployments, SwissLI AG does not act as a processor of personal
+            data.
           </Typography>
 
           {/* 3. Nature of Processing */}
@@ -204,7 +217,6 @@ const DataProcessingAgreementPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -223,7 +235,6 @@ const DataProcessingAgreementPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: "1.05rem",
               color: "text.primary",
               mb: 1.5,
@@ -372,8 +383,15 @@ const DataProcessingAgreementPage = () => {
           {/* 12. Data Retention and Deletion */}
           <SectionHeading number="12" title="Data Retention and Deletion" />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            SwissLI AG does not retain client AI system data as part of standard
-            AODIT operation. Where personal data is processed under this DPA:
+            SwissLI AG does not retain client AI system data as part of standard{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            operation. Where personal data is processed under this DPA:
           </Typography>
           <BulletList
             items={[
@@ -382,7 +400,15 @@ const DataProcessingAgreementPage = () => {
             ]}
           />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            Outputs generated by AODIT:
+            Outputs generated by{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            :
           </Typography>
           <BulletList
             items={[
@@ -450,7 +476,6 @@ const DataProcessingAgreementPage = () => {
             <Typography
               variant="h6"
               sx={{
-                fontFamily: fontFamilySerif,
                 mb: 2,
                 color: "text.primary",
               }}

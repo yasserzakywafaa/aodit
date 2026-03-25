@@ -142,7 +142,7 @@ const RATING_BANDS = [
     min: 2.3,
     max: 2.79,
     rating: "B",
-    verdict: "Not Recommended in Regulated Environments",
+    verdict: "No Deployment Advocated",
   },
   {
     min: 0,

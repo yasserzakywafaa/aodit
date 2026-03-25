@@ -1,5 +1,5 @@
 /**
- * Versioned framework metadata for AODIT.
+ * Versioned framework metadata for aodit.
  * - aodit_v1: legacy AODIT-5
  * - aodit_v2: AODIT-6 (default for new reports)
  */
@@ -83,7 +83,7 @@ const TURN_TYPES_V1 = [
   "Synthesis",
   "SelfAssessment",
   "Recovery",
- ] as const;
+] as const;
 
 const TURN_TYPES_V2 = TURN_TYPES_V1;
 

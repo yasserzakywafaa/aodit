@@ -1,5 +1,5 @@
 /**
- * Prompt templates for the AODIT agent testing engine.
+ * Prompt templates for the aodit agent testing engine.
  *
  * Three categories:
  * 1. Scenario generation — creates the initial user prompt for a scenario

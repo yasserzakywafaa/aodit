@@ -7,9 +7,9 @@ import {
   Typography,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
-import { fontFamilySerif, primaryColor } from "src/application/shared/themes";
 
 import Page from "src/components/shared/Page/Page";
+import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -41,7 +41,6 @@ const SectionHeading = ({
   <Typography
     variant="h5"
     sx={{
-      fontFamily: fontFamilySerif,
       fontSize: { xs: "1.2rem", md: "1.35rem" },
       color: "text.primary",
       mb: 2,
@@ -68,7 +67,7 @@ const TermsAndConditions = () => {
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "Terms and Conditions",
-      "Terms and Conditions governing the provision of services by Swiss Lab of Intelligence (SwissLI AG) in connection with the AODIT platform.",
+      "Terms and Conditions governing the provision of services by Swiss Lab of Intelligence (SwissLI AG) in connection with the aodit platform.",
       routes.termsAndConditions,
       new Date("03/01/2026"),
     );
@@ -78,7 +77,7 @@ const TermsAndConditions = () => {
 
   return (
     <Page
-      title="Terms & Conditions | AODIT"
+      title="Terms & Conditions | aodit"
       className="terms-and-conditions-page"
       isLoading={false}
     >
@@ -109,7 +108,6 @@ const TermsAndConditions = () => {
           <Typography
             variant="h1"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "2rem", sm: "2.4rem", md: "2.6rem" },
               lineHeight: 1.15,
               mb: 2,
@@ -138,8 +136,15 @@ const TermsAndConditions = () => {
             These Terms &amp; Conditions (&ldquo;Terms&rdquo;) govern the
             provision of services by Swiss Lab of Intelligence (&ldquo;SwissLI
             AG&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) in connection with
-            the AODIT platform, related software components, reports, and
-            services.
+            the{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            platform, related software components, reports, and services.
           </Typography>
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             By engaging SwissLI AG through an order form, master service
@@ -170,7 +175,15 @@ const TermsAndConditions = () => {
           {/* 3. Nature of Services */}
           <SectionHeading number="3" title="Nature of Services" />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            All services provided by SwissLI AG are advisory in nature. AODIT:
+            All services provided by SwissLI AG are advisory in nature.{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            :
           </Typography>
           <BulletList
             items={[
@@ -189,7 +202,7 @@ const TermsAndConditions = () => {
               "Its systems and infrastructure",
               "Regulatory compliance",
               "Implementation of controls and remediation actions",
-              "Decisions taken based on AODIT outputs",
+              "Decisions taken based on aodit outputs",
             ]}
           />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
@@ -219,7 +232,7 @@ const TermsAndConditions = () => {
           {/* 5. Use of Services and Reports */}
           <SectionHeading number="5" title="Use of Services and Reports" />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            The Client may use AODIT outputs solely for:
+            The Client may use aodit outputs solely for:
           </Typography>
           <BulletList
             items={[
@@ -233,7 +246,7 @@ const TermsAndConditions = () => {
           </Typography>
           <BulletList
             items={[
-              "Represent AODIT outputs as regulatory certification",
+              "Represent aodit outputs as regulatory certification",
               "Publish or distribute full reports externally without written approval",
               "Reverse-engineer or replicate SwissLI AG methodologies",
             ]}
@@ -272,9 +285,16 @@ const TermsAndConditions = () => {
             title="Proprietary Methods and Trade Secrets"
           />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            AODIT methodology, scenario architecture, category structures,
-            scoring logic, and report generation systems are proprietary to
-            SwissLI AG and constitute confidential trade secrets.
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            methodology, scenario architecture, category structures, scoring
+            logic, and report generation systems are proprietary to SwissLI AG
+            and constitute confidential trade secrets.
           </Typography>
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             The Client shall not, and shall not permit any third party to:
@@ -314,8 +334,15 @@ const TermsAndConditions = () => {
           {/* 8. Data and Deployment Model */}
           <SectionHeading number="8" title="Data and Deployment Model" />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-            AODIT is designed to operate within client-controlled
-            infrastructure. Unless otherwise agreed:
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            is designed to operate within client-controlled infrastructure.
+            Unless otherwise agreed:
           </Typography>
           <BulletList
             items={[
@@ -365,7 +392,7 @@ const TermsAndConditions = () => {
             items={[
               "Ensuring it has rights to any data shared",
               "Maintaining its own governance and controls",
-              "Reviewing and acting on AODIT findings",
+              "Reviewing and acting on aodit findings",
               "Ensuring appropriate internal use of reports",
             ]}
           />
@@ -527,7 +554,6 @@ const TermsAndConditions = () => {
             <Typography
               variant="h6"
               sx={{
-                fontFamily: fontFamilySerif,
                 mb: 2,
                 color: "text.primary",
               }}

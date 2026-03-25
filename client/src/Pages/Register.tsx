@@ -28,7 +28,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <Page title="Register | AODIT">
+    <Page title="Register | aodit">
       <Container
         sx={{
           display: "flex",

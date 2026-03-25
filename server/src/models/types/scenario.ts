@@ -14,9 +14,9 @@ export interface TurnTemplate {
 export interface Scenario {
   _id?: string;
   reportId: string;
-  categoryId: string; // AODIT dimension id
+  categoryId: string; // aodit dimension id
   /**
-   * AODIT category code within the dimension (e.g. R1–R5, I1–I5, C1–C5).
+   * aodit category code within the dimension (e.g. R1–R5, I1–I5, C1–C5).
    * Used for per-category deep-dive analysis in PDF reports.
    */
   categoryCode?: string;

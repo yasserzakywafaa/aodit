@@ -12,8 +12,8 @@ import {
   Typography,
   alpha,
 } from "@mui/material";
+import { fontFamilyInter, primaryColor } from "src/application/shared/themes";
 
-import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -39,7 +39,7 @@ const Hero = () => {
     <Box
       component="section"
       sx={{
-        pt: { xs: 10, md: 14 },
+        pt: { xs: 6, md: 14 },
         pb: { xs: 8, md: 12 },
         px: { xs: 3, md: 0 },
         backgroundImage: `
@@ -53,30 +53,47 @@ const Hero = () => {
         <Typography
           variant="h1"
           sx={{
-            fontSize: { xs: "2.2rem", sm: "2.8rem", md: "3.2rem" },
+            fontSize: { xs: "2.5rem", sm: "3rem", md: "4rem" },
             lineHeight: 1.12,
-            mb: 3,
+            mb: 4,
             color: "text.primary",
             letterSpacing: "-0.02em",
           }}
         >
-          Independent AI Agent Evaluation for Banks and Fintechs and Insurance
-          companies
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: { xs: 16, md: 18 },
-            color: "text.secondary",
-            mb: 4,
-            maxWidth: 620,
-            lineHeight: 1.75,
-          }}
-        >
-          Evidence how your AI behaves under stress — before regulators,
-          auditors, or clients do.
+          How Does Your AI Agent Behave Under{" "}
+          <Typography
+            component="span"
+            fontSize="inherit"
+            fontFamily="inherit"
+            color="primary.main"
+          >
+            Pressure?
+          </Typography>
         </Typography>
 
-        <Stack spacing={1.5} sx={{ mb: 4 }}>
+        <Typography
+          variant="h3"
+          component="span"
+          color="text.secondary"
+          display="block"
+          sx={{
+            fontSize: { xs: "1.5rem", sm: "2rem", md: "2.75rem" },
+            fontFamily: fontFamilyInter,
+            mb: 4,
+          }}
+        >
+          We break your AI Agent <br />
+          <Typography
+            component="span"
+            fontSize="inherit"
+            fontFamily="inherit"
+            className="text-underline"
+          >
+            before Regulators do
+          </Typography>
+        </Typography>
+
+        <Stack spacing={1.5} sx={{ my: 5 }}>
           {HERO_BULLETS.map(({ icon, text }) => (
             <Stack key={text} direction="row" alignItems="center" gap={1.5}>
               <Box sx={{ color: primaryColor, display: "flex" }}>{icon}</Box>

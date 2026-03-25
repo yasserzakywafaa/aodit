@@ -3,8 +3,7 @@ import {
   ToastTypes,
 } from "src/components/shared/Notification/Notification";
 import {
-  fontFamilySans,
-  fontFamilySerif,
+  fontFamilyPlayfairDisplay,
   grey,
 } from "src/application/shared/themes";
 
@@ -87,7 +86,6 @@ const SubscribeSection = ({
     maxWidth: 600,
     mx: "auto",
     "& .MuiOutlinedInput-root": {
-      fontFamily: fontFamilySans,
       fontSize: 12,
       minHeight: inputHeight,
       height: inputHeight,
@@ -135,7 +133,6 @@ const SubscribeSection = ({
         >
           <Typography
             sx={{
-              fontFamily: fontFamilySans,
               textTransform: "uppercase",
               color: "primary.main",
             }}
@@ -206,7 +203,6 @@ const SubscribeSection = ({
       >
         <Typography
           sx={{
-            fontFamily: fontFamilySans,
             textTransform: "uppercase",
             color: "primary.main",
             mb: 3,
@@ -226,7 +222,7 @@ const SubscribeSection = ({
         <Typography
           component="h2"
           sx={{
-            fontFamily: fontFamilySerif,
+            fontFamily: fontFamilyPlayfairDisplay,
             fontSize: {
               xs: "clamp(1.75rem, 4vw, 2.5rem)",
               md: "clamp(36px, 4vw, 52px)",
@@ -284,7 +280,6 @@ const SubscribeSection = ({
         <Typography
           sx={{
             mt: 3,
-            fontFamily: fontFamilySans,
             color: "text.secondary",
           }}
         >

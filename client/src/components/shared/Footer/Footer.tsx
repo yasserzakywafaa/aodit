@@ -7,7 +7,6 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { fontFamilySans } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +20,10 @@ const FOOTER_SECTIONS = [
   },
   {
     title: "Compliance",
-    links: [{ label: "FINMA Guidance", href: routes.compliance.finma }],
+    links: [
+      { label: "FINMA Guidance", href: routes.compliance.finma },
+      { label: "Security", href: routes.security },
+    ],
   },
   {
     title: "Company",
@@ -35,7 +37,10 @@ const FOOTER_SECTIONS = [
     links: [
       { label: "Privacy Policy", href: routes.privacyPolicy },
       { label: "Terms & Conditions", href: routes.termsAndConditions },
-      { label: "Data Processing Agreement", href: routes.dataProcessingAgreement },
+      {
+        label: "Data Processing Agreement",
+        href: routes.dataProcessingAgreement,
+      },
     ],
   },
 ] as const;
@@ -49,7 +54,6 @@ const Footer = () => {
   };
 
   const linkStyle = {
-    fontFamily: fontFamilySans,
     fontSize: 13,
     color: "text.secondary",
     textDecoration: "none",
@@ -77,7 +81,6 @@ const Footer = () => {
           </Box>
           <Typography
             sx={{
-              fontFamily: fontFamilySans,
               fontSize: 12,
               color: "text.secondary",
               lineHeight: 1.8,
@@ -98,7 +101,6 @@ const Footer = () => {
           <Grid key={title} size={{ xs: 6, sm: 3, md: 2 }}>
             <Typography
               sx={{
-                fontFamily: fontFamilySans,
                 fontSize: 11,
                 fontWeight: 700,
                 letterSpacing: "0.1em",
@@ -126,7 +128,6 @@ const Footer = () => {
       {/* Disclaimer */}
       <Typography
         sx={{
-          fontFamily: fontFamilySans,
           fontSize: 11,
           color: "text.secondary",
           mt: 5,
@@ -137,10 +138,13 @@ const Footer = () => {
           maxWidth: 700,
         }}
       >
-        AODIT is an independent AI evaluation framework. SwissLI AG is not
-        affiliated with FINMA or any regulatory authority. Evaluation results
-        are advisory and do not constitute regulatory approval or legal advice.
-        &copy; 2026 Swiss Lab of Intelligence (SwissLI AG)
+        <Typography component="span" fontSize="inherit" color="primary.main">
+          aodit
+        </Typography>{" "}
+        is an independent AI evaluation framework. SwissLI AG is not affiliated
+        with FINMA or any regulatory authority. Evaluation results are advisory
+        and do not constitute regulatory approval or legal advice. &copy; 2026
+        Swiss Lab of Intelligence (SwissLI AG)
       </Typography>
     </Container>
   );

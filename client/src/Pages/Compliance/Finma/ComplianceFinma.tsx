@@ -34,16 +34,16 @@ import {
   alpha,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
-import { fontFamilySerif, primaryColor } from "src/application/shared/themes";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import Page from "src/components/shared/Page/Page";
 import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
 import finmaLogo from "src/assets/images/finma_logo.png";
+import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMediaQuery, useTheme } from "@mui/material";
 
 const levelChipSx = (level: string) => {
   if (level === "Strong") {
@@ -93,7 +93,7 @@ const ComplianceFinmaPage = () => {
 
   return (
     <Page
-      title="FINMA AI Guidance 08/2024 Explained (Switzerland) | AODIT"
+      title="FINMA AI Guidance 08/2024 Explained (Switzerland) | aodit"
       className="compliance-finma-page"
       isLoading={false}
     >
@@ -125,7 +125,6 @@ const ComplianceFinmaPage = () => {
           <Typography
             variant="h1"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "2rem", sm: "2.5rem", md: "2.8rem" },
               lineHeight: 1.15,
               mb: 2,
@@ -144,8 +143,16 @@ const ComplianceFinmaPage = () => {
               lineHeight: 1.7,
             }}
           >
-            How AODIT maps to Swiss financial market supervision requirements
-            for AI in regulated institutions.
+            How{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            maps to Swiss financial market supervision requirements for AI in
+            regulated institutions.
           </Typography>
 
           <Paper
@@ -190,7 +197,9 @@ const ComplianceFinmaPage = () => {
               />
               <Typography
                 variant="h6"
-                sx={{ fontFamily: fontFamilySerif, color: "text.primary" }}
+                sx={{
+                  color: "text.primary",
+                }}
               >
                 Key Principle
               </Typography>
@@ -218,13 +227,20 @@ const ComplianceFinmaPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.4rem", md: "1.65rem" },
               mb: 4,
               color: "text.primary",
             }}
           >
-            Where AODIT Fits in the Lifecycle
+            Where{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            Fits in the Lifecycle
           </Typography>
           <Grid container spacing={2}>
             {FINMA_LIFECYCLE_STAGES.map((item, index) => (
@@ -290,7 +306,6 @@ const ComplianceFinmaPage = () => {
                   <Typography
                     variant="h6"
                     sx={{
-                      fontFamily: fontFamilySerif,
                       fontWeight: 600,
                       color: "text.primary",
                     }}
@@ -368,7 +383,6 @@ const ComplianceFinmaPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.4rem", md: "1.65rem" },
               mb: 1.5,
               color: "text.primary",
@@ -433,7 +447,14 @@ const ComplianceFinmaPage = () => {
                       FINMA Principle
                     </TableCell>
                     <TableCell sx={{ ...tableHeaderSx, width: "14%" }}>
-                      AODIT Level
+                      <Typography
+                        component="span"
+                        fontSize="inherit"
+                        color="primary.main"
+                      >
+                        aodit
+                      </Typography>{" "}
+                      Level
                     </TableCell>
                     <TableCell sx={tableHeaderSx}>
                       Control Relevance &amp; Boundary
@@ -491,7 +512,6 @@ const ComplianceFinmaPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.4rem", md: "1.65rem" },
               mb: 1.5,
               color: "text.primary",
@@ -605,19 +625,26 @@ const ComplianceFinmaPage = () => {
         </Container>
       </Box>
 
-      {/* ===== AODIT ADDED VALUE ===== */}
+      {/* ===== aodit ADDED VALUE ===== */}
       <Box component="section" sx={altBgSx}>
         <Container maxWidth="md">
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.4rem", md: "1.65rem" },
               mb: 3,
               color: "text.primary",
             }}
           >
-            Three Things AODIT Adds That No Standard Currently Requires
+            Three Things{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            Adds That No Standard Currently Requires
           </Typography>
           <Stack spacing={2}>
             {AODIT_ADDED_VALUE_POINTS.map((point) => (
@@ -649,7 +676,6 @@ const ComplianceFinmaPage = () => {
             <Typography
               variant="h4"
               sx={{
-                fontFamily: fontFamilySerif,
                 fontSize: { xs: "1.4rem", md: "1.65rem" },
                 color: "text.primary",
               }}
@@ -688,7 +714,6 @@ const ComplianceFinmaPage = () => {
           <Typography
             variant="h6"
             sx={{
-              fontFamily: fontFamilySerif,
               mb: 1.5,
               color: "text.primary",
             }}
@@ -719,7 +744,6 @@ const ComplianceFinmaPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.5rem", md: "1.75rem" },
               mb: 2,
               color: "text.primary",
@@ -735,8 +759,15 @@ const ComplianceFinmaPage = () => {
               lineHeight: 1.7,
             }}
           >
-            Request an evaluation to see how AODIT maps to your institution's
-            FINMA compliance requirements.
+            Request an evaluation to see how{" "}
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            maps to your institution's FINMA compliance requirements.
           </Typography>
           <Button
             variant="contained"

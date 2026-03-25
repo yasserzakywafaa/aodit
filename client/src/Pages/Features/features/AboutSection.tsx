@@ -1,10 +1,11 @@
-import { fontFamilySans, fontFamilySerif } from "src/application/shared/themes";
+import {
+  fontFamilyPlayfairDisplay,
+} from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 const SECTION_LABEL_STYLE = {
-  fontFamily: fontFamilySans,
   fontSize: 10,
   letterSpacing: "0.2em",
   textTransform: "uppercase" as const,
@@ -55,7 +56,7 @@ const AboutSection = () => (
         <Typography
           component="h2"
           sx={{
-            fontFamily: fontFamilySerif,
+            fontFamily: fontFamilyPlayfairDisplay,
             fontSize: {
               xs: "clamp(1.5rem, 3.5vw, 2.25rem)",
               md: "clamp(32px, 3.5vw, 50px)",
@@ -117,7 +118,6 @@ const AboutSection = () => (
         </Typography>
         <Typography
           sx={{
-            fontFamily: fontFamilySans,
             fontSize: 11,
             color: "text.secondary",
             mt: 4,
@@ -144,7 +144,7 @@ const AboutSection = () => (
             <Box key={s.label} sx={{ bgcolor: "background.default", p: 3.5 }}>
               <Typography
                 sx={{
-                  fontFamily: fontFamilySerif,
+                  fontFamily: fontFamilyPlayfairDisplay,
                   fontSize: 48,
                   fontWeight: 300,
                   color: "primary.main",
@@ -156,7 +156,6 @@ const AboutSection = () => (
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: fontFamilySans,
                   fontSize: 10,
                   letterSpacing: "0.15em",
                   textTransform: "uppercase",
@@ -172,7 +171,6 @@ const AboutSection = () => (
         <Box sx={{ mt: 3, p: 3, border: "1px solid", borderColor: "divider" }}>
           <Typography
             sx={{
-              fontFamily: fontFamilySans,
               fontSize: 10,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
@@ -206,7 +204,6 @@ const AboutSection = () => (
                 </Typography>
                 <Typography
                   sx={{
-                    fontFamily: fontFamilySans,
                     fontSize: 10,
                     color: c.active ? "primary.main" : "text.secondary",
                   }}

@@ -18,13 +18,13 @@ const DIFFERENTIATORS = [
     icon: <BalanceOutlined sx={{ fontSize: 28, color: primaryColor }} />,
     title: "Independent",
     description:
-      "AODIT is not a vendor tool. It evaluates AI agents independently, without access to model weights, training data, or production systems.",
+      "aodit is not a vendor tool. It evaluates AI agents independently, without access to model weights, training data, or production systems.",
   },
   {
     icon: <LocationOnOutlined sx={{ fontSize: 28, color: primaryColor }} />,
     title: "Swiss",
     description:
-      "Headquartered in Luzerne, governed by Swiss law. Designed for Swiss banking secrecy and FINMA-regulated deployment expectations.",
+      "Headquartered in Luzern, governed by Swiss law. Designed for Swiss banking secrecy and FINMA-regulated deployment expectations.",
   },
   {
     icon: <SecurityOutlined sx={{ fontSize: 28, color: primaryColor }} />,
@@ -78,7 +78,7 @@ const AboutPage = () => {
             sx={{ maxWidth: 750, lineHeight: 1.7, fontSize: 17, mb: 2 }}
           >
             Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI
-            lab founded in 2021 and headquartered in Luzerne. The lab focuses on
+            lab founded in 2021 and headquartered in Luzern. The lab focuses on
             building and evaluating AI systems with a strong focus on real-world
             behavior, safety, and system performance.
           </Typography>
@@ -86,8 +86,15 @@ const AboutPage = () => {
             color="text.secondary"
             sx={{ maxWidth: 750, lineHeight: 1.7, fontSize: 17 }}
           >
-            AODIT is SwissLI&apos;s platform for independent evaluation of AI
-            agents in regulated environments, including banking, fintech, and
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            is SwissLI&apos;s platform for independent evaluation of AI agents
+            in regulated environments, including banking, fintech, and
             insurance.
           </Typography>
         </Container>

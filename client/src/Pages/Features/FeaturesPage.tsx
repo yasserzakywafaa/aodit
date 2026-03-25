@@ -23,7 +23,6 @@ import {
   useSchemaOrg,
 } from "src/shared/utils/schemaOrg";
 import {
-  fontFamilySerif,
   primaryColor,
   primaryColorOpaqueEight,
 } from "src/application/shared/themes";
@@ -34,8 +33,7 @@ import DownloadReportSection from "./features/DownloadReportSection";
 import Hero from "./features/Hero";
 import Page from "src/components/shared/Page/Page";
 import { alpha } from "@mui/material/styles";
-import euHostedImgDark from "src/assets/images/eu_hosted_black_text.webp";
-import euHostedImgLight from "src/assets/images/eu_hosted_white_text.webp";
+import euHostedImg from "src/assets/images/eu_hosted.webp";
 import { routes } from "src/application/routes";
 import swissMadeImg from "src/assets/images/swiss_made.webp";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -46,7 +44,7 @@ const FeaturesPage = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { isFetching, themeMode },
+      state: { isFetching },
     },
   } = useApplicationContext();
 
@@ -74,7 +72,7 @@ const FeaturesPage = () => {
 
   return (
     <Page
-      title="AI Agent Evaluation for Banks (FINMA & EU AI Act Ready) | AODIT"
+      title="AI Agent Evaluation for Banks (FINMA & EU AI Act Ready) | aodit"
       className="features-page"
       isLoading={isFetching}
     >
@@ -94,7 +92,6 @@ const FeaturesPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.5rem", md: "1.85rem" },
               mb: 2.5,
               color: "text.primary",
@@ -104,9 +101,15 @@ const FeaturesPage = () => {
           </Typography>
           <Stack spacing={1.5}>
             <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
-              AODIT is deployed fully on-premise within your environment.
-              SwissLI AG does not access, store, or process client data by
-              default.
+              <Typography
+                component="span"
+                fontSize="inherit"
+                color="primary.main"
+              >
+                aodit
+              </Typography>{" "}
+              is deployed fully on-premise within your environment. SwissLI AG
+              does not access, store, or process client data by default.
             </Typography>
             <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
               All AI agent inputs, outputs, and transcripts remain exclusively
@@ -127,17 +130,25 @@ const FeaturesPage = () => {
           >
             <Box
               component="img"
-              src={themeMode === "dark" ? euHostedImgLight : euHostedImgDark}
+              src={euHostedImg}
               alt="EU Hosted (EU AI Act Ready)"
+              sx={{ maxWidth: "200px" }}
             />
-            <Box component="img" src={swissMadeImg} alt="Swiss Made Software" />
+            <Box
+              component="img"
+              src={swissMadeImg}
+              alt="Swiss Made Software"
+              sx={{ maxWidth: "200px" }}
+            />
           </Stack>
         </Container>
       </Box>
 
       {/* ===== SECTION 3 — FEATURED REPORT ===== */}
       <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
-        <DownloadReportSection />
+        <Container maxWidth="md">
+          <DownloadReportSection />
+        </Container>
       </Box>
 
       {/* ===== SECTION 4 — WHERE AODIT FITS ===== */}
@@ -155,7 +166,6 @@ const FeaturesPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.5rem", md: "1.85rem" },
               mb: 3,
               color: "text.primary",
@@ -244,7 +254,6 @@ const FeaturesPage = () => {
             <Typography
               variant="h4"
               sx={{
-                fontFamily: fontFamilySerif,
                 fontSize: { xs: "1.5rem", md: "1.85rem" },
                 mb: 2,
                 color: "text.primary",
@@ -256,8 +265,15 @@ const FeaturesPage = () => {
               color="text.secondary"
               sx={{ mb: 1.5, lineHeight: 1.75 }}
             >
-              AODIT evaluates how AI agents behave under pressure,
-              contradiction, and adversarial input.
+              <Typography
+                component="span"
+                fontSize="inherit"
+                color="primary.main"
+              >
+                aodit
+              </Typography>{" "}
+              evaluates how AI agents behave under pressure, contradiction, and
+              adversarial input.
             </Typography>
             <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
               Each evaluation uses a structured multi-turn protocol to simulate
@@ -283,7 +299,6 @@ const FeaturesPage = () => {
           <Typography
             variant="h4"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.5rem", md: "1.85rem" },
               mb: 2,
               color: "text.primary",
@@ -292,8 +307,14 @@ const FeaturesPage = () => {
             Scope and boundaries
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 2, lineHeight: 1.75 }}>
-            AODIT currently focuses on independent behavioral evaluation of AI
-            agents.
+            <Typography
+              component="span"
+              fontSize="inherit"
+              color="primary.main"
+            >
+              aodit
+            </Typography>{" "}
+            currently focuses on independent behavioral evaluation of AI agents.
           </Typography>
 
           <Paper variant="outlined" sx={{ p: 3, mb: 2.5 }}>
@@ -353,7 +374,6 @@ const FeaturesPage = () => {
             <Typography
               variant="h4"
               sx={{
-                fontFamily: fontFamilySerif,
                 fontSize: { xs: "1.5rem", md: "1.85rem" },
                 mb: 2.5,
                 color: "text.primary",
@@ -389,7 +409,7 @@ const FeaturesPage = () => {
       </Box>
 
       {/* ===== SECTION 8 — COMPLIANCE LOGOS ===== */}
-      <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
+      <Box component="section" sx={{ pb: { xs: 6, md: 8 } }}>
         <ComplianceLogosSection />
       </Box>
 
@@ -407,7 +427,6 @@ const FeaturesPage = () => {
           <Typography
             variant="h3"
             sx={{
-              fontFamily: fontFamilySerif,
               fontSize: { xs: "1.75rem", md: "2.5rem" },
               mb: 2,
               color: "text.primary",

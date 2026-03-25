@@ -1,6 +1,6 @@
 /**
  * ReportRunService — create, fetch, and launch report runs.
- * Wires up the real AODIT execution engine for AI agent testing.
+ * Wires up the real aodit execution engine for AI agent testing.
  */
 
 import {
@@ -12,13 +12,16 @@ import {
   readDocument,
   updateDocument,
 } from "../../models/mongoDb/crudOperations";
+import {
+  getFrameworkDefinition,
+  resolveFrameworkVersion,
+} from "./frameworkRegistry";
 
 import { ObjectId } from "mongodb";
 import { Report } from "../../models/types/report";
 import { ReportRun } from "../../models/types/reportRun";
 import crypto from "crypto";
 import { executeReport } from "./executionEngine";
-import { getFrameworkDefinition, resolveFrameworkVersion } from "./frameworkRegistry";
 
 // ---------------------------------------------------------------------------
 // CRUD helpers
@@ -158,7 +161,7 @@ export const getLatestRunStatus = async (
 // ---------------------------------------------------------------------------
 
 /**
- * Launch a full AODIT test run for a report.
+ * Launch a full aodit test run for a report.
  *
  * Creates one ReportRun per model, then fires the execution engine asynchronously.
  * Returns immediately so the controller can respond to the client.
@@ -219,7 +222,7 @@ export const launchReportRun = async (
 
   // Fire execution engine asynchronously — don't await
   executeReport(reportId, batchId, runIds).catch((err) => {
-    console.error(`[AODIT] executeReport failed: ${err.message}`);
+    console.error(`[aodit] executeReport failed: ${err.message}`);
   });
 
   return { batchId, runs };

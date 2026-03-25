@@ -94,6 +94,8 @@ const END_POINTS = {
         `/api/v1/dashboard/reports/${reportId}/run-status`,
       GET_SCENARIO_RESULTS: (reportId: string) =>
         `/api/v1/dashboard/reports/${reportId}/scenario-results`,
+      STOP_REPORT: (reportId: string) =>
+        `/api/v1/dashboard/reports/${reportId}/stop`,
     },
   },
 };

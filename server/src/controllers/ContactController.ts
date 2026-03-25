@@ -9,15 +9,13 @@ export const contactSupport = async (
   response: Response,
   next: NextFunction,
 ) => {
-  const { name, company, email, reportOfInterest, message } =
-    request.body as ContactFormState;
+  const { name, company, email, message } = request.body as ContactFormState;
 
   try {
     await handleContactSupport({
       name,
       company,
       email,
-      reportOfInterest,
       message,
     });
 

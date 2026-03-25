@@ -142,7 +142,7 @@ const PrivacyPolicyPage = () => {
           </Typography>
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             For data protection inquiries, including data subject requests:{" "}
-            <Link href="mailto:privacy@swissli.ai">privacy@swissli.ai</Link>
+            <Link href="mailto:info@aodit.ai">info@aodit.ai</Link>
           </Typography>
 
           {/* 2. Scope of this Policy */}
@@ -652,8 +652,7 @@ const PrivacyPolicyPage = () => {
               Switzerland
             </Typography>
             <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
-              Email:{" "}
-              <Link href="mailto:privacy@swissli.ai">privacy@swissli.ai</Link>
+              Email: <Link href="mailto:info@aodit.ai">info@aodit.ai</Link>
             </Typography>
           </Box>
         </Container>

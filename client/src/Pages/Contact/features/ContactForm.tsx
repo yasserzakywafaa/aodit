@@ -1,27 +1,7 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
-import {
-  primaryColorOpaqueTen,
-} from "src/application/shared/themes";
+import { Box, Button, Grid, TextField } from "@mui/material";
 
+import { primaryColorOpaqueTen } from "src/application/shared/themes";
 import { useContactContext } from "../store/Provider";
-
-const REPORT_OPTIONS = [
-  "Frontier AI Risk Ratings",
-  "Trust & Deception Benchmark",
-  "Jailbreak Resistance Benchmark",
-  "Banking Agent Risk Ratings",
-  "AI Employee Stress Test",
-  "Custom Enterprise Report",
-];
 
 const inputSx = {
   "& .MuiOutlinedInput-root": {
@@ -75,6 +55,7 @@ const ContactForm = () => {
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <TextField
+            required
             fullWidth
             name="company"
             placeholder="Company"
@@ -96,43 +77,13 @@ const ContactForm = () => {
           />
         </Grid>
         <Grid size={12}>
-          <FormControl fullWidth sx={inputSx}>
-            <InputLabel id="contact-report-label">
-              Report of interest
-            </InputLabel>
-            <Select
-              labelId="contact-report-label"
-              name="reportOfInterest"
-              value={state.contactForm.reportOfInterest}
-              onChange={(e) =>
-                handleUpdateContactForm("reportOfInterest", e.target.value)
-              }
-              label="Report of interest"
-              displayEmpty
-              renderValue={(v) => v || ""}
-              sx={{
-                fontSize: 12,
-                "& .MuiOutlinedInput-notchedOutline": { border: 0 },
-              }}
-            >
-              <MenuItem value="" disabled>
-                Report of interest
-              </MenuItem>
-              {REPORT_OPTIONS.map((opt) => (
-                <MenuItem key={opt} value={opt}>
-                  {opt}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid size={12}>
           <TextField
+            required
             fullWidth
             multiline
             rows={3}
             name="message"
-            placeholder="Describe your AI agent or use case (optional)"
+            placeholder="Describe your AI agent or use case"
             value={state.contactForm.message}
             onChange={handleChange("message")}
             sx={inputSx}

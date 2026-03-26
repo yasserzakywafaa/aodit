@@ -41,6 +41,8 @@ export interface Report {
   modelsToTest?: string[];
   /** Model ids/names to use for evaluation (default: Claude only) */
   modelsToEvaluate?: string[];
+  /** Linked agent id (FINMA compliance — required before running) */
+  agentId?: string;
 }
 
 export enum ReportStatus {

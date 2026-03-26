@@ -5,6 +5,7 @@ import {
   getDocumentsByQueryFromDb,
 } from "../models/mongoDb";
 
+import AgentServices from "../services/agentService";
 import DashboardServices from "../services/dashboardService";
 import ReportServices from "../services/reportService";
 import * as ReportRunService from "../services/reports/reportRunService";
@@ -202,6 +203,7 @@ const updateReport = async (
       dimensionWeights,
       modelsToTest,
       modelsToEvaluate,
+      agentId,
     } = request.body;
     const updated = await ReportServices.updateReport(reportId, {
       name,
@@ -213,6 +215,7 @@ const updateReport = async (
       dimensionWeights,
       modelsToTest,
       modelsToEvaluate,
+      agentId,
     });
     response.status(200).json(updated);
   } catch (error) {
@@ -334,6 +337,135 @@ const getScenarioResults = async (
   }
 };
 
+// Agents
+const createAgent = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const agent = await AgentServices.createAgent(request.body);
+    response.status(201).json(agent);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserAgents = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId, page, limit } = request.query;
+    const agents = await AgentServices.getUserAgents(
+      userId as string,
+      Number(page) || 1,
+      Number(limit) || 10,
+    );
+    response.status(200).json(agents);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAgentById = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const agent = await AgentServices.getAgentById(
+      request.query.agentId as string,
+    );
+    response.status(200).json(agent);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateAgent = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const agentId = request.params.agentId;
+    const { name, description, intent, ownerName, status } = request.body;
+    const updated = await AgentServices.updateAgent(agentId, {
+      name,
+      description,
+      intent,
+      ownerName,
+      status,
+    });
+    response.status(200).json(updated);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteAgentHandler = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await AgentServices.deleteAgent(request.params.agentId);
+    response.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllAgents = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const pageNumber = parseInt(request.query.pageNumber as string) || 1;
+  const pageSize = parseInt(request.query.pageSize as string) || 10;
+
+  try {
+    const { results, paging } = await AgentServices.getAllAgents(
+      pageNumber,
+      pageSize,
+    );
+
+    response.status(200).json({
+      results,
+      paging: paging || {
+        pageNumber: 1,
+        pageSize: 10,
+        totalCount: 0,
+        totalPagesCount: 0,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getReportsByAgentId = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { agentId } = request.params;
+    const page = Number(request.query.page) || 1;
+    const limit = Number(request.query.limit) || 10;
+    const reports = await ReportServices.getReportsByAgentId(
+      agentId,
+      page,
+      limit,
+    );
+    response.status(200).json(reports);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const DashboardController = {
   getUsersCount,
   getAllUsers,
@@ -355,6 +487,14 @@ const DashboardController = {
   getReportRuns,
   getRunStatus,
   getScenarioResults,
+  // Agents
+  createAgent,
+  getUserAgents,
+  getAgentById,
+  updateAgent,
+  deleteAgent: deleteAgentHandler,
+  getAllAgents,
+  getReportsByAgentId,
 };
 
 export default DashboardController;

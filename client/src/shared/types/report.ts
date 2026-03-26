@@ -29,6 +29,8 @@ export interface Report {
   dimensionWeights?: DimensionWeights;
   modelsToTest?: string[];
   modelsToEvaluate?: string[];
+  /** Linked agent id (FINMA compliance — required before running) */
+  agentId?: string;
 }
 
 export enum ReportStatus {

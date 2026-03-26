@@ -89,6 +89,17 @@ const DashboardCreateReportPage = lazy(
   () =>
     import("../Pages/Dashboard/DashboardCreateReport/DashboardCreateReport"),
 );
+
+const DashboardAgentsPage = lazy(
+  () => import("../Pages/Dashboard/DashboardAgents/DashboardAgents"),
+);
+const DashboardAgentPage = lazy(
+  () => import("../Pages/Dashboard/DashboardAgent/DashboardAgent"),
+);
+const DashboardCreateAgentPage = lazy(
+  () =>
+    import("../Pages/Dashboard/DashboardCreateAgent/DashboardCreateAgent"),
+);
 const DashboardLiveFeedPage = lazy(
   () => import("../Pages/Dashboard/DashboardReportRun/DashboardReportRun"),
 );
@@ -101,6 +112,12 @@ const DashboardAdminUsersPage = lazy(
 const DashboardAdminUserPage = lazy(
   () =>
     import("../Pages/Dashboard/Admin/DashboardAdminUser/DashboardAdminUser"),
+);
+const DashboardAdminAgentsPage = lazy(
+  () =>
+    import(
+      "../Pages/Dashboard/Admin/DashboardAdminAgents/DashboardAdminAgents"
+    ),
 );
 
 const AppContent = () => {
@@ -188,6 +205,21 @@ const AppContent = () => {
                   />
 
                   <Route
+                    path={routes.dashboard.agents.base}
+                    element={<DashboardAgentsPage />}
+                  />
+
+                  <Route
+                    path={routes.dashboard.agents.agentById(":agentId")}
+                    element={<DashboardAgentPage />}
+                  />
+
+                  <Route
+                    path={routes.dashboard.agents.create}
+                    element={<DashboardCreateAgentPage />}
+                  />
+
+                  <Route
                     path={routes.dashboard.user.profile}
                     element={<MyProfilePage />}
                   />
@@ -207,6 +239,11 @@ const AppContent = () => {
                       <Route
                         path={routes.dashboard.user.userById(":userId")}
                         element={<DashboardAdminUserPage />}
+                      />
+
+                      <Route
+                        path={routes.dashboard.admin.agents.base}
+                        element={<DashboardAdminAgentsPage />}
                       />
                     </>
                   )}

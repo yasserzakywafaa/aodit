@@ -66,6 +66,9 @@ const END_POINTS = {
       REPORTS: {
         GET_ALL_REPORTS: `/api/v1/dashboard/admin/reports`,
       },
+      AGENTS: {
+        GET_ALL_AGENTS: `/api/v1/dashboard/admin/agents`,
+      },
     },
     USERS: {
       GET_ALL_USERS: `/api/v1/dashboard/users`,
@@ -76,6 +79,18 @@ const END_POINTS = {
         `/api/v1/dashboard/users/${userId}/info`,
       DELETE_USER: (userId: string) =>
         `/api/v1/dashboard/users/delete/${userId}`,
+    },
+    // Agents
+    AGENTS: {
+      CREATE_AGENT: `/api/v1/dashboard/agents/create`,
+      GET_USER_AGENTS: `/api/v1/dashboard/agents/get-user-agents`,
+      GET_AGENT_BY_ID: `/api/v1/dashboard/agents/get-agent-by-id`,
+      UPDATE_AGENT: (agentId: string) =>
+        `/api/v1/dashboard/agents/update/${agentId}`,
+      DELETE_AGENT: (agentId: string) =>
+        `/api/v1/dashboard/agents/delete/${agentId}`,
+      GET_REPORTS_BY_AGENT_ID: (agentId: string) =>
+        `/api/v1/dashboard/agents/${agentId}/reports`,
     },
     // Reports
     REPORTS: {

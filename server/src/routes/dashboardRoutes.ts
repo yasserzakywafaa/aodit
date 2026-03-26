@@ -81,6 +81,11 @@ dashboardRoutes.post(
   DashboardController.launchReport,
 );
 
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.REPORTS.STOP_REPORT(":reportId"),
+  DashboardController.stopReport,
+);
+
 dashboardRoutes.get(
   END_POINTS.DASHBOARD.REPORTS.GET_REPORT_RUNS(":reportId"),
   DashboardController.getReportRuns,

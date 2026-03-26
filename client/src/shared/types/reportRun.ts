@@ -24,7 +24,7 @@ export interface ReportRun {
   batchId?: string;
   modelId?: string;
   modelName?: string;
-  status: "pending" | "running" | "completed" | "failed";
+  status: "pending" | "running" | "completed" | "failed" | "stopped";
   dimensionScores: DimensionScore[];
   compositeScore: number;
   rating: string;

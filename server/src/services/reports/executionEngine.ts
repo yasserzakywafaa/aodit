@@ -471,6 +471,16 @@ const executeModelRun = async (params: {
     // Skip scenarios already completed in a previous run (resume support)
     if (completedScenarioIds.has(String(scenario._id))) continue;
 
+    // Check if a stop was requested between scenarios
+    const currentRun = (await readDocument(
+      new ObjectId(runId),
+      DBCollectionsEnum.reportRuns,
+    )) as any;
+    if (currentRun?.status === "stopped") {
+      console.log(`[aodit] Run ${runId} was stopped. Aborting execution.`);
+      return;
+    }
+
     try {
       const result = await executeScenario({
         scenario,
@@ -896,6 +906,18 @@ export const executeReport = async (
     for (const modelName of modelsToTest) {
       const runId = runIds.get(modelName);
       if (!runId) continue;
+
+      // Check if the report was stopped before starting the next model run
+      const latestReport = (await readDocument(
+        new ObjectId(reportId),
+        DBCollectionsEnum.reports,
+      )) as any;
+      if (latestReport?.status !== "running") {
+        console.log(
+          `[aodit] Report ${reportId} is no longer running (status: ${latestReport?.status}). Stopping.`,
+        );
+        break;
+      }
 
       try {
         const modelId = resolveModelId(modelName);

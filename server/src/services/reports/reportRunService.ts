@@ -111,7 +111,13 @@ export const getLatestRunStatus = async (
       allFeedItems.push(...run.feedItems);
     }
     if (run.status === "running") overallStatus = "running";
-    else if (run.status === "failed" && overallStatus !== "running")
+    else if (run.status === "stopped" && overallStatus !== "running")
+      overallStatus = "stopped";
+    else if (
+      run.status === "failed" &&
+      overallStatus !== "running" &&
+      overallStatus !== "stopped"
+    )
       overallStatus = "failed";
     else if (run.status === "pending" && overallStatus === "completed")
       overallStatus = "pending";
@@ -226,4 +232,48 @@ export const launchReportRun = async (
   });
 
   return { batchId, runs };
+};
+
+// ---------------------------------------------------------------------------
+// Stop
+// ---------------------------------------------------------------------------
+
+/**
+ * Stop a running report. Marks all active runs in the latest batch as "stopped"
+ * and resets the report status back to "draft" so it can be re-launched.
+ */
+export const stopReport = async (reportId: string): Promise<void> => {
+  const runs = await getReportRunsByReportId(reportId);
+  if (runs.length === 0) throw new Error("No runs found for this report");
+
+  // Find the latest batch — same logic as getLatestRunStatus
+  const sorted = [...runs].sort(
+    (a, b) =>
+      new Date(b.createdAt ?? 0).getTime() -
+      new Date(a.createdAt ?? 0).getTime(),
+  );
+  const latestBatchId = sorted[0].batchId;
+  const batchRuns = latestBatchId
+    ? sorted.filter((r) => r.batchId === latestBatchId)
+    : [sorted[0]];
+
+  const now = new Date().toISOString();
+
+  // Mark all running/pending runs in the batch as stopped
+  for (const run of batchRuns) {
+    if (run.status === "running" || run.status === "pending") {
+      await updateDocument<ReportRun>(
+        String(run._id),
+        { status: "stopped" as any, updatedAt: now },
+        DBCollectionsEnum.reportRuns,
+      );
+    }
+  }
+
+  // Reset report to draft so it can be re-launched
+  await updateDocument<Report>(
+    reportId,
+    { status: "draft" as any, updatedAt: now },
+    DBCollectionsEnum.reports,
+  );
 };

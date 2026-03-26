@@ -180,6 +180,7 @@ const updateReport = async (
       | "dimensionWeights"
       | "modelsToTest"
       | "modelsToEvaluate"
+      | "agentId"
     >
   >,
 ): Promise<Report | null> => {
@@ -237,6 +238,18 @@ const updateReport = async (
   return updated as unknown as Report | null;
 };
 
+const getReportsByAgentId = async (
+  agentId: string,
+  page: number,
+  limit: number,
+) => {
+  return await getPaginatedDocuments<Report>(
+    { agentId } as any,
+    DBCollectionsEnum.reports,
+    { pageNumber: page, pageSize: limit },
+  );
+};
+
 const ReportServices = {
   getReportsCount,
   createReport,
@@ -245,6 +258,7 @@ const ReportServices = {
   getReportById,
   updateReport,
   deleteReport,
+  getReportsByAgentId,
 };
 
 export default ReportServices;

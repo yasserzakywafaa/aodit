@@ -40,6 +40,11 @@ export const routes = {
       userReports: (userId: string) => `/dashboard/users/${userId}/reports`,
     },
     profile: "/dashboard/profile",
+    agents: {
+      base: "/dashboard/agents",
+      create: "/dashboard/agents/create",
+      agentById: (agentId: string) => `/dashboard/agents/${agentId}`,
+    },
     reports: {
       base: "/dashboard/reports",
       create: "/dashboard/reports/create",
@@ -61,6 +66,9 @@ export const routes = {
         base: "/dashboard/admin/users",
         userById: (userId: string) => `/dashboard/admin/users/${userId}`,
         userReports: (userId: string) => `/dashboard/users/${userId}/reports`,
+      },
+      agents: {
+        base: "/dashboard/admin/agents",
       },
       reports: {
         base: "/dashboard/admin/reports",

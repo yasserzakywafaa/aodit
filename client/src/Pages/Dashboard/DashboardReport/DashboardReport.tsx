@@ -2,6 +2,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Autocomplete,
   Box,
   Button,
   Container,
@@ -50,11 +51,13 @@ const DashboardReport = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { report, runs },
+      state: { report, runs, agents },
       setReport,
     },
     manager: { setUp, handleUpdateReport, handleLaunchReport },
   } = useDashboardReportContext();
+
+  const selectedAgent = agents.find((a) => a._id === report?.agentId) ?? null;
 
   const latestRun = getLatestCompletedRun(runs);
   const [pdfModeLoading, setPdfModeLoading] = useState<
@@ -150,6 +153,7 @@ const DashboardReport = () => {
       dimensionWeights: report.dimensionWeights,
       modelsToTest: report.modelsToTest,
       modelsToEvaluate: ["Claude"],
+      agentId: report.agentId,
     });
   };
 
@@ -164,6 +168,7 @@ const DashboardReport = () => {
         dimensionWeights: report.dimensionWeights,
         modelsToTest: report.modelsToTest,
         modelsToEvaluate: ["Claude"],
+        agentId: report.agentId,
       });
       await handleLaunchReport(reportId);
       navigate(routes.dashboard.reports.reportLiveFeed(reportId));
@@ -280,6 +285,45 @@ const DashboardReport = () => {
         </Paper>
       )}
 
+      {/* Agent Assignment */}
+      {reportId && (
+        <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
+          <Typography
+            variant="subtitle1"
+            color="primary"
+            fontWeight={600}
+            sx={{ mb: 2 }}
+          >
+            Agent Assignment
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Select the AI agent this report evaluates. A report cannot run
+            without an assigned agent (FINMA compliance).
+          </Typography>
+          <Autocomplete
+            options={agents}
+            getOptionLabel={(option) =>
+              `${option.name}${option.ownerName ? ` (${option.ownerName})` : ""}`
+            }
+            value={selectedAgent}
+            onChange={(_event, newValue) => {
+              if (!report) return;
+              setReport({ ...report, agentId: newValue?._id ?? undefined });
+            }}
+            isOptionEqualToValue={(option, value) => option._id === value._id}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select Agent"
+                placeholder="Search agents..."
+                fullWidth
+              />
+            )}
+            sx={{ maxWidth: 500 }}
+          />
+        </Paper>
+      )}
+
       {reportId && !latestRun && (
         <Box
           sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}
@@ -294,6 +338,7 @@ const DashboardReport = () => {
               !reportId ||
               !report ||
               modelsToTest.length < 1 ||
+              !report?.agentId ||
               report?.status === "running"
             }
           >

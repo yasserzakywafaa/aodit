@@ -74,6 +74,9 @@ const END_POINTS = {
       REPORTS: {
         GET_ALL_REPORTS: `${publicApiUrl}/api/v1/dashboard/admin/reports`,
       },
+      AGENTS: {
+        GET_ALL_AGENTS: `${publicApiUrl}/api/v1/dashboard/admin/agents`,
+      },
     },
     USERS: {
       GET_ALL_USERS: `${publicApiUrl}/api/v1/dashboard/users`,
@@ -85,6 +88,17 @@ const END_POINTS = {
         `${publicApiUrl}/api/v1/dashboard/users/${userId}/info`,
       DELETE_USER: (userId: string) =>
         `${publicApiUrl}/api/v1/dashboard/users/delete/${userId}`,
+    },
+    AGENTS: {
+      CREATE_AGENT: `${publicApiUrl}/api/v1/dashboard/agents/create`,
+      GET_USER_AGENTS: `${publicApiUrl}/api/v1/dashboard/agents/get-user-agents`,
+      GET_AGENT_BY_ID: `${publicApiUrl}/api/v1/dashboard/agents/get-agent-by-id`,
+      UPDATE_AGENT: (agentId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/agents/update/${agentId}`,
+      DELETE_AGENT: (agentId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/agents/delete/${agentId}`,
+      GET_REPORTS_BY_AGENT_ID: (agentId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/agents/${agentId}/reports`,
     },
     REPORTS: {
       CREATE_REPORT: `${publicApiUrl}/api/v1/dashboard/reports/create`,

@@ -17,15 +17,18 @@ This document is the **single source of truth** for what aodit is, how reports w
 
 1. **Landing** → User visits the site (Features, Pricing, Methodology).
 2. **Auth** → Login / Register (Google, LinkedIn, or phone).
-3. **Dashboard** → Overview (e.g. total reports count) and navigation to Reports.
-4. **Reports list** → View all reports; create new report; open a report.
-5. **Create Report** → Set name and description (required — describes the AI agent use case, sector, and risk context). Navigates to report config page.
-6. **Report detail** → View/edit report config (models to test, models to evaluate with, scenarios per dimension, dimension weights); click "RUN REPORT".
-7. **RUN REPORT** → Frontend saves the config first, then calls launch API. Server sets report status to `running`, creates one ReportRun per model, fires execution engine asynchronously. User is navigated to the Live Feed page.
-8. **Live Feed page** (`/dashboard/reports/:id/live-feed`) → Pure monitoring page with real-time polling every 3s. Shows pipeline steps, progress bar, scenarios completed counter, and a live feed of scored turns. User can refresh and return to this page anytime. On complete/failed, shows "Back to Report" button.
-9. **Report detail (running)** → If report status is `running`, a "View Report Status" button appears to navigate back to the Live Feed page. "RUN REPORT" is disabled while running.
-10. **Execution completes** → Server sets report status to `completed` (or `failed`). Live Feed page stops polling and shows result status.
-11. **Report detail + run result** → View latest run: dimension scores, composite, rating, calibration gap, outlook, deployment verdict (aodit framework box).
+3. **Dashboard** → Overview (e.g. total reports count) and navigation to Reports and Agents.
+4. **Agents list** → View all agents; create new agent; open an agent.
+5. **Create Agent** → Set name, description, intent, and human owner (FINMA compliance). Navigates to agent detail page.
+6. **Agent detail** → View/edit agent info (collapsed accordion); below it, a list of reports attached to this agent.
+7. **Reports list** → View all reports; create new report; open a report.
+8. **Create Report** → Set name and description (required — describes the AI agent use case, sector, and risk context). Navigates to report config page.
+9. **Report detail** → View/edit report config (models to test, models to evaluate with, scenarios per dimension, dimension weights); **assign an agent** (required); click "RUN REPORT".
+10. **RUN REPORT** → Frontend saves the config (including agentId) first, then calls launch API. Server sets report status to `running`, creates one ReportRun per model, fires execution engine asynchronously. User is navigated to the Live Feed page.
+11. **Live Feed page** (`/dashboard/reports/:id/live-feed`) → Pure monitoring page with real-time polling every 3s. Shows pipeline steps, progress bar, scenarios completed counter, and a live feed of scored turns. User can refresh and return to this page anytime. On complete/failed, shows "Back to Report" button.
+12. **Report detail (running)** → If report status is `running`, a "View Report Status" button appears to navigate back to the Live Feed page. "RUN REPORT" is disabled while running.
+13. **Execution completes** → Server sets report status to `completed` (or `failed`). Live Feed page stops polling and shows result status.
+14. **Report detail + run result** → View latest run: dimension scores, composite, rating, calibration gap, outlook, deployment verdict (aodit framework box).
 
 ---
 
@@ -113,7 +116,14 @@ If no description is provided (legacy reports), it falls back to "General purpos
 
 - **What:** One "campaign" of evaluations.
 - **Where:** `server/src/models/types/report.ts`, `client/src/shared/types/report.ts`.
-- **Key fields:** `_id`, `name`, `description` (required — used as sector context for prompts), `status` (draft → running → completed/failed), `reportType`, `frameworkVersion` (`aodit_v1` or `aodit_v2`), `userId`, `modelsToTest` (string[]), `modelsToEvaluate` (string[]), `scenariosPerDimension` (number), `dimensionWeights` (Record), `createdAt`, `updatedAt`.
+- **Key fields:** `_id`, `name`, `description` (required — used as sector context for prompts), `status` (draft → running → completed/failed), `reportType`, `frameworkVersion` (`aodit_v1` or `aodit_v2`), `userId`, `agentId` (linked agent — required before running), `modelsToTest` (string[]), `modelsToEvaluate` (string[]), `scenariosPerDimension` (number), `dimensionWeights` (Record), `createdAt`, `updatedAt`.
+
+### Agent
+
+- **What:** A registered AI agent with a designated human owner (FINMA compliance). Each report must have an agent assigned before it can run.
+- **Where:** `server/src/models/types/agent.ts`, `client/src/shared/types/agent.ts`.
+- **Key fields:** `_id`, `name`, `description`, `intent` (business purpose), `ownerName` (human responsible), `userId` (creator), `status` (active | inactive), `createdAt`, `updatedAt`.
+- **Relationship:** Report has optional `agentId` field. The "RUN REPORT" button is disabled until an agent is selected. Agent detail page lists all reports attached to it.
 
 ### Scenario
 
@@ -360,6 +370,13 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 | OpenRouter client                             | `server/src/utils/openRouterClient.ts`              |
 | App routes                                    | `client/src/application/routes.ts`                  |
 | App content (route tree)                      | `client/src/application/AppContent.tsx`             |
+| Agent type (server)                           | `server/src/models/types/agent.ts`                  |
+| Agent type (client)                           | `client/src/shared/types/agent.ts`                  |
+| Agent CRUD service                            | `server/src/services/agentService.ts`               |
+| Agents list page                              | `client/src/Pages/Dashboard/DashboardAgents/`       |
+| Agent detail page                             | `client/src/Pages/Dashboard/DashboardAgent/`        |
+| Create agent page                             | `client/src/Pages/Dashboard/DashboardCreateAgent/`  |
+| Admin agents page                             | `client/src/Pages/Dashboard/Admin/DashboardAdminAgents/` |
 
 ---
 

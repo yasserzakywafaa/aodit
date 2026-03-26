@@ -3,6 +3,7 @@ import {
   getDashboardReportInitialState,
 } from "./state";
 
+import { Agent } from "src/shared/types/agent";
 import { Report } from "src/shared/types/report";
 import { ReportRun } from "src/shared/types/reportRun";
 import { useState } from "react";
@@ -12,6 +13,7 @@ export interface DashboardReportStore {
   setIsFetching: (isFetching: boolean) => void;
   setReport: (report: Report | undefined) => void;
   setRuns: (runs: ReportRun[]) => void;
+  setAgents: (agents: Agent[]) => void;
 }
 
 const useDashboardReportStore = (): DashboardReportStore => {
@@ -39,11 +41,19 @@ const useDashboardReportStore = (): DashboardReportStore => {
     }));
   };
 
+  const setAgents = (agents: Agent[]) => {
+    setState((prev) => ({
+      ...prev,
+      agents,
+    }));
+  };
+
   return {
     state,
     setIsFetching,
     setReport,
     setRuns,
+    setAgents,
   };
 };
 

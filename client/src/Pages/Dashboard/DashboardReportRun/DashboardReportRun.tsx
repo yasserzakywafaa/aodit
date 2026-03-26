@@ -1,4 +1,12 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import {
   DEFAULT_FRAMEWORK_VERSION,
   getFrameworkDefinition,
@@ -10,6 +18,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import END_POINTS from "src/application/shared/endpoints";
 import type { FeedItem } from "src/shared/types/reportRun";
 import type { Report } from "src/shared/types/report";
+import { StopCircleOutlined } from "@mui/icons-material";
 import axios from "axios";
 import { routes } from "src/application/routes";
 
@@ -48,6 +57,8 @@ const DashboardReportRun = () => {
   const [runStatus, setRunStatus] = useState<string>("pending");
   const [currentTurnName, setCurrentTurnName] = useState<string>("—");
   const [noActiveRun, setNoActiveRun] = useState(false);
+  const [stopDialogOpen, setStopDialogOpen] = useState(false);
+  const [isStopping, setIsStopping] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -83,7 +94,11 @@ const DashboardReportRun = () => {
         setRunStatus(data.status ?? "running");
         if (data.feedItems && data.feedItems.length > 0)
           setFeedItems(data.feedItems);
-        if (data.status === "completed" || data.status === "failed") {
+        if (
+          data.status === "completed" ||
+          data.status === "failed" ||
+          data.status === "stopped"
+        ) {
           if (pollRef.current) {
             clearInterval(pollRef.current);
             pollRef.current = null;
@@ -107,7 +122,10 @@ const DashboardReportRun = () => {
     };
   }, [reportId, report]);
 
-  const isFinished = runStatus === "completed" || runStatus === "failed";
+  const isFinished =
+    runStatus === "completed" ||
+    runStatus === "failed" ||
+    runStatus === "stopped";
   const frameworkVersion = resolveFrameworkVersion(
     report?.frameworkVersion ? DEFAULT_FRAMEWORK_VERSION : "aodit_v1",
   );
@@ -156,6 +174,24 @@ const DashboardReportRun = () => {
   const currentTurnIdx = (turnDisplayNames as readonly string[]).indexOf(
     currentTurnName,
   );
+
+  const handleStopConfirm = async () => {
+    if (!reportId) return;
+    setIsStopping(true);
+    try {
+      await axios.post(END_POINTS.DASHBOARD.REPORTS.STOP_REPORT(reportId));
+      setStopDialogOpen(false);
+      setRunStatus("stopped");
+      if (pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+    } catch {
+      // Silently ignore — the next poll will reflect the actual state
+    } finally {
+      setIsStopping(false);
+    }
+  };
 
   if (noActiveRun) {
     return (
@@ -353,40 +389,51 @@ const DashboardReportRun = () => {
 
           {/* Active processing indicator */}
           {runStatus === "running" && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1.25,
-                p: "10px 12px",
-                border: "1px solid",
-                borderColor: "primary.main",
-                my: 0.5,
-                "@keyframes pulseBorder": {
-                  "0%,100%": { opacity: 0.5 },
-                  "50%": { opacity: 1 },
-                },
-                animation: "pulseBorder 1.5s ease infinite",
-              }}
-            >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
               <Box
                 sx={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  bgcolor: "primary.main",
-                  "@keyframes dotPulse": {
-                    "0%,100%": { opacity: 1 },
-                    "50%": { opacity: 0.3 },
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.25,
+                  p: "10px 12px",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  my: 0.5,
+                  "@keyframes pulseBorder": {
+                    "0%,100%": { opacity: 0.5 },
+                    "50%": { opacity: 1 },
                   },
-                  animation: "dotPulse 1s ease infinite",
+                  animation: "pulseBorder 1.5s ease infinite",
                 }}
-              />
-              <Typography
-                sx={{ fontSize: 10, letterSpacing: 1, color: "primary.main" }}
               >
-                PROCESSING
-              </Typography>
+                <Box
+                  sx={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    bgcolor: "primary.main",
+                    "@keyframes dotPulse": {
+                      "0%,100%": { opacity: 1 },
+                      "50%": { opacity: 0.3 },
+                    },
+                    animation: "dotPulse 1s ease infinite",
+                  }}
+                />
+                <Typography
+                  sx={{ fontSize: 10, letterSpacing: 1, color: "primary.main" }}
+                >
+                  PROCESSING
+                </Typography>
+              </Box>
+              <Button
+                size="small"
+                variant="outlined"
+                color="error"
+                startIcon={<StopCircleOutlined />}
+                onClick={() => setStopDialogOpen(true)}
+              >
+                Stop
+              </Button>
             </Box>
           )}
 
@@ -609,6 +656,49 @@ const DashboardReportRun = () => {
           </Box>
         </Box>
       </Box>
+
+      {/* Stop confirmation dialog — Dialog uses a Portal so it renders at body level */}
+      <Dialog
+        open={stopDialogOpen}
+        onClose={() => setStopDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box display="flex" alignItems="center" gap={1}>
+            <StopCircleOutlined color="error" fontSize="large" />
+            <Typography variant="h5">Stop Report</Typography>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            Are you sure you want to stop{" "}
+            <strong>"{report?.name ?? "this report"}"</strong>?
+            <br />
+            The current run will be terminated immediately. You can re-launch
+            the report at any time.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setStopDialogOpen(false)}
+            disabled={isStopping}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<StopCircleOutlined />}
+            onClick={handleStopConfirm}
+            disabled={isStopping}
+          >
+            {isStopping ? "Stopping…" : "Stop Report"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

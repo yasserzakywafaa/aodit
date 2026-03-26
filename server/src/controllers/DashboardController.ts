@@ -298,6 +298,19 @@ const getReportRuns = async (
   }
 };
 
+const stopReport = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    await ReportRunService.stopReport(request.params.reportId);
+    response.status(200).json({ message: "Report stopped successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getScenarioResults = async (
   request: Request,
   response: Response,
@@ -338,6 +351,7 @@ const DashboardController = {
   deleteReport,
   getUserReportsCount,
   launchReport,
+  stopReport,
   getReportRuns,
   getRunStatus,
   getScenarioResults,

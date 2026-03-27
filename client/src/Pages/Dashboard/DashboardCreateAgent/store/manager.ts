@@ -35,6 +35,7 @@ export const useDashboardCreateAgentManager = (
       description: agent.description,
       intent: agent.intent,
       ownerName: agent.ownerName,
+      agentUrl: agent.agentUrl || undefined,
       userId: auth.user._id,
     };
 

@@ -23,7 +23,7 @@ import {
   getFrameworkDefinition,
   resolveFrameworkVersion,
 } from "src/shared/constants/aoditFramework";
-import { ExpandMore, PlayArrow, Save, Visibility } from "@mui/icons-material";
+import { ExpandMore, OpenInNew, PlayArrow, Save, Visibility } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -363,7 +363,7 @@ const DashboardReport = () => {
                   sx={{ maxWidth: 500, mb: 2 }}
                 />
 
-                {/* Show agent URL info */}
+                {/* Agent URL status */}
                 {selectedAgent && (
                   <Box sx={{ mb: 3 }}>
                     {selectedAgent.agentUrl ? (
@@ -372,10 +372,7 @@ const DashboardReport = () => {
                           <strong>Agent URL:</strong>{" "}
                           <Box
                             component="span"
-                            sx={{
-                              fontFamily: "monospace",
-                              wordBreak: "break-all",
-                            }}
+                            sx={{ fontFamily: "monospace", wordBreak: "break-all" }}
                           >
                             {selectedAgent.agentUrl}
                           </Box>
@@ -385,16 +382,45 @@ const DashboardReport = () => {
                         </Typography>
                       </Alert>
                     ) : (
-                      <Alert severity="warning" variant="outlined" sx={{ maxWidth: 600 }}>
+                      <Alert
+                        severity="warning"
+                        variant="outlined"
+                        sx={{ maxWidth: 600 }}
+                        action={
+                          <Button
+                            size="small"
+                            color="warning"
+                            endIcon={<OpenInNew fontSize="small" />}
+                            onClick={() =>
+                              navigate(
+                                routes.dashboard.agents.agentById(
+                                  selectedAgent._id,
+                                ),
+                              )
+                            }
+                          >
+                            Edit Agent
+                          </Button>
+                        }
+                      >
                         <Typography variant="body2">
-                          The selected agent does not have an{" "}
-                          <strong>Agent URL</strong> configured. Go to the{" "}
-                          <strong>Agent settings</strong> and add a URL before
-                          running in Agent evaluation mode.
+                          <strong>{selectedAgent.name}</strong> does not have
+                          an <strong>Agent URL</strong> configured. Add a URL
+                          in the agent settings to run in Agent evaluation
+                          mode.
                         </Typography>
                       </Alert>
                     )}
                   </Box>
+                )}
+
+                {!selectedAgent && (
+                  <Alert severity="info" variant="outlined" sx={{ maxWidth: 600, mb: 3 }}>
+                    <Typography variant="body2">
+                      Select an agent above to evaluate it. The agent must
+                      have an <strong>Agent URL</strong> configured.
+                    </Typography>
+                  </Alert>
                 )}
 
                 {/* Still show evaluation config below */}
@@ -423,50 +449,6 @@ const DashboardReport = () => {
                   independently via OpenRouter.
                 </Typography>
 
-                {/* Agent Assignment (still required for FINMA traceability) */}
-                <Typography
-                  variant="subtitle2"
-                  color="primary"
-                  fontWeight={600}
-                  sx={{ mb: 1 }}
-                >
-                  Agent Assignment
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 1.5 }}
-                >
-                  Select the AI agent this report benchmarks. Required for
-                  FINMA audit traceability.
-                </Typography>
-                <Autocomplete
-                  options={agents}
-                  getOptionLabel={(option) =>
-                    `${option.name}${option.ownerName ? ` (${option.ownerName})` : ""}`
-                  }
-                  value={selectedAgent}
-                  onChange={(_event, newValue) => {
-                    if (!report) return;
-                    setReport({
-                      ...report,
-                      agentId: newValue?._id ?? undefined,
-                    });
-                  }}
-                  isOptionEqualToValue={(option, value) =>
-                    option._id === value._id
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select Agent"
-                      placeholder="Search agents..."
-                      fullWidth
-                    />
-                  )}
-                  sx={{ maxWidth: 500, mb: 3 }}
-                />
-
                 <ReportConfig
                   modelsCount={modelsCount}
                   totalScenarios={totalScenarios}
@@ -492,12 +474,11 @@ const DashboardReport = () => {
             disabled={
               !reportId ||
               !report ||
-              !report?.agentId ||
               report?.status === "running" ||
               // Benchmark mode: must have at least one model selected
               (evaluationMode === "benchmark" && modelsToTest.length < 1) ||
-              // Agent mode: the selected agent must have a URL configured
-              (evaluationMode === "agent" && !selectedAgent?.agentUrl)
+              // Agent mode: must select an agent that has a URL configured
+              (evaluationMode === "agent" && (!report?.agentId || !selectedAgent?.agentUrl))
             }
           >
             RUN REPORT

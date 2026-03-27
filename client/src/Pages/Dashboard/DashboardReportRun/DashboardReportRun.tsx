@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import {
@@ -15,6 +16,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import type { Agent } from "src/shared/types/agent";
 import END_POINTS from "src/application/shared/endpoints";
 import type { FeedItem } from "src/shared/types/reportRun";
 import type { Report } from "src/shared/types/report";
@@ -47,6 +49,7 @@ const DashboardReportRun = () => {
   const { reportId } = useParams<{ reportId: string }>();
   const navigate = useNavigate();
   const [report, setReport] = useState<Report | null>(null);
+  const [agent, setAgent] = useState<Agent | null>(null);
   const [progress, setProgress] = useState(0);
   const [totalScenarios, setTotalScenarios] = useState(0);
   const [completedScenarios, setCompletedScenarios] = useState(0);
@@ -70,6 +73,20 @@ const DashboardReportRun = () => {
       .then((res) => setReport(res.data))
       .catch(() => setReport(null));
   }, [reportId]);
+
+  // Fetch the assigned agent when running in agent evaluation mode
+  useEffect(() => {
+    if (!report?.agentId || report.evaluationMode !== "agent") {
+      setAgent(null);
+      return;
+    }
+    axios
+      .get(END_POINTS.DASHBOARD.AGENTS.GET_AGENT_BY_ID, {
+        params: { agentId: report.agentId },
+      })
+      .then((res) => setAgent(res.data))
+      .catch(() => setAgent(null));
+  }, [report?.agentId, report?.evaluationMode]);
 
   useEffect(() => {
     if (!reportId || !report) return;
@@ -256,6 +273,24 @@ const DashboardReportRun = () => {
           <Typography variant="h6" color="primary" className="ellipsis">
             {report?.name ?? "Loading…"}
           </Typography>
+          {report?.evaluationMode === "agent" && (
+            <Typography
+              variant="caption"
+              sx={{
+                display: "inline-block",
+                mt: 0.5,
+                px: 1,
+                py: 0.25,
+                border: "1px solid",
+                borderColor: "primary.main",
+                color: "primary.main",
+                letterSpacing: 1,
+                fontSize: 9,
+              }}
+            >
+              AGENT EVALUATION
+            </Typography>
+          )}
         </Box>
 
         {/* Overall progress */}
@@ -338,22 +373,47 @@ const DashboardReportRun = () => {
                   />
                 </Box>
                 <Box sx={{ display: "flex", gap: 0.75, flexWrap: "wrap" }}>
-                  {(report?.modelsToTest ?? []).map((m) => (
-                    <Box
-                      key={m}
-                      sx={{
-                        px: "6px",
-                        py: "2px",
-                        border: "1px solid",
-                        borderColor: "divider",
-                        color: "text.primary",
-                      }}
+                  {report?.evaluationMode === "agent" ? (
+                    /* Agent evaluation mode: show agent chip */
+                    <Tooltip
+                      title={agent?.agentUrl ?? ""}
+                      placement="right"
+                      arrow
                     >
-                      <Typography variant="caption">
-                        {m.toUpperCase()}
-                      </Typography>
-                    </Box>
-                  ))}
+                      <Box
+                        sx={{
+                          px: "6px",
+                          py: "2px",
+                          border: "1px solid",
+                          borderColor: "primary.main",
+                          color: "primary.main",
+                          cursor: agent?.agentUrl ? "pointer" : "default",
+                        }}
+                      >
+                        <Typography variant="caption">
+                          {(agent?.name ?? "AGENT").toUpperCase()}
+                        </Typography>
+                      </Box>
+                    </Tooltip>
+                  ) : (
+                    /* Benchmark mode: show model chips */
+                    (report?.modelsToTest ?? []).map((m) => (
+                      <Box
+                        key={m}
+                        sx={{
+                          px: "6px",
+                          py: "2px",
+                          border: "1px solid",
+                          borderColor: "divider",
+                          color: "text.primary",
+                        }}
+                      >
+                        <Typography variant="caption">
+                          {m.toUpperCase()}
+                        </Typography>
+                      </Box>
+                    ))
+                  )}
                 </Box>
               </Box>
             );
@@ -383,9 +443,31 @@ const DashboardReportRun = () => {
             flexWrap: "wrap",
           }}
         >
-          <Typography variant="h6" color="primary">
-            LIVE SCENARIO FEED
-          </Typography>
+          <Box>
+            <Typography variant="h6" color="primary">
+              LIVE SCENARIO FEED
+            </Typography>
+            {report?.evaluationMode === "agent" && agent && (
+              <Typography variant="caption" color="text.secondary">
+                Evaluating:{" "}
+                <Box component="span" sx={{ color: "primary.main" }}>
+                  {agent.name}
+                </Box>
+                {agent.agentUrl && (
+                  <>
+                    {" "}
+                    ·{" "}
+                    <Box
+                      component="span"
+                      sx={{ fontFamily: "monospace", fontSize: 10 }}
+                    >
+                      {agent.agentUrl}
+                    </Box>
+                  </>
+                )}
+              </Typography>
+            )}
+          </Box>
 
           {/* Active processing indicator */}
           {runStatus === "running" && (
@@ -638,7 +720,10 @@ const DashboardReportRun = () => {
           >
             {latestItem && !isFinished && (
               <Typography variant="caption" color="text.primary">
-                {latestItem.id} · {latestItem.model.toUpperCase()}
+                {latestItem.id} ·{" "}
+                {report?.evaluationMode === "agent"
+                  ? (agent?.name ?? latestItem.model).toUpperCase()
+                  : latestItem.model.toUpperCase()}
               </Typography>
             )}
             {isFinished && reportId && (

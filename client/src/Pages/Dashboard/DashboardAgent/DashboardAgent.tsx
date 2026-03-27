@@ -50,6 +50,16 @@ const DashboardAgent = () => {
     setAgent({ ...agent, [name as string]: value });
   };
 
+  const isValidUrl = (url: string | undefined): boolean => {
+    if (!url || url.trim() === "") return true;
+    try {
+      const parsed = new URL(url.trim());
+      return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+      return false;
+    }
+  };
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!agentId || !agent) return;
@@ -58,6 +68,7 @@ const DashboardAgent = () => {
       description: agent.description,
       intent: agent.intent,
       ownerName: agent.ownerName,
+      agentUrl: agent.agentUrl,
       status: agent.status,
     });
   };
@@ -142,6 +153,22 @@ const DashboardAgent = () => {
               value={agent?.ownerName ?? ""}
               onChange={handleChange}
               fullWidth
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Agent URL (optional)"
+              name="agentUrl"
+              value={agent?.agentUrl ?? ""}
+              onChange={handleChange}
+              placeholder="https://your-agent.example.com/chat"
+              fullWidth
+              type="url"
+              error={!isValidUrl(agent?.agentUrl)}
+              helperText={
+                !isValidUrl(agent?.agentUrl)
+                  ? "Enter a valid https:// URL"
+                  : "Required only for Agent-to-Agent evaluation mode"
+              }
             />
           </Box>
         </AccordionDetails>

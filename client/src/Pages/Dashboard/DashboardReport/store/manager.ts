@@ -116,6 +116,7 @@ export const useDashboardReportManager = (
           modelsToTest: data.modelsToTest,
           modelsToEvaluate: data.modelsToEvaluate,
           agentId: data.agentId,
+          evaluationMode: data.evaluationMode,
         },
       );
       store.setReport(response.data);

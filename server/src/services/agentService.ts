@@ -67,7 +67,7 @@ const getAllAgents = async (page: number, limit: number) => {
 
 const updateAgent = async (
   agentId: string,
-  data: Partial<Pick<Agent, "name" | "description" | "intent" | "ownerName" | "status">>,
+  data: Partial<Pick<Agent, "name" | "description" | "intent" | "ownerName" | "agentUrl" | "status">>,
 ): Promise<Agent | null> => {
   const now = new Date().toISOString();
   const payload = {

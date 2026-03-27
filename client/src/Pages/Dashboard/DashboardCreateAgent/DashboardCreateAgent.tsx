@@ -38,6 +38,16 @@ const DashboardCreateAgent = () => {
     });
   };
 
+  const isValidUrl = (url: string | undefined): boolean => {
+    if (!url || url.trim() === "") return true; // optional field — empty is fine
+    try {
+      const parsed = new URL(url.trim());
+      return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (
@@ -47,6 +57,7 @@ const DashboardCreateAgent = () => {
       !agent.ownerName?.trim()
     )
       return;
+    if (!isValidUrl(agent.agentUrl)) return;
     try {
       const created = await handleCreateAgent(agent);
       if (created?._id) {
@@ -64,6 +75,7 @@ const DashboardCreateAgent = () => {
         description: "",
         intent: "",
         ownerName: "",
+        agentUrl: "",
       });
     };
   }, []);
@@ -131,6 +143,22 @@ const DashboardCreateAgent = () => {
                   placeholder="e.g. Jane Smith"
                   required
                   fullWidth
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Agent URL (optional)"
+                  name="agentUrl"
+                  value={agent.agentUrl ?? ""}
+                  onChange={handleChange}
+                  placeholder="https://your-agent.example.com/chat"
+                  fullWidth
+                  type="url"
+                  error={!isValidUrl(agent.agentUrl)}
+                  helperText={
+                    !isValidUrl(agent.agentUrl)
+                      ? "Enter a valid https:// URL"
+                      : "Required only for Agent-to-Agent evaluation mode"
+                  }
                 />
               </CardContent>
             </Card>
@@ -142,7 +170,8 @@ const DashboardCreateAgent = () => {
                 !agent.name?.trim() ||
                 !agent.description?.trim() ||
                 !agent.intent?.trim() ||
-                !agent.ownerName?.trim()
+                !agent.ownerName?.trim() ||
+                !isValidUrl(agent.agentUrl)
               }
               sx={{ mt: 3 }}
             >

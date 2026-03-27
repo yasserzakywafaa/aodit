@@ -13,6 +13,11 @@ export interface Agent {
   intent?: string;
   /** Human responsible for this agent (FINMA compliance) */
   ownerName?: string;
+  /**
+   * Public HTTP(S) endpoint of the live agent.
+   * Required for Agent-to-Agent evaluation mode; optional for Benchmark mode.
+   */
+  agentUrl?: string;
   /** Creator user id */
   userId: string;
   status: AgentStatus;

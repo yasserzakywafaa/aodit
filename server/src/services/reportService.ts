@@ -181,6 +181,7 @@ const updateReport = async (
       | "modelsToTest"
       | "modelsToEvaluate"
       | "agentId"
+      | "evaluationMode"
     >
   >,
 ): Promise<Report | null> => {

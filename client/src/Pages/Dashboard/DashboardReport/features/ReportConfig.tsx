@@ -11,12 +11,14 @@ interface ReportConfigProps {
   modelsCount: number;
   totalScenarios: number;
   datapoints: number;
+  evaluationMode?: "benchmark" | "agent";
 }
 
 const ReportConfig = ({
   modelsCount,
   totalScenarios,
   datapoints,
+  evaluationMode = "benchmark",
 }: ReportConfigProps) => {
   return (
     <>
@@ -26,9 +28,12 @@ const ReportConfig = ({
 
       <DimensionWeightsSection />
 
-      <Divider sx={{ mt: 3, mb: 6 }} />
-
-      <ModelsToTestSection />
+      {evaluationMode === "benchmark" && (
+        <>
+          <Divider sx={{ mt: 3, mb: 6 }} />
+          <ModelsToTestSection />
+        </>
+      )}
 
       <Divider sx={{ mt: 3, mb: 6 }} />
 
@@ -111,7 +116,7 @@ const ReportConfig = ({
                 letterSpacing: 0.5,
               }}
             >
-              Models
+              {evaluationMode === "agent" ? "Agents" : "Models"}
             </Typography>
           </Box>
           <Box

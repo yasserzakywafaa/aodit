@@ -204,6 +204,7 @@ const updateReport = async (
       modelsToTest,
       modelsToEvaluate,
       agentId,
+      evaluationMode,
     } = request.body;
     const updated = await ReportServices.updateReport(reportId, {
       name,
@@ -216,6 +217,7 @@ const updateReport = async (
       modelsToTest,
       modelsToEvaluate,
       agentId,
+      evaluationMode,
     });
     response.status(200).json(updated);
   } catch (error) {
@@ -391,12 +393,13 @@ const updateAgent = async (
 ) => {
   try {
     const agentId = request.params.agentId;
-    const { name, description, intent, ownerName, status } = request.body;
+    const { name, description, intent, ownerName, agentUrl, status } = request.body;
     const updated = await AgentServices.updateAgent(agentId, {
       name,
       description,
       intent,
       ownerName,
+      agentUrl,
       status,
     });
     response.status(200).json(updated);

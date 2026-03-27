@@ -68,6 +68,7 @@ export const useDashboardAgentManager = (
           description: data.description,
           intent: data.intent,
           ownerName: data.ownerName,
+          agentUrl: data.agentUrl,
           status: data.status,
         },
       );

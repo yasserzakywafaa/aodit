@@ -2,16 +2,19 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Alert,
   Autocomplete,
   Box,
   Button,
   Container,
   Paper,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  Tabs,
   TextField,
   Typography,
 } from "@mui/material";
@@ -58,6 +61,18 @@ const DashboardReport = () => {
   } = useDashboardReportContext();
 
   const selectedAgent = agents.find((a) => a._id === report?.agentId) ?? null;
+
+  // Tab: 0 = Evaluate Your Agent, 1 = Benchmark Frontier Models
+  const evaluationMode = report?.evaluationMode ?? "benchmark";
+  const activeTab = evaluationMode === "agent" ? 0 : 1;
+
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+    if (!report) return;
+    setReport({
+      ...report,
+      evaluationMode: newValue === 0 ? "agent" : "benchmark",
+    });
+  };
 
   const latestRun = getLatestCompletedRun(runs);
   const [pdfModeLoading, setPdfModeLoading] = useState<
@@ -110,7 +125,8 @@ const DashboardReport = () => {
   const framework = getFrameworkDefinition(frameworkVersion);
   const totalScenarios =
     (report?.scenariosPerDimension ?? 20) * framework.dimensions.length;
-  const modelsCount = modelsToTest.length;
+  // In agent mode there is always exactly 1 "model" (the agent itself)
+  const modelsCount = evaluationMode === "agent" ? 1 : modelsToTest.length;
   const datapoints = totalScenarios * 8 * Math.max(modelsCount, 1);
   const weightLabels = (
     report?.dimensionWeights
@@ -142,34 +158,28 @@ const DashboardReport = () => {
     setReport({ ...report, [name as string]: value });
   };
 
+  const buildUpdatePayload = () => ({
+    name: report?.name,
+    description: report?.description,
+    scenariosPerDimension: report?.scenariosPerDimension,
+    frameworkVersion,
+    dimensionWeights: report?.dimensionWeights,
+    modelsToTest: report?.modelsToTest,
+    modelsToEvaluate: ["Claude"],
+    agentId: report?.agentId,
+    evaluationMode: report?.evaluationMode ?? "benchmark",
+  });
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!reportId || !report) return;
-    handleUpdateReport(reportId, {
-      name: report.name,
-      description: report.description,
-      scenariosPerDimension: report.scenariosPerDimension,
-      frameworkVersion,
-      dimensionWeights: report.dimensionWeights,
-      modelsToTest: report.modelsToTest,
-      modelsToEvaluate: ["Claude"],
-      agentId: report.agentId,
-    });
+    handleUpdateReport(reportId, buildUpdatePayload());
   };
 
   const handleRunReport = async () => {
     if (!reportId || !report) return;
     try {
-      await handleUpdateReport(reportId, {
-        name: report.name,
-        description: report.description,
-        scenariosPerDimension: report.scenariosPerDimension,
-        frameworkVersion,
-        dimensionWeights: report.dimensionWeights,
-        modelsToTest: report.modelsToTest,
-        modelsToEvaluate: ["Claude"],
-        agentId: report.agentId,
-      });
+      await handleUpdateReport(reportId, buildUpdatePayload());
       await handleLaunchReport(reportId);
       navigate(routes.dashboard.reports.reportLiveFeed(reportId));
     } catch (error) {
@@ -247,8 +257,7 @@ const DashboardReport = () => {
         </AccordionDetails>
       </Accordion>
 
-      {/* Report Config */}
-
+      {/* Evaluation Mode Tabs + Report Config */}
       {latestRun ? (
         <Accordion
           defaultExpanded={false}
@@ -264,63 +273,209 @@ const DashboardReport = () => {
               modelsCount={modelsCount}
               totalScenarios={totalScenarios}
               datapoints={datapoints}
+              evaluationMode={evaluationMode}
             />
           </AccordionDetails>
         </Accordion>
       ) : (
-        <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
-          <Typography
-            variant="h5"
-            color="primary"
-            sx={{ mb: 3, borderBottom: 1, borderColor: "divider", pb: 2 }}
-          >
-            Report Config
-          </Typography>
-
-          <ReportConfig
-            modelsCount={modelsCount}
-            totalScenarios={totalScenarios}
-            datapoints={datapoints}
-          />
-        </Paper>
-      )}
-
-      {/* Agent Assignment */}
-      {reportId && (
-        <Paper variant="outlined" sx={{ p: 3, mt: 2 }}>
-          <Typography
-            variant="subtitle1"
-            color="primary"
-            fontWeight={600}
-            sx={{ mb: 2 }}
-          >
-            Agent Assignment
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Select the AI agent this report evaluates. A report cannot run
-            without an assigned agent (FINMA compliance).
-          </Typography>
-          <Autocomplete
-            options={agents}
-            getOptionLabel={(option) =>
-              `${option.name}${option.ownerName ? ` (${option.ownerName})` : ""}`
-            }
-            value={selectedAgent}
-            onChange={(_event, newValue) => {
-              if (!report) return;
-              setReport({ ...report, agentId: newValue?._id ?? undefined });
+        <Paper variant="outlined" sx={{ mt: 2, overflow: "hidden" }}>
+          {/* Tab switcher */}
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+              px: 3,
+              pt: 1,
+              minHeight: 48,
             }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select Agent"
-                placeholder="Search agents..."
-                fullWidth
-              />
+          >
+            <Tab
+              label="Evaluate Your Agent"
+              sx={{ textTransform: "none", fontWeight: 600 }}
+            />
+            <Tab
+              label="Benchmark Frontier Models"
+              sx={{ textTransform: "none", fontWeight: 600 }}
+            />
+          </Tabs>
+
+          <Box sx={{ p: 3 }}>
+            {/* ── TAB 0: Evaluate Your Agent ── */}
+            {activeTab === 0 && (
+              <>
+                <Typography variant="h5" color="primary" sx={{ mb: 1 }}>
+                  Evaluate Your Agent
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 3 }}
+                >
+                  Select one of your registered agents and aodit will send
+                  adversarial prompts directly to its endpoint using the AODIT-6
+                  methodology. The agent must be reachable and respond to HTTP
+                  POST requests.
+                </Typography>
+
+                {/* Agent selector */}
+                <Typography
+                  variant="subtitle2"
+                  color="primary"
+                  fontWeight={600}
+                  sx={{ mb: 1 }}
+                >
+                  Agent Assignment
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 1.5 }}
+                >
+                  Select the AI agent this report evaluates. A report cannot
+                  run without an assigned agent (FINMA compliance).
+                </Typography>
+                <Autocomplete
+                  options={agents}
+                  getOptionLabel={(option) =>
+                    `${option.name}${option.ownerName ? ` (${option.ownerName})` : ""}`
+                  }
+                  value={selectedAgent}
+                  onChange={(_event, newValue) => {
+                    if (!report) return;
+                    setReport({
+                      ...report,
+                      agentId: newValue?._id ?? undefined,
+                    });
+                  }}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Agent"
+                      placeholder="Search agents..."
+                      fullWidth
+                    />
+                  )}
+                  sx={{ maxWidth: 500, mb: 2 }}
+                />
+
+                {/* Show agent URL info */}
+                {selectedAgent && (
+                  <Box sx={{ mb: 3 }}>
+                    {selectedAgent.agentUrl ? (
+                      <Alert severity="success" variant="outlined" sx={{ maxWidth: 600 }}>
+                        <Typography variant="body2">
+                          <strong>Agent URL:</strong>{" "}
+                          <Box
+                            component="span"
+                            sx={{
+                              fontFamily: "monospace",
+                              wordBreak: "break-all",
+                            }}
+                          >
+                            {selectedAgent.agentUrl}
+                          </Box>
+                          <br />
+                          aodit will perform a liveness check before starting
+                          the evaluation to confirm the agent is reachable.
+                        </Typography>
+                      </Alert>
+                    ) : (
+                      <Alert severity="warning" variant="outlined" sx={{ maxWidth: 600 }}>
+                        <Typography variant="body2">
+                          The selected agent does not have an{" "}
+                          <strong>Agent URL</strong> configured. Go to the{" "}
+                          <strong>Agent settings</strong> and add a URL before
+                          running in Agent evaluation mode.
+                        </Typography>
+                      </Alert>
+                    )}
+                  </Box>
+                )}
+
+                {/* Still show evaluation config below */}
+                <ReportConfig
+                  modelsCount={1}
+                  totalScenarios={totalScenarios}
+                  datapoints={totalScenarios * 8}
+                  evaluationMode="agent"
+                />
+              </>
             )}
-            sx={{ maxWidth: 500 }}
-          />
+
+            {/* ── TAB 1: Benchmark Frontier Models ── */}
+            {activeTab === 1 && (
+              <>
+                <Typography variant="h5" color="primary" sx={{ mb: 1 }}>
+                  Benchmark Frontier Models
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 3 }}
+                >
+                  Select one or more frontier LLMs to benchmark against the
+                  AODIT-6 framework. Each model runs every scenario
+                  independently via OpenRouter.
+                </Typography>
+
+                {/* Agent Assignment (still required for FINMA traceability) */}
+                <Typography
+                  variant="subtitle2"
+                  color="primary"
+                  fontWeight={600}
+                  sx={{ mb: 1 }}
+                >
+                  Agent Assignment
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 1.5 }}
+                >
+                  Select the AI agent this report benchmarks. Required for
+                  FINMA audit traceability.
+                </Typography>
+                <Autocomplete
+                  options={agents}
+                  getOptionLabel={(option) =>
+                    `${option.name}${option.ownerName ? ` (${option.ownerName})` : ""}`
+                  }
+                  value={selectedAgent}
+                  onChange={(_event, newValue) => {
+                    if (!report) return;
+                    setReport({
+                      ...report,
+                      agentId: newValue?._id ?? undefined,
+                    });
+                  }}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Agent"
+                      placeholder="Search agents..."
+                      fullWidth
+                    />
+                  )}
+                  sx={{ maxWidth: 500, mb: 3 }}
+                />
+
+                <ReportConfig
+                  modelsCount={modelsCount}
+                  totalScenarios={totalScenarios}
+                  datapoints={datapoints}
+                  evaluationMode="benchmark"
+                />
+              </>
+            )}
+          </Box>
         </Paper>
       )}
 
@@ -337,9 +492,12 @@ const DashboardReport = () => {
             disabled={
               !reportId ||
               !report ||
-              modelsToTest.length < 1 ||
               !report?.agentId ||
-              report?.status === "running"
+              report?.status === "running" ||
+              // Benchmark mode: must have at least one model selected
+              (evaluationMode === "benchmark" && modelsToTest.length < 1) ||
+              // Agent mode: the selected agent must have a URL configured
+              (evaluationMode === "agent" && !selectedAgent?.agentUrl)
             }
           >
             RUN REPORT

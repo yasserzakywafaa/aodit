@@ -86,6 +86,11 @@ dashboardRoutes.get(
   DashboardController.getAllAgents,
 );
 
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.ADMIN.REPORTS.GET_ALL_REPORTS,
+  DashboardController.getAllReports,
+);
+
 // Report Routes
 dashboardRoutes.post(
   END_POINTS.DASHBOARD.REPORTS.CREATE_REPORT,

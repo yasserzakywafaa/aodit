@@ -35,8 +35,10 @@ import ReportConfig from "./features/ReportConfig";
 import { ReportRun } from "src/shared/types/reportRun";
 import type { ScenarioResult } from "src/shared/types/scenarioResult";
 import axios from "axios";
+import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
+import { useApplicationContext } from "src/application/store/Provider";
 import { useDashboardReportContext } from "./store/Provider";
 
 const getLatestCompletedRun = (runs: ReportRun[]): ReportRun | undefined => {
@@ -60,10 +62,20 @@ const DashboardReport = () => {
     manager: { setUp, handleUpdateReport, handleLaunchReport },
   } = useDashboardReportContext();
 
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
+  const isAdmin = hasAdminRights(auth.user);
+
   const selectedAgent = agents.find((a) => a._id === report?.agentId) ?? null;
 
   // Tab: 0 = Evaluate Your Agent, 1 = Benchmark Frontier Models
-  const evaluationMode = report?.evaluationMode ?? "benchmark";
+  // Non-admin users can only use agent evaluation mode
+  const evaluationMode = isAdmin
+    ? (report?.evaluationMode ?? "benchmark")
+    : "agent";
   const activeTab = evaluationMode === "agent" ? 0 : 1;
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -279,30 +291,32 @@ const DashboardReport = () => {
         </Accordion>
       ) : (
         <Paper variant="outlined" sx={{ mt: 2, overflow: "hidden" }}>
-          {/* Tab switcher */}
-          <Tabs
-            value={activeTab}
-            onChange={handleTabChange}
-            sx={{
-              borderBottom: 1,
-              borderColor: "divider",
-              px: 3,
-              pt: 1,
-              minHeight: 48,
-            }}
-          >
-            <Tab
-              label="Evaluate Your Agent"
-              sx={{ textTransform: "none", fontWeight: 600 }}
-            />
-            <Tab
-              label="Benchmark Frontier Models"
-              sx={{ textTransform: "none", fontWeight: 600 }}
-            />
-          </Tabs>
+          {/* Tab switcher — only shown for admins */}
+          {isAdmin && (
+            <Tabs
+              value={activeTab}
+              onChange={handleTabChange}
+              sx={{
+                borderBottom: 1,
+                borderColor: "divider",
+                px: 3,
+                pt: 1,
+                minHeight: 48,
+              }}
+            >
+              <Tab
+                label="Evaluate Your Agent"
+                sx={{ textTransform: "none", fontWeight: 600 }}
+              />
+              <Tab
+                label="Benchmark Frontier Models"
+                sx={{ textTransform: "none", fontWeight: 600 }}
+              />
+            </Tabs>
+          )}
 
           <Box sx={{ p: 3 }}>
-            {/* ── TAB 0: Evaluate Your Agent ── */}
+            {/* ── TAB 0 / Non-admin default: Evaluate Your Agent ── */}
             {activeTab === 0 && (
               <>
                 <Typography variant="h5" color="primary" sx={{ mb: 1 }}>
@@ -433,8 +447,8 @@ const DashboardReport = () => {
               </>
             )}
 
-            {/* ── TAB 1: Benchmark Frontier Models ── */}
-            {activeTab === 1 && (
+            {/* ── TAB 1: Benchmark Frontier Models (admin only) ── */}
+            {isAdmin && activeTab === 1 && (
               <>
                 <Typography variant="h5" color="primary" sx={{ mb: 1 }}>
                   Benchmark Frontier Models

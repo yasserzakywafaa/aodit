@@ -4,28 +4,32 @@ import { Report, ReportStatus } from "src/shared/types/report";
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
 
-export interface DashboardReportsGridFields {
+export interface DashboardAdminReportsGridFields {
   id: string;
   name: string;
-  createdAt: string;
-  status: ReportStatus;
+  userId: string;
   evaluationMode: string;
+  status: ReportStatus;
+  createdAt: string;
 }
 
-export interface DashboardReportsGridResult {
-  rows: DashboardReportsGridFields[];
-  columns: GridColDef<DashboardReportsGridFields>[];
+export interface DashboardAdminReportsGridResult {
+  rows: DashboardAdminReportsGridFields[];
+  columns: GridColDef<DashboardAdminReportsGridFields>[];
 }
 
-export const getDashboardReportsDataGridConfig = (
+export const getDashboardAdminReportsDataGridConfig = (
   reports: Report[],
-): DashboardReportsGridResult => {
+): DashboardAdminReportsGridResult => {
   if (!reports || reports.length === 0) return { rows: [], columns: [] };
 
-  const rows: DashboardReportsGridFields[] = reports.map((report) => {
+  const rows: DashboardAdminReportsGridFields[] = reports.map((report) => {
     return {
       id: report._id || "",
       name: report.name || "",
+      userId: report.userId || "",
+      evaluationMode: report.evaluationMode || "benchmark",
+      status: report.status || ReportStatus.draft,
       createdAt: new Date(report.createdAt || new Date()).toLocaleDateString(
         "en-GB",
         {
@@ -34,8 +38,6 @@ export const getDashboardReportsDataGridConfig = (
           day: "numeric",
         },
       ),
-      status: report.status || ReportStatus.draft,
-      evaluationMode: report.evaluationMode || "benchmark",
     };
   });
 
@@ -45,7 +47,7 @@ export const getDashboardReportsDataGridConfig = (
       headerName: "REPORT",
       editable: false,
       sortable: true,
-      minWidth: 250,
+      minWidth: 220,
       flex: 1,
       description: "Report information",
       valueGetter: (value, row) => row.name,
@@ -83,6 +85,46 @@ export const getDashboardReportsDataGridConfig = (
       },
     },
     {
+      field: "userId",
+      headerName: "CREATOR",
+      editable: false,
+      sortable: true,
+      minWidth: 120,
+      flex: 1,
+      display: "flex",
+      description: "User who created this report",
+      renderCell: (params) => {
+        const uid = params.row.userId;
+        const displayUid = uid.length > 8 ? uid.slice(-6).toUpperCase() : uid;
+        return (
+          <Typography variant="body2" color="text.secondary">
+            {displayUid}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "evaluationMode",
+      headerName: "TYPE",
+      editable: false,
+      sortable: true,
+      minWidth: 120,
+      flex: 1,
+      display: "flex",
+      description: "Report evaluation type",
+      renderCell: (params) => {
+        const mode = params.row.evaluationMode;
+        return (
+          <Chip
+            label={mode === "agent" ? "Agent Evaluation" : "Benchmark"}
+            color={mode === "agent" ? "primary" : "info"}
+            size="small"
+            variant="outlined"
+          />
+        );
+      },
+    },
+    {
       field: "status",
       headerName: "STATUS",
       editable: false,
@@ -113,27 +155,6 @@ export const getDashboardReportsDataGridConfig = (
       },
     },
     {
-      field: "evaluationMode",
-      headerName: "TYPE",
-      editable: false,
-      sortable: true,
-      minWidth: 120,
-      flex: 1,
-      display: "flex",
-      description: "Report evaluation type",
-      renderCell: (params) => {
-        const mode = params.row.evaluationMode;
-        return (
-          <Chip
-            label={mode === "agent" ? "Agent Evaluation" : "Benchmark"}
-            color={mode === "agent" ? "primary" : "info"}
-            size="small"
-            variant="outlined"
-          />
-        );
-      },
-    },
-    {
       field: "createdAt",
       headerName: "CREATED DATE",
       editable: false,
@@ -143,7 +164,6 @@ export const getDashboardReportsDataGridConfig = (
       display: "flex",
       description: "Date report was created",
     },
-
     {
       field: "action",
       align: "right",

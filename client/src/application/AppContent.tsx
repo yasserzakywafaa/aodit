@@ -119,6 +119,12 @@ const DashboardAdminAgentsPage = lazy(
       "../Pages/Dashboard/Admin/DashboardAdminAgents/DashboardAdminAgents"
     ),
 );
+const DashboardAdminReportsPage = lazy(
+  () =>
+    import(
+      "../Pages/Dashboard/Admin/DashboardAdminReports/DashboardAdminReports"
+    ),
+);
 
 const AppContent = () => {
   const {
@@ -244,6 +250,11 @@ const AppContent = () => {
                       <Route
                         path={routes.dashboard.admin.agents.base}
                         element={<DashboardAdminAgentsPage />}
+                      />
+
+                      <Route
+                        path={routes.dashboard.admin.reports.base}
+                        element={<DashboardAdminReportsPage />}
                       />
                     </>
                   )}

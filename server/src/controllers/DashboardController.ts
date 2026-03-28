@@ -449,6 +449,34 @@ const getAllAgents = async (
   }
 };
 
+const getAllReports = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const pageNumber = parseInt(request.query.pageNumber as string) || 1;
+  const pageSize = parseInt(request.query.pageSize as string) || 10;
+
+  try {
+    const { results, paging } = await ReportServices.getAllReports(
+      pageNumber,
+      pageSize,
+    );
+
+    response.status(200).json({
+      results,
+      paging: paging || {
+        pageNumber: 1,
+        pageSize: 10,
+        totalCount: 0,
+        totalPagesCount: 0,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getReportsByAgentId = async (
   request: Request,
   response: Response,
@@ -478,6 +506,7 @@ const DashboardController = {
   unblockUser,
   deleteUser,
   // Reports
+  getAllReports,
   getReportsCount,
   createReport,
   getUserReports,

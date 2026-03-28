@@ -239,6 +239,14 @@ const updateReport = async (
   return updated as unknown as Report | null;
 };
 
+const getAllReports = async (page: number, limit: number) => {
+  return await getPaginatedDocuments<Report>(
+    {} as any,
+    DBCollectionsEnum.reports,
+    { pageNumber: page, pageSize: limit },
+  );
+};
+
 const getReportsByAgentId = async (
   agentId: string,
   page: number,
@@ -259,6 +267,7 @@ const ReportServices = {
   getReportById,
   updateReport,
   deleteReport,
+  getAllReports,
   getReportsByAgentId,
 };
 

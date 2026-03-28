@@ -389,6 +389,7 @@ The report config page (`DashboardReport`) offers two evaluation modes via tabs:
 | Agent detail page                             | `client/src/Pages/Dashboard/DashboardAgent/`        |
 | Create agent page                             | `client/src/Pages/Dashboard/DashboardCreateAgent/`  |
 | Admin agents page                             | `client/src/Pages/Dashboard/Admin/DashboardAdminAgents/` |
+| Admin reports page                            | `client/src/Pages/Dashboard/Admin/DashboardAdminReports/` |
 
 ---
 

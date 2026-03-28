@@ -9,6 +9,7 @@ export interface DashboardReportsGridFields {
   name: string;
   createdAt: string;
   status: ReportStatus;
+  evaluationMode: string;
 }
 
 export interface DashboardReportsGridResult {
@@ -34,6 +35,7 @@ export const getDashboardReportsDataGridConfig = (
         },
       ),
       status: report.status || ReportStatus.draft,
+      evaluationMode: report.evaluationMode || "benchmark",
     };
   });
 
@@ -104,6 +106,27 @@ export const getDashboardReportsDataGridConfig = (
           <Chip
             label={status.toUpperCase()}
             color={chipColor[status] ?? "default"}
+            size="small"
+            variant="outlined"
+          />
+        );
+      },
+    },
+    {
+      field: "evaluationMode",
+      headerName: "TYPE",
+      editable: false,
+      sortable: true,
+      minWidth: 120,
+      flex: 1,
+      display: "flex",
+      description: "Report evaluation type",
+      renderCell: (params) => {
+        const mode = params.row.evaluationMode;
+        return (
+          <Chip
+            label={mode === "agent" ? "Agent Evaluation" : "Benchmark"}
+            color={mode === "agent" ? "primary" : "info"}
             size="small"
             variant="outlined"
           />

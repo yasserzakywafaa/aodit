@@ -313,10 +313,22 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 | Page          | Path                     | Purpose                                                                                                                                                                 |
 | ------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Reports list  | `DashboardReports/`      | List reports, create button, link to report detail                                                                                                                      |
+| Reports list  | `DashboardReports/`      | List reports (with TYPE column showing `evaluationMode`), create button, link to report detail                                                                           |
 | Create Report | `DashboardCreateReport/` | Form: name (required), description (required); creates report (seeds scenarios), navigates to config                                                                    |
-| Report detail | `DashboardReport/`       | View/edit config, Save button, RUN REPORT button (saves config first), "View Report Status" button (when running), aodit framework box with latest run results          |
+| Report detail | `DashboardReport/`       | View/edit config (Benchmark tab admin-only via `hasAdminRights`), Save button, RUN REPORT button (saves config first), "View Report Status" button (when running), aodit framework box with latest run results |
 | Live Feed     | `DashboardReportRun/`    | Pure monitoring page: polls run-status every 3s, shows pipeline steps, progress bar, live feed. No launch call — safe to refresh. Shows "Back to Report" when finished. |
+
+### Evaluation mode access control
+
+The report config page (`DashboardReport`) offers two evaluation modes via tabs:
+
+- **"Evaluate Your Agent"** (`evaluationMode: "agent"`) — available to **all users**.
+- **"Benchmark Frontier Models"** (`evaluationMode: "benchmark"`) — available to **admins only** (`hasAdminRights` from `client/src/shared/utils/getUserRoles.ts`).
+
+**Behavior:**
+- **Admin users** see both tabs and can switch between agent evaluation and benchmark modes.
+- **Non-admin users** see only the "Evaluate Your Agent" content (no tab switcher). The `evaluationMode` is forced to `"agent"` regardless of the stored value.
+- The reports list DataGrid (`DashboardReports`) displays a **TYPE** column showing the report's `evaluationMode` as a chip: "Agent Evaluation" or "Benchmark".
 
 ### Live Feed page (`DashboardReportRun`)
 

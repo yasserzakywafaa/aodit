@@ -53,14 +53,28 @@ export const callAgentUrl = async (
     );
   }
 
-  let body: any;
+  let rawBody = "";
   try {
-    body = await response.json();
+    // Read the body exactly once, then attempt JSON parse from text.
+    // This avoids "Body has already been read" on non-JSON responses.
+    rawBody = await response.text();
+  } catch (err: any) {
+    throw new Error(
+      `Agent at ${agentUrl} returned an unreadable response body: ${err?.message ?? String(err)}`,
+    );
+  }
+
+  const trimmedBody = rawBody.trim();
+  if (!trimmedBody) {
+    return "";
+  }
+
+  let body: any = trimmedBody;
+  try {
+    body = JSON.parse(trimmedBody);
   } catch {
-    // If the body is plain text, try reading it as a string
-    body = await response.text();
-    if (typeof body === "string") return body.trim();
-    throw new Error(`Agent at ${agentUrl} returned non-JSON response`);
+    // Non-JSON text/html response; treat as direct reply text.
+    return trimmedBody;
   }
 
   // Extract text from various common response shapes

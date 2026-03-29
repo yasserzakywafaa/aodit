@@ -6,6 +6,7 @@ import {
 } from "../models/mongoDb";
 
 import AgentServices from "../services/agentService";
+import { AgentUnreachableError } from "../utils/agentClient";
 import DashboardServices from "../services/dashboardService";
 import ReportServices from "../services/reportService";
 import * as ReportRunService from "../services/reports/reportRunService";
@@ -269,6 +270,31 @@ const launchReport = async (
   }
 };
 
+const testReportAgentConnection = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { reportId } = request.params;
+    const { agentId } = request.body ?? {};
+    const result = await ReportRunService.testAgentConnection(reportId, agentId);
+    response.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AgentUnreachableError) {
+      response.status(502).json({ message: error.message });
+      return;
+    }
+
+    if (error instanceof Error) {
+      response.status(400).json({ message: error.message });
+      return;
+    }
+
+    next(error);
+  }
+};
+
 const getRunStatus = async (
   request: Request,
   response: Response,
@@ -515,6 +541,7 @@ const DashboardController = {
   deleteReport,
   getUserReportsCount,
   launchReport,
+  testReportAgentConnection,
   stopReport,
   getReportRuns,
   getRunStatus,

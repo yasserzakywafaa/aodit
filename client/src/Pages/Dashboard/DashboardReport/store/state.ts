@@ -7,6 +7,9 @@ export interface DashboardReportState {
   report: Report | undefined;
   runs: ReportRun[];
   agents: Agent[];
+  agentConnectionStatus: "idle" | "testing" | "success" | "failed";
+  agentConnectionMessage: string;
+  agentConnectionCheckedAgentId?: string;
 }
 
 export const getDashboardReportInitialState = (): DashboardReportState => {
@@ -15,5 +18,8 @@ export const getDashboardReportInitialState = (): DashboardReportState => {
     report: undefined,
     runs: [],
     agents: [],
+    agentConnectionStatus: "idle",
+    agentConnectionMessage: "",
+    agentConnectionCheckedAgentId: undefined,
   };
 };

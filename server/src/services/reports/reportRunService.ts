@@ -164,6 +164,62 @@ export const getLatestRunStatus = async (
   };
 };
 
+/**
+ * Perform an explicit pre-flight connection test against the selected agent.
+ * This allows the UI to verify reachability before launching a full run.
+ */
+export const testAgentConnection = async (
+  reportId: string,
+  overrideAgentId?: string,
+): Promise<{
+  success: true;
+  message: string;
+  agentId: string;
+  agentName: string;
+  agentUrl: string;
+  replyPreview: string;
+}> => {
+  const report = (await readDocument(
+    new ObjectId(reportId),
+    DBCollectionsEnum.reports,
+  )) as unknown as Report | null;
+
+  if (!report) throw new Error(`Report ${reportId} not found`);
+
+  const resolvedAgentId = overrideAgentId ?? report.agentId;
+  if (!resolvedAgentId) {
+    throw new Error("Select an agent before testing the connection.");
+  }
+
+  const agent = (await readDocument(
+    new ObjectId(resolvedAgentId),
+    DBCollectionsEnum.agents,
+  )) as unknown as Agent | null;
+
+  if (!agent) {
+    throw new Error(`Assigned agent (${resolvedAgentId}) not found`);
+  }
+
+  if (!agent.agentUrl || agent.agentUrl.trim() === "") {
+    throw new Error(
+      `Agent "${agent.name}" does not have an Agent URL configured. ` +
+        "Add the URL in the Agent settings before testing the connection.",
+    );
+  }
+
+  const reply = await checkAgentLiveness(agent.agentUrl);
+  const replyPreview = reply.length > 200 ? `${reply.slice(0, 197)}...` : reply;
+
+  return {
+    success: true,
+    message: `Connection successful for agent "${agent.name}".`,
+    agentId: String(agent._id),
+    agentName: agent.name,
+    agentUrl: agent.agentUrl,
+    replyPreview,
+  };
+};
+
 // ---------------------------------------------------------------------------
 // Launch
 // ---------------------------------------------------------------------------

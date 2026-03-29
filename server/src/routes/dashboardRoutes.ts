@@ -123,6 +123,11 @@ dashboardRoutes.post(
 );
 
 dashboardRoutes.post(
+  END_POINTS.DASHBOARD.REPORTS.TEST_AGENT_CONNECTION(":reportId"),
+  DashboardController.testReportAgentConnection,
+);
+
+dashboardRoutes.post(
   END_POINTS.DASHBOARD.REPORTS.STOP_REPORT(":reportId"),
   DashboardController.stopReport,
 );

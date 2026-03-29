@@ -14,6 +14,12 @@ export interface DashboardReportStore {
   setReport: (report: Report | undefined) => void;
   setRuns: (runs: ReportRun[]) => void;
   setAgents: (agents: Agent[]) => void;
+  setAgentConnectionStatus: (
+    status: DashboardReportState["agentConnectionStatus"],
+  ) => void;
+  setAgentConnectionMessage: (message: string) => void;
+  setAgentConnectionCheckedAgentId: (agentId: string | undefined) => void;
+  resetAgentConnectionState: () => void;
 }
 
 const useDashboardReportStore = (): DashboardReportStore => {
@@ -48,12 +54,48 @@ const useDashboardReportStore = (): DashboardReportStore => {
     }));
   };
 
+  const setAgentConnectionStatus = (
+    status: DashboardReportState["agentConnectionStatus"],
+  ) => {
+    setState((prev) => ({
+      ...prev,
+      agentConnectionStatus: status,
+    }));
+  };
+
+  const setAgentConnectionMessage = (message: string) => {
+    setState((prev) => ({
+      ...prev,
+      agentConnectionMessage: message,
+    }));
+  };
+
+  const setAgentConnectionCheckedAgentId = (agentId: string | undefined) => {
+    setState((prev) => ({
+      ...prev,
+      agentConnectionCheckedAgentId: agentId,
+    }));
+  };
+
+  const resetAgentConnectionState = () => {
+    setState((prev) => ({
+      ...prev,
+      agentConnectionStatus: "idle",
+      agentConnectionMessage: "",
+      agentConnectionCheckedAgentId: undefined,
+    }));
+  };
+
   return {
     state,
     setIsFetching,
     setReport,
     setRuns,
     setAgents,
+    setAgentConnectionStatus,
+    setAgentConnectionMessage,
+    setAgentConnectionCheckedAgentId,
+    resetAgentConnectionState,
   };
 };
 

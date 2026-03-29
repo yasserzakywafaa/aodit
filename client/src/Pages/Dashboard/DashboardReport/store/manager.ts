@@ -18,6 +18,10 @@ export interface DashboardReportManager {
   handleGetUserAgents: () => Promise<void>;
   handleUpdateReport: (reportId: string, data: Partial<Report>) => Promise<void>;
   handleLaunchReport: (reportId: string) => Promise<void>;
+  handleTestAgentConnection: (
+    reportId: string,
+    agentId?: string,
+  ) => Promise<boolean>;
 }
 
 export const useDashboardReportManager = (
@@ -161,6 +165,54 @@ export const useDashboardReportManager = (
     }
   };
 
+  const handleTestAgentConnection = async (
+    reportId: string,
+    agentId?: string,
+  ): Promise<boolean> => {
+    try {
+      store.setAgentConnectionStatus("testing");
+      store.setAgentConnectionMessage("");
+      store.setAgentConnectionCheckedAgentId(undefined);
+
+      const response = await axios.post<{
+        success: boolean;
+        message: string;
+        agentId: string;
+      }>(END_POINTS.DASHBOARD.REPORTS.TEST_AGENT_CONNECTION(reportId), {
+        agentId,
+      });
+
+      const checkedAgentId = response.data.agentId ?? agentId;
+      store.setAgentConnectionStatus("success");
+      store.setAgentConnectionCheckedAgentId(checkedAgentId);
+      store.setAgentConnectionMessage(
+        response.data.message || "Connection successful. Agent is reachable.",
+      );
+
+      Notify({
+        content: response.data.message || "Agent connection successful.",
+        type: ToastTypes.Success,
+      });
+      return true;
+    } catch (error) {
+      console.error("❌ Failed to test agent connection:", error);
+      store.setAgentConnectionStatus("failed");
+      store.setAgentConnectionCheckedAgentId(agentId);
+
+      const errorMessage =
+        axios.isAxiosError(error) && error.response
+          ? error.response?.data?.message || "Failed to test agent connection"
+          : "Failed to test agent connection";
+
+      store.setAgentConnectionMessage(errorMessage);
+      Notify({
+        content: errorMessage,
+        type: ToastTypes.Error,
+      });
+      return false;
+    }
+  };
+
   return {
     setUp,
     handleGetReportById,
@@ -168,5 +220,6 @@ export const useDashboardReportManager = (
     handleGetUserAgents,
     handleUpdateReport,
     handleLaunchReport,
+    handleTestAgentConnection,
   };
 };

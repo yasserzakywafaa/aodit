@@ -110,6 +110,8 @@ const END_POINTS = {
         `${publicApiUrl}/api/v1/dashboard/reports/delete/${reportId}`,
       LAUNCH_REPORT: (reportId: string) =>
         `${publicApiUrl}/api/v1/dashboard/reports/launch/${reportId}`,
+      TEST_AGENT_CONNECTION: (reportId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/reports/${reportId}/test-agent-connection`,
       GET_REPORT_RUNS: (reportId: string) =>
         `${publicApiUrl}/api/v1/dashboard/reports/${reportId}/runs`,
       GET_RUN_STATUS: (reportId: string) =>

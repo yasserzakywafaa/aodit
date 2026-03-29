@@ -24,7 +24,7 @@ import {
   resolveFrameworkVersion,
 } from "src/shared/constants/aoditFramework";
 import { ExpandMore, OpenInNew, PlayArrow, Save, Visibility } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { AoditReportPDF } from "./ReportPDF/AoditReportPDF";
@@ -56,10 +56,23 @@ const DashboardReport = () => {
   const navigate = useNavigate();
   const {
     store: {
-      state: { report, runs, agents },
+      state: {
+        report,
+        runs,
+        agents,
+        agentConnectionStatus,
+        agentConnectionMessage,
+        agentConnectionCheckedAgentId,
+      },
       setReport,
+      resetAgentConnectionState,
     },
-    manager: { setUp, handleUpdateReport, handleLaunchReport },
+    manager: {
+      setUp,
+      handleUpdateReport,
+      handleLaunchReport,
+      handleTestAgentConnection,
+    },
   } = useDashboardReportContext();
 
   const {
@@ -70,6 +83,14 @@ const DashboardReport = () => {
   const isAdmin = hasAdminRights(auth.user);
 
   const selectedAgent = agents.find((a) => a._id === report?.agentId) ?? null;
+  const isAgentConnectionTesting = agentConnectionStatus === "testing";
+  const isAgentConnectionValidForSelection = useMemo(
+    () =>
+      agentConnectionStatus === "success" &&
+      !!report?.agentId &&
+      agentConnectionCheckedAgentId === report.agentId,
+    [agentConnectionCheckedAgentId, agentConnectionStatus, report?.agentId],
+  );
 
   // Tab: 0 = Evaluate Your Agent, 1 = Benchmark Frontier Models
   // Non-admin users can only use agent evaluation mode
@@ -197,6 +218,11 @@ const DashboardReport = () => {
     } catch (error) {
       console.error("Failed to run report:", error);
     }
+  };
+
+  const handleTestConnection = async () => {
+    if (!reportId || !report?.agentId) return;
+    await handleTestAgentConnection(reportId, report.agentId);
   };
 
   return (
@@ -358,6 +384,7 @@ const DashboardReport = () => {
                   value={selectedAgent}
                   onChange={(_event, newValue) => {
                     if (!report) return;
+                    resetAgentConnectionState();
                     setReport({
                       ...report,
                       agentId: newValue?._id ?? undefined,
@@ -377,6 +404,21 @@ const DashboardReport = () => {
                   sx={{ maxWidth: 500, mb: 2 }}
                 />
 
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleTestConnection}
+                  disabled={
+                    !reportId ||
+                    !selectedAgent?._id ||
+                    !selectedAgent?.agentUrl ||
+                    isAgentConnectionTesting
+                  }
+                  sx={{ mb: 2 }}
+                >
+                  {isAgentConnectionTesting ? "Testing connection..." : "Test Connection"}
+                </Button>
+
                 {/* Agent URL status */}
                 {selectedAgent && (
                   <Box sx={{ mb: 3 }}>
@@ -391,8 +433,7 @@ const DashboardReport = () => {
                             {selectedAgent.agentUrl}
                           </Box>
                           <br />
-                          aodit will perform a liveness check before starting
-                          the evaluation to confirm the agent is reachable.
+                          Test the connection before running the evaluation.
                         </Typography>
                       </Alert>
                     ) : (
@@ -436,6 +477,42 @@ const DashboardReport = () => {
                     </Typography>
                   </Alert>
                 )}
+
+                {selectedAgent?.agentUrl &&
+                  report?.agentId &&
+                  agentConnectionCheckedAgentId === report.agentId &&
+                  agentConnectionStatus === "success" && (
+                    <Alert severity="success" variant="outlined" sx={{ maxWidth: 600, mb: 3 }}>
+                      <Typography variant="body2">
+                        {agentConnectionMessage || "Connection successful."}
+                      </Typography>
+                    </Alert>
+                  )}
+
+                {selectedAgent?.agentUrl &&
+                  report?.agentId &&
+                  agentConnectionCheckedAgentId === report.agentId &&
+                  agentConnectionStatus === "failed" && (
+                    <Alert severity="error" variant="outlined" sx={{ maxWidth: 600, mb: 3 }}>
+                      <Typography variant="body2">
+                        {agentConnectionMessage ||
+                          "Connection test failed. Verify your agent endpoint and try again."}
+                      </Typography>
+                    </Alert>
+                  )}
+
+                {selectedAgent?.agentUrl &&
+                  report?.agentId &&
+                  (agentConnectionCheckedAgentId !== report.agentId ||
+                    agentConnectionStatus === "idle") && (
+                    <Alert severity="info" variant="outlined" sx={{ maxWidth: 600, mb: 3 }}>
+                      <Typography variant="body2">
+                        Click <strong>Test Connection</strong> to verify this agent endpoint.
+                        <br />
+                        <strong>Run Report</strong> will stay disabled until the test succeeds.
+                      </Typography>
+                    </Alert>
+                  )}
 
                 {/* Still show evaluation config below */}
                 <ReportConfig
@@ -492,7 +569,10 @@ const DashboardReport = () => {
               // Benchmark mode: must have at least one model selected
               (evaluationMode === "benchmark" && modelsToTest.length < 1) ||
               // Agent mode: must select an agent that has a URL configured
-              (evaluationMode === "agent" && (!report?.agentId || !selectedAgent?.agentUrl))
+              (evaluationMode === "agent" &&
+                (!report?.agentId ||
+                  !selectedAgent?.agentUrl ||
+                  !isAgentConnectionValidForSelection))
             }
           >
             RUN REPORT

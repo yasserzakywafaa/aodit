@@ -17,11 +17,13 @@ import {
   resolveFrameworkVersion,
 } from "./frameworkRegistry";
 
+import { Agent } from "../../models/types/agent";
 import { ObjectId } from "mongodb";
 import { Report } from "../../models/types/report";
 import { ReportRun } from "../../models/types/reportRun";
+import { AgentUnreachableError, checkAgentLiveness } from "../../utils/agentClient";
 import crypto from "crypto";
-import { executeReport } from "./executionEngine";
+import { executeAgentReport, executeReport } from "./executionEngine";
 
 // ---------------------------------------------------------------------------
 // CRUD helpers
@@ -162,6 +164,62 @@ export const getLatestRunStatus = async (
   };
 };
 
+/**
+ * Perform an explicit pre-flight connection test against the selected agent.
+ * This allows the UI to verify reachability before launching a full run.
+ */
+export const testAgentConnection = async (
+  reportId: string,
+  overrideAgentId?: string,
+): Promise<{
+  success: true;
+  message: string;
+  agentId: string;
+  agentName: string;
+  agentUrl: string;
+  replyPreview: string;
+}> => {
+  const report = (await readDocument(
+    new ObjectId(reportId),
+    DBCollectionsEnum.reports,
+  )) as unknown as Report | null;
+
+  if (!report) throw new Error(`Report ${reportId} not found`);
+
+  const resolvedAgentId = overrideAgentId ?? report.agentId;
+  if (!resolvedAgentId) {
+    throw new Error("Select an agent before testing the connection.");
+  }
+
+  const agent = (await readDocument(
+    new ObjectId(resolvedAgentId),
+    DBCollectionsEnum.agents,
+  )) as unknown as Agent | null;
+
+  if (!agent) {
+    throw new Error(`Assigned agent (${resolvedAgentId}) not found`);
+  }
+
+  if (!agent.agentUrl || agent.agentUrl.trim() === "") {
+    throw new Error(
+      `Agent "${agent.name}" does not have an Agent URL configured. ` +
+        "Add the URL in the Agent settings before testing the connection.",
+    );
+  }
+
+  const reply = await checkAgentLiveness(agent.agentUrl);
+  const replyPreview = reply.length > 200 ? `${reply.slice(0, 197)}...` : reply;
+
+  return {
+    success: true,
+    message: `Connection successful for agent "${agent.name}".`,
+    agentId: String(agent._id),
+    agentName: agent.name,
+    agentUrl: agent.agentUrl,
+    replyPreview,
+  };
+};
+
 // ---------------------------------------------------------------------------
 // Launch
 // ---------------------------------------------------------------------------
@@ -169,8 +227,14 @@ export const getLatestRunStatus = async (
 /**
  * Launch a full aodit test run for a report.
  *
- * Creates one ReportRun per model, then fires the execution engine asynchronously.
+ * - "benchmark" mode: creates one ReportRun per frontier model, fires the
+ *   OpenRouter-based execution engine asynchronously.
+ * - "agent" mode: performs a liveness check against the registered agent URL,
+ *   then creates a single ReportRun (labelled with the agent's name) and fires
+ *   the agent-targeted execution engine asynchronously.
+ *
  * Returns immediately so the controller can respond to the client.
+ * Throws synchronously (before updating DB) if the agent liveness check fails.
  */
 export const launchReportRun = async (
   reportId: string,
@@ -187,7 +251,7 @@ export const launchReportRun = async (
     throw new Error("Report is already running");
   }
 
-  const modelsToTest = report.modelsToTest ?? ["Claude"];
+  const evaluationMode = report.evaluationMode ?? "benchmark";
   const scenariosPerDimension = report.scenariosPerDimension ?? 20;
   const frameworkVersionForRun = resolveFrameworkVersion(
     report.frameworkVersion,
@@ -197,6 +261,76 @@ export const launchReportRun = async (
   const totalScenarios = scenariosPerDimension * framework.dimensions.length;
   const batchId = crypto.randomUUID();
   const now = new Date().toISOString();
+
+  // ── AGENT EVALUATION MODE ──────────────────────────────────────────────────
+  if (evaluationMode === "agent") {
+    if (!report.agentId) {
+      throw new Error("Agent evaluation mode requires an assigned agent");
+    }
+
+    // Resolve the agent document to get the URL
+    const agent = (await readDocument(
+      new ObjectId(report.agentId),
+      DBCollectionsEnum.agents,
+    )) as unknown as Agent | null;
+
+    if (!agent) {
+      throw new Error(`Assigned agent (${report.agentId}) not found`);
+    }
+
+    if (!agent.agentUrl || agent.agentUrl.trim() === "") {
+      throw new Error(
+        `Agent "${agent.name}" does not have an Agent URL configured. ` +
+          "Add the URL in the Agent settings before running in Agent evaluation mode.",
+      );
+    }
+
+    // Liveness check — throws AgentUnreachableError if agent doesn't respond
+    console.log(
+      `[aodit] Performing liveness check for agent "${agent.name}" at ${agent.agentUrl}`,
+    );
+    try {
+      await checkAgentLiveness(agent.agentUrl);
+      console.log(`[aodit] Liveness check passed for agent "${agent.name}"`);
+    } catch (err) {
+      if (err instanceof AgentUnreachableError) {
+        throw err; // Re-throw so the controller returns 4xx to the client
+      }
+      throw err;
+    }
+
+    // Update report status to running
+    await updateDocument<Report>(
+      reportId,
+      { status: "running" as any, updatedAt: now },
+      DBCollectionsEnum.reports,
+    );
+
+    // Create a single run using the agent name as "modelName" for display
+    const run = await createReportRun(reportId, {
+      batchId,
+      frameworkVersion: frameworkVersionForRun,
+      modelName: agent.name,
+      status: "pending",
+      progress: 0,
+      currentStep: "Generating scenarios",
+      totalScenarios,
+      completedScenarios: 0,
+      startedAt: now,
+    });
+    const runId = run._id != null ? String(run._id) : "";
+    const runIds = new Map<string, string>([[agent.name, runId]]);
+
+    // Fire agent execution engine asynchronously
+    executeAgentReport(reportId, batchId, runIds, agent.agentUrl).catch((err) => {
+      console.error(`[aodit] executeAgentReport failed: ${err.message}`);
+    });
+
+    return { batchId, runs: [run] };
+  }
+
+  // ── BENCHMARK MODE (default) ───────────────────────────────────────────────
+  const modelsToTest = report.modelsToTest ?? ["Claude"];
 
   // Update report status to running
   await updateDocument<Report>(

@@ -8,6 +8,7 @@ import {
   ExpandMore,
   Menu as MenuIcon,
   People as PeopleIcon,
+  SmartToy as SmartToyIcon,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -62,6 +63,7 @@ const DashboardLayout = () => {
     const adminSubPaths = [
       routes.dashboard.admin.users.base,
       routes.dashboard.admin.reports.base,
+      routes.dashboard.admin.agents.base,
     ];
 
     const isOnAdminSubPage = adminSubPaths.some((subPath) =>
@@ -90,6 +92,11 @@ const DashboardLayout = () => {
       icon: <ArticleIcon />,
     },
     {
+      label: "Agents",
+      path: routes.dashboard.agents.base,
+      icon: <SmartToyIcon />,
+    },
+    {
       label: "Admin",
       path: routes.dashboard.admin.base,
       icon: <AdminPanelSettings />,
@@ -104,6 +111,11 @@ const DashboardLayout = () => {
           label: "Reports",
           path: routes.dashboard.admin.reports.base,
           icon: <ArticleIcon />,
+        },
+        {
+          label: "Agents",
+          path: routes.dashboard.admin.agents.base,
+          icon: <SmartToyIcon />,
         },
       ],
     },

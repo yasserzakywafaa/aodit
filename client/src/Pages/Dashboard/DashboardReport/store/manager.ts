@@ -4,22 +4,35 @@ import {
 } from "src/components/shared/Notification/Notification";
 import axios, { AxiosResponse } from "axios";
 
+import { Agent } from "src/shared/types/agent";
 import { DashboardReportStore } from "./store";
 import END_POINTS from "src/application/shared/endpoints";
 import { Report } from "src/shared/types/report";
 import { ReportRun } from "src/shared/types/reportRun";
+import { useApplicationContext } from "src/application/store/Provider";
 
 export interface DashboardReportManager {
   setUp: (reportId: string) => Promise<void>;
   handleGetReportById: (reportId: string) => Promise<void>;
   handleGetReportRuns: (reportId: string) => Promise<void>;
+  handleGetUserAgents: () => Promise<void>;
   handleUpdateReport: (reportId: string, data: Partial<Report>) => Promise<void>;
   handleLaunchReport: (reportId: string) => Promise<void>;
+  handleTestAgentConnection: (
+    reportId: string,
+    agentId?: string,
+  ) => Promise<boolean>;
 }
 
 export const useDashboardReportManager = (
   store: DashboardReportStore,
 ): DashboardReportManager => {
+  const {
+    store: {
+      state: { auth },
+    },
+  } = useApplicationContext();
+
   const setUp = async (reportId: string): Promise<void> => {
     store.setIsFetching(false);
 
@@ -27,6 +40,7 @@ export const useDashboardReportManager = (
       await Promise.all([
         handleGetReportById(reportId),
         handleGetReportRuns(reportId),
+        handleGetUserAgents(),
       ]);
     } catch (error) {
       console.error("❌ Failed to set up report:", error);
@@ -69,6 +83,26 @@ export const useDashboardReportManager = (
     }
   };
 
+  const handleGetUserAgents = async (): Promise<void> => {
+    try {
+      const response = await axios.get(
+        END_POINTS.DASHBOARD.AGENTS.GET_USER_AGENTS,
+        {
+          params: {
+            userId: auth.user?._id || "",
+            page: 1,
+            limit: 100,
+          },
+        },
+      );
+      const results = (response.data as any).results ?? response.data;
+      store.setAgents(Array.isArray(results) ? (results as Agent[]) : []);
+    } catch (error) {
+      console.error("❌ Failed to get user agents:", error);
+      store.setAgents([]);
+    }
+  };
+
   const handleUpdateReport = async (
     reportId: string,
     data: Partial<Report>,
@@ -85,6 +119,8 @@ export const useDashboardReportManager = (
           dimensionWeights: data.dimensionWeights,
           modelsToTest: data.modelsToTest,
           modelsToEvaluate: data.modelsToEvaluate,
+          agentId: data.agentId,
+          evaluationMode: data.evaluationMode,
         },
       );
       store.setReport(response.data);
@@ -129,11 +165,61 @@ export const useDashboardReportManager = (
     }
   };
 
+  const handleTestAgentConnection = async (
+    reportId: string,
+    agentId?: string,
+  ): Promise<boolean> => {
+    try {
+      store.setAgentConnectionStatus("testing");
+      store.setAgentConnectionMessage("");
+      store.setAgentConnectionCheckedAgentId(undefined);
+
+      const response = await axios.post<{
+        success: boolean;
+        message: string;
+        agentId: string;
+      }>(END_POINTS.DASHBOARD.REPORTS.TEST_AGENT_CONNECTION(reportId), {
+        agentId,
+      });
+
+      const checkedAgentId = response.data.agentId ?? agentId;
+      store.setAgentConnectionStatus("success");
+      store.setAgentConnectionCheckedAgentId(checkedAgentId);
+      store.setAgentConnectionMessage(
+        response.data.message || "Connection successful. Agent is reachable.",
+      );
+
+      Notify({
+        content: response.data.message || "Agent connection successful.",
+        type: ToastTypes.Success,
+      });
+      return true;
+    } catch (error) {
+      console.error("❌ Failed to test agent connection:", error);
+      store.setAgentConnectionStatus("failed");
+      store.setAgentConnectionCheckedAgentId(agentId);
+
+      const errorMessage =
+        axios.isAxiosError(error) && error.response
+          ? error.response?.data?.message || "Failed to test agent connection"
+          : "Failed to test agent connection";
+
+      store.setAgentConnectionMessage(errorMessage);
+      Notify({
+        content: errorMessage,
+        type: ToastTypes.Error,
+      });
+      return false;
+    }
+  };
+
   return {
     setUp,
     handleGetReportById,
     handleGetReportRuns,
+    handleGetUserAgents,
     handleUpdateReport,
     handleLaunchReport,
+    handleTestAgentConnection,
   };
 };

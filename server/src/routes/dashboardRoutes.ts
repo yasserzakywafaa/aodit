@@ -50,6 +50,47 @@ dashboardRoutes.delete(
   DashboardController.deleteUser,
 );
 
+// Agent Routes
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.AGENTS.CREATE_AGENT,
+  DashboardController.createAgent,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.AGENTS.GET_USER_AGENTS,
+  DashboardController.getUserAgents,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.AGENTS.GET_AGENT_BY_ID,
+  DashboardController.getAgentById,
+);
+
+dashboardRoutes.put(
+  END_POINTS.DASHBOARD.AGENTS.UPDATE_AGENT(":agentId"),
+  DashboardController.updateAgent,
+);
+
+dashboardRoutes.delete(
+  END_POINTS.DASHBOARD.AGENTS.DELETE_AGENT(":agentId"),
+  DashboardController.deleteAgent,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.AGENTS.GET_REPORTS_BY_AGENT_ID(":agentId"),
+  DashboardController.getReportsByAgentId,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.ADMIN.AGENTS.GET_ALL_AGENTS,
+  DashboardController.getAllAgents,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.ADMIN.REPORTS.GET_ALL_REPORTS,
+  DashboardController.getAllReports,
+);
+
 // Report Routes
 dashboardRoutes.post(
   END_POINTS.DASHBOARD.REPORTS.CREATE_REPORT,
@@ -79,6 +120,11 @@ dashboardRoutes.delete(
 dashboardRoutes.post(
   END_POINTS.DASHBOARD.REPORTS.LAUNCH_REPORT(":reportId"),
   DashboardController.launchReport,
+);
+
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.REPORTS.TEST_AGENT_CONNECTION(":reportId"),
+  DashboardController.testReportAgentConnection,
 );
 
 dashboardRoutes.post(

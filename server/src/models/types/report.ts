@@ -41,6 +41,14 @@ export interface Report {
   modelsToTest?: string[];
   /** Model ids/names to use for evaluation (default: Claude only) */
   modelsToEvaluate?: string[];
+  /** Linked agent id (FINMA compliance — required before running) */
+  agentId?: string;
+  /**
+   * Determines how the report is executed.
+   * - "benchmark": prompts are sent to frontier LLMs via OpenRouter (default).
+   * - "agent": prompts are sent to the live agent URL registered on the assigned agent.
+   */
+  evaluationMode?: "benchmark" | "agent";
 }
 
 export enum ReportStatus {

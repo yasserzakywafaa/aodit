@@ -25,9 +25,9 @@ const SubscriptionSection = () => {
   if (!user) return null;
 
   const projectsCounterLeft =
-    user.subscription.maxProjectsAllowed - user.projectsCount;
+    user.subscription.maxProjectsAllowed - user.reportsCount;
   const hasMaxProjectsLimit =
-    user.projectsCount >= user.subscription.maxProjectsAllowed;
+    user.reportsCount >= user.subscription.maxProjectsAllowed;
   const isCancelledButStillActive =
     subscription && subscription.cancel_at_period_end;
 

@@ -35,6 +35,7 @@ export enum DBCollectionsEnum {
   scenarios = "scenarios",
   reportRuns = "report_runs",
   scenarioResults = "scenario_results",
+  agents = "agents",
   users = "users",
   lead_subscribers = "lead_subscribers",
 }
@@ -96,6 +97,7 @@ const createIndexes = async () => {
     DBCollectionsEnum.reports,
     DBCollectionsEnum.scenarios,
     DBCollectionsEnum.reportRuns,
+    DBCollectionsEnum.agents,
     DBCollectionsEnum.users,
   ];
 
@@ -134,6 +136,10 @@ const createIndexes = async () => {
     await users.createIndex({ role: 1 });
     await users.createIndex({ isPaidUser: 1 });
     await users.createIndex({ phoneNumber: 1 }, { unique: true, sparse: true });
+
+    const agents = database.collection(DBCollectionsEnum.agents);
+    await agents.createIndex({ userId: 1 });
+    await agents.createIndex({ createdAt: -1 });
 
     const leadSubscribers = database.collection(DBCollectionsEnum.lead_subscribers);
     await leadSubscribers.createIndex({ email: 1 }, { unique: true });

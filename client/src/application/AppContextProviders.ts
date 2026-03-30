@@ -2,6 +2,11 @@ import { ApplicationContextProvider } from "./store/Provider";
 import { CancelSubscriptionModalContextProvider } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
 import { DashboardCreateReportContextProvider } from "src/Pages/Dashboard/DashboardCreateReport/store/Provider";
+import { DashboardAgentsContextProvider } from "src/Pages/Dashboard/DashboardAgents/store/Provider";
+import { DashboardCreateAgentContextProvider } from "src/Pages/Dashboard/DashboardCreateAgent/store/Provider";
+import { DashboardAgentContextProvider } from "src/Pages/Dashboard/DashboardAgent/store/Provider";
+import { DashboardAdminAgentsContextProvider } from "src/Pages/Dashboard/Admin/DashboardAdminAgents/store/Provider";
+import { DashboardAdminReportsContextProvider } from "src/Pages/Dashboard/Admin/DashboardAdminReports/store/Provider";
 import { DashboardOverviewContextProvider } from "src/Pages/Dashboard/DashboardOverview/store/Provider";
 import { DashboardProfileContextProvider } from "src/Pages/Dashboard/DashboardProfile/store/Provider";
 import { DashboardReportContextProvider } from "src/Pages/Dashboard/DashboardReport/store/Provider";
@@ -36,6 +41,11 @@ const contextProviders = [
   DashboardUsersContextProvider,
   DashboardUserContextProvider,
   DashboardReportContextProvider,
+  DashboardAgentsContextProvider,
+  DashboardCreateAgentContextProvider,
+  DashboardAgentContextProvider,
+  DashboardAdminAgentsContextProvider,
+  DashboardAdminReportsContextProvider,
 
   // Modals
   LoginModalContextProvider,

@@ -431,26 +431,18 @@ const DashboardReport = () => {
                 {selectedAgent && (
                   <Box sx={{ mb: 3 }}>
                     {selectedAgent.agentUrl ? (
-                      <Alert
-                        severity="success"
-                        variant="outlined"
-                        sx={{ maxWidth: 600 }}
-                      >
-                        <Typography variant="body2">
-                          <strong>Agent URL:</strong>{" "}
-                          <Box
-                            component="span"
-                            sx={{
-                              fontFamily: "monospace",
-                              wordBreak: "break-all",
-                            }}
-                          >
-                            {selectedAgent.agentUrl}
-                          </Box>
-                          <br />
-                          Test the connection before running the evaluation.
-                        </Typography>
-                      </Alert>
+                      <Typography variant="body2">
+                        <strong>Agent URL:</strong>{" "}
+                        <Box
+                          component="span"
+                          sx={{
+                            fontFamily: "monospace",
+                            wordBreak: "break-all",
+                          }}
+                        >
+                          {selectedAgent.agentUrl}
+                        </Box>
+                      </Typography>
                     ) : (
                       <Alert
                         severity="warning"

@@ -35,7 +35,7 @@ export const getDashboardReportsDataGridConfig = (
         },
       ),
       status: report.status || ReportStatus.draft,
-      evaluationMode: report.evaluationMode || "benchmark",
+      evaluationMode: report.evaluationMode || "agent",
     };
   });
 

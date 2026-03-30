@@ -92,7 +92,7 @@ export const useDashboardProfileManager = (
         {
           userId: auth.user?._id,
           subscriptionId: auth.user?.subscription.id,
-          userProjectCount: auth.user?.projectsCount,
+          userProjectCount: auth.user?.reportsCount,
         },
         {
           withCredentials: true,

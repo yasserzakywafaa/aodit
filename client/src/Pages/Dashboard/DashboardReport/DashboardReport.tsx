@@ -23,7 +23,13 @@ import {
   getFrameworkDefinition,
   resolveFrameworkVersion,
 } from "src/shared/constants/aoditFramework";
-import { ExpandMore, OpenInNew, PlayArrow, Save, Visibility } from "@mui/icons-material";
+import {
+  ExpandMore,
+  OpenInNew,
+  PlayArrow,
+  Save,
+  Visibility,
+} from "@mui/icons-material";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -200,7 +206,7 @@ const DashboardReport = () => {
     modelsToTest: report?.modelsToTest,
     modelsToEvaluate: ["Claude"],
     agentId: report?.agentId,
-    evaluationMode: report?.evaluationMode ?? "benchmark",
+    evaluationMode,
   });
 
   const handleSave = (e: React.FormEvent) => {
@@ -373,8 +379,8 @@ const DashboardReport = () => {
                   color="text.secondary"
                   sx={{ mb: 1.5 }}
                 >
-                  Select the AI agent this report evaluates. A report cannot
-                  run without an assigned agent (FINMA compliance).
+                  Select the AI agent this report evaluates. A report cannot run
+                  without an assigned agent (FINMA compliance).
                 </Typography>
                 <Autocomplete
                   options={agents}
@@ -416,19 +422,28 @@ const DashboardReport = () => {
                   }
                   sx={{ mb: 2 }}
                 >
-                  {isAgentConnectionTesting ? "Testing connection..." : "Test Connection"}
+                  {isAgentConnectionTesting
+                    ? "Testing connection..."
+                    : "Test Connection"}
                 </Button>
 
                 {/* Agent URL status */}
                 {selectedAgent && (
                   <Box sx={{ mb: 3 }}>
                     {selectedAgent.agentUrl ? (
-                      <Alert severity="success" variant="outlined" sx={{ maxWidth: 600 }}>
+                      <Alert
+                        severity="success"
+                        variant="outlined"
+                        sx={{ maxWidth: 600 }}
+                      >
                         <Typography variant="body2">
                           <strong>Agent URL:</strong>{" "}
                           <Box
                             component="span"
-                            sx={{ fontFamily: "monospace", wordBreak: "break-all" }}
+                            sx={{
+                              fontFamily: "monospace",
+                              wordBreak: "break-all",
+                            }}
                           >
                             {selectedAgent.agentUrl}
                           </Box>
@@ -440,40 +455,43 @@ const DashboardReport = () => {
                       <Alert
                         severity="warning"
                         variant="outlined"
-                        sx={{ maxWidth: 600 }}
-                        action={
-                          <Button
-                            size="small"
-                            color="warning"
-                            endIcon={<OpenInNew fontSize="small" />}
-                            onClick={() =>
-                              navigate(
-                                routes.dashboard.agents.agentById(
-                                  selectedAgent._id,
-                                ),
-                              )
-                            }
-                          >
-                            Edit Agent
-                          </Button>
-                        }
+                        sx={{ maxWidth: 600, gap: 2 }}
                       >
                         <Typography variant="body2">
-                          <strong>{selectedAgent.name}</strong> does not have
-                          an <strong>Agent URL</strong> configured. Add a URL
-                          in the agent settings to run in Agent evaluation
-                          mode.
+                          <strong>{selectedAgent.name}</strong> does not have an{" "}
+                          <strong>Agent URL</strong> configured. Add a URL in
+                          the agent settings to run in Agent evaluation mode.
                         </Typography>
+
+                        <Button
+                          size="small"
+                          color="warning"
+                          variant="text"
+                          endIcon={<OpenInNew fontSize="small" />}
+                          onClick={() =>
+                            navigate(
+                              routes.dashboard.agents.agentById(
+                                selectedAgent._id,
+                              ),
+                            )
+                          }
+                        >
+                          Edit Agent
+                        </Button>
                       </Alert>
                     )}
                   </Box>
                 )}
 
                 {!selectedAgent && (
-                  <Alert severity="info" variant="outlined" sx={{ maxWidth: 600, mb: 3 }}>
+                  <Alert
+                    severity="info"
+                    variant="outlined"
+                    sx={{ maxWidth: 600, mb: 3 }}
+                  >
                     <Typography variant="body2">
-                      Select an agent above to evaluate it. The agent must
-                      have an <strong>Agent URL</strong> configured.
+                      Select an agent above to evaluate it. The agent must have
+                      an <strong>Agent URL</strong> configured.
                     </Typography>
                   </Alert>
                 )}
@@ -482,7 +500,11 @@ const DashboardReport = () => {
                   report?.agentId &&
                   agentConnectionCheckedAgentId === report.agentId &&
                   agentConnectionStatus === "success" && (
-                    <Alert severity="success" variant="outlined" sx={{ maxWidth: 600, mb: 3 }}>
+                    <Alert
+                      severity="success"
+                      variant="outlined"
+                      sx={{ maxWidth: 600, mb: 3 }}
+                    >
                       <Typography variant="body2">
                         {agentConnectionMessage || "Connection successful."}
                       </Typography>
@@ -493,7 +515,11 @@ const DashboardReport = () => {
                   report?.agentId &&
                   agentConnectionCheckedAgentId === report.agentId &&
                   agentConnectionStatus === "failed" && (
-                    <Alert severity="error" variant="outlined" sx={{ maxWidth: 600, mb: 3 }}>
+                    <Alert
+                      severity="error"
+                      variant="outlined"
+                      sx={{ maxWidth: 600, mb: 3 }}
+                    >
                       <Typography variant="body2">
                         {agentConnectionMessage ||
                           "Connection test failed. Verify your agent endpoint and try again."}
@@ -505,11 +531,17 @@ const DashboardReport = () => {
                   report?.agentId &&
                   (agentConnectionCheckedAgentId !== report.agentId ||
                     agentConnectionStatus === "idle") && (
-                    <Alert severity="info" variant="outlined" sx={{ maxWidth: 600, mb: 3 }}>
+                    <Alert
+                      severity="info"
+                      variant="outlined"
+                      sx={{ maxWidth: 600, mb: 3 }}
+                    >
                       <Typography variant="body2">
-                        Click <strong>Test Connection</strong> to verify this agent endpoint.
+                        Click <strong>Test Connection</strong> to verify this
+                        agent endpoint.
                         <br />
-                        <strong>Run Report</strong> will stay disabled until the test succeeds.
+                        <strong>Run Report</strong> will stay disabled until the
+                        test succeeds.
                       </Typography>
                     </Alert>
                   )}

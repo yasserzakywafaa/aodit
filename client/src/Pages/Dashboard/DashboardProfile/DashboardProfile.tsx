@@ -193,11 +193,11 @@ const DashboardProfilePage = () => {
             id="profile-tab-0"
             aria-controls="profile-tabpanel-0"
           />
-          <Tab
+          {/* <Tab
             label="Subscription"
             id="profile-tab-1"
             aria-controls="profile-tabpanel-1"
-          />
+          /> */}
         </Tabs>
       </Box>
 
@@ -211,13 +211,13 @@ const DashboardProfilePage = () => {
               <CardContent>
                 <Box display="flex" alignItems="center" mb={2}>
                   <ArticleOutlined color="primary" sx={{ mr: 1 }} />
-                  <Typography variant="h6">Total Projects</Typography>
+                  <Typography variant="h6">Total Reports</Typography>
                 </Box>
                 <Typography variant="h4" color="primary">
-                  {user.projectsCount}
+                  {user.reportsCount}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Projects created
+                  Reports created
                 </Typography>
               </CardContent>
               <CardActions>
@@ -225,13 +225,9 @@ const DashboardProfilePage = () => {
                   fullWidth
                   variant="contained"
                   startIcon={<VisibilityOutlined />}
-                  onClick={() =>
-                    navigate(
-                      routes.dashboard.reports.reportsByUserId(user._id),
-                    )
-                  }
+                  onClick={() => navigate(routes.dashboard.reports.base)}
                 >
-                  View My Projects
+                  View My Reports
                 </Button>
               </CardActions>
             </Card>

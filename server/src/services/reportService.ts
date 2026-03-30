@@ -5,25 +5,25 @@ import {
   getPaginatedDocuments,
 } from "../models/mongoDb";
 import {
-  createDocument,
+  DEFAULT_FRAMEWORK_VERSION,
+  getFrameworkDefinition,
+  resolveFrameworkVersion,
+} from "./reports/frameworkRegistry";
+import {
+  DimensionWeights,
+  FrameworkVersion,
+  Report,
+  ScenariosPerDimension,
+} from "../models/types/report";
+import {
   createBulkDocuments,
+  createDocument,
   deleteDocument,
   readDocument,
   updateDocument,
 } from "../models/mongoDb/crudOperations";
 
-import {
-  Report,
-  ScenariosPerDimension,
-  DimensionWeights,
-  FrameworkVersion,
-} from "src/models/types/report";
-import { Scenario } from "src/models/types/scenario";
-import {
-  DEFAULT_FRAMEWORK_VERSION,
-  getFrameworkDefinition,
-  resolveFrameworkVersion,
-} from "./reports/frameworkRegistry";
+import { Scenario } from "../models/types/scenario";
 
 const DEFAULT_SCENARIOS_PER_DIMENSION: ScenariosPerDimension = 20;
 
@@ -45,9 +45,9 @@ const seedScenariosForReport = async (
   );
 
   for (const dimensionId of framework.dimensions) {
-    const categoryCodes = (framework.dimensionCategories[dimensionId] ?? []).map(
-      (category) => category.id,
-    );
+    const categoryCodes = (
+      framework.dimensionCategories[dimensionId] ?? []
+    ).map((category) => category.id);
     const perCategory = Math.max(1, Math.floor(perDim / categoryCodes.length));
 
     for (let i = 0; i < perDim; i++) {
@@ -107,8 +107,9 @@ const createReport = async (data: any): Promise<Report> => {
 
   if (
     dimensionWeights &&
-    Math.abs(sumWeights(dimensionWeights, framework.dimensions as string[]) - 1) >
-      0.001
+    Math.abs(
+      sumWeights(dimensionWeights, framework.dimensions as string[]) - 1,
+    ) > 0.001
   ) {
     throw new Error("Dimension weights must sum to 1 (100%)");
   }
@@ -152,17 +153,20 @@ const getUserReportsCount = async (userId: string): Promise<number> => {
 };
 
 const getReportById = async (reportId: string) => {
-  return await readDocument(
-    new ObjectId(reportId),
-    DBCollectionsEnum.reports,
-  );
+  return await readDocument(new ObjectId(reportId), DBCollectionsEnum.reports);
 };
 
 const deleteReport = async (reportId: string) => {
   // Cascade: remove all related data before deleting the report itself
-  await database.collection(DBCollectionsEnum.scenarios).deleteMany({ reportId });
-  await database.collection(DBCollectionsEnum.reportRuns).deleteMany({ reportId });
-  await database.collection(DBCollectionsEnum.scenarioResults).deleteMany({ reportId });
+  await database
+    .collection(DBCollectionsEnum.scenarios)
+    .deleteMany({ reportId });
+  await database
+    .collection(DBCollectionsEnum.reportRuns)
+    .deleteMany({ reportId });
+  await database
+    .collection(DBCollectionsEnum.scenarioResults)
+    .deleteMany({ reportId });
   return await deleteDocument(reportId, DBCollectionsEnum.reports);
 };
 
@@ -196,8 +200,9 @@ const updateReport = async (
 
   if (
     data.dimensionWeights &&
-    Math.abs(sumWeights(data.dimensionWeights, framework.dimensions as string[]) - 1) >
-      0.001
+    Math.abs(
+      sumWeights(data.dimensionWeights, framework.dimensions as string[]) - 1,
+    ) > 0.001
   ) {
     throw new Error("Dimension weights must sum to 1 (100%)");
   }

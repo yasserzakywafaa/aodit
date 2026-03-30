@@ -76,7 +76,7 @@ export const useDashboardUserManager = (
 
     const roleChanged = role !== user.role;
     const isPaidUserChanged = isPaidUser !== user.isPaidUser;
-    const projectsCountChanged = projectsCount !== user.projectsCount;
+    const projectsCountChanged = projectsCount !== user.reportsCount;
 
     let subscriptionChanged = false;
     if (user.subscription) {
@@ -138,7 +138,7 @@ export const useDashboardUserManager = (
         updates.isPaidUser = isPaidUser;
       }
 
-      if (projectsCount !== user.projectsCount) {
+      if (projectsCount !== user.reportsCount) {
         updates.projectsCount = projectsCount;
       }
 

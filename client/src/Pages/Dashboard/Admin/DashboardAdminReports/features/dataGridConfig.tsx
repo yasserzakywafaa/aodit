@@ -28,7 +28,7 @@ export const getDashboardAdminReportsDataGridConfig = (
       id: report._id || "",
       name: report.name || "",
       userId: report.userId || "",
-      evaluationMode: report.evaluationMode || "benchmark",
+      evaluationMode: report.evaluationMode || "agent",
       status: report.status || ReportStatus.draft,
       createdAt: new Date(report.createdAt || new Date()).toLocaleDateString(
         "en-GB",
@@ -135,7 +135,10 @@ export const getDashboardAdminReportsDataGridConfig = (
       description: "Report status",
       renderCell: (params) => {
         const status = params.row.status;
-        const chipColor: Record<string, "default" | "primary" | "success" | "error" | "info"> = {
+        const chipColor: Record<
+          string,
+          "default" | "primary" | "success" | "error" | "info"
+        > = {
           [ReportStatus.draft]: "default",
           [ReportStatus.running]: "primary",
           [ReportStatus.completed]: "success",

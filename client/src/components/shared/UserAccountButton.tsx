@@ -47,7 +47,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const handleCloseMenu = () => setElement(null);
 
   const handleOnProfileClick = () => {
-    user && navigate(routes.dashboard.user.userById(user._id));
+    navigate(routes.dashboard.profile);
     handleCloseMenu();
   };
 

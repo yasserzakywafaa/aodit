@@ -39,7 +39,7 @@ const useDashboardUserStore = (): DashboardUserStore => {
       if (user) {
         newState.role = user.role;
         newState.isPaidUser = user.isPaidUser;
-        newState.projectsCount = user.projectsCount;
+        newState.projectsCount = user.reportsCount;
         newState.subscriptionType =
           user.subscription?.type || SubscriptionPlanEnum.Free;
         newState.maxProjectsAllowed =

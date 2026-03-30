@@ -8,7 +8,10 @@ import { useState } from "react";
 export interface DashboardOverviewStore {
   state: DashboardOverviewState;
   setIsFetching: (isFetching: boolean) => void;
-  setReportsCount: (reportsCount: number) => void;
+  setUserReportsCount: (userReportsCount: number) => void;
+  setUserAgentsCount: (userAgentsCount: number) => void;
+  setAllReportsCount: (allReportsCount: number) => void;
+  setAllAgentsCount: (allAgentsCount: number) => void;
 }
 
 const useDashboardOverviewStore = (): DashboardOverviewStore => {
@@ -22,17 +25,41 @@ const useDashboardOverviewStore = (): DashboardOverviewStore => {
     }));
   };
 
-  const setReportsCount = (reportsCount: number) => {
+  const setUserReportsCount = (userReportsCount: number) => {
     setState((prev) => ({
       ...prev,
-      reportsCount,
+      userReportsCount,
+    }));
+  };
+
+  const setUserAgentsCount = (userAgentsCount: number) => {
+    setState((prev) => ({
+      ...prev,
+      userAgentsCount,
+    }));
+  };
+
+  const setAllReportsCount = (allReportsCount: number) => {
+    setState((prev) => ({
+      ...prev,
+      allReportsCount,
+    }));
+  };
+
+  const setAllAgentsCount = (allAgentsCount: number) => {
+    setState((prev) => ({
+      ...prev,
+      allAgentsCount,
     }));
   };
 
   return {
     state,
     setIsFetching,
-    setReportsCount,
+    setUserReportsCount,
+    setUserAgentsCount,
+    setAllReportsCount,
+    setAllAgentsCount,
   };
 };
 

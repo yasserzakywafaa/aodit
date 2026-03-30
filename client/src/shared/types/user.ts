@@ -18,7 +18,7 @@ export interface User {
   picture: string;
   createdAt: Date;
   lastLogin: Date;
-  projectsCount: number;
+  reportsCount: number;
   status: UserStatus;
   role: UserRole;
   isPaidUser: boolean;

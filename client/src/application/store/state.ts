@@ -45,11 +45,11 @@ export const getThemePreference = (user?: User | null): PaletteMode => {
 
   // Fall back to localStorage
   const storedTheme = localStorage.getItem(
-    APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME
+    APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
   ) as PaletteMode;
 
   // Default to "light" if nothing is found
-  return storedTheme || "light";
+  return storedTheme || "dark";
 };
 
 export const getApplicationInitialState = (): ApplicationInitialState => {

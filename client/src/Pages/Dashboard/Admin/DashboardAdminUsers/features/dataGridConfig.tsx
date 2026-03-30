@@ -91,7 +91,7 @@ export const getDashboardUsersDataGridConfig = (
       email: user.email || "",
       type: user.role || UserRole.user,
       source: user.provider,
-      projects: user.projectsCount || 0,
+      projects: user.reportsCount || 0,
       joinDate: new Date(user.createdAt || new Date()).toLocaleDateString(
         "en-GB",
         {

@@ -52,6 +52,7 @@
     "rimraf": "^6.1.2"
   },
   "devDependencies": {
+    "@sparticuz/chromium": "^143.0.4",
     "@types/html-to-text": "^9.0.4",
     "@types/node": "latest",
     "@types/react-syntax-highlighter": "^15.5.6",

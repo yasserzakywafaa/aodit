@@ -294,7 +294,19 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ---
 
-## Frontend structure
+## Frontend build & SEO pre-rendering
+
+The client uses **Vite** (migrated from Create React App) with **vite-plugin-prerender**.
+
+At build time, Puppeteer renders the public/marketing routes into static HTML files; `/` · `/ai-agent-testing-methodology`, etc.
+
+Each route gets its own `index.html` in the build output (e.g. `build/contact/index.html`). Vercel's `routes` config (`client/vercel.json`) serves these static files first; any route without a matching file falls back to the SPA `index.html` (for dashboard, auth pages, etc.).
+
+The entry point (`client/src/index.tsx`) uses a hybrid hydration strategy: `hydrateRoot` when pre-rendered HTML is present, `createRoot` otherwise.
+
+Key files: `client/vite.config.ts`, `client/index.html`, `client/vercel.json`.
+
+---
 
 ### Layout
 
@@ -311,12 +323,12 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ### Pages
 
-| Page          | Path                     | Purpose                                                                                                                                                                 |
-| ------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Reports list  | `DashboardReports/`      | List reports (with TYPE column showing `evaluationMode`), create button, link to report detail                                                                           |
-| Create Report | `DashboardCreateReport/` | Form: name (required), description (required); creates report (seeds scenarios), navigates to config                                                                    |
+| Page          | Path                     | Purpose                                                                                                                                                                                                        |
+| ------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Reports list  | `DashboardReports/`      | List reports (with TYPE column showing `evaluationMode`), create button, link to report detail                                                                                                                 |
+| Create Report | `DashboardCreateReport/` | Form: name (required), description (required); creates report (seeds scenarios), navigates to config                                                                                                           |
 | Report detail | `DashboardReport/`       | View/edit config (Benchmark tab admin-only via `hasAdminRights`), Save button, RUN REPORT button (saves config first), "View Report Status" button (when running), aodit framework box with latest run results |
-| Live Feed     | `DashboardReportRun/`    | Pure monitoring page: polls run-status every 3s, shows pipeline steps, progress bar, live feed. No launch call — safe to refresh. Shows "Back to Report" when finished. |
+| Live Feed     | `DashboardReportRun/`    | Pure monitoring page: polls run-status every 3s, shows pipeline steps, progress bar, live feed. No launch call — safe to refresh. Shows "Back to Report" when finished.                                        |
 
 ### Evaluation mode access control
 
@@ -326,6 +338,7 @@ The report config page (`DashboardReport`) offers two evaluation modes via tabs:
 - **"Benchmark Frontier Models"** (`evaluationMode: "benchmark"`) — available to **admins only** (`hasAdminRights` from `client/src/shared/utils/getUserRoles.ts`).
 
 **Behavior:**
+
 - **Admin users** see both tabs and can switch between agent evaluation and benchmark modes.
 - **Non-admin users** see only the "Evaluate Your Agent" content (no tab switcher). The `evaluationMode` is forced to `"agent"` regardless of the stored value.
 - The reports list DataGrid (`DashboardReports`) displays a **TYPE** column showing the report's `evaluationMode` as a chip: "Agent Evaluation" or "Benchmark".
@@ -354,41 +367,41 @@ The report config page (`DashboardReport`) offers two evaluation modes via tabs:
 
 ## Where to find things
 
-| What                                          | Where                                               |
-| --------------------------------------------- | --------------------------------------------------- |
-| Report type (server)                          | `server/src/models/types/report.ts`                 |
-| Report type (client)                          | `client/src/shared/types/report.ts`                 |
-| ReportRun type (server)                       | `server/src/models/types/reportRun.ts`              |
-| ReportRun type (client)                       | `client/src/shared/types/reportRun.ts`              |
-| ScenarioResult type                           | `server/src/models/types/scenarioResult.ts`         |
-| Scenario type                                 | `server/src/models/types/scenario.ts`               |
-| Framework constants (v1/v2)                   | `client/src/shared/constants/aoditFramework.ts`     |
-| Model registry                                | `server/src/services/reports/modelRegistry.ts`      |
-| Prompt templates                              | `server/src/services/reports/prompts.ts`            |
-| Scoring & aggregation                         | `server/src/services/reports/scoring.ts`            |
-| Framework registry (server)                   | `server/src/services/reports/frameworkRegistry.ts`  |
-| Execution engine                              | `server/src/services/reports/executionEngine.ts`    |
-| Report CRUD service (incl. scenario seeding)  | `server/src/services/reportService.ts`              |
-| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts`   |
-| Dashboard controller                          | `server/src/controllers/DashboardController.ts`     |
-| Dashboard routes                              | `server/src/routes/dashboardRoutes.ts`              |
-| API endpoints (server)                        | `server/src/models/endpoints.ts`                    |
-| API endpoints (client)                        | `client/src/application/shared/endpoints.ts`        |
-| Reports list page                             | `client/src/Pages/Dashboard/DashboardReports/`      |
-| Report detail page                            | `client/src/Pages/Dashboard/DashboardReport/`       |
-| Live Feed page                                | `client/src/Pages/Dashboard/DashboardReportRun/`    |
-| Create report page                            | `client/src/Pages/Dashboard/DashboardCreateReport/` |
-| DB collections & indexes                      | `server/src/models/mongoDb/index.ts`                |
-| OpenRouter client                             | `server/src/utils/openRouterClient.ts`              |
-| App routes                                    | `client/src/application/routes.ts`                  |
-| App content (route tree)                      | `client/src/application/AppContent.tsx`             |
-| Agent type (server)                           | `server/src/models/types/agent.ts`                  |
-| Agent type (client)                           | `client/src/shared/types/agent.ts`                  |
-| Agent CRUD service                            | `server/src/services/agentService.ts`               |
-| Agents list page                              | `client/src/Pages/Dashboard/DashboardAgents/`       |
-| Agent detail page                             | `client/src/Pages/Dashboard/DashboardAgent/`        |
-| Create agent page                             | `client/src/Pages/Dashboard/DashboardCreateAgent/`  |
-| Admin agents page                             | `client/src/Pages/Dashboard/Admin/DashboardAdminAgents/` |
+| What                                          | Where                                                     |
+| --------------------------------------------- | --------------------------------------------------------- |
+| Report type (server)                          | `server/src/models/types/report.ts`                       |
+| Report type (client)                          | `client/src/shared/types/report.ts`                       |
+| ReportRun type (server)                       | `server/src/models/types/reportRun.ts`                    |
+| ReportRun type (client)                       | `client/src/shared/types/reportRun.ts`                    |
+| ScenarioResult type                           | `server/src/models/types/scenarioResult.ts`               |
+| Scenario type                                 | `server/src/models/types/scenario.ts`                     |
+| Framework constants (v1/v2)                   | `client/src/shared/constants/aoditFramework.ts`           |
+| Model registry                                | `server/src/services/reports/modelRegistry.ts`            |
+| Prompt templates                              | `server/src/services/reports/prompts.ts`                  |
+| Scoring & aggregation                         | `server/src/services/reports/scoring.ts`                  |
+| Framework registry (server)                   | `server/src/services/reports/frameworkRegistry.ts`        |
+| Execution engine                              | `server/src/services/reports/executionEngine.ts`          |
+| Report CRUD service (incl. scenario seeding)  | `server/src/services/reportService.ts`                    |
+| Report run service (launch + polling + guard) | `server/src/services/reports/reportRunService.ts`         |
+| Dashboard controller                          | `server/src/controllers/DashboardController.ts`           |
+| Dashboard routes                              | `server/src/routes/dashboardRoutes.ts`                    |
+| API endpoints (server)                        | `server/src/models/endpoints.ts`                          |
+| API endpoints (client)                        | `client/src/application/shared/endpoints.ts`              |
+| Reports list page                             | `client/src/Pages/Dashboard/DashboardReports/`            |
+| Report detail page                            | `client/src/Pages/Dashboard/DashboardReport/`             |
+| Live Feed page                                | `client/src/Pages/Dashboard/DashboardReportRun/`          |
+| Create report page                            | `client/src/Pages/Dashboard/DashboardCreateReport/`       |
+| DB collections & indexes                      | `server/src/models/mongoDb/index.ts`                      |
+| OpenRouter client                             | `server/src/utils/openRouterClient.ts`                    |
+| App routes                                    | `client/src/application/routes.ts`                        |
+| App content (route tree)                      | `client/src/application/AppContent.tsx`                   |
+| Agent type (server)                           | `server/src/models/types/agent.ts`                        |
+| Agent type (client)                           | `client/src/shared/types/agent.ts`                        |
+| Agent CRUD service                            | `server/src/services/agentService.ts`                     |
+| Agents list page                              | `client/src/Pages/Dashboard/DashboardAgents/`             |
+| Agent detail page                             | `client/src/Pages/Dashboard/DashboardAgent/`              |
+| Create agent page                             | `client/src/Pages/Dashboard/DashboardCreateAgent/`        |
+| Admin agents page                             | `client/src/Pages/Dashboard/Admin/DashboardAdminAgents/`  |
 | Admin reports page                            | `client/src/Pages/Dashboard/Admin/DashboardAdminReports/` |
 
 ---

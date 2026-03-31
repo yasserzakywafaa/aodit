@@ -10,7 +10,13 @@ import { LoaderVariantEnum } from "src/shared/types/types";
 
 const App: FC = () => {
   useEffect(() => {
-    document.dispatchEvent(new Event("render-complete"));
+    // Delay gives React.lazy() chunks time to resolve through Suspense before
+    // Puppeteer takes the pre-render snapshot.
+    const timer = setTimeout(
+      () => document.dispatchEvent(new Event("render-complete")),
+      500,
+    );
+    return () => clearTimeout(timer);
   }, []);
 
   return (

@@ -11,9 +11,12 @@ User-agent: *
 Disallow: /dashboard/
 Allow: /
 Allow: /ai-agent-testing-methodology
-Allow: /finma-ai-guidance-switzerland
 Allow: /security-on-premise-ai
 Allow: /about-swissli
+Allow: /pricing
 Allow: /contact
+Allow: /compliance/finma-ai-guidance-switzerland
+Allow: /compliance/eu-ai-act-europe
 Allow: /privacy-policy
 Allow: /terms-and-conditions
+Allow: /data-processing-agreement

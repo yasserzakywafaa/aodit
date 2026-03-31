@@ -1,7 +1,8 @@
 import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react";
-import prerender from "vite-plugin-prerender";
+
 import path from "path";
+import prerender from "vite-plugin-prerender";
+import react from "@vitejs/plugin-react";
 
 // Vercel (and most CI providers) set CI=true. Use @sparticuz/chromium there
 // because the build container lacks the system libs (libnss3 etc.) that
@@ -70,7 +71,7 @@ export default defineConfig(async ({ mode }) => {
       }),
     ],
     server: {
-      port: Number(env.REACT_APP_PORT) || 1606,
+      port: Number(env.REACT_APP_PORT),
     },
     build: {
       outDir: "build",

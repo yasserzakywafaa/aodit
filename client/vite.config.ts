@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import prerender from "vite-plugin-prerender";
 import path from "path";
@@ -37,7 +37,9 @@ async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(async () => {
+export default defineConfig(async ({ mode }) => {
+  // loadEnv reads the .env file — process.env alone doesn't have it at config time
+  const env = loadEnv(mode, process.cwd(), "REACT_APP_");
   const puppeteerOptions = await getPuppeteerOptions();
 
   return {
@@ -68,7 +70,7 @@ export default defineConfig(async () => {
       }),
     ],
     server: {
-      port: Number(process.env.REACT_APP_PORT) || 1606,
+      port: Number(env.REACT_APP_PORT) || 1606,
     },
     build: {
       outDir: "build",

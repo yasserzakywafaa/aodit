@@ -294,7 +294,25 @@ Report CRUD and report-run endpoints live under dashboard routes (`server/src/ro
 
 ---
 
-## Frontend structure
+## Frontend build & SEO pre-rendering
+
+The client uses **Vite** (migrated from Create React App) with **vite-plugin-prerender**.
+
+At build time, Puppeteer renders the following public/marketing routes into static HTML files:
+
+- `/` · `/ai-agent-testing-methodology` · `/about-swissli` · `/security-on-premise-ai`
+- `/compliance/finma-ai-guidance-switzerland` · `/compliance/eu-ai-act-europe`
+- `/pricing` · `/contact` · `/privacy-policy` · `/terms-and-conditions` · `/data-processing-agreement`
+
+Each route gets its own `index.html` in the build output (e.g. `build/contact/index.html`). Vercel's `routes` config (`client/vercel.json`) serves these static files first; any route without a matching file falls back to the SPA `index.html` (for dashboard, auth pages, etc.).
+
+The entry point (`client/src/index.tsx`) uses a hybrid hydration strategy: `hydrateRoot` when pre-rendered HTML is present, `createRoot` otherwise.
+
+Key files: `client/vite.config.ts`, `client/index.html`, `client/vercel.json`.
+
+---
+
+
 
 ### Layout
 

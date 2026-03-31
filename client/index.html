@@ -209,19 +209,19 @@
 
     <!-- Conditional Google Tag Manager -->
     <script nonce="%NONCE_PLACEHOLDER%">
-      if ("%VITE_APP_ENV%" === "production") {
+      if ("%REACT_APP_ENV%" === "production") {
         const gaScript1 = document.createElement("script");
         gaScript1.async = true;
         gaScript1.nonce = "%NONCE_PLACEHOLDER%";
         gaScript1.src =
-          "https://www.googletagmanager.com/gtag/js?id=%VITE_GOOGLE_ANALYTICS_ID%";
+          "https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GOOGLE_ANALYTICS_ID%";
         document.head.appendChild(gaScript1);
 
         const gaScript2 = document.createElement("script");
         gaScript2.nonce = "%NONCE_PLACEHOLDER%";
         gaScript2.textContent = `
             window.gtag('js', new Date());
-            window.gtag('config', '%VITE_GOOGLE_ANALYTICS_ID%');
+            window.gtag('config', '%REACT_APP_GOOGLE_ANALYTICS_ID%');
           `;
         document.head.appendChild(gaScript2);
 

@@ -24,12 +24,15 @@ export default defineConfig({
       ],
       renderer: new prerender.PuppeteerRenderer({
         renderAfterDocumentEvent: "render-complete",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
       }),
     }),
   ],
   build: {
     outDir: "build",
   },
+  // Expose REACT_APP_* env vars to client code (mirrors CRA behaviour)
+  envPrefix: "REACT_APP_",
   resolve: {
     alias: {
       src: path.resolve(__dirname, "src"),

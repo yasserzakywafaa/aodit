@@ -1,12 +1,12 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_PORT: string;
-  readonly VITE_SERVER_PORT: string;
-  readonly VITE_APP_ENV: "local" | "development" | "production";
-  readonly VITE_DEV_API_URL: string;
-  readonly VITE_PROD_API_URL: string;
-  readonly VITE_GOOGLE_ANALYTICS_ID: string;
+  readonly REACT_APP_PORT: string;
+  readonly REACT_APP_SERVER_PORT: string;
+  readonly REACT_APP_ENV: "local" | "development" | "production";
+  readonly REACT_APP_DEV_API_URL: string;
+  readonly REACT_APP_PROD_API_URL: string;
+  readonly REACT_APP_GOOGLE_ANALYTICS_ID: string;
 }
 
 interface ImportMeta {

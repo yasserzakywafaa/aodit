@@ -9,9 +9,9 @@ const APP_CONSTANTS = {
   PROD_API_URL: import.meta.env.REACT_APP_PROD_API_URL,
 
   // Environment
-  IS_LOCAL: import.meta.env.REACT_APP_APP_ENV === "local",
-  IS_DEV: import.meta.env.REACT_APP_APP_ENV === "development",
-  IS_PROD: import.meta.env.REACT_APP_APP_ENV === "production",
+  IS_LOCAL: import.meta.env.REACT_APP_ENV === "local",
+  IS_DEV: import.meta.env.REACT_APP_ENV === "development",
+  IS_PROD: import.meta.env.REACT_APP_ENV === "production",
 
   // Tracking
   GOOGLE_ANALYTICS_ID: import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID,
@@ -34,15 +34,15 @@ const APP_CONSTANTS = {
   MAX_APP_LIMIT_PREMIUM: 500,
   // App Main URL
   APP_URL:
-    import.meta.env.REACT_APP_APP_ENV === "local" ||
-    import.meta.env.REACT_APP_APP_ENV === "development"
+    import.meta.env.REACT_APP_ENV === "local" ||
+    import.meta.env.REACT_APP_ENV === "development"
       ? "https://dev.aodit.ai"
       : "https://www.aodit.ai",
 
   // Docs URL
   APP_DOCS_LINK:
-    import.meta.env.REACT_APP_APP_ENV === "local" ||
-    import.meta.env.REACT_APP_APP_ENV === "development"
+    import.meta.env.REACT_APP_ENV === "local" ||
+    import.meta.env.REACT_APP_ENV === "development"
       ? "https://docs-dev.aodit.ai"
       : "https://docs.aodit.ai",
 

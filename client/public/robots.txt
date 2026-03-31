@@ -10,10 +10,3 @@ Disallow: /
 User-agent: *
 Disallow: /dashboard/
 Allow: /
-Allow: /ai-agent-testing-methodology
-Allow: /finma-ai-guidance-switzerland
-Allow: /security-on-premise-ai
-Allow: /about-swissli
-Allow: /contact
-Allow: /privacy-policy
-Allow: /terms-and-conditions

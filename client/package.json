@@ -11,16 +11,14 @@
     "url": "https://gitlab.com/yasserzakywafaa/aodit.git"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "start:windows": "set REACT_APP_ENV=local&& react-scripts start",
-    "start:dev": "REACT_APP_ENV=development react-scripts start",
+    "start": "vite",
+    "start:windows": "set VITE_APP_ENV=local&& vite",
+    "start:dev": "VITE_APP_ENV=development vite",
     "start:prod": "serve -l 5000 -s build",
     "prebuild": "node public/scripts/update-sw-version.js",
-    "build": "rimraf build && react-scripts build",
+    "build": "rimraf build && vite build",
     "postbuild": "node public/scripts/generate-nonce.js",
-    "test": "react-scripts test",
-    "test-watch": "react-scripts test --watch",
-    "eject": "react-scripts eject"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "latest",
@@ -54,12 +52,16 @@
     "rimraf": "^6.1.2"
   },
   "devDependencies": {
+    "@sparticuz/chromium": "^143.0.4",
     "@types/html-to-text": "^9.0.4",
     "@types/node": "latest",
     "@types/react-syntax-highlighter": "^15.5.6",
+    "@vitejs/plugin-react": "^6.0.1",
     "sass": "1.75.0",
     "serve": "14.2.1",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "vite": "^8.0.3",
+    "vite-plugin-prerender": "^1.0.8"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",

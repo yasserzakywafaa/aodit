@@ -16,12 +16,21 @@ async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
   ];
 
   if (isCI) {
-    const { default: chromium } = await import("@sparticuz/chromium");
-    return {
-      executablePath: await chromium.executablePath(),
-      args: [...chromium.args, ...baseArgs],
-      headless: true,
-    };
+    try {
+      const { default: chromium } = await import("@sparticuz/chromium");
+      return {
+        executablePath: await chromium.executablePath(),
+        args: [...chromium.args, ...baseArgs],
+        headless: true,
+      };
+    } catch {
+      // Binary extraction failed — fall back to Puppeteer's own Chrome.
+      // This will only work if the system has the required shared libs,
+      // but it's better than crashing the entire build.
+      console.warn(
+        "[prerender] @sparticuz/chromium failed, falling back to bundled Chrome",
+      );
+    }
   }
 
   return { args: baseArgs };
@@ -50,7 +59,10 @@ export default defineConfig(async () => {
           "/data-processing-agreement",
         ],
         renderer: new prerender.PuppeteerRenderer({
-          renderAfterDocumentEvent: "render-complete",
+          // Time-based rendering is more reliable than event-based in CI:
+          // it doesn't depend on the app dispatching a custom event and gives
+          // React, Suspense, and lazy-loaded chunks a fixed window to settle.
+          renderAfterTime: 5000,
           ...puppeteerOptions,
         }),
       }),

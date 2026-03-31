@@ -66,6 +66,7 @@ export default defineConfig(async ({ mode }) => {
           // it doesn't depend on the app dispatching a custom event and gives
           // React, Suspense, and lazy-loaded chunks a fixed window to settle.
           renderAfterTime: 5000,
+          maxConcurrentRoutes: 2,
           ...puppeteerOptions,
         }),
       }),

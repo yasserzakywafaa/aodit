@@ -67,6 +67,9 @@ export default defineConfig(async () => {
         }),
       }),
     ],
+    server: {
+      port: Number(process.env.REACT_APP_PORT) || 1606,
+    },
     build: {
       outDir: "build",
     },

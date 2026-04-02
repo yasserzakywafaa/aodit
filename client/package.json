@@ -62,7 +62,7 @@
     "typescript": "5.4.5",
     "vite": "^8.0.3",
     "vite-plugin-prerender": "^1.0.8",
-    "puppeteer-core": "^24.22.0"
+    "puppeteer": "npm:puppeteer-core@^24.22.0"
   },
   "resolutions": {
     "puppeteer": "npm:puppeteer-core@^24.22.0"

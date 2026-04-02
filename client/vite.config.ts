@@ -6,8 +6,8 @@ import prerender from "vite-plugin-prerender";
 import react from "@vitejs/plugin-react";
 
 /**
- * vite-plugin-prerender depends on puppeteer@1.x; we override it to puppeteer-core@24
- * (package.json resolutions) so Node 22+ can drive Chrome over CDP.
+ * vite-plugin-prerender depends on puppeteer@1.x; we override puppeteer to
+ * puppeteer-core@24 (package.json resolutions) so Node 22+ can drive Chrome over CDP.
  *
  * - **Linux** (CI, Docker, most prod build agents): `@sparticuz/chromium` — same as before.
  * - **macOS / Windows** (local dev): @sparticuz/chromium ships a **Linux** Chromium; on Mac
@@ -46,7 +46,9 @@ function resolveLocalChromeExecutable(): string {
 }
 
 async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
-  const puppeteer = await import("puppeteer-core");
+  // Import by package id "puppeteer" because that's what is guaranteed to exist
+  // after Yarn resolution aliasing in CI (Vercel).
+  const puppeteer = await import("puppeteer");
   const extraArgs = ["--disable-dev-shm-usage"];
 
   if (process.platform === "linux") {

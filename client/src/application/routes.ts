@@ -1,9 +1,3 @@
-import APP_CONSTANTS from "./shared/app_constants";
-
-export const externalLinks = {
-  docs: APP_CONSTANTS.APP_DOCS_LINK,
-};
-
 export const routes = {
   features: `/`,
   methodology: `/ai-agent-testing-methodology`,
@@ -24,12 +18,8 @@ export const routes = {
   auth: {
     login: "/login",
     register: "/register",
-    logout: `/logout`,
   },
-  // Documentation
-  documentation: {
-    base: `${externalLinks.docs}`,
-  },
+
   // Dashboard (Admin)
   dashboard: {
     base: "/dashboard",

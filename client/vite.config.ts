@@ -1,83 +1,125 @@
 import { defineConfig, loadEnv } from "vite";
 
+import fs from "node:fs";
 import path from "path";
 import prerender from "vite-plugin-prerender";
 import react from "@vitejs/plugin-react";
+import { routes } from "./src/application/routes";
 
-// Vercel (and most CI providers) set CI=true. Use @sparticuz/chromium there
-// because the build container lacks the system libs (libnss3 etc.) that
-// Puppeteer's bundled Chromium requires. @sparticuz/chromium bundles its own.
-const isCI = Boolean(process.env.CI);
+const prerenderPaths: string[] = [
+  routes.features,
+  routes.methodology,
+  routes.security,
+  routes.about,
+  routes.pricing,
+  routes.compliance.finma,
+  routes.compliance.euAiAct,
+  routes.contact,
+  routes.privacyPolicy,
+  routes.termsAndConditions,
+  routes.dataProcessingAgreement,
+  routes.auth.login,
+  routes.auth.register,
+];
+/**
+ * vite-plugin-prerender depends on puppeteer@1.x; we override puppeteer to
+ * puppeteer-core@24 (package.json resolutions) so Node 22+ can drive Chrome over CDP.
+ *
+ * - **Linux** (CI, Docker, most prod build agents): `@sparticuz/chromium` — same as before.
+ * - **macOS / Windows** (local dev): @sparticuz/chromium ships a **Linux** Chromium; on Mac
+ *   yields `ENOEXEC`. Use an installed **Google Chrome / Chromium** instead (same engine family).
+ */
+function resolveLocalChromeExecutable(): string {
+  const fromEnv = process.env.PUPPETEER_EXECUTABLE_PATH;
+  if (fromEnv && fs.existsSync(fromEnv)) {
+    return fromEnv;
+  }
 
-async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
-  const baseArgs = [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-  ];
+  const candidates: string[] = [];
+  if (process.platform === "darwin") {
+    candidates.push(
+      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    );
+  } else if (process.platform === "win32") {
+    const pf = process.env.PROGRAMFILES ?? "C:\\Program Files";
+    const pf86 = process.env["PROGRAMFILES(X86)"] ?? "C:\\Program Files (x86)";
+    candidates.push(
+      `${pf}\\Google\\Chrome\\Application\\chrome.exe`,
+      `${pf86}\\Google\\Chrome\\Application\\chrome.exe`,
+    );
+  }
 
-  if (isCI) {
-    try {
-      const { default: chromium } = await import("@sparticuz/chromium");
-      return {
-        executablePath: await chromium.executablePath(),
-        args: [...chromium.args, ...baseArgs],
-        headless: true,
-      };
-    } catch {
-      // Binary extraction failed — fall back to Puppeteer's own Chrome.
-      // This will only work if the system has the required shared libs,
-      // but it's better than crashing the entire build.
-      console.warn(
-        "[prerender] @sparticuz/chromium failed, falling back to bundled Chrome",
-      );
+  for (const p of candidates) {
+    if (fs.existsSync(p)) {
+      return p;
     }
   }
 
-  return { args: baseArgs };
+  throw new Error(
+    `[prerender] No Chrome/Chromium found for ${process.platform}. Install Google Chrome or set PUPPETEER_EXECUTABLE_PATH. Checked: ${candidates.join(", ")}`,
+  );
+}
+
+async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
+  const extraArgs = ["--disable-dev-shm-usage"];
+
+  if (process.platform === "linux") {
+    const { default: chromium } = await import("@sparticuz/chromium");
+    return {
+      executablePath: await chromium.executablePath(),
+      args: [...chromium.args, ...extraArgs],
+      headless: "shell",
+    };
+  }
+
+  return {
+    executablePath: resolveLocalChromeExecutable(),
+    args: ["--no-sandbox", "--disable-setuid-sandbox", ...extraArgs],
+    headless: "shell",
+  };
 }
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
-  // loadEnv reads the .env file — process.env alone doesn't have it at config time
   const env = loadEnv(mode, process.cwd(), "REACT_APP_");
   const puppeteerOptions = await getPuppeteerOptions();
 
   return {
     plugins: [
-      react(),
+      react({
+        jsxImportSource: "@emotion/react",
+      }),
       prerender({
         staticDir: path.join(__dirname, "build"),
-        routes: [
-          "/",
-          "/ai-agent-testing-methodology",
-          "/about-swissli",
-          "/security-on-premise-ai",
-          "/compliance/finma-ai-guidance-switzerland",
-          "/compliance/eu-ai-act-europe",
-          "/pricing",
-          "/contact",
-          "/privacy-policy",
-          "/terms-and-conditions",
-          "/data-processing-agreement",
-        ],
+        routes: prerenderPaths,
         renderer: new prerender.PuppeteerRenderer({
-          // Time-based rendering is more reliable than event-based in CI:
-          // it doesn't depend on the app dispatching a custom event and gives
-          // React, Suspense, and lazy-loaded chunks a fixed window to settle.
+          viewport: { width: 1280, height: 800 },
           renderAfterTime: 5000,
           maxConcurrentRoutes: 2,
           ...puppeteerOptions,
         }),
+        postProcess(renderedRoute) {
+          // Puppeteer resolves URLs against the local server, baking
+          // "http://localhost:<port>" into src/href attributes. Strip it
+          // so the HTML uses root-relative paths that work on any host.
+          renderedRoute.html = renderedRoute.html.replace(
+            /http:\/\/localhost:\d+\//g,
+            "/",
+          );
+          return renderedRoute;
+        },
       }),
     ],
+    optimizeDeps: {
+      include: ["@emotion/styled", "@emotion/react"],
+    },
     server: {
       port: Number(env.REACT_APP_PORT),
     },
     build: {
       outDir: "build",
     },
-    // Expose REACT_APP_* env vars to client code (mirrors CRA behaviour)
     envPrefix: "REACT_APP_",
     resolve: {
       alias: {

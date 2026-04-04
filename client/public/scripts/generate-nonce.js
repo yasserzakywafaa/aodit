@@ -69,34 +69,47 @@ const writeFile = (filePath, content) => {
 };
 
 /**
- * @description Injects the nonce into the index.html file.
+ * Recursively finds every index.html under a directory (e.g. Vite prerender output:
+ * build/index.html, build/contact/index.html, …).
+ * @param {string} dir - Root directory to search.
+ * @returns {string[]} - Absolute paths to index.html files.
+ */
+const findAllIndexHtmlFiles = (dir) => {
+  /** @type {string[]} */
+  const results = [];
+  if (!directoryExists(dir)) {
+    return results;
+  }
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      findAllIndexHtmlFiles(fullPath).forEach((p) => results.push(p));
+    } else if (entry.isFile() && entry.name === INDEX_HTML_FILE_NAME) {
+      results.push(fullPath);
+    }
+  }
+  return results;
+};
+
+/**
+ * @description Injects the nonce into an HTML document (root or prerendered route).
+ * 1) Replaces every %NONCE_PLACEHOLDER% so meta, Emotion style tags, and inline
+ *    script strings all match the CSP header (tags that already had nonce="..." were
+ *    previously skipped by regex-only injection).
+ * 2) Adds nonce to any script/style still missing it (e.g. Vite module script).
  * @param {string} indexHtml - The content of the index.html file.
  * @param {string} nonce - The nonce to inject.
  * @returns {string} - The modified index.html content.
  */
 const injectNonceIntoIndexHtml = (indexHtml, nonce) => {
-  let modifiedIndexHtml = indexHtml;
+  let modifiedIndexHtml = indexHtml.split(NONCE_PLACEHOLDER).join(nonce);
 
-  // Use Regex to find the placeholder, allowing for optional slash and whitespace variations
-  const placeholderRegex =
-    /<meta\s+name="csp-nonce"\s+content="%NONCE_PLACEHOLDER%"\s*\/?>/;
-  const replacement = `<meta name="csp-nonce" content="${nonce}">`; // Replace with a standard meta tag
-
-  // Add nonce to meta tag placeholder
-  if (placeholderRegex.test(modifiedIndexHtml)) {
-    modifiedIndexHtml = modifiedIndexHtml.replace(
-      placeholderRegex,
-      replacement,
-    );
-  }
-
-  // Add nonce to <script> tags
-  const scriptRegex = /(<script(?![^>]*nonce=)([^>]*))>/g;
+  const scriptRegex = /(<script(?![^>]*\bnonce=)([^>]*))>/gi;
   const scriptReplacement = `$1 nonce="${nonce}">`;
   modifiedIndexHtml = modifiedIndexHtml.replace(scriptRegex, scriptReplacement);
 
-  // Add nonce to <style> tags
-  const styleRegex = /(<style(?![^>]*nonce=)([^>]*))>/g;
+  const styleRegex = /(<style(?![^>]*\bnonce=)([^>]*))>/gi;
   const styleReplacement = `$1 nonce="${nonce}">`;
   modifiedIndexHtml = modifiedIndexHtml.replace(styleRegex, styleReplacement);
 
@@ -120,12 +133,6 @@ const processBuildFiles = () => {
 
   // --- Paths ---  const buildDir = resolvePath("..", BUILD_DIR_NAME);
   const buildDir = resolvePath("..", "..", BUILD_DIR_NAME);
-  const buildIndexPath = resolvePath(
-    "..",
-    "..",
-    BUILD_DIR_NAME,
-    INDEX_HTML_FILE_NAME,
-  );
   const nonceFilePath = resolvePath(
     "..",
     "..",
@@ -154,11 +161,22 @@ const processBuildFiles = () => {
   // --- Generate Nonce ---
   const nonce = generateNonce();
 
-  // --- Process index.html ---
-  console.log(`[Nonce Script] Reading index.html from: ${buildIndexPath}`);
-  let indexHtml = readFile(buildIndexPath);
-  indexHtml = injectNonceIntoIndexHtml(indexHtml, nonce);
-  writeFile(buildIndexPath, indexHtml);
+  // --- Process every index.html (root + vite-plugin-prerender routes) ---
+  const indexHtmlPaths = findAllIndexHtmlFiles(buildDir);
+  if (indexHtmlPaths.length === 0) {
+    console.error(
+      `[Nonce Script] ERROR: No ${INDEX_HTML_FILE_NAME} files found under ${buildDir}`,
+    );
+    process.exit(1);
+  }
+  console.log(
+    `[Nonce Script] Injecting nonce into ${indexHtmlPaths.length} HTML file(s)`,
+  );
+  for (const htmlPath of indexHtmlPaths) {
+    let html = readFile(htmlPath);
+    html = injectNonceIntoIndexHtml(html, nonce);
+    writeFile(htmlPath, html);
+  }
 
   // --- Process customHttp.yml (if it exists) ---
   if (fileExists(customHeadersPath)) {

@@ -48,8 +48,7 @@ const CookiePolicy = () => {
 
         <Typography variant="body2" sx={{ position: "relative", zIndex: 2 }}>
           By continuing to use this website, you agree to our use of cookies to
-          improve your experience and analyze site traffic. <br />
-          See our{" "}
+          improve your experience and analyze site traffic. See our{" "}
           <MuiLink href={routes.privacyPolicy} underline="hover">
             Privacy Policy
           </MuiLink>{" "}

@@ -5,6 +5,7 @@ import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import { CssBaseline } from "@mui/material";
+import CookiePolicy from "src/components/shared/CookiePolicy/CookiePolicy";
 import CustomCursor from "src/components/shared/CustomCursor/CustomCursor";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
@@ -269,6 +270,8 @@ const AppContent = () => {
           </Routes>
         </BrowserRouter>
       )}
+
+      <CookiePolicy />
     </ThemeProvider>
   );
 };

@@ -3,10 +3,13 @@
   "configurations": [
     {
       "name": "client",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["start"],
-      "port": 3000,
-      "cwd": "client"
+      "runtimeExecutable": "/Users/yasserzaky/.nvm/versions/node/v22.22.0/bin/node",
+      "runtimeArgs": ["/Users/yasserzaky/.nvm/versions/node/v22.22.0/bin/npx", "vite"],
+      "port": 1607,
+      "cwd": "client",
+      "env": {
+        "PATH": "/Users/yasserzaky/.nvm/versions/node/v22.22.0/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+      }
     }
   ]
 }

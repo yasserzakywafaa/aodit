@@ -22,6 +22,7 @@ const APP_CONSTANTS = {
     TOKEN: "token",
     USER: "user",
     AUTHENTICATED: "isAuthenticated",
+    COOKIE_CONSENT: "cookieConsent",
   },
   APP_THEME_CLASS: {
     DARK: "dark",

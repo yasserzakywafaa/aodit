@@ -1,13 +1,14 @@
-import App from "./application/App";
 import "./application/shared/axiosConfig"; // Initialize Axios interceptors
+
+import App from "./application/App";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
-import { createRoot, hydrateRoot } from "react-dom/client";
+import { createRoot } from "react-dom/client";
 
 // --- CSP Nonce Handling for MUI ---
 // 1. Read the nonce from the meta tag added by generate-nonce.js
 const nonce = document.querySelector<HTMLMetaElement>(
-  'meta[name="csp-nonce"]'
+  'meta[name="csp-nonce"]',
 )?.content;
 
 if (!nonce) {
@@ -15,9 +16,13 @@ if (!nonce) {
 }
 
 // 2. Create an Emotion cache instance with the nonce
+//    speedy: false forces Emotion to write CSS as text nodes instead of using
+//    insertRule(), so styles are visible in the DOM and captured by prerendering.
 const cache = createCache({
   key: "css",
+  prepend: true,
   nonce: nonce,
+  speedy: false,
 });
 // --- End CSP Nonce Handling ---
 
@@ -30,13 +35,7 @@ if (rootElement) {
     </CacheProvider>
   );
 
-  if (rootElement.hasChildNodes()) {
-    // Pre-rendered HTML exists — hydrate to attach React to existing markup
-    hydrateRoot(rootElement, app);
-  } else {
-    // No pre-rendered HTML — standard client-side render
-    createRoot(rootElement).render(app);
-  }
+  createRoot(rootElement).render(app);
 } else {
   console.error("Failed to find the root element");
 }

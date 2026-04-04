@@ -4,7 +4,23 @@ import fs from "node:fs";
 import path from "path";
 import prerender from "vite-plugin-prerender";
 import react from "@vitejs/plugin-react";
+import { routes } from "./src/application/routes";
 
+const prerenderPaths: string[] = [
+  routes.features,
+  routes.methodology,
+  routes.security,
+  routes.about,
+  routes.pricing,
+  routes.compliance.finma,
+  routes.compliance.euAiAct,
+  routes.contact,
+  routes.privacyPolicy,
+  routes.termsAndConditions,
+  routes.dataProcessingAgreement,
+  routes.auth.login,
+  routes.auth.register,
+];
 /**
  * vite-plugin-prerender depends on puppeteer@1.x; we override puppeteer to
  * puppeteer-core@24 (package.json resolutions) so Node 22+ can drive Chrome over CDP.
@@ -46,38 +62,20 @@ function resolveLocalChromeExecutable(): string {
 }
 
 async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
-  // Import by package id "puppeteer" because that's what is guaranteed to exist
-  // after Yarn resolution aliasing in CI (Vercel).
-  const puppeteer = await import("puppeteer");
   const extraArgs = ["--disable-dev-shm-usage"];
 
   if (process.platform === "linux") {
     const { default: chromium } = await import("@sparticuz/chromium");
-    const executablePath = await chromium.executablePath();
-    const launchArgs = puppeteer.defaultArgs({
-      args: [...chromium.args, ...extraArgs],
-      headless: "shell",
-    });
     return {
-      executablePath,
-      args: launchArgs,
+      executablePath: await chromium.executablePath(),
+      args: [...chromium.args, ...extraArgs],
       headless: "shell",
     };
   }
 
-  const executablePath = resolveLocalChromeExecutable();
-  const launchArgs = puppeteer.defaultArgs({
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      ...extraArgs,
-    ],
-    headless: "shell",
-  });
-
   return {
-    executablePath,
-    args: launchArgs,
+    executablePath: resolveLocalChromeExecutable(),
+    args: ["--no-sandbox", "--disable-setuid-sandbox", ...extraArgs],
     headless: "shell",
   };
 }
@@ -89,29 +87,33 @@ export default defineConfig(async ({ mode }) => {
 
   return {
     plugins: [
-      react(),
+      react({
+        jsxImportSource: "@emotion/react",
+      }),
       prerender({
         staticDir: path.join(__dirname, "build"),
-        routes: [
-          "/",
-          "/ai-agent-testing-methodology",
-          "/about-swissli",
-          "/security-on-premise-ai",
-          "/compliance/finma-ai-guidance-switzerland",
-          "/compliance/eu-ai-act-europe",
-          "/pricing",
-          "/contact",
-          "/privacy-policy",
-          "/terms-and-conditions",
-          "/data-processing-agreement",
-        ],
+        routes: prerenderPaths,
         renderer: new prerender.PuppeteerRenderer({
+          viewport: { width: 1280, height: 800 },
           renderAfterTime: 5000,
           maxConcurrentRoutes: 2,
           ...puppeteerOptions,
         }),
+        postProcess(renderedRoute) {
+          // Puppeteer resolves URLs against the local server, baking
+          // "http://localhost:<port>" into src/href attributes. Strip it
+          // so the HTML uses root-relative paths that work on any host.
+          renderedRoute.html = renderedRoute.html.replace(
+            /http:\/\/localhost:\d+\//g,
+            "/",
+          );
+          return renderedRoute;
+        },
       }),
     ],
+    optimizeDeps: {
+      include: ["@emotion/styled", "@emotion/react"],
+    },
     server: {
       port: Number(env.REACT_APP_PORT),
     },

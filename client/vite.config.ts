@@ -3,31 +3,12 @@ import { defineConfig, loadEnv } from "vite";
 import fs from "node:fs";
 import path from "path";
 import prerender from "vite-plugin-prerender";
+import { prerenderPaths } from "./src/application/routes";
 import react from "@vitejs/plugin-react";
-import { routes } from "./src/application/routes";
 
-const prerenderPaths: string[] = [
-  routes.features,
-  routes.methodology,
-  routes.security,
-  routes.about,
-  routes.pricing,
-  routes.compliance.finma,
-  routes.compliance.euAiAct,
-  routes.contact,
-  routes.privacyPolicy,
-  routes.termsAndConditions,
-  routes.dataProcessingAgreement,
-  routes.auth.login,
-  routes.auth.register,
-];
 /**
  * vite-plugin-prerender depends on puppeteer@1.x; we override puppeteer to
  * puppeteer-core@24 (package.json resolutions) so Node 22+ can drive Chrome over CDP.
- *
- * - **Linux** (CI, Docker, most prod build agents): `@sparticuz/chromium` — same as before.
- * - **macOS / Windows** (local dev): @sparticuz/chromium ships a **Linux** Chromium; on Mac
- *   yields `ENOEXEC`. Use an installed **Google Chrome / Chromium** instead (same engine family).
  */
 function resolveLocalChromeExecutable(): string {
   const fromEnv = process.env.PUPPETEER_EXECUTABLE_PATH;

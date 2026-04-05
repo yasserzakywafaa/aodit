@@ -13,7 +13,6 @@ export const routes = {
   privacyPolicy: `/privacy-policy`,
   termsAndConditions: `/terms-and-conditions`,
   dataProcessingAgreement: `/data-processing-agreement`,
-  logout: `/logout`,
   // Auth
   auth: {
     login: "/login",
@@ -71,3 +70,19 @@ export const routes = {
     },
   },
 };
+
+export const prerenderPaths: string[] = [
+  routes.features,
+  routes.methodology,
+  routes.security,
+  routes.about,
+  routes.pricing,
+  routes.compliance.finma,
+  routes.compliance.euAiAct,
+  routes.contact,
+  routes.privacyPolicy,
+  routes.termsAndConditions,
+  routes.dataProcessingAgreement,
+  routes.auth.login,
+  routes.auth.register,
+];

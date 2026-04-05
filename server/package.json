@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/yzwa/aodit.git"
+    "url": "https://gitlab.com/yasserzakywafaa/aodit.git"
   },
   "scripts": {
     "start": "ts-node src/server.ts",

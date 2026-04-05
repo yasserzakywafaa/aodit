@@ -72,7 +72,7 @@ export default defineConfig(async ({ mode }) => {
         jsxImportSource: "@emotion/react",
       }),
       prerender({
-        staticDir: path.join(__dirname, "build"),
+        staticDir: path.join(__dirname, "dist"),
         routes: prerenderPaths,
         renderer: new prerender.PuppeteerRenderer({
           viewport: { width: 1280, height: 800 },
@@ -99,7 +99,7 @@ export default defineConfig(async ({ mode }) => {
       port: Number(env.REACT_APP_PORT),
     },
     build: {
-      outDir: "build",
+      outDir: "dist",
     },
     envPrefix: "REACT_APP_",
     resolve: {

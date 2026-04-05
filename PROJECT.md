@@ -300,7 +300,7 @@ The client uses **Vite** (migrated from Create React App) with **vite-plugin-pre
 
 At build time, Puppeteer renders the public/marketing routes into static HTML files; `/` · `/ai-agent-testing-methodology`, etc.
 
-Each route gets its own `index.html` in the build output (e.g. `build/contact/index.html`). Vercel's `routes` config (`client/vercel.json`) serves these static files first; any route without a matching file falls back to the SPA `index.html` (for dashboard, auth pages, etc.).
+Each route gets its own `index.html` in the build output (e.g. `dist/contact/index.html`). Vercel's `routes` config (`client/vercel.json`) serves these static files first; any route without a matching file falls back to the SPA `index.html` (for dashboard, auth pages, etc.).
 
 The entry point (`client/src/index.tsx`) uses a hybrid hydration strategy: `hydrateRoot` when pre-rendered HTML is present, `createRoot` otherwise.
 

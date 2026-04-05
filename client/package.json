@@ -14,9 +14,9 @@
     "start": "vite",
     "start:windows": "set VITE_APP_ENV=local&& vite",
     "start:dev": "VITE_APP_ENV=development vite",
-    "start:prod": "serve -l 5000 -s build",
+    "start:prod": "serve -l 5000 -s dist",
     "prebuild": "node public/scripts/update-sw-version.js",
-    "build": "rimraf build && vite build",
+    "build": "rimraf dist && vite build",
     "postbuild": "node public/scripts/generate-nonce.js",
     "preview": "vite preview"
   },

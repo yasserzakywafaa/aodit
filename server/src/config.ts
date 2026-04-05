@@ -32,7 +32,7 @@ const CONFIG = {
 
   // Paths
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
-  FRONTEND_BUILD_PATH: path.resolve("../client/build"),
+  FRONTEND_BUILD_PATH: path.resolve("../client/dist"),
   SERVE_STATIC_CONTENT: process.env.SERVE_STATIC_CONTENT,
 
   // GitLab

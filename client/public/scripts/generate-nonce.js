@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
-const BUILD_DIR_NAME = "build";
+const OUTPUT_DIR_NAME = "dist";
 const INDEX_HTML_FILE_NAME = "index.html";
 const NONCE_FILE_NAME = ".csp-nonce";
 const CUSTOM_HEADERS_FILE_NAME = "customHttp.yml";
@@ -70,7 +70,7 @@ const writeFile = (filePath, content) => {
 
 /**
  * Recursively finds every index.html under a directory (e.g. Vite prerender output:
- * build/index.html, build/contact/index.html, …).
+ * dist/index.html, dist/contact/index.html, …).
  * @param {string} dir - Root directory to search.
  * @returns {string[]} - Absolute paths to index.html files.
  */
@@ -131,12 +131,12 @@ const injectNonceIntoCustomHeaders = (customHeadersContent, nonce) =>
 const processBuildFiles = () => {
   console.log(`[Nonce Script] Started.`);
 
-  // --- Paths ---  const buildDir = resolvePath("..", BUILD_DIR_NAME);
-  const buildDir = resolvePath("..", "..", BUILD_DIR_NAME);
+  // --- Paths ---
+  const buildDir = resolvePath("..", "..", OUTPUT_DIR_NAME);
   const nonceFilePath = resolvePath(
     "..",
     "..",
-    BUILD_DIR_NAME,
+    OUTPUT_DIR_NAME,
     NONCE_FILE_NAME,
   );
   const customHeadersPath = resolvePath(

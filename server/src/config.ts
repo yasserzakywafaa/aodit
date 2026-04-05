@@ -1,3 +1,8 @@
+import {
+  OPENROUTER_FREE_MODELS_NAMES,
+  OPENROUTER_PAID_MODELS_NAMES,
+} from "./constants";
+
 import dotenv from "dotenv";
 import path from "path";
 
@@ -27,7 +32,7 @@ const CONFIG = {
 
   // Paths
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
-  FRONTEND_BUILD_PATH: path.resolve("../client/build"),
+  FRONTEND_BUILD_PATH: path.resolve("../client/dist"),
   SERVE_STATIC_CONTENT: process.env.SERVE_STATIC_CONTENT,
 
   // GitLab
@@ -64,9 +69,11 @@ const CONFIG = {
     process.env.NODE_ENV === "development"
       ? process.env.OPENROUTER_API_KEY_DEV
       : process.env.OPENROUTER_API_KEY_PROD,
-  OPENROUTER_MODEL_NAME: "mistralai/devstral-2512:free",
-  // OPENROUTER_MODEL_NAME: "xiaomi/mimo-v2-flash:free",
-  OPENROUTER_DEFAULT_MODEL_NAME: "openai/gpt-5-mini",
+  OPENROUTER_MODEL_NAME: OPENROUTER_FREE_MODELS_NAMES[0],
+  OPENROUTER_MODELS_NAMES: [
+    ...OPENROUTER_FREE_MODELS_NAMES,
+    ...OPENROUTER_PAID_MODELS_NAMES,
+  ],
   OPENROUTER_WEB_BROWSE_MODEL:
     process.env.OPENROUTER_WEB_BROWSE_MODEL || "openai/gpt-5-mini:online",
 

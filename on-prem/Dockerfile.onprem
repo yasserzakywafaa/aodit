@@ -36,7 +36,7 @@ COPY server/package.json server/yarn.lock* ./
 RUN yarn install --frozen-lockfile
 COPY server/ .
 RUN yarn build
-RUN mkdir -p build/services/email && cp -r src/services/email/templates build/services/email/templates
+RUN mkdir -p build/src/services/email && cp -r src/services/email/templates build/src/services/email/templates
 
 # ============================================================
 # Stage 3: Production image

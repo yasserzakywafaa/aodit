@@ -10,7 +10,7 @@ COPY . .
 RUN yarn build
 
 # Copy non-TS assets that tsc doesn't emit (email templates)
-RUN cp -r src/services/email/templates build/services/email/templates
+RUN mkdir -p build/src/services/email && cp -r src/services/email/templates build/src/services/email/templates
 
 # ---- Production stage ----
 FROM node:22-alpine

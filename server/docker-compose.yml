@@ -1,0 +1,10 @@
+services:
+  aodit-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "16006:16006"
+    env_file:
+      - ./.env
+    restart: unless-stopped

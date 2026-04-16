@@ -1,0 +1,82 @@
+# =============================================================================
+# aodit — On-Premises Docker Compose  |  Bank Deployment
+#
+# Usage (run from the repo root or the on-prem/ directory):
+#   docker compose -f on-prem/docker-compose.onprem.yml up -d        # start
+#   docker compose -f on-prem/docker-compose.onprem.yml down         # stop
+#   docker compose -f on-prem/docker-compose.onprem.yml logs -f      # tail logs
+#
+# Prerequisites:
+#   Copy on-prem/.env.onprem.example to on-prem/.env.onprem and fill in all REQUIRED values.
+#   Requires Docker Engine >= 24 and Docker Compose plugin >= 2.20.
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # MongoDB — self-hosted, not reachable from outside the Docker network
+  # ---------------------------------------------------------------------------
+  # To use an EXTERNAL MongoDB instance instead (your bank already runs one):
+  #   1. Remove or comment out this entire 'mongodb' service block.
+  #   2. Remove 'mongodb' from the 'depends_on' list in the 'aodit' service.
+  #   3. Set MONGODB_URI_PROD in .env.onprem to point at your existing instance.
+  # ---------------------------------------------------------------------------
+  mongodb:
+    image: mongo:7.0
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: aodit_prod
+    volumes:
+      - mongo_data:/data/db
+    expose:
+      - "27017"
+    # Do NOT publish port 27017 to the host — MongoDB must not be
+    # reachable from outside the Docker network on a banking host.
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+
+  aodit:
+    image: aodit:latest
+    build:
+      context: ..
+      dockerfile: on-prem/Dockerfile.onprem
+    ports:
+      - "16006:16006"
+    env_file:
+      - ./.env.onprem
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:16006/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+volumes:
+  mongo_data:
+    driver: local

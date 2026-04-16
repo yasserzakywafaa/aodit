@@ -1,17 +1,20 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Divider, Typography } from "@mui/material";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
+import EmailPasswordForm from "src/components/shared/Auth/EmailPasswordForm";
 import { LockOpenOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import PhoneAuth from "src/components/shared/SocialLogins/PhoneAuth";
 import SocialLogin from "src/components/Modals/LoginModal/features/SocialLogin/SocialLogin";
 import { routes } from "src/application/routes";
+import { useAppConfig } from "src/application/context/AppConfigContext";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { isOnPrem } = useAppConfig();
   const {
     store: {
       state: { auth },
@@ -79,9 +82,15 @@ const LoginPage = () => {
           </Typography>
         </Box>
 
-        <Box display="flex" flexDirection="column" gap={2}>
-          <SocialLogin authType="login" />
-          <PhoneAuth authType="login" />
+        <Box display="flex" flexDirection="column" gap={2} alignItems="center">
+          <EmailPasswordForm mode="login" />
+          {!isOnPrem && (
+            <>
+              <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+              <SocialLogin authType="login" />
+              <PhoneAuth authType="login" />
+            </>
+          )}
         </Box>
       </Container>
     </Page>

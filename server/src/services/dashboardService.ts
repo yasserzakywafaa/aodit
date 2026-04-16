@@ -1,12 +1,22 @@
 import {
   DBCollectionsEnum,
   database,
+  getDocumentByFieldFromDb,
   getDocumentsByQueryFromDb,
   getPaginatedDocuments,
+  saveUserDataToDb,
   updateUserInDb,
 } from "../models/mongoDb";
-import { User, UserStatus } from "../models/types";
+import {
+  AuthProviderEnum,
+  User,
+  UserRole,
+  UserStatus,
+  getInitialUserData,
+} from "../models/types";
 import { deleteDocument, readDocument } from "../models/mongoDb/crudOperations";
+
+import { randomUUID } from "crypto";
 
 import { ObjectId } from "mongodb";
 
@@ -69,6 +79,51 @@ const deleteUser = async (userId: string) => {
   return await deleteDocument(userId, DBCollectionsEnum.users);
 };
 
+interface CreateUserInput {
+  email: string;
+  passwordHash: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+}
+
+const createUser = async (input: CreateUserInput): Promise<User> => {
+  const normalizedEmail = input.email.trim().toLowerCase();
+
+  const existing = (await getDocumentByFieldFromDb(
+    "email",
+    normalizedEmail,
+    DBCollectionsEnum.users,
+  )) as User | null;
+
+  if (existing) {
+    throw new Error("A user with this email already exists.");
+  }
+
+  const newUser: User = {
+    ...getInitialUserData(),
+    userId: `email-${randomUUID()}`,
+    email: normalizedEmail,
+    passwordHash: input.passwordHash,
+    name: {
+      givenName: input.firstName.trim(),
+      familyName: input.lastName.trim(),
+    },
+    picture: "",
+    role: input.role,
+    provider: AuthProviderEnum.email,
+    verified: true,
+    lastLogin: new Date(),
+  };
+
+  const newUserId = await saveUserDataToDb(newUser);
+  if (!newUserId) {
+    throw new Error("Failed to create user.");
+  }
+
+  return { ...newUser, _id: newUserId };
+};
+
 const DashboardServices = {
   getUsersCount,
   getAllUsers,
@@ -77,6 +132,7 @@ const DashboardServices = {
   blockUser,
   unblockUser,
   deleteUser,
+  createUser,
 };
 
 export default DashboardServices;

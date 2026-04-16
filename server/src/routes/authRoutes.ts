@@ -34,6 +34,10 @@ authRouter.post(
   AuthController.verifyPhoneLoginOtp
 );
 
+// Email + password auth
+authRouter.post(END_POINTS.AUTH.EMAIL_REGISTER, AuthController.emailRegister);
+authRouter.post(END_POINTS.AUTH.EMAIL_LOGIN, AuthController.emailLogin);
+
 // Token Management Routes
 authRouter.post(END_POINTS.AUTH.REFRESH_TOKEN, AuthController.refreshToken);
 authRouter.post(END_POINTS.AUTH.LOGOUT, AuthController.logout);

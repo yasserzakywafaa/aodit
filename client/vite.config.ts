@@ -46,6 +46,14 @@ async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
   const extraArgs = ["--disable-dev-shm-usage"];
 
   if (process.platform === "linux") {
+    const fromEnv = process.env.PUPPETEER_EXECUTABLE_PATH;
+    if (fromEnv && fs.existsSync(fromEnv)) {
+      return {
+        executablePath: fromEnv,
+        args: ["--no-sandbox", "--disable-setuid-sandbox", ...extraArgs],
+        headless: "shell",
+      };
+    }
     const { default: chromium } = await import("@sparticuz/chromium");
     return {
       executablePath: await chromium.executablePath(),

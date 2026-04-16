@@ -1,12 +1,15 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 
+import { Add } from "@mui/icons-material";
+import CreateUserDialog from "./CreateUserDialog";
 import { dataGridStyle } from "src/application/shared/themes";
 import { getDashboardUsersDataGridConfig } from "./features/dataGridConfig";
 import { useDashboardUsersContext } from "./store/Provider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const DashboardUsers = () => {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const {
     store: {
       state: { isFetching, users, paging },
@@ -28,14 +31,35 @@ const DashboardUsers = () => {
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        Users
-      </Typography>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mb: 1 }}
+      >
+        <Typography variant="h4" component="h1" color="primary">
+          Users
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<Add />}
+          size="small"
+          onClick={() => setIsCreateDialogOpen(true)}
+        >
+          Create User
+        </Button>
+      </Box>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         {paging.totalCount
           ? `${paging.totalCount} total`
           : "Manage users, roles, and permissions from here."}
       </Typography>
+
+      <CreateUserDialog
+        open={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+        onSuccess={() => handleGetUsersByPage(1, paging.pageSize || 10)}
+      />
 
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid

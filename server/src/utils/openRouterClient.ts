@@ -21,7 +21,7 @@ export const createOpenRouterClient = (externalApiKey?: string): OpenAI => {
 
   return new OpenAI({
     apiKey: openRouterApiKey,
-    baseURL: "https://openrouter.ai/api/v1",
+    baseURL: CONFIG.OPENROUTER_BASE_URL,
     defaultHeaders: {
       "HTTP-Referer": CONFIG.APP_URL || "https://www.aodit.ai",
       "X-Title": "Aodit",
@@ -124,7 +124,7 @@ export const handleOpenRouterHttpRequest = async (
   };
 
   const response = await fetch(
-    "https://openrouter.ai/api/v1/chat/completions",
+    `${CONFIG.OPENROUTER_BASE_URL}/chat/completions`,
     {
       method: "POST",
       headers: {

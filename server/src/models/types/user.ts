@@ -7,6 +7,7 @@ export enum AuthProviderEnum {
   google = "google",
   linkedin = "linkedin",
   phone = "phone",
+  email = "email",
 }
 
 export interface User {
@@ -34,6 +35,9 @@ export interface User {
   refreshToken?: string;
   provider?: AuthProviderEnum;
   verified?: boolean;
+
+  // Email/password auth
+  passwordHash?: string;
 }
 
 export interface UserName {

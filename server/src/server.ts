@@ -5,7 +5,9 @@ import express, { NextFunction, Request, Response } from "express";
 import CONFIG from "./config";
 import { agendaInit } from "./services/agenda/agendaService";
 import authRoutes from "./routes/authRoutes";
+import configRoutes from "./routes/configRoutes";
 import compression from "compression";
+import path from "path";
 import contactRoutes from "./routes/contactRoutes";
 import leadMagnetRoutes from "./routes/leadMagnetRoutes";
 import cookieParser from "cookie-parser";
@@ -43,6 +45,9 @@ handleCorsConfig(expressApp);
 // Place here because Stripe gateway need the request raw body
 // which is manipulated but the "express.json()" middleware
 expressApp.use(paymentWebhooksRouter);
+
+// Public config endpoint — must be registered before rate limiter and auth middleware
+expressApp.use(configRoutes);
 
 // Security middleware
 expressApp.use(
@@ -96,10 +101,24 @@ expressApp.use(paymentsRoutes);
 expressApp.use(scheduleRoutes);
 expressApp.use(dashboardRoutes);
 
-// 404 Handler
-expressApp.use((req: Request, res: Response) => {
+// Health check — used by Docker HEALTHCHECK and compose depends_on
+expressApp.get("/api/health", (_req: Request, res: Response) => {
+  res.status(200).json({ status: "ok" });
+});
+
+// API 404 handler — scoped to /api/ so SPA routes are not swallowed
+expressApp.use("/api", (_req: Request, res: Response) => {
   res.status(404).json({ error: "🙁 Endpoint not found" });
 });
+
+// Static serving for on-prem / single-image deployments (SERVE_STATIC_CONTENT=true)
+if (CONFIG.SERVE_STATIC_CONTENT === "true") {
+  const staticPath = CONFIG.FRONTEND_BUILD_PATH;
+  expressApp.use(express.static(staticPath));
+  expressApp.get("*", (_req: Request, res: Response) => {
+    res.sendFile(path.join(staticPath, "index.html"));
+  });
+}
 
 // Central error handler
 expressApp.use(

@@ -32,7 +32,7 @@ const CONFIG = {
 
   // Paths
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
-  FRONTEND_BUILD_PATH: path.resolve("../client/dist"),
+  FRONTEND_BUILD_PATH: process.env.FRONTEND_BUILD_PATH || path.resolve("../client/dist"),
   SERVE_STATIC_CONTENT: process.env.SERVE_STATIC_CONTENT,
 
   // GitLab
@@ -64,12 +64,18 @@ const CONFIG = {
 
   // // APIs keys for AI
 
-  // OpenRouter (primary AI provider)
+  // AI / LLM provider
+  // OPENROUTER_BASE_URL: for on-prem deployments, set this to the bank's internal
+  // OpenAI-compatible endpoint (e.g., http://llm.bank.internal:11434/v1 for Ollama,
+  // or an Azure OpenAI endpoint). Defaults to openrouter.ai for cloud deployments.
+  OPENROUTER_BASE_URL:
+    process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",
   OPENROUTER_API_KEY:
     process.env.NODE_ENV === "development"
       ? process.env.OPENROUTER_API_KEY_DEV
       : process.env.OPENROUTER_API_KEY_PROD,
-  OPENROUTER_MODEL_NAME: OPENROUTER_FREE_MODELS_NAMES[0],
+  OPENROUTER_MODEL_NAME:
+    process.env.OPENROUTER_MODEL_NAME || OPENROUTER_FREE_MODELS_NAMES[0],
   OPENROUTER_MODELS_NAMES: [
     ...OPENROUTER_FREE_MODELS_NAMES,
     ...OPENROUTER_PAID_MODELS_NAMES,
@@ -129,6 +135,8 @@ const CONFIG = {
   OAUTH_CALLBACK_URL: (baseURL: string, userId: string, provider: string) =>
     `${baseURL}?authStatus=success&provider=${provider}&userId=${userId}`,
   JWT_SECRET: process.env.JWT_SECRET,
+  // ON_PREM: hides Google/LinkedIn/Phone auth in the UI; email+password only
+  ON_PREM: process.env.ON_PREM === "true",
   TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
   TWILIO_VERIFY_SERVICE_SID: process.env.TWILIO_VERIFY_SERVICE_SID,

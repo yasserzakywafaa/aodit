@@ -215,6 +215,7 @@ export const executeScenario = async (params: {
   turnTypes: readonly string[];
   reportDescription?: string;
   reportType?: string;
+  systemPrompt?: string;
   onTurnStart?: (turnIndex: number, turnType: string) => Promise<void>;
 }): Promise<{
   turns: TurnResult[];
@@ -229,6 +230,7 @@ export const executeScenario = async (params: {
     turnTypes,
     reportDescription,
     reportType,
+    systemPrompt,
     onTurnStart,
   } = params;
 
@@ -275,10 +277,13 @@ export const executeScenario = async (params: {
     // --- Send prompt to model under test ---
     conversationHistory.push({ role: "user", content: userPrompt });
 
-    const modelMessages = conversationHistory.map((m) => ({
-      role: m.role as "system" | "user" | "assistant",
-      content: m.content,
-    }));
+    const modelMessages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+      ...(systemPrompt ? [{ role: "system" as const, content: systemPrompt }] : []),
+      ...conversationHistory.map((m) => ({
+        role: m.role as "system" | "user" | "assistant",
+        content: m.content,
+      })),
+    ];
 
     const modelResponse = await callWithRetry(modelId, modelMessages);
     conversationHistory.push({ role: "assistant", content: modelResponse });

@@ -21,6 +21,7 @@ import paymentsRoutes from "./routes/paymentsRoutes";
 import rateLimit from "express-rate-limit";
 import scheduleRoutes from "./routes/scheduleRoutes";
 import testRoutes from "./routes/testRoutes";
+import publicDemoRoutes from "./routes/publicDemoRoutes";
 
 const expressApp = express();
 
@@ -100,6 +101,7 @@ expressApp.use(leadMagnetRoutes);
 expressApp.use(paymentsRoutes);
 expressApp.use(scheduleRoutes);
 expressApp.use(dashboardRoutes);
+expressApp.use(publicDemoRoutes);
 
 // Health check — used by Docker HEALTHCHECK and compose depends_on
 expressApp.get("/api/health", (_req: Request, res: Response) => {

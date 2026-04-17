@@ -192,16 +192,16 @@ const AoditDemoPlayground: React.FC = () => {
       {!sessionId && (
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
-            label="System Prompt"
+            label="Agent Instructions"
             multiline
             minRows={4}
             maxRows={10}
             fullWidth
             value={systemPrompt}
             onChange={(e) => setSystemPrompt(e.target.value)}
-            placeholder="You are a helpful customer service agent for Acme Corp..."
+            placeholder="e.g. You are a customer service agent for Acme Bank. You help users with account queries, card issues, and loan applications. You must never share account details without identity verification..."
             inputProps={{ maxLength: 2000 }}
-            helperText={`${systemPrompt.length}/2000`}
+            helperText={`${systemPrompt.length} / 2000 — paste the instructions your agent follows`}
             disabled={isStarting}
           />
 
@@ -235,7 +235,7 @@ const AoditDemoPlayground: React.FC = () => {
             startIcon={isStarting ? <CircularProgress size={16} /> : undefined}
             sx={{ alignSelf: "flex-start" }}
           >
-            {isStarting ? "Starting…" : "Run Demo"}
+            {isStarting ? "Launching audit…" : "Audit My Agent — Free"}
           </Button>
         </Box>
       )}

@@ -194,9 +194,9 @@ const DemoPage = () => {
             color="text.secondary"
             sx={{ maxWidth: 560, mb: 3.5, lineHeight: 1.7, fontSize: "1.05rem" }}
           >
-            Paste your system prompt, pick a model, and watch an 8-turn
+            Paste your agent's instructions, pick a model, and watch an 8-turn
             adversarial stress-test run in real time. An independent AI judge
-            scores every turn on Factual Consistency.
+            scores every turn on Factual Consistency — completely free.
           </Typography>
 
           {/* Stat pills */}

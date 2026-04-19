@@ -62,7 +62,7 @@ export const runDemoAsync = async (
   const framework = getFrameworkDefinition(DEFAULT_FRAMEWORK_VERSION);
 
   try {
-    const { turns, rawScore } = await executeScenario({
+    const { rawScore } = await executeScenario({
       scenario: DEMO_SCENARIO,
       modelId,
       evaluatorModelId: DEFAULT_EVALUATOR_MODEL,
@@ -82,7 +82,7 @@ export const runDemoAsync = async (
           .collection(DBCollectionsEnum.demo_sessions)
           .updateOne(
             { _id: new ObjectId(sessionId) },
-            { $push: { turns: turn } },
+            { $push: { turns: turn } } as any,
           );
       },
     });

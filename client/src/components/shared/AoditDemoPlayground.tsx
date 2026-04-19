@@ -3,8 +3,12 @@ import {
   Button,
   Chip,
   CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Divider,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -14,7 +18,9 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
+import { Close, InfoOutlined } from "@mui/icons-material";
 import END_POINTS from "../../application/shared/endpoints";
+import ReactMarkdown from "react-markdown";
 import axios from "axios";
 
 // ---------------------------------------------------------------------------
@@ -91,6 +97,101 @@ const scoreLabel = (score: number): string => {
 };
 
 // ---------------------------------------------------------------------------
+// Markdown renderer — styles react-markdown output to match MUI body2
+// ---------------------------------------------------------------------------
+
+const mdSx = {
+  fontSize: "0.875rem",
+  lineHeight: 1.65,
+  wordBreak: "break-word",
+  "& p": { margin: "0 0 0.6em 0" },
+  "& p:last-child": { marginBottom: 0 },
+  "& h1, & h2, & h3, & h4": {
+    fontWeight: 700,
+    margin: "0.8em 0 0.3em",
+    fontSize: "0.9rem",
+    lineHeight: 1.3,
+  },
+  "& h1:first-of-type, & h2:first-of-type, & h3:first-of-type": {
+    marginTop: 0,
+  },
+  "& strong": { fontWeight: 700 },
+  "& em": { fontStyle: "italic" },
+  "& ul, & ol": { paddingLeft: "1.3em", margin: "0.4em 0 0.6em" },
+  "& li": { marginBottom: "0.25em" },
+  "& code": {
+    fontFamily: "monospace",
+    fontSize: "0.8rem",
+    bgcolor: "action.hover",
+    px: 0.5,
+    borderRadius: "2px",
+  },
+  "& blockquote": {
+    borderLeft: "3px solid",
+    borderColor: "divider",
+    pl: 1.5,
+    ml: 0,
+    color: "text.secondary",
+  },
+} as const;
+
+// ---------------------------------------------------------------------------
+// Reasoning dialog
+// ---------------------------------------------------------------------------
+
+interface ReasoningDialogProps {
+  open: boolean;
+  reasoning: string;
+  score: number;
+  turnIndex: number;
+  onClose: () => void;
+}
+
+const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
+  open,
+  reasoning,
+  score,
+  turnIndex,
+  onClose,
+}) => (
+  <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <DialogTitle
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        pb: 1,
+      }}
+    >
+      <Box display="flex" alignItems="center" gap={1}>
+        <Typography variant="subtitle1" fontWeight={700}>
+          Judge's Reasoning
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          · Turn {turnIndex}
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" gap={1}>
+        <Chip
+          label={`${score}/5 · ${scoreLabel(score)}`}
+          color={scoreColor(score)}
+          size="small"
+          sx={{ fontWeight: 700 }}
+        />
+        <IconButton size="small" onClick={onClose} edge="end">
+          <Close fontSize="small" />
+        </IconButton>
+      </Box>
+    </DialogTitle>
+    <DialogContent dividers>
+      <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+        {reasoning}
+      </Typography>
+    </DialogContent>
+  </Dialog>
+);
+
+// ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
@@ -101,10 +202,15 @@ const AoditDemoPlayground: React.FC = () => {
   const [demoStatus, setDemoStatus] = useState<DemoStatus | null>(null);
   const [isStarting, setIsStarting] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
+  const [reasoningDialog, setReasoningDialog] = useState<{
+    open: boolean;
+    reasoning: string;
+    score: number;
+    turnIndex: number;
+  }>({ open: false, reasoning: "", score: 0, turnIndex: 0 });
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Stop polling once we reach a terminal state
   useEffect(() => {
     if (!sessionId) return;
 
@@ -159,6 +265,15 @@ const AoditDemoPlayground: React.FC = () => {
     setStartError(null);
   };
 
+  const openReasoning = (turn: TurnResult) => {
+    setReasoningDialog({
+      open: true,
+      reasoning: turn.evaluatorReasoning,
+      score: turn.score,
+      turnIndex: turn.turnIndex,
+    });
+  };
+
   const isRunning =
     demoStatus?.status === "pending" || demoStatus?.status === "running";
   const isCompleted = demoStatus?.status === "completed";
@@ -167,14 +282,7 @@ const AoditDemoPlayground: React.FC = () => {
   const turns = demoStatus?.turns ?? [];
 
   return (
-    <Box
-      sx={{
-        maxWidth: 800,
-        mx: "auto",
-        p: { xs: 2, sm: 3 },
-        fontFamily: "monospace",
-      }}
-    >
+    <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, sm: 3 } }}>
       {/* ------------------------------------------------------------------ */}
       {/* Header                                                              */}
       {/* ------------------------------------------------------------------ */}
@@ -301,15 +409,13 @@ const AoditDemoPlayground: React.FC = () => {
                   sx={{ fontWeight: 700 }}
                 />
               )}
-              {isFailed && (
-                <Chip label="Failed" color="error" size="small" />
-              )}
+              {isFailed && <Chip label="Failed" color="error" size="small" />}
             </Box>
           </Box>
 
           <Divider sx={{ mb: 2 }} />
 
-          {/* Waiting state before turns start */}
+          {/* Waiting state before first turn arrives */}
           {turns.length === 0 && isRunning && (
             <Box
               display="flex"
@@ -362,18 +468,23 @@ const AoditDemoPlayground: React.FC = () => {
                   <Typography variant="caption" color="text.secondary">
                     {turn.turnType}
                   </Typography>
-                  <Box ml="auto">
-                    <Tooltip
-                      title={turn.evaluatorReasoning}
-                      placement="top"
-                      arrow
-                    >
-                      <Chip
-                        label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
-                        color={scoreColor(turn.score)}
+
+                  {/* Score chip + reasoning button */}
+                  <Box ml="auto" display="flex" alignItems="center" gap={0.5}>
+                    <Chip
+                      label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
+                      color={scoreColor(turn.score)}
+                      size="small"
+                      sx={{ fontWeight: 700 }}
+                    />
+                    <Tooltip title="Judge's reasoning" placement="top">
+                      <IconButton
                         size="small"
-                        sx={{ fontWeight: 700, cursor: "default" }}
-                      />
+                        onClick={() => openReasoning(turn)}
+                        sx={{ opacity: 0.65, "&:hover": { opacity: 1 } }}
+                      >
+                        <InfoOutlined sx={{ fontSize: 15 }} />
+                      </IconButton>
                     </Tooltip>
                   </Box>
                 </Box>
@@ -399,7 +510,7 @@ const AoditDemoPlayground: React.FC = () => {
 
                 <Divider />
 
-                {/* Agent response */}
+                {/* Agent response — rendered as markdown */}
                 <Box px={2} py={1.5}>
                   <Typography
                     variant="caption"
@@ -410,12 +521,9 @@ const AoditDemoPlayground: React.FC = () => {
                   >
                     AGENT
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-                  >
-                    {turn.response}
-                  </Typography>
+                  <Box sx={mdSx}>
+                    <ReactMarkdown>{turn.response}</ReactMarkdown>
+                  </Box>
                 </Box>
               </Box>
             ))}
@@ -431,6 +539,19 @@ const AoditDemoPlayground: React.FC = () => {
           )}
         </Box>
       )}
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Reasoning dialog                                                    */}
+      {/* ------------------------------------------------------------------ */}
+      <ReasoningDialog
+        open={reasoningDialog.open}
+        reasoning={reasoningDialog.reasoning}
+        score={reasoningDialog.score}
+        turnIndex={reasoningDialog.turnIndex}
+        onClose={() =>
+          setReasoningDialog((s) => ({ ...s, open: false }))
+        }
+      />
     </Box>
   );
 };

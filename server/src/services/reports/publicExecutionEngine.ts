@@ -7,9 +7,11 @@ import {
   updateDocument,
 } from "../../models/mongoDb/crudOperations";
 
-import { DBCollectionsEnum } from "../../models/mongoDb";
+import { DBCollectionsEnum, database } from "../../models/mongoDb";
 import { DemoSession } from "../../models/types/demoSession";
 import { DEFAULT_EVALUATOR_MODEL } from "./modelRegistry";
+import { ObjectId } from "mongodb";
+import { TurnResult } from "../../models/types/scenarioResult";
 import { executeScenario } from "./executionEngine";
 
 const DEMO_SCENARIO = {
@@ -74,11 +76,20 @@ export const runDemoAsync = async (
           DBCollectionsEnum.demo_sessions,
         );
       },
+      onTurnComplete: async (turn: TurnResult) => {
+        // $push each turn as it completes so the polling endpoint returns live results
+        await database
+          .collection(DBCollectionsEnum.demo_sessions)
+          .updateOne(
+            { _id: new ObjectId(sessionId) },
+            { $push: { turns: turn } },
+          );
+      },
     });
 
     await updateDocument(
       sessionId,
-      { status: "completed", turns, rawScore },
+      { status: "completed", rawScore },
       DBCollectionsEnum.demo_sessions,
     );
   } catch (err) {

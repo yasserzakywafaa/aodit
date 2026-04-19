@@ -269,27 +269,63 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
     <DialogTitle
       sx={{
         display: "flex",
-        alignItems: "center",
+        flexDirection: { xs: "column", sm: "row" },
+        alignItems: { xs: "stretch", sm: "flex-start" },
         justifyContent: "space-between",
-        pb: 1,
+        gap: { xs: 1.25, sm: 1 },
+        pb: 1.5,
+        pr: { xs: 1, sm: 2 },
       }}
     >
-      <Box display="flex" alignItems="center" gap={1}>
-        <Typography variant="subtitle1" fontWeight={700}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: 0.25,
+          flex: 1,
+          minWidth: 0,
+          pr: { sm: 1 },
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          fontWeight={700}
+          sx={{ lineHeight: 1.25, width: "100%" }}
+        >
           Judge's Reasoning
         </Typography>
-        <Typography variant="caption" color="text.secondary">
-          · Turn {turnIndex}
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ whiteSpace: "nowrap" }}
+        >
+          Turn {turnIndex}
         </Typography>
       </Box>
-      <Box display="flex" alignItems="center" gap={1}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          flexShrink: 0,
+          justifyContent: { xs: "space-between", sm: "flex-end" },
+          alignSelf: { xs: "stretch", sm: "auto" },
+        }}
+      >
         <Chip
           label={`${score}/5 · ${scoreLabel(score)}`}
           color={scoreColor(score)}
           size="small"
-          sx={{ fontWeight: 700 }}
+          sx={{ fontWeight: 700, maxWidth: { xs: "calc(100% - 48px)", sm: "none" } }}
         />
-        <IconButton size="small" onClick={onClose} edge="end">
+        <IconButton
+          size="small"
+          onClick={onClose}
+          edge="end"
+          aria-label="Close"
+          sx={{ flexShrink: 0 }}
+        >
           <Close fontSize="small" />
         </IconButton>
       </Box>
@@ -628,7 +664,14 @@ const AoditDemoPlayground: React.FC = () => {
               );
             })}
 
-            <Box ml="auto" display="flex" alignItems="center" gap={1}>
+            <Box
+              ml={{ xs: 0, sm: "auto" }}
+              width={{ xs: "100%", sm: "auto" }}
+              display="flex"
+              alignItems="center"
+              justifyContent={{ xs: "space-between", sm: "flex-start" }}
+              gap={1}
+            >
               {isRunning && (
                 <>
                   <LoaderSpinner
@@ -707,11 +750,12 @@ const AoditDemoPlayground: React.FC = () => {
                 >
                   {/* Turn header — click to toggle */}
                   <Box
-                    px={2}
-                    py={1}
+                    px={{ xs: 1.5, sm: 2 }}
+                    py={{ xs: 1.25, sm: 1 }}
                     display="flex"
                     alignItems="center"
-                    gap={1}
+                    gap={{ xs: 0.75, sm: 1 }}
+                    flexWrap="wrap"
                     onClick={() => toggleTurn(turn.turnIndex)}
                     sx={{
                       bgcolor: "action.hover",
@@ -720,39 +764,84 @@ const AoditDemoPlayground: React.FC = () => {
                       "&:hover": { bgcolor: "action.selected" },
                     }}
                   >
-                    {expanded ? (
-                      <ExpandLess sx={{ fontSize: 18, opacity: 0.6 }} />
-                    ) : (
-                      <ExpandMore sx={{ fontSize: 18, opacity: 0.6 }} />
-                    )}
-                    <Typography variant="caption" fontWeight={700}>
-                      Turn {turn.turnIndex}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      ·
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {turn.turnType}
-                    </Typography>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      gap={{ xs: 0.75, sm: 1 }}
+                      minWidth={0}
+                      flex="1 1 auto"
+                    >
+                      {expanded ? (
+                        <ExpandLess sx={{ fontSize: 18, opacity: 0.6 }} />
+                      ) : (
+                        <ExpandMore sx={{ fontSize: 18, opacity: 0.6 }} />
+                      )}
+                      <Typography
+                        variant="caption"
+                        fontWeight={700}
+                        sx={{ flexShrink: 0 }}
+                      >
+                        Turn {turn.turnIndex}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ display: { xs: "none", sm: "block" } }}
+                      >
+                        ·
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        noWrap
+                        sx={{
+                          minWidth: 0,
+                          maxWidth: { xs: "100%", sm: 220 },
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {turn.turnType}
+                      </Typography>
+                    </Box>
 
                     {/* Score chip + reasoning button */}
-                    <Box ml="auto" display="flex" alignItems="center" gap={0.5}>
+                    <Box
+                      ml={{ xs: 0, sm: "auto" }}
+                      width={{ xs: "100%", sm: "auto" }}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent={{ xs: "space-between", sm: "flex-end" }}
+                      gap={0.75}
+                    >
                       <Chip
                         label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
                         color={scoreColor(turn.score)}
                         size="small"
-                        sx={{ fontWeight: 700 }}
+                        sx={{ fontWeight: 700, maxWidth: { xs: "70%", sm: "none" } }}
                       />
                       <Button
                         size="small"
                         variant="text"
                         startIcon={<InfoOutlined />}
+                        aria-label="View evaluation details"
                         onClick={(e) => {
                           e.stopPropagation();
                           openReasoning(turn);
                         }}
+                        sx={{
+                          minWidth: 0,
+                          px: { xs: 0.75, sm: 1 },
+                          fontSize: { xs: 11, sm: 12 },
+                          "& .MuiButton-startIcon": {
+                            mr: { xs: 0, sm: 0.5 },
+                            ml: 0,
+                          },
+                        }}
                       >
-                        Evaluation
+                        <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                          Evaluation
+                        </Box>
                       </Button>
                     </Box>
                   </Box>

@@ -72,11 +72,16 @@ const RegisterPage = () => {
             </Typography>
           </Box>
         ) : (
-          <Box display="flex" flexDirection="column" gap={2} alignItems="center">
-            <EmailPasswordForm mode="register" />
-            <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            alignItems="center"
+          >
             <SocialRegister authType="register" />
             <PhoneAuth authType="register" />
+            <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+            <EmailPasswordForm mode="register" />
           </Box>
         )}
       </Container>

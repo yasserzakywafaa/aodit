@@ -83,14 +83,14 @@ const LoginPage = () => {
         </Box>
 
         <Box display="flex" flexDirection="column" gap={2} alignItems="center">
-          <EmailPasswordForm mode="login" />
           {!isOnPrem && (
             <>
-              <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
               <SocialLogin authType="login" />
               <PhoneAuth authType="login" />
+              <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
             </>
           )}
+          <EmailPasswordForm mode="login" />
         </Box>
       </Container>
     </Page>

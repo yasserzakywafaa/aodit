@@ -1,9 +1,10 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import { Close, LockOpenOutlined } from "@mui/icons-material";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import EmailPasswordForm from "src/components/shared/Auth/EmailPasswordForm";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
 import PhoneAuth from "src/components/shared/SocialLogins/PhoneAuth";
@@ -78,6 +79,9 @@ export const LoginModal = () => {
             >
               <SocialLogin authType="login" />
               <PhoneAuth authType="login" onAuthSuccess={handleCloseModal} />
+
+              <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+              <EmailPasswordForm mode="login" />
             </Box>
           </Box>
         </DialogContent>

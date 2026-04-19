@@ -36,6 +36,7 @@ const ResetAndRedirectHome = () => {
 };
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
+const DemoPage = lazy(() => import("../Pages/Demo/DemoPage"));
 const PricingPage = lazy(() => import("../Pages/Pricing/Pricing"));
 const MethodologyPage = lazy(() => import("../Pages/Methodology/Methodology"));
 const SecurityPage = lazy(() => import("../Pages/Security/Security"));
@@ -156,6 +157,7 @@ const AppContent = () => {
 
             {/* Public Routes */}
             <Route index path={routes.features} element={<FeaturesPage />} />
+            <Route path={routes.demo} element={<DemoPage />} />
             <Route path={routes.methodology} element={<MethodologyPage />} />
             <Route path={routes.security} element={<SecurityPage />} />
             <Route path={routes.about} element={<AboutPage />} />

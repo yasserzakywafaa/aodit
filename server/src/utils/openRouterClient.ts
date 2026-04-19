@@ -85,8 +85,6 @@ export const handleOpenRouterAIRequest = async (
   const openai = createOpenRouterClient();
   return await openai.chat.completions.create({
     model: modelName,
-    // @ts-expect-error
-    models: CONFIG.OPENROUTER_MODELS_NAMES,
     messages: messages as any,
     ...(options.response_format && {
       response_format: options.response_format as any,
@@ -147,7 +145,7 @@ export const handleOpenRouterHttpRequest = async (
 
   const responseData = await response.json();
   console.log("🔗 Fetched URL Data from OpenRouter:", {
-    dataLength: responseData.choices[0].message.content,
+    dataLength: responseData.choices?.[0]?.message?.content?.length ?? 0,
   });
   console.log("--------------------------------");
 

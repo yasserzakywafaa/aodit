@@ -1,5 +1,6 @@
 export const routes = {
   features: `/`,
+  demo: `/demo`,
   methodology: `/ai-agent-testing-methodology`,
   security: `/security-on-premise-ai`,
   about: `/about-swissli`,

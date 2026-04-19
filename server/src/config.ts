@@ -1,8 +1,3 @@
-import {
-  OPENROUTER_FREE_MODELS_NAMES,
-  OPENROUTER_PAID_MODELS_NAMES,
-} from "./constants";
-
 import dotenv from "dotenv";
 import path from "path";
 
@@ -75,11 +70,7 @@ const CONFIG = {
       ? process.env.OPENROUTER_API_KEY_DEV
       : process.env.OPENROUTER_API_KEY_PROD,
   OPENROUTER_MODEL_NAME:
-    process.env.OPENROUTER_MODEL_NAME || OPENROUTER_FREE_MODELS_NAMES[0],
-  OPENROUTER_MODELS_NAMES: [
-    ...OPENROUTER_FREE_MODELS_NAMES,
-    ...OPENROUTER_PAID_MODELS_NAMES,
-  ],
+    process.env.OPENROUTER_MODEL_NAME || "openai/gpt-5-mini",
   OPENROUTER_WEB_BROWSE_MODEL:
     process.env.OPENROUTER_WEB_BROWSE_MODEL || "openai/gpt-5-mini:online",
 

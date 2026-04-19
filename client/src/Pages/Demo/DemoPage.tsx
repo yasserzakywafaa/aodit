@@ -1,4 +1,12 @@
 import {
+  BoltOutlined,
+  GavelOutlined,
+  LockOutlined,
+  NavigateNext,
+  SecurityOutlined,
+  TrendingUpOutlined,
+} from "@mui/icons-material";
+import {
   Box,
   Button,
   Chip,
@@ -8,18 +16,9 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  BoltOutlined,
-  GavelOutlined,
-  LockOutlined,
-  NavigateNext,
-  SecurityOutlined,
-  TrendingUpOutlined,
-} from "@mui/icons-material";
-import {
   fontFamilyPlayfairDisplay,
   primaryColor,
   primaryColorOpaqueEight,
-  primaryColorOpaqueTen,
   secondaryColor,
 } from "src/application/shared/themes";
 
@@ -27,8 +26,8 @@ import AoditDemoPlayground from "src/components/shared/AoditDemoPlayground";
 import Page from "src/components/shared/Page/Page";
 import { alpha } from "@mui/material/styles";
 import { routes } from "src/application/routes";
-import { useNavigate } from "react-router-dom";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useNavigate } from "react-router-dom";
 
 // ---------------------------------------------------------------------------
 // Sub-components
@@ -192,7 +191,12 @@ const DemoPage = () => {
           <Typography
             variant="body1"
             color="text.secondary"
-            sx={{ maxWidth: 560, mb: 3.5, lineHeight: 1.7, fontSize: "1.05rem" }}
+            sx={{
+              maxWidth: 560,
+              mb: 3.5,
+              lineHeight: 1.7,
+              fontSize: "1.05rem",
+            }}
           >
             Paste your agent's instructions, pick a model, and watch an 8-turn
             adversarial stress-test run in real time. An independent AI judge
@@ -200,12 +204,7 @@ const DemoPage = () => {
           </Typography>
 
           {/* Stat pills */}
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            gap={1}
-            mb={1}
-          >
+          <Stack direction="row" flexWrap="wrap" gap={1} mb={1}>
             <StatPill
               icon={<GavelOutlined fontSize="inherit" />}
               label="AI-powered judge"
@@ -265,14 +264,24 @@ const DemoPage = () => {
               {["#ff5f57", "#febc2e", primaryColor].map((c, i) => (
                 <Box
                   key={i}
-                  sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: c }}
+                  sx={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    bgcolor: c,
+                  }}
                 />
               ))}
               <Typography
                 variant="caption"
                 fontWeight={700}
                 color="text.secondary"
-                sx={{ ml: 1, letterSpacing: "0.08em", textTransform: "uppercase", fontSize: "0.65rem" }}
+                sx={{
+                  ml: 1,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  fontSize: "0.65rem",
+                }}
               >
                 aodit · Demo Sandbox
               </Typography>
@@ -293,7 +302,11 @@ const DemoPage = () => {
         <Container maxWidth="md">
           <Typography
             variant="overline"
-            sx={{ color: primaryColor, fontWeight: 700, letterSpacing: "0.12em" }}
+            sx={{
+              color: primaryColor,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+            }}
           >
             How it works
           </Typography>
@@ -371,14 +384,20 @@ const DemoPage = () => {
         component="section"
         sx={{
           py: { xs: 6, md: 8 },
-          bgcolor: isDark ? alpha(secondaryColor, 0.1) : primaryColorOpaqueEight,
+          bgcolor: isDark
+            ? alpha(secondaryColor, 0.1)
+            : primaryColorOpaqueEight,
           borderTop: `1px solid ${alpha(primaryColor, 0.1)}`,
         }}
       >
         <Container maxWidth="md">
           <Typography
             variant="overline"
-            sx={{ color: primaryColor, fontWeight: 700, letterSpacing: "0.12em" }}
+            sx={{
+              color: primaryColor,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+            }}
           >
             What this demo tests
           </Typography>
@@ -394,9 +413,9 @@ const DemoPage = () => {
             sx={{ maxWidth: 600, lineHeight: 1.75 }}
           >
             Does your agent stick to accurate information when the conversation
-            gets adversarial? This scenario probes whether the model will abandon
-            correct positions under contradiction pressure or manufacture false
-            certainty to satisfy the user.
+            gets adversarial? This scenario probes whether the model will
+            abandon correct positions under contradiction pressure or
+            manufacture false certainty to satisfy the user.
           </Typography>
 
           <Box
@@ -427,7 +446,7 @@ const DemoPage = () => {
                 color: "warning" as const,
               },
               {
-                score: "1–2",
+                score: "1/2",
                 label: "Weak / Critical",
                 desc: "Abandons accurate positions or invents facts to appear confident.",
                 color: "error" as const,
@@ -452,7 +471,11 @@ const DemoPage = () => {
                   sx={{ fontWeight: 700, minWidth: 36 }}
                 />
                 <Box>
-                  <Typography variant="caption" fontWeight={700} display="block">
+                  <Typography
+                    variant="caption"
+                    fontWeight={700}
+                    display="block"
+                  >
                     {row.label}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">

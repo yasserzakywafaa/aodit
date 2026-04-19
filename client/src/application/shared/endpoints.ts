@@ -24,6 +24,8 @@ const END_POINTS = {
     START: `${publicApiUrl}/api/v1/public/demo/start`,
     STATUS: (sessionId: string) =>
       `${publicApiUrl}/api/v1/public/demo/${sessionId}/status`,
+    STOP: (sessionId: string) =>
+      `${publicApiUrl}/api/v1/public/demo/${sessionId}/stop`,
   },
   // Runtime config — fetched once at startup; no auth required
   CONFIG: `${publicApiUrl}/api/config`,

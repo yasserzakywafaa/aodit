@@ -9,14 +9,18 @@ export interface ModelEntry {
 
 /** Models available for testing (the models under evaluation). */
 export const MODEL_REGISTRY: Record<string, ModelEntry> = {
-  Claude: { id: "anthropic/claude-sonnet-4", displayName: "Claude" },
-  GPT: { id: "openai/gpt-4o", displayName: "GPT" },
-  Gemini: { id: "google/gemini-2.5-flash", displayName: "Gemini" },
-  Grok: { id: "x-ai/grok-3-mini", displayName: "Grok" },
-  Deepseek: { id: "deepseek/deepseek-chat-v3-0324", displayName: "Deepseek" },
-  Kimi: { id: "moonshotai/kimi-k2", displayName: "Kimi" },
-  Llama: { id: "meta-llama/llama-4-maverick", displayName: "Llama" },
-  Qwen: { id: "qwen/qwen3-30b-a3b", displayName: "Qwen" },
+  Claude: { id: "anthropic/claude-opus-4.7", displayName: "Claude Opus 4.7" },
+  GPT: { id: "openai/gpt-5.4-mini", displayName: "GPT-5.4 Mini" },
+  Gemini: {
+    id: "google/gemini-3-flash-preview",
+    displayName: "Gemini 3 Flash",
+  },
+  Grok: { id: "x-ai/grok-4.1-fast", displayName: "Grok 4.1 Fast" },
+  Deepseek: { id: "deepseek/deepseek-v3.2", displayName: "DeepSeek v3.2" },
+  Kimi: { id: "moonshotai/kimi-k2.5", displayName: "Kimi K2.5" },
+  Llama: { id: "meta-llama/llama-4-maverick", displayName: "Llama 4 Maverick" },
+  Gemma: { id: "google/gemma-4-26b-a4b-it", displayName: "Gemma 4.26b A4b" },
+  Qwen: { id: "qwen/qwen3.6-plus", displayName: "Qwen 3.6 Plus" },
 };
 
 /** Default judge/evaluator model used for prompt generation and scoring. */

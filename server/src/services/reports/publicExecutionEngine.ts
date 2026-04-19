@@ -48,6 +48,18 @@ export const createDemoSession = async (
   return insertedId.toString();
 };
 
+const CANCELLED_SIGNAL = "__DEMO_CANCELLED__";
+
+const isCancelled = async (sessionId: string): Promise<boolean> => {
+  const session = await database
+    .collection(DBCollectionsEnum.demo_sessions)
+    .findOne(
+      { _id: new ObjectId(sessionId) },
+      { projection: { status: 1 } },
+    );
+  return session?.status === "cancelled";
+};
+
 export const runDemoAsync = async (
   sessionId: string,
   systemPrompt: string,
@@ -70,6 +82,7 @@ export const runDemoAsync = async (
       turnTypes: framework.turnTypes,
       systemPrompt,
       onTurnStart: async (turnIndex: number) => {
+        if (await isCancelled(sessionId)) throw new Error(CANCELLED_SIGNAL);
         await updateDocument(
           sessionId,
           { currentTurnIndex: turnIndex },
@@ -77,15 +90,17 @@ export const runDemoAsync = async (
         );
       },
       onTurnComplete: async (turn: TurnResult) => {
-        // $push each turn as it completes so the polling endpoint returns live results
         await database
           .collection(DBCollectionsEnum.demo_sessions)
           .updateOne(
             { _id: new ObjectId(sessionId) },
             { $push: { turns: turn } } as any,
           );
+        if (await isCancelled(sessionId)) throw new Error(CANCELLED_SIGNAL);
       },
     });
+
+    if (await isCancelled(sessionId)) return;
 
     await updateDocument(
       sessionId,
@@ -93,6 +108,7 @@ export const runDemoAsync = async (
       DBCollectionsEnum.demo_sessions,
     );
   } catch (err) {
+    if (err instanceof Error && err.message === CANCELLED_SIGNAL) return;
     await updateDocument(
       sessionId,
       { status: "failed", error: String(err) },

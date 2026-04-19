@@ -4,7 +4,7 @@ export interface DemoSession {
   _id?: string;
   systemPrompt: string;
   modelId: string;
-  status: "pending" | "running" | "completed" | "failed";
+  status: "pending" | "running" | "completed" | "failed" | "cancelled";
   currentTurnIndex: number;
   turns: TurnResult[];
   rawScore?: number;

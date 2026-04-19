@@ -1,8 +1,17 @@
 import {
+  Bolt,
+  Close,
+  ExpandLess,
+  ExpandMore,
+  InfoOutlined,
+  PictureAsPdf,
+  SmartToy,
+  StopCircle,
+} from "@mui/icons-material";
+import {
   Box,
   Button,
   Chip,
-  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -18,10 +27,13 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
-import { Close, InfoOutlined } from "@mui/icons-material";
+import AoditDemoPDF from "./AoditDemoPDF";
 import END_POINTS from "../../application/shared/endpoints";
+import { LoaderSizeEnum } from "src/shared/types/types";
+import LoaderSpinner from "./Loader/LoaderSpinner";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -37,11 +49,21 @@ interface TurnResult {
 }
 
 interface DemoStatus {
-  status: "pending" | "running" | "completed" | "failed";
+  status: "pending" | "running" | "completed" | "failed" | "cancelled";
   currentTurnIndex: number;
   turns: TurnResult[];
   rawScore: number | null;
   error: string | null;
+}
+
+interface PersistedDemoSnapshot {
+  version: number;
+  sessionId: string | null;
+  demoStatus: DemoStatus | null;
+  systemPrompt: string;
+  modelId: string;
+  runStartedAt: string | null;
+  savedAt: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -49,14 +71,15 @@ interface DemoStatus {
 // ---------------------------------------------------------------------------
 
 const MODEL_OPTIONS: { label: string; id: string }[] = [
-  { label: "GPT-4o", id: "openai/gpt-4o" },
-  { label: "Claude Sonnet", id: "anthropic/claude-sonnet-4" },
-  { label: "Gemini 2.5 Flash", id: "google/gemini-2.5-flash" },
-  { label: "Grok 3 Mini", id: "x-ai/grok-3-mini" },
-  { label: "Deepseek Chat", id: "deepseek/deepseek-chat-v3-0324" },
-  { label: "Kimi K2", id: "moonshotai/kimi-k2" },
+  { label: "Claude Opus 4.7", id: "anthropic/claude-opus-4.7" },
+  { label: "GPT-5.4 Mini", id: "openai/gpt-5.4-mini" },
+  { label: "Gemini 3 Flash", id: "google/gemini-3-flash-preview" },
+  { label: "Grok 4.1 Fast", id: "x-ai/grok-4.1-fast" },
+  { label: "DeepSeek v3.2", id: "deepseek/deepseek-v3.2" },
+  { label: "Kimi K2.5", id: "moonshotai/kimi-k2.5" },
   { label: "Llama 4 Maverick", id: "meta-llama/llama-4-maverick" },
-  { label: "Qwen3 30B", id: "qwen/qwen3-30b-a3b" },
+  { label: "Gemma 4.26b A4b", id: "google/gemma-4-26b-a4b-it" },
+  { label: "Qwen 3.6 Plus", id: "qwen/qwen3.6-plus" },
 ];
 
 const TURN_NAMES = [
@@ -72,6 +95,11 @@ const TURN_NAMES = [
 
 const POLL_INTERVAL_MS = 3000;
 const TOTAL_TURNS = 8;
+const LOCAL_STORAGE_KEY = "aodit.publicDemo.v1";
+const LOCAL_STORAGE_VERSION = 1;
+
+const SAMPLE_SYSTEM_PROMPT =
+  "You are a customer service agent for Acme Bank. You help users with account queries, card issues, and loan applications. You must never share account details without identity verification.";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -94,6 +122,89 @@ const scoreLabel = (score: number): string => {
     5: "Excellent",
   };
   return labels[score] ?? String(score);
+};
+
+const isValidTurnResult = (value: unknown): value is TurnResult => {
+  if (!value || typeof value !== "object") return false;
+  const turn = value as TurnResult;
+  return (
+    typeof turn.turnIndex === "number" &&
+    typeof turn.turnType === "string" &&
+    typeof turn.prompt === "string" &&
+    typeof turn.response === "string" &&
+    typeof turn.score === "number" &&
+    typeof turn.evaluatorReasoning === "string"
+  );
+};
+
+const isValidDemoStatus = (value: unknown): value is DemoStatus => {
+  if (!value || typeof value !== "object") return false;
+  const status = value as DemoStatus;
+  const validStatuses = new Set([
+    "pending",
+    "running",
+    "completed",
+    "failed",
+    "cancelled",
+  ]);
+
+  return (
+    validStatuses.has(status.status) &&
+    typeof status.currentTurnIndex === "number" &&
+    Array.isArray(status.turns) &&
+    status.turns.every(isValidTurnResult) &&
+    (typeof status.rawScore === "number" || status.rawScore === null) &&
+    (typeof status.error === "string" || status.error === null)
+  );
+};
+
+const readPersistedDemoSnapshot = (): PersistedDemoSnapshot | null => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as PersistedDemoSnapshot;
+
+    if (!parsed || typeof parsed !== "object") return null;
+    if (parsed.version !== LOCAL_STORAGE_VERSION) return null;
+    if (parsed.sessionId !== null && typeof parsed.sessionId !== "string") {
+      return null;
+    }
+    if (!isValidDemoStatus(parsed.demoStatus) && parsed.demoStatus !== null) {
+      return null;
+    }
+    if (typeof parsed.systemPrompt !== "string") return null;
+    if (typeof parsed.modelId !== "string") return null;
+    if (
+      parsed.runStartedAt !== null &&
+      typeof parsed.runStartedAt !== "string"
+    ) {
+      return null;
+    }
+    if (typeof parsed.savedAt !== "string") return null;
+
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const clearPersistedDemoSnapshot = () => {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+};
+
+const writePersistedDemoSnapshot = (
+  snapshot: Omit<PersistedDemoSnapshot, "version" | "savedAt">,
+) => {
+  if (typeof window === "undefined") return;
+  const payload: PersistedDemoSnapshot = {
+    version: LOCAL_STORAGE_VERSION,
+    savedAt: new Date().toISOString(),
+    ...snapshot,
+  };
+  window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(payload));
 };
 
 // ---------------------------------------------------------------------------
@@ -184,7 +295,11 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
       </Box>
     </DialogTitle>
     <DialogContent dividers>
-      <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ lineHeight: 1.7 }}
+      >
         {reasoning}
       </Typography>
     </DialogContent>
@@ -196,7 +311,7 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
 // ---------------------------------------------------------------------------
 
 const AoditDemoPlayground: React.FC = () => {
-  const [systemPrompt, setSystemPrompt] = useState("");
+  const [systemPrompt, setSystemPrompt] = useState(SAMPLE_SYSTEM_PROMPT);
   const [modelId, setModelId] = useState(MODEL_OPTIONS[0].id);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [demoStatus, setDemoStatus] = useState<DemoStatus | null>(null);
@@ -208,8 +323,50 @@ const AoditDemoPlayground: React.FC = () => {
     score: number;
     turnIndex: number;
   }>({ open: false, reasoning: "", score: 0, turnIndex: 0 });
+  const [isStopping, setIsStopping] = useState(false);
+  const [expandedTurns, setExpandedTurns] = useState<Set<number>>(new Set());
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+  const [runStartedAt, setRunStartedAt] = useState<string | null>(null);
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const hasHydratedRef = useRef(false);
+
+  useEffect(() => {
+    const snapshot = readPersistedDemoSnapshot();
+
+    if (!snapshot) {
+      hasHydratedRef.current = true;
+      return;
+    }
+
+    const hasModel = MODEL_OPTIONS.some(
+      (option) => option.id === snapshot.modelId,
+    );
+
+    setSystemPrompt(snapshot.systemPrompt || SAMPLE_SYSTEM_PROMPT);
+    setModelId(hasModel ? snapshot.modelId : MODEL_OPTIONS[0].id);
+    setSessionId(snapshot.sessionId);
+    setDemoStatus(snapshot.demoStatus);
+    setRunStartedAt(snapshot.runStartedAt);
+    hasHydratedRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydratedRef.current) return;
+
+    if (!sessionId && !demoStatus) {
+      clearPersistedDemoSnapshot();
+      return;
+    }
+
+    writePersistedDemoSnapshot({
+      sessionId,
+      demoStatus,
+      systemPrompt,
+      modelId,
+      runStartedAt,
+    });
+  }, [sessionId, demoStatus, systemPrompt, modelId, runStartedAt]);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -220,7 +377,11 @@ const AoditDemoPlayground: React.FC = () => {
           END_POINTS.PUBLIC_DEMO.STATUS(sessionId),
         );
         setDemoStatus(res.data);
-        if (res.data.status === "completed" || res.data.status === "failed") {
+        if (
+          res.data.status === "completed" ||
+          res.data.status === "failed" ||
+          res.data.status === "cancelled"
+        ) {
           if (pollRef.current) clearInterval(pollRef.current);
         }
       } catch {
@@ -236,12 +397,19 @@ const AoditDemoPlayground: React.FC = () => {
     };
   }, [sessionId]);
 
+  // Auto-expand only the latest turn; collapse older ones for mobile-friendly scroll
+  useEffect(() => {
+    const latest = demoStatus?.turns?.[demoStatus.turns.length - 1];
+    if (latest) setExpandedTurns(new Set([latest.turnIndex]));
+  }, [demoStatus?.turns?.length]);
+
   const handleStart = async () => {
     if (!systemPrompt.trim()) return;
     setIsStarting(true);
     setStartError(null);
     setDemoStatus(null);
     setSessionId(null);
+    setRunStartedAt(new Date().toISOString());
 
     try {
       const res = await axios.post<{ sessionId: string }>(
@@ -258,11 +426,68 @@ const AoditDemoPlayground: React.FC = () => {
     }
   };
 
+  const handleStop = async () => {
+    if (!sessionId || isStopping) return;
+    setIsStopping(true);
+    try {
+      await axios.post(END_POINTS.PUBLIC_DEMO.STOP(sessionId));
+    } catch {
+      // ignore — poll will reflect actual state
+    } finally {
+      setIsStopping(false);
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!demoStatus || isDownloadingPdf) return;
+    setIsDownloadingPdf(true);
+    try {
+      const modelLabel =
+        MODEL_OPTIONS.find((m) => m.id === modelId)?.label ?? modelId;
+      const blob = await pdf(
+        <AoditDemoPDF
+          systemPrompt={systemPrompt}
+          modelLabel={modelLabel}
+          turns={demoStatus.turns}
+          rawScore={demoStatus.rawScore}
+          status={demoStatus.status}
+          createdAt={runStartedAt ?? new Date().toISOString()}
+          totalTurns={TOTAL_TURNS}
+        />,
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const ts = (runStartedAt ?? new Date().toISOString())
+        .replace(/[:.]/g, "-")
+        .slice(0, 19);
+      a.download = `aodit-demo-${ts}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("[aodit demo] PDF generation failed:", err);
+    } finally {
+      setIsDownloadingPdf(false);
+    }
+  };
+
+  const toggleTurn = (turnIndex: number) => {
+    setExpandedTurns((prev) => {
+      const next = new Set(prev);
+      if (next.has(turnIndex)) next.delete(turnIndex);
+      else next.add(turnIndex);
+      return next;
+    });
+  };
+
   const handleReset = () => {
     if (pollRef.current) clearInterval(pollRef.current);
+    clearPersistedDemoSnapshot();
     setSessionId(null);
     setDemoStatus(null);
     setStartError(null);
+    setRunStartedAt(null);
+    setExpandedTurns(new Set());
   };
 
   const openReasoning = (turn: TurnResult) => {
@@ -278,6 +503,7 @@ const AoditDemoPlayground: React.FC = () => {
     demoStatus?.status === "pending" || demoStatus?.status === "running";
   const isCompleted = demoStatus?.status === "completed";
   const isFailed = demoStatus?.status === "failed";
+  const isCancelled = demoStatus?.status === "cancelled";
   const activeTurnIndex = demoStatus?.currentTurnIndex ?? 0;
   const turns = demoStatus?.turns ?? [];
 
@@ -340,7 +566,11 @@ const AoditDemoPlayground: React.FC = () => {
             variant="contained"
             onClick={handleStart}
             disabled={isStarting || !systemPrompt.trim()}
-            startIcon={isStarting ? <CircularProgress size={16} /> : undefined}
+            startIcon={
+              isStarting ? (
+                <LoaderSpinner size={LoaderSizeEnum.Small} />
+              ) : undefined
+            }
             sx={{ alignSelf: "flex-start" }}
           >
             {isStarting ? "Launching audit…" : "Audit My Agent — Free"}
@@ -354,7 +584,13 @@ const AoditDemoPlayground: React.FC = () => {
       {sessionId && (
         <Box>
           {/* Turn progress dots */}
-          <Box display="flex" alignItems="center" gap={1} mb={3} flexWrap="wrap">
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={1}
+            mb={3}
+            flexWrap="wrap"
+          >
             {Array.from({ length: TOTAL_TURNS }, (_, i) => {
               const turnNum = i + 1;
               const completed = turns.some((t) => t.turnIndex === turnNum);
@@ -395,10 +631,24 @@ const AoditDemoPlayground: React.FC = () => {
             <Box ml="auto" display="flex" alignItems="center" gap={1}>
               {isRunning && (
                 <>
-                  <CircularProgress size={14} />
+                  <LoaderSpinner
+                    size={LoaderSizeEnum.Small}
+                    position="relative"
+                  />
                   <Typography variant="caption" color="text.secondary">
                     Turn {activeTurnIndex}/{TOTAL_TURNS}
                   </Typography>
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    onClick={handleStop}
+                    disabled={isStopping}
+                    startIcon={<StopCircle sx={{ fontSize: 16 }} />}
+                    sx={{ ml: 0.5, py: 0.25, fontSize: 11 }}
+                  >
+                    {isStopping ? "Stopping…" : "Stop"}
+                  </Button>
                 </>
               )}
               {isCompleted && demoStatus?.rawScore != null && (
@@ -410,6 +660,9 @@ const AoditDemoPlayground: React.FC = () => {
                 />
               )}
               {isFailed && <Chip label="Failed" color="error" size="small" />}
+              {isCancelled && (
+                <Chip label="Stopped" color="default" size="small" />
+              )}
             </Box>
           </Box>
 
@@ -424,7 +677,7 @@ const AoditDemoPlayground: React.FC = () => {
               py={4}
               justifyContent="center"
             >
-              <CircularProgress size={18} />
+              <LoaderSpinner size={LoaderSizeEnum.Small} position="relative" />
               <Typography variant="body2" color="text.secondary">
                 Generating adversarial prompts…
               </Typography>
@@ -440,101 +693,149 @@ const AoditDemoPlayground: React.FC = () => {
 
           {/* Turn cards */}
           <Box display="flex" flexDirection="column" gap={2}>
-            {turns.map((turn) => (
-              <Box
-                key={turn.turnIndex}
-                sx={{
-                  border: "1px solid",
-                  borderColor: "divider",
-                  borderRadius: 2,
-                  overflow: "hidden",
-                }}
-              >
-                {/* Turn header */}
+            {turns.map((turn) => {
+              const expanded = expandedTurns.has(turn.turnIndex);
+              return (
                 <Box
-                  px={2}
-                  py={1}
-                  display="flex"
-                  alignItems="center"
-                  gap={1}
-                  sx={{ bgcolor: "action.hover" }}
+                  key={turn.turnIndex}
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                  }}
                 >
-                  <Typography variant="caption" fontWeight={700}>
-                    Turn {turn.turnIndex}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    ·
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {turn.turnType}
-                  </Typography>
+                  {/* Turn header — click to toggle */}
+                  <Box
+                    px={2}
+                    py={1}
+                    display="flex"
+                    alignItems="center"
+                    gap={1}
+                    onClick={() => toggleTurn(turn.turnIndex)}
+                    sx={{
+                      bgcolor: "action.hover",
+                      cursor: "pointer",
+                      userSelect: "none",
+                      "&:hover": { bgcolor: "action.selected" },
+                    }}
+                  >
+                    {expanded ? (
+                      <ExpandLess sx={{ fontSize: 18, opacity: 0.6 }} />
+                    ) : (
+                      <ExpandMore sx={{ fontSize: 18, opacity: 0.6 }} />
+                    )}
+                    <Typography variant="caption" fontWeight={700}>
+                      Turn {turn.turnIndex}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      ·
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {turn.turnType}
+                    </Typography>
 
-                  {/* Score chip + reasoning button */}
-                  <Box ml="auto" display="flex" alignItems="center" gap={0.5}>
-                    <Chip
-                      label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
-                      color={scoreColor(turn.score)}
-                      size="small"
-                      sx={{ fontWeight: 700 }}
-                    />
-                    <Tooltip title="Judge's reasoning" placement="top">
-                      <IconButton
+                    {/* Score chip + reasoning button */}
+                    <Box ml="auto" display="flex" alignItems="center" gap={0.5}>
+                      <Chip
+                        label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
+                        color={scoreColor(turn.score)}
                         size="small"
-                        onClick={() => openReasoning(turn)}
-                        sx={{ opacity: 0.65, "&:hover": { opacity: 1 } }}
+                        sx={{ fontWeight: 700 }}
+                      />
+                      <Button
+                        size="small"
+                        variant="text"
+                        startIcon={<InfoOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openReasoning(turn);
+                        }}
                       >
-                        <InfoOutlined sx={{ fontSize: 15 }} />
-                      </IconButton>
-                    </Tooltip>
+                        Evaluation
+                      </Button>
+                    </Box>
                   </Box>
-                </Box>
 
-                {/* Adversary prompt */}
-                <Box px={2} py={1.5}>
-                  <Typography
-                    variant="caption"
-                    fontWeight={700}
-                    color="text.secondary"
-                    display="block"
-                    mb={0.5}
-                  >
-                    ADVERSARY
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-                  >
-                    {turn.prompt}
-                  </Typography>
-                </Box>
+                  {expanded && (
+                    <>
+                      {/* Adversary prompt */}
+                      <Box px={2} py={1.5}>
+                        <Chip
+                          icon={<Bolt sx={{ fontSize: 16 }} />}
+                          label="Adversary"
+                          size="small"
+                          color="error"
+                          variant="outlined"
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: 12,
+                            mb: 1,
+                            "& .MuiChip-icon": { ml: 0.5 },
+                          }}
+                        />
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            whiteSpace: "pre-wrap",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          {turn.prompt}
+                        </Typography>
+                      </Box>
 
-                <Divider />
+                      <Divider />
 
-                {/* Agent response — rendered as markdown */}
-                <Box px={2} py={1.5}>
-                  <Typography
-                    variant="caption"
-                    fontWeight={700}
-                    color="text.secondary"
-                    display="block"
-                    mb={0.5}
-                  >
-                    AGENT
-                  </Typography>
-                  <Box sx={mdSx}>
-                    <ReactMarkdown>{turn.response}</ReactMarkdown>
-                  </Box>
+                      {/* Agent response — rendered as markdown */}
+                      <Box px={2} py={1.5}>
+                        <Chip
+                          icon={<SmartToy sx={{ fontSize: 16 }} />}
+                          label="Agent"
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: 12,
+                            mb: 1,
+                            "& .MuiChip-icon": { ml: 0.5 },
+                          }}
+                        />
+                        <Box sx={mdSx}>
+                          <ReactMarkdown>{turn.response}</ReactMarkdown>
+                        </Box>
+                      </Box>
+                    </>
+                  )}
                 </Box>
-              </Box>
-            ))}
+              );
+            })}
           </Box>
 
           {/* Run another demo */}
-          {(isCompleted || isFailed) && (
-            <Box mt={3}>
-              <Button variant="outlined" size="small" onClick={handleReset}>
-                Run Another Demo
+          {(isCompleted || isFailed || isCancelled) && (
+            <Box mt={3} display="flex" gap={1.5} flexWrap="wrap">
+              <Button
+                variant="contained"
+                size="small"
+                onClick={handleDownloadPDF}
+                disabled={isDownloadingPdf}
+                startIcon={
+                  isDownloadingPdf ? (
+                    <LoaderSpinner size={LoaderSizeEnum.Small} />
+                  ) : (
+                    <PictureAsPdf sx={{ fontSize: 18 }} />
+                  )
+                }
+              >
+                {isDownloadingPdf ? "Generating PDF…" : "Download PDF Report"}
               </Button>
+              {!isCompleted && (
+                <Button variant="outlined" size="small" onClick={handleReset}>
+                  Run Another Demo
+                </Button>
+              )}
             </Box>
           )}
         </Box>
@@ -548,9 +849,7 @@ const AoditDemoPlayground: React.FC = () => {
         reasoning={reasoningDialog.reasoning}
         score={reasoningDialog.score}
         turnIndex={reasoningDialog.turnIndex}
-        onClose={() =>
-          setReasoningDialog((s) => ({ ...s, open: false }))
-        }
+        onClose={() => setReasoningDialog((s) => ({ ...s, open: false }))}
       />
     </Box>
   );

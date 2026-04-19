@@ -30,4 +30,10 @@ router.get(
   PublicDemoController.getDemoStatus,
 );
 
+router.post(
+  "/api/v1/public/demo/:sessionId/stop",
+  demoStatusLimiter,
+  PublicDemoController.stopDemo,
+);
+
 export default router;

@@ -91,5 +91,42 @@ const getDemoStatus = async (
   }
 };
 
-const PublicDemoController = { startDemo, getDemoStatus };
+const stopDemo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { sessionId } = req.params;
+
+    let objectId: ObjectId;
+    try {
+      objectId = new ObjectId(sessionId);
+    } catch {
+      res.status(400).json({ error: "Invalid sessionId." });
+      return;
+    }
+
+    const result = await database
+      .collection(DBCollectionsEnum.demo_sessions)
+      .findOneAndUpdate(
+        { _id: objectId, status: { $in: ["pending", "running"] } },
+        { $set: { status: "cancelled" } },
+        { returnDocument: "after" },
+      );
+
+    if (!result) {
+      res
+        .status(409)
+        .json({ error: "Demo session not found or already finished." });
+      return;
+    }
+
+    res.status(200).json({ status: "cancelled" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const PublicDemoController = { startDemo, getDemoStatus, stopDemo };
 export default PublicDemoController;

@@ -85,8 +85,6 @@ export const handleOpenRouterAIRequest = async (
   const openai = createOpenRouterClient();
   return await openai.chat.completions.create({
     model: modelName,
-    // @ts-expect-error
-    models: CONFIG.OPENROUTER_MODELS_NAMES,
     messages: messages as any,
     ...(options.response_format && {
       response_format: options.response_format as any,

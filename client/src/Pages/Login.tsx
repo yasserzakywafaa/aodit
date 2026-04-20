@@ -1,6 +1,7 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Divider, Typography } from "@mui/material";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
+import EmailPasswordForm from "src/components/shared/Auth/EmailPasswordForm";
 import { LockOpenOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import PhoneAuth from "src/components/shared/SocialLogins/PhoneAuth";
@@ -79,9 +80,15 @@ const LoginPage = () => {
           </Typography>
         </Box>
 
-        <Box display="flex" flexDirection="column" gap={2}>
-          <SocialLogin authType="login" />
-          <PhoneAuth authType="login" />
+        <Box display="flex" flexDirection="column" gap={2} alignItems="center">
+          {!APP_CONSTANTS.IS_ON_PREM && (
+            <>
+              <SocialLogin authType="login" />
+              <PhoneAuth authType="login" />
+              <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+            </>
+          )}
+          <EmailPasswordForm mode="login" />
         </Box>
       </Container>
     </Page>

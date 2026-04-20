@@ -141,28 +141,31 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     <UserAccountMenuButton user={auth.user as User} />
                   </MenuItem>
                 ) : (
-                  // TODO: Remove this after going live to PROD
-                  (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
-                    <>
-                      <MenuItem onClick={handleToggleRegisterModal}>
-                        <LockOpenOutlined
-                          fontSize="small"
-                          color="secondary"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="body1">Register</Typography>
-                      </MenuItem>
-                      <MenuItem onClick={handleToggleLoginModal}>
-                        <VpnKeyOutlined
-                          fontSize="small"
-                          color="secondary"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="body1">Log in</Typography>
-                      </MenuItem>
-                    </>
+                  // Show Login in dev/local/on-prem (users need to log in)
+                  (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL || APP_CONSTANTS.IS_ON_PREM) && (
+                    <MenuItem onClick={handleToggleLoginModal}>
+                      <VpnKeyOutlined
+                        fontSize="small"
+                        color="secondary"
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="body1">Log in</Typography>
+                    </MenuItem>
                   )
                 )}
+
+                {/* Show Register only in dev/local (NOT on-prem - admin creates users) */}
+                {!auth.isAuthenticated && (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
+                  <MenuItem onClick={handleToggleRegisterModal}>
+                    <LockOpenOutlined
+                      fontSize="small"
+                      color="secondary"
+                      sx={{ mr: 1 }}
+                    />
+                    <Typography variant="body1">Register</Typography>
+                  </MenuItem>
+                )}
+
                 <MenuItem>
                   <SettingsMenuButton
                     setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}

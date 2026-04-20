@@ -215,7 +215,9 @@ export const executeScenario = async (params: {
   turnTypes: readonly string[];
   reportDescription?: string;
   reportType?: string;
+  systemPrompt?: string;
   onTurnStart?: (turnIndex: number, turnType: string) => Promise<void>;
+  onTurnComplete?: (turn: TurnResult) => Promise<void>;
 }): Promise<{
   turns: TurnResult[];
   rawScore: number;
@@ -229,7 +231,9 @@ export const executeScenario = async (params: {
     turnTypes,
     reportDescription,
     reportType,
+    systemPrompt,
     onTurnStart,
+    onTurnComplete,
   } = params;
 
   const conversationHistory: Array<{ role: string; content: string }> = [];
@@ -275,10 +279,13 @@ export const executeScenario = async (params: {
     // --- Send prompt to model under test ---
     conversationHistory.push({ role: "user", content: userPrompt });
 
-    const modelMessages = conversationHistory.map((m) => ({
-      role: m.role as "system" | "user" | "assistant",
-      content: m.content,
-    }));
+    const modelMessages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+      ...(systemPrompt ? [{ role: "system" as const, content: systemPrompt }] : []),
+      ...conversationHistory.map((m) => ({
+        role: m.role as "system" | "user" | "assistant",
+        content: m.content,
+      })),
+    ];
 
     const modelResponse = await callWithRetry(modelId, modelMessages);
     conversationHistory.push({ role: "assistant", content: modelResponse });
@@ -317,14 +324,19 @@ export const executeScenario = async (params: {
       selfScore = Math.max(1, Math.min(5, Math.round(selfParsed.selfScore)));
     }
 
-    turns.push({
+    const completedTurn: TurnResult = {
       turnIndex: turnNumber,
       turnType,
       prompt: userPrompt,
       response: modelResponse,
       score,
       evaluatorReasoning: parsed.reasoning,
-    });
+    };
+    turns.push(completedTurn);
+
+    if (onTurnComplete) {
+      await onTurnComplete(completedTurn);
+    }
   }
 
   // Raw score = average of all turn scores

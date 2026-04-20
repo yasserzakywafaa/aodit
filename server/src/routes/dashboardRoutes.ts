@@ -1,6 +1,8 @@
 import DashboardController from "../controllers/DashboardController";
 import END_POINTS from "../models/endpoints";
 import { Router } from "express";
+import { authMiddleware } from "../middleware/authMiddleware";
+import { requireAdminRole } from "../middleware/adminMiddleware";
 
 const dashboardRoutes = Router();
 
@@ -35,13 +37,32 @@ dashboardRoutes.put(
   DashboardController.updateUserInfo,
 );
 
+// Admin-only routes — require authenticated admin/super_admin
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.ADMIN.USERS.GET_ALL_USERS,
+  authMiddleware,
+  requireAdminRole,
+  DashboardController.getAllUsers,
+);
+
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.ADMIN.USERS.CREATE_USER,
+  authMiddleware,
+  requireAdminRole,
+  DashboardController.createUser,
+);
+
 dashboardRoutes.post(
   END_POINTS.DASHBOARD.ADMIN.USERS.BLOCK_USER(":userId"),
+  authMiddleware,
+  requireAdminRole,
   DashboardController.blockUser,
 );
 
 dashboardRoutes.post(
   END_POINTS.DASHBOARD.ADMIN.USERS.UNBLOCK_USER(":userId"),
+  authMiddleware,
+  requireAdminRole,
   DashboardController.unblockUser,
 );
 
@@ -83,11 +104,15 @@ dashboardRoutes.get(
 
 dashboardRoutes.get(
   END_POINTS.DASHBOARD.ADMIN.AGENTS.GET_ALL_AGENTS,
+  authMiddleware,
+  requireAdminRole,
   DashboardController.getAllAgents,
 );
 
 dashboardRoutes.get(
   END_POINTS.DASHBOARD.ADMIN.REPORTS.GET_ALL_REPORTS,
+  authMiddleware,
+  requireAdminRole,
   DashboardController.getAllReports,
 );
 

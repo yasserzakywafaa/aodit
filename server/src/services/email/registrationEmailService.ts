@@ -1,7 +1,7 @@
 import CONFIG from "../../config";
 import { RegistrationEmailData } from "./types";
 import { User } from "../../models/types";
-import { createOAuth2Transporter } from "./utils/sendEmail";
+import { createOAuth2Transporter, createSmtpTransporter } from "./utils/sendEmail";
 import { generateRegistrationWelcomePlainText } from "./utils/plainTextGenerator";
 import { renderEmailTemplate } from "./emailTemplateService";
 
@@ -27,7 +27,14 @@ export const sendRegistrationWelcomeEmail = async (
   }
 
   try {
-    const transporter = await createOAuth2Transporter();
+    const isGmailConfigured = Boolean(
+      CONFIG.GMAIL_CLIENT_ID &&
+      CONFIG.GMAIL_CLIENT_SECRET &&
+      CONFIG.GMAIL_REFRESH_TOKEN,
+    );
+    const transporter = isGmailConfigured
+      ? await createOAuth2Transporter()
+      : createSmtpTransporter();
 
     const userName =
       user.name?.givenName && user.name?.familyName

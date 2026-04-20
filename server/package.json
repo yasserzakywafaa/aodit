@@ -13,9 +13,15 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "start:watch": "nodemon src/server.ts",
-    "start:prod": "NODE_ENV=production node build/server.js",
+    "start:prod": "NODE_ENV=production node build/src/server.js",
     "build": "tsc",
-    "build:vercel": "yarn build && mv build ../build/server"
+    "build:vercel": "yarn build && mv build ../build/server",
+    "seed:admin": "ts-node scripts/seed-admin.ts",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f server",
+    "docker:deploy": "docker compose up --build -d"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.591.0",
@@ -41,12 +47,13 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-linkedin-oauth2": "^2.0.0",
     "path": "0.12.7",
+    "agenda": "5.0.0",
+    "bcryptjs": "^2.4.3",
     "stripe": "^16.12.0",
     "tslib": "2.6.2",
     "twilio": "^5.12.1"
   },
   "devDependencies": {
-    "@types/agenda": "^4.1.0",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "2.8.12",
@@ -56,6 +63,7 @@
     "@types/nodemailer": "^6.4.15",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
+    "@types/bcryptjs": "^2.4.6",
     "@types/passport-linkedin-oauth2": "^1.5.6",
     "ts-node": "10.9.2",
     "typescript": "^5.9.3"

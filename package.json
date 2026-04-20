@@ -1,0 +1,20 @@
+{
+  "name": "aodit",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "docker:build": "docker build -f on-prem/Dockerfile.onprem -t aodit:latest .",
+    "docker:tar": "docker save aodit:latest | gzip > aodit-latest.tar.gz",
+    "docker:checksum": "sh -c 'if command -v shasum >/dev/null 2>&1; then shasum -a 256 aodit-latest.tar.gz | awk \"{print \\$1}\" > aodit-latest.tar.gz.sha256; elif command -v sha256sum >/dev/null 2>&1; then sha256sum aodit-latest.tar.gz | awk \"{print \\$1}\" > aodit-latest.tar.gz.sha256; else echo \"No SHA-256 tool found. Install shasum or sha256sum.\" >&2; exit 1; fi'",
+    "docker:package": "./on-prem/package-image.sh",
+    "docker:install:onprem": "./on-prem/install.sh --tar ./aodit-latest.tar.gz",
+    "docker:install:onprem:skip-seed": "./on-prem/install.sh --tar ./aodit-latest.tar.gz --skip-seed",
+    "docker:load": "docker load < aodit-latest.tar.gz",
+    "docker:up": "docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml up -d",
+    "docker:down": "docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml down",
+    "docker:ps": "docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml ps",
+    "docker:logs": "docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml logs -f aodit",
+    "docker:logs:db": "docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml logs -f mongodb",
+    "docker:deploy": "docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml up --build -d"
+  }
+}

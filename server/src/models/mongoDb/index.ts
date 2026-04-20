@@ -38,6 +38,7 @@ export enum DBCollectionsEnum {
   agents = "agents",
   users = "users",
   lead_subscribers = "lead_subscribers",
+  demo_sessions = "demo_sessions",
 }
 
 const getMongoDbUri = (): string => {
@@ -144,6 +145,10 @@ const createIndexes = async () => {
     const leadSubscribers = database.collection(DBCollectionsEnum.lead_subscribers);
     await leadSubscribers.createIndex({ email: 1 }, { unique: true });
     await leadSubscribers.createIndex({ createdAt: -1 });
+
+    const demoSessions = database.collection(DBCollectionsEnum.demo_sessions);
+    await demoSessions.createIndex({ createdAt: -1 });
+    await demoSessions.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
   } catch (error) {
     console.error("❌ Error creating index:", error);
   }

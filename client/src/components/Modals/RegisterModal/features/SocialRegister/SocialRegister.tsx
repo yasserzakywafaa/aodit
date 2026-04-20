@@ -9,7 +9,7 @@ interface SocialRegisterProps {
 
 const SocialRegister = (props: SocialRegisterProps): JSX.Element => {
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
+    <Box display="flex" flexDirection="column" gap={2} width="100%">
       <GoogleAuth authType={props.authType || "register"} />
       {/* <LinkedInAuth authType={props.authType || "register"} /> */}
     </Box>

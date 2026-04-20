@@ -1,16 +1,18 @@
-import { NextFunction, Request, Response } from "express";
+import * as ReportRunService from "../services/reports/reportRunService";
 
 import {
   DBCollectionsEnum,
   getDocumentsByQueryFromDb,
 } from "../models/mongoDb";
+import { NextFunction, Request, Response } from "express";
 
 import AgentServices from "../services/agentService";
 import { AgentUnreachableError } from "../utils/agentClient";
 import DashboardServices from "../services/dashboardService";
 import ReportServices from "../services/reportService";
-import * as ReportRunService from "../services/reports/reportRunService";
 import { ScenarioResult } from "../models/types/scenarioResult";
+import { UserRole } from "../models/types";
+import bcrypt from "bcryptjs";
 
 const getUsersCount = async (
   request: Request,
@@ -232,9 +234,7 @@ const deleteReport = async (
   next: NextFunction,
 ) => {
   try {
-    const report = await ReportServices.deleteReport(
-      request.params.reportId,
-    );
+    const report = await ReportServices.deleteReport(request.params.reportId);
     response.status(200).json(report);
   } catch (error) {
     next(error);
@@ -278,7 +278,10 @@ const testReportAgentConnection = async (
   try {
     const { reportId } = request.params;
     const { agentId } = request.body ?? {};
-    const result = await ReportRunService.testAgentConnection(reportId, agentId);
+    const result = await ReportRunService.testAgentConnection(
+      reportId,
+      agentId,
+    );
     response.status(200).json(result);
   } catch (error) {
     if (error instanceof AgentUnreachableError) {
@@ -351,9 +354,7 @@ const getScenarioResults = async (
     const { reportId } = request.params;
     const { runId } = request.query as { runId?: string };
 
-    const query = runId
-      ? { reportRunId: runId }
-      : { reportId };
+    const query = runId ? { reportRunId: runId } : { reportId };
 
     const results = await getDocumentsByQueryFromDb<ScenarioResult>(
       query as any,
@@ -419,7 +420,8 @@ const updateAgent = async (
 ) => {
   try {
     const agentId = request.params.agentId;
-    const { name, description, intent, ownerName, agentUrl, status } = request.body;
+    const { name, description, intent, ownerName, agentUrl, status } =
+      request.body;
     const updated = await AgentServices.updateAgent(agentId, {
       name,
       description,
@@ -523,6 +525,55 @@ const getReportsByAgentId = async (
   }
 };
 
+const createUser = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { email, password, firstName, lastName, role } = request.body;
+
+  if (!email || !password || !firstName || !role) {
+    return response.status(400).json({
+      message: "email, password, firstName, and role are required.",
+    });
+  }
+
+  if (password.length < 8) {
+    return response.status(400).json({
+      message: "Password must be at least 8 characters.",
+    });
+  }
+
+  const validRoles = Object.values(UserRole);
+  if (!validRoles.includes(role)) {
+    return response.status(400).json({
+      message: `Role must be one of: ${validRoles.join(", ")}.`,
+    });
+  }
+
+  try {
+    const passwordHash = await bcrypt.hash(password, 12);
+    const newUser = await DashboardServices.createUser({
+      email,
+      passwordHash,
+      firstName,
+      lastName: lastName || "",
+      role,
+    });
+
+    // Strip passwordHash before returning
+    const { passwordHash: _ph, ...safeUser } = newUser as any;
+    return response.status(201).json(safeUser);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("already exists")) {
+      return response.status(409).json({ message: error.message });
+    }
+    next(error);
+  }
+
+  return;
+};
+
 const DashboardController = {
   getUsersCount,
   getAllUsers,
@@ -531,6 +582,7 @@ const DashboardController = {
   blockUser,
   unblockUser,
   deleteUser,
+  createUser,
   // Reports
   getAllReports,
   getReportsCount,

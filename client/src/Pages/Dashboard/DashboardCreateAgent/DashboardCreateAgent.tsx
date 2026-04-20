@@ -146,7 +146,8 @@ const DashboardCreateAgent = () => {
                   sx={{ mb: 2 }}
                 />
                 <TextField
-                  label="Agent URL (optional)"
+                  required
+                  label="Agent URL"
                   name="agentUrl"
                   value={agent.agentUrl ?? ""}
                   onChange={handleChange}
@@ -157,7 +158,7 @@ const DashboardCreateAgent = () => {
                   helperText={
                     !isValidUrl(agent.agentUrl)
                       ? "Enter a valid https:// URL"
-                      : "Required only for Agent-to-Agent evaluation mode"
+                      : "Required for Agent-to-Agent evaluation mode. This will be used to probe the agent during evaluation."
                   }
                 />
               </CardContent>
@@ -210,8 +211,8 @@ const DashboardCreateAgent = () => {
               }}
             >
               Under Swiss FINMA regulations, every AI agent deployed in
-              regulated environments must have a designated human responsible for
-              its oversight. Creating an agent here registers it in the{" "}
+              regulated environments must have a designated human responsible
+              for its oversight. Creating an agent here registers it in the{" "}
               <Typography
                 component="span"
                 fontSize="inherit"

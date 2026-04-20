@@ -32,6 +32,9 @@ const END_POINTS = {
     PHONE_REGISTER_VERIFY_OTP: `/api/v1/auth/phone/register/verify-otp`,
     PHONE_LOGIN_SEND_OTP: `/api/v1/auth/phone/login/send-otp`,
     PHONE_LOGIN_VERIFY_OTP: `/api/v1/auth/phone/login/verify-otp`,
+    // Email + password auth
+    EMAIL_REGISTER: `/api/v1/auth/register/email`,
+    EMAIL_LOGIN: `/api/v1/auth/login/email`,
   },
   PAYMENTS: {
     CONFIG: `/api/v1/payments/config`,
@@ -58,6 +61,7 @@ const END_POINTS = {
     ADMIN: {
       USERS: {
         GET_ALL_USERS: `/api/v1/dashboard/admin/users`,
+        CREATE_USER: `/api/v1/dashboard/admin/users/create`,
         BLOCK_USER: (userId: string) =>
           `/api/v1/dashboard/users/block/${userId}`,
         UNBLOCK_USER: (userId: string) =>

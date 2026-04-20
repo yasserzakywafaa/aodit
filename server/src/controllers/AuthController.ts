@@ -1,4 +1,5 @@
 import { AuthProviderEnum, User, getInitialUserData } from "../models/types";
+import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import {
   getDocumentByFieldFromDb,
@@ -63,6 +64,14 @@ const OTP_CODE_REGEX = /^\d{4,8}$/;
 
 const sanitizeUserForResponse = (user: User): Omit<User, "refreshToken"> => {
   const { refreshToken, ...safeUser } = user;
+  return safeUser;
+};
+
+// Strips both refreshToken and passwordHash — used for email/password auth responses
+const sanitizeUserForClientResponse = (
+  user: User,
+): Omit<User, "refreshToken" | "passwordHash"> => {
+  const { refreshToken, passwordHash, ...safeUser } = user as any;
   return safeUser;
 };
 
@@ -242,6 +251,13 @@ const sendPhoneRegisterOtp = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // Block phone registration in on-prem mode
+  if (CONFIG.ON_PREM) {
+    return res.status(403).json({
+      message: "Self-registration is disabled in on-premises mode.",
+    });
+  }
+
   try {
     const { phoneNumber } = req.body as PhoneOtpRequestBody;
     const normalizedPhoneNumber = normalizeAndValidatePhoneNumber(phoneNumber);
@@ -283,6 +299,13 @@ const verifyPhoneRegisterOtp = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // Block phone verification in on-prem mode
+  if (CONFIG.ON_PREM) {
+    return res.status(403).json({
+      message: "Self-registration is disabled in on-premises mode.",
+    });
+  }
+
   try {
     const { phoneNumber, otpCode, firstName, lastName } =
       req.body as PhoneRegisterVerifyRequestBody;
@@ -505,6 +528,167 @@ const verifyPhoneLoginOtp = async (
   }
 };
 
+// ─── Email + Password Auth ────────────────────────────────────────────────────
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+interface EmailRegisterRequestBody {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+const emailRegister = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // Block self-registration in on-prem mode - admins create users
+  if (CONFIG.ON_PREM) {
+    return res.status(403).json({
+      message: "Self-registration is disabled in on-premises mode. Please contact your IT administrator to create an account.",
+    });
+  }
+
+  try {
+    const { email, password, firstName, lastName } =
+      req.body as EmailRegisterRequestBody;
+
+    if (!email || !EMAIL_REGEX.test(email.trim())) {
+      return res
+        .status(400)
+        .json({ message: "Please provide a valid email address." });
+    }
+    if (!password || password.length < 8) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 8 characters." });
+    }
+    if (!firstName?.trim()) {
+      return res.status(400).json({ message: "First name is required." });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const existingUser = (await getDocumentByFieldFromDb(
+      "email",
+      normalizedEmail,
+      DBCollectionsEnum.users,
+    )) as User | null;
+
+    if (existingUser) {
+      return res
+        .status(409)
+        .json({ message: "An account with this email already exists." });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    const newUser: User = {
+      ...getInitialUserData(),
+      userId: `email-${randomUUID()}`,
+      email: normalizedEmail,
+      passwordHash,
+      name: {
+        givenName: firstName.trim(),
+        familyName: lastName?.trim() || "",
+      },
+      picture: "",
+      provider: AuthProviderEnum.email,
+      verified: true,
+      lastLogin: new Date(),
+    };
+
+    const newUserId = await saveUserDataToDb(newUser);
+    if (!newUserId) {
+      throw new Error("Failed to create user.");
+    }
+
+    const savedUser: User = { ...newUser, _id: newUserId };
+
+    const tokenPair = TokenService.generateTokenPair({
+      userId: newUserId.toString(),
+      email: savedUser.email,
+    });
+    TokenService.setTokenCookies(res, tokenPair);
+
+    return res.status(201).json({
+      message: "Account created successfully.",
+      user: sanitizeUserForClientResponse(savedUser),
+    });
+  } catch (error) {
+    console.error("❌ Email register error:", error);
+    return res.status(500).json({ message: "Registration failed." });
+  }
+};
+
+interface EmailLoginRequestBody {
+  email?: string;
+  password?: string;
+}
+
+const emailLogin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { email, password } = req.body as EmailLoginRequestBody;
+
+    if (!email?.trim() || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required." });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const existingUser = (await getDocumentByFieldFromDb(
+      "email",
+      normalizedEmail,
+      DBCollectionsEnum.users,
+    )) as User | null;
+
+    // Always return the same message — never reveal which field is wrong
+    if (!existingUser || !existingUser.passwordHash) {
+      return res.status(401).json({ message: "Invalid email or password." });
+    }
+
+    const isValid = await bcrypt.compare(password, existingUser.passwordHash);
+    if (!isValid) {
+      return res.status(401).json({ message: "Invalid email or password." });
+    }
+
+    if (!existingUser._id) {
+      throw new Error("User document is missing _id.");
+    }
+
+    const updatedUser = (await updateUserInDb(existingUser._id.toString(), {
+      lastLogin: new Date(),
+    })) as User;
+
+    const authenticatedUser = updatedUser || existingUser;
+
+    const tokenPair = TokenService.generateTokenPair({
+      userId:
+        authenticatedUser._id?.toString() || existingUser._id.toString(),
+      email: authenticatedUser.email,
+    });
+    TokenService.setTokenCookies(res, tokenPair);
+
+    return res.status(200).json({
+      message: "Login successful.",
+      user: sanitizeUserForClientResponse(authenticatedUser),
+    });
+  } catch (error) {
+    console.error("❌ Email login error:", error);
+    return res.status(500).json({ message: "Login failed." });
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 const refreshToken = async (
   req: Request,
   res: Response,
@@ -586,7 +770,7 @@ const getAuthUserInfo = async (
     }
 
     // Return user data without sensitive information
-    const { refreshToken, ...userWithoutToken } = user;
+    const { refreshToken, passwordHash, ...userWithoutToken } = user as any;
 
     return res.status(200).json(userWithoutToken);
   } catch (error) {
@@ -694,6 +878,8 @@ const OAuthController = {
   verifyPhoneRegisterOtp,
   sendPhoneLoginOtp,
   verifyPhoneLoginOtp,
+  emailRegister,
+  emailLogin,
   refreshToken,
   logout,
   getAuthUserInfo,

@@ -1,6 +1,6 @@
 import APP_CONSTANTS from "./app_constants";
 
-const getPublicURL = (): string | undefined => {
+const getPublicURL = (): string => {
   const {
     IS_LOCAL,
     IS_DEV,
@@ -10,8 +10,9 @@ const getPublicURL = (): string | undefined => {
     PROD_API_URL,
   } = APP_CONSTANTS;
 
-  if (!IS_LOCAL && IS_DEV && !IS_PROD) return DEV_API_URL; // DEV env
-  if (!IS_LOCAL && !IS_DEV && IS_PROD) return PROD_API_URL; // PROD env
+  if (!IS_LOCAL && IS_DEV && !IS_PROD && DEV_API_URL) return DEV_API_URL; // DEV env
+  if (!IS_LOCAL && !IS_DEV && IS_PROD && PROD_API_URL) return PROD_API_URL; // PROD env
+  if (!IS_LOCAL && !IS_DEV && IS_PROD && !PROD_API_URL) return ""; // on-prem: same-origin, use relative URLs
 
   return `http://localhost:${DEV_SERVER_PORT || "16002"}`; // LOCAL env
 };
@@ -19,6 +20,16 @@ const getPublicURL = (): string | undefined => {
 const publicApiUrl = getPublicURL();
 
 const END_POINTS = {
+  PUBLIC_DEMO: {
+    START: `${publicApiUrl}/api/v1/public/demo/start`,
+    STATUS: (sessionId: string) =>
+      `${publicApiUrl}/api/v1/public/demo/${sessionId}/status`,
+    STOP: (sessionId: string) =>
+      `${publicApiUrl}/api/v1/public/demo/${sessionId}/stop`,
+  },
+  // Runtime config — fetched once at startup; no auth required
+  CONFIG: `${publicApiUrl}/api/config`,
+
   OPENAI: {
     GENERATE: {
       PROJECT: `${publicApiUrl}/api/v1/openai/create/project`,
@@ -47,6 +58,9 @@ const END_POINTS = {
     PHONE_REGISTER_VERIFY_OTP: `${publicApiUrl}/api/v1/auth/phone/register/verify-otp`,
     PHONE_LOGIN_SEND_OTP: `${publicApiUrl}/api/v1/auth/phone/login/send-otp`,
     PHONE_LOGIN_VERIFY_OTP: `${publicApiUrl}/api/v1/auth/phone/login/verify-otp`,
+    // Email + password auth
+    EMAIL_REGISTER: `${publicApiUrl}/api/v1/auth/register/email`,
+    EMAIL_LOGIN: `${publicApiUrl}/api/v1/auth/login/email`,
   },
   PAYMENTS: {
     CONFIG: `${publicApiUrl}/api/v1/payments/config`,
@@ -66,6 +80,7 @@ const END_POINTS = {
     ADMIN: {
       USERS: {
         GET_ALL_USERS: `${publicApiUrl}/api/v1/dashboard/admin/users`,
+        CREATE_USER: `${publicApiUrl}/api/v1/dashboard/admin/users/create`,
         BLOCK_USER: (userId: string) =>
           `${publicApiUrl}/api/v1/dashboard/users/block/${userId}`,
         UNBLOCK_USER: (userId: string) =>

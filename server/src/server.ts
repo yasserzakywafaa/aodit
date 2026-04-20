@@ -1,5 +1,4 @@
 import { closeDatabase, databaseInit } from "./models/mongoDb";
-import { resumeStuckRuns } from "./services/reports/executionEngine";
 import express, { NextFunction, Request, Response } from "express";
 
 import CONFIG from "./config";
@@ -7,16 +6,19 @@ import { agendaInit } from "./services/agenda/agendaService";
 import authRoutes from "./routes/authRoutes";
 import compression from "compression";
 import contactRoutes from "./routes/contactRoutes";
-import leadMagnetRoutes from "./routes/leadMagnetRoutes";
 import cookieParser from "cookie-parser";
 import dashboardRoutes from "./routes/dashboardRoutes";
 import handleCorsConfig from "./cors-config";
 import helmet from "helmet";
 import { initializePassport } from "./services/passportService";
+import leadMagnetRoutes from "./routes/leadMagnetRoutes";
 import openaiRoutes from "./routes/openaiRoutes";
+import path from "path";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
+import publicDemoRoutes from "./routes/publicDemoRoutes";
 import rateLimit from "express-rate-limit";
+import { resumeStuckRuns } from "./services/reports/executionEngine";
 import scheduleRoutes from "./routes/scheduleRoutes";
 import testRoutes from "./routes/testRoutes";
 
@@ -78,7 +80,7 @@ expressApp.use(express.urlencoded({ extended: true, limit: "5mb" }));
 expressApp.set("trust proxy", 1);
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // Limit each IP to 100 requests per window
+  max: 1000, // Limit each IP to 100 requests per window
 });
 // Apply the rate limiter globally
 expressApp.use(limiter);
@@ -95,11 +97,26 @@ expressApp.use(leadMagnetRoutes);
 expressApp.use(paymentsRoutes);
 expressApp.use(scheduleRoutes);
 expressApp.use(dashboardRoutes);
+expressApp.use(publicDemoRoutes);
 
-// 404 Handler
-expressApp.use((req: Request, res: Response) => {
+// Health check — used by Docker HEALTHCHECK and compose depends_on
+expressApp.get("/api/health", (_req: Request, res: Response) => {
+  res.status(200).json({ status: "ok" });
+});
+
+// API 404 handler — scoped to /api/ so SPA routes are not swallowed
+expressApp.use("/api", (_req: Request, res: Response) => {
   res.status(404).json({ error: "🙁 Endpoint not found" });
 });
+
+// Static serving for on-prem / single-image deployments (SERVE_STATIC_CONTENT=true)
+if (CONFIG.SERVE_STATIC_CONTENT === "true") {
+  const staticPath = CONFIG.FRONTEND_BUILD_PATH;
+  expressApp.use(express.static(staticPath));
+  expressApp.get("*", (_req: Request, res: Response) => {
+    res.sendFile(path.join(staticPath, "index.html"));
+  });
+}
 
 // Central error handler
 expressApp.use(

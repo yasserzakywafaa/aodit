@@ -368,7 +368,7 @@ const DemoPage = () => {
             <Button
               variant="contained"
               endIcon={<NavigateNext />}
-              onClick={() => navigate(routes.auth.register)}
+              onClick={() => navigate(routes.contact)}
               sx={{ whiteSpace: "nowrap", flexShrink: 0 }}
             >
               Get full access

@@ -13,6 +13,7 @@ import {
   List,
   ListItem,
   Paper,
+  Stack,
   Typography,
 } from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
@@ -25,6 +26,7 @@ import {
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 const documentationItems = [
   "Security Policy",
@@ -35,6 +37,8 @@ const documentationItems = [
 ];
 
 const SecurityPage = () => {
+  const navigate = useNavigate();
+
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       "On-Premise AI Evaluation Security",
@@ -408,15 +412,26 @@ const SecurityPage = () => {
                     <Typography color="text.secondary">{item}</Typography>
                   </Box>
                 ))}
-                <Box sx={{ mt: 2.5 }}>
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={1.5}
+                  sx={{ mt: 2.5 }}
+                >
                   <Button
                     variant="contained"
-                    href={routes.contact}
                     endIcon={<ArrowForward />}
+                    onClick={() => navigate(routes.contact)}
                   >
                     Request Security Package
                   </Button>
-                </Box>
+                  <Button
+                    variant="outlined"
+                    endIcon={<ArrowForward />}
+                    onClick={() => navigate(routes.demo)}
+                  >
+                    Try Live Demo
+                  </Button>
+                </Stack>
               </Paper>
             </Grid>
           </Grid>

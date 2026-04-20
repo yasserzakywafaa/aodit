@@ -4,8 +4,9 @@ import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
-import { CssBaseline } from "@mui/material";
+import APP_CONSTANTS from "./shared/app_constants";
 import CookiePolicy from "src/components/shared/CookiePolicy/CookiePolicy";
+import { CssBaseline } from "@mui/material";
 import CustomCursor from "src/components/shared/CustomCursor/CustomCursor";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
@@ -61,10 +62,7 @@ const TermsAndConditionsPage = lazy(
   () => import("../Pages/TermsAndConditions/TermsAndConditions"),
 );
 const DataProcessingAgreementPage = lazy(
-  () =>
-    import(
-      "../Pages/DataProcessingAgreement/DataProcessingAgreement"
-    ),
+  () => import("../Pages/DataProcessingAgreement/DataProcessingAgreement"),
 );
 const ComplianceFinmaPage = lazy(
   () => import("../Pages/Compliance/Finma/ComplianceFinma"),
@@ -99,8 +97,7 @@ const DashboardAgentPage = lazy(
   () => import("../Pages/Dashboard/DashboardAgent/DashboardAgent"),
 );
 const DashboardCreateAgentPage = lazy(
-  () =>
-    import("../Pages/Dashboard/DashboardCreateAgent/DashboardCreateAgent"),
+  () => import("../Pages/Dashboard/DashboardCreateAgent/DashboardCreateAgent"),
 );
 const DashboardLiveFeedPage = lazy(
   () => import("../Pages/Dashboard/DashboardReportRun/DashboardReportRun"),
@@ -117,15 +114,11 @@ const DashboardAdminUserPage = lazy(
 );
 const DashboardAdminAgentsPage = lazy(
   () =>
-    import(
-      "../Pages/Dashboard/Admin/DashboardAdminAgents/DashboardAdminAgents"
-    ),
+    import("../Pages/Dashboard/Admin/DashboardAdminAgents/DashboardAdminAgents"),
 );
 const DashboardAdminReportsPage = lazy(
   () =>
-    import(
-      "../Pages/Dashboard/Admin/DashboardAdminReports/DashboardAdminReports"
-    ),
+    import("../Pages/Dashboard/Admin/DashboardAdminReports/DashboardAdminReports"),
 );
 
 const AppContent = () => {
@@ -153,7 +146,9 @@ const AppContent = () => {
           <Routes>
             {/* Auth Routes */}
             <Route path={routes.auth.login} element={<LoginPage />} />
-            <Route path={routes.auth.register} element={<RegisterPage />} />
+            {!APP_CONSTANTS.IS_PROD && (
+              <Route path={routes.auth.register} element={<RegisterPage />} />
+            )}
 
             {/* Public Routes */}
             <Route index path={routes.features} element={<FeaturesPage />} />

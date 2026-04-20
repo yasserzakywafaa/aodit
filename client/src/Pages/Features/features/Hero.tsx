@@ -104,15 +104,26 @@ const Hero = () => {
           ))}
         </Stack>
 
-        <Button
-          variant="contained"
-          size="large"
-          endIcon={<ArrowForward />}
-          onClick={() => navigate(routes.contact)}
-          sx={{ px: 4, py: 1.2 }}
-        >
-          Request Evaluation
-        </Button>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+          <Button
+            variant="contained"
+            size="large"
+            endIcon={<ArrowForward />}
+            onClick={() => navigate(routes.contact)}
+            sx={{ px: 4, py: 1.2 }}
+          >
+            Request Evaluation
+          </Button>
+          <Button
+            variant="outlined"
+            size="large"
+            endIcon={<ArrowForward />}
+            onClick={() => navigate(routes.demo)}
+            sx={{ px: 4, py: 1.2 }}
+          >
+            Try Live Demo
+          </Button>
+        </Stack>
       </Container>
     </Box>
   );

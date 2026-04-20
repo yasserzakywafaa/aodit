@@ -4,7 +4,15 @@ import {
   LocationOnOutlined,
   SecurityOutlined,
 } from "@mui/icons-material";
-import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 
 import Page from "src/components/shared/Page/Page";
@@ -261,13 +269,26 @@ const AboutPage = () => {
             We work with banks, fintechs, and insurers operating in
             FINMA-regulated environments. Let us know how we can help.
           </Typography>
-          <Button
-            variant="contained"
-            endIcon={<ArrowForward />}
-            onClick={() => navigate(routes.contact)}
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={1.5}
+            justifyContent="center"
           >
-            Contact Us
-          </Button>
+            <Button
+              variant="contained"
+              endIcon={<ArrowForward />}
+              onClick={() => navigate(routes.contact)}
+            >
+              Contact Us
+            </Button>
+            <Button
+              variant="outlined"
+              endIcon={<ArrowForward />}
+              onClick={() => navigate(routes.demo)}
+            >
+              Try Live Demo
+            </Button>
+          </Stack>
         </Container>
       </Box>
     </Page>

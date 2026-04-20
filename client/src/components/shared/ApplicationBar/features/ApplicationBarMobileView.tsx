@@ -132,6 +132,16 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   >
                     Request Evaluation
                   </Button>
+                  <Button
+                    component="a"
+                    href={routes.demo}
+                    variant="outlined"
+                    fullWidth
+                    onClick={handleOnMenuItemClickEvent("demo")}
+                    sx={{ mt: 1 }}
+                  >
+                    Demo
+                  </Button>
                 </Box>
               </Box>
 

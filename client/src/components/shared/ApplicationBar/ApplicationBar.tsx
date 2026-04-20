@@ -91,6 +91,9 @@ const ApplicationBar = () => {
       case "contact":
         navigate(routes.contact);
         break;
+      case "demo":
+        navigate(routes.demo);
+        break;
       case "request-evaluation":
         navigate(routes.contact);
         break;

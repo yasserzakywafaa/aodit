@@ -441,15 +441,30 @@ const FeaturesPage = () => {
           >
             Independent evaluation delivered in 2–3 weeks. Fully on-premise.
           </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            endIcon={<ArrowForward />}
-            onClick={() => navigate(routes.contact)}
-            sx={{ px: 5, py: 1.5 }}
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={1.5}
+            justifyContent="center"
           >
-            Request Evaluation
-          </Button>
+            <Button
+              variant="contained"
+              size="large"
+              endIcon={<ArrowForward />}
+              onClick={() => navigate(routes.contact)}
+              sx={{ px: 5, py: 1.5 }}
+            >
+              Request Evaluation
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              endIcon={<ArrowForward />}
+              onClick={() => navigate(routes.demo)}
+              sx={{ px: 5, py: 1.5 }}
+            >
+              Try Live Demo
+            </Button>
+          </Stack>
         </Container>
       </Box>
     </Page>

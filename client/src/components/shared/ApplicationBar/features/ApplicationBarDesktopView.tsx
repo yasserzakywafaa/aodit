@@ -156,6 +156,15 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
             >
               Request Evaluation
             </Button>
+            <Button
+              component="a"
+              href={routes.demo}
+              variant="outlined"
+              size="small"
+              onClick={handleOnMenuItemClickEvent("demo")}
+            >
+              Demo
+            </Button>
 
             <MenuItem sx={{ ...buttonHoverStyleSecondary }}>
               <SettingsMenuButton

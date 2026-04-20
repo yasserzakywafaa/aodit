@@ -16,6 +16,7 @@ const FOOTER_SECTIONS = [
     links: [
       { label: "Methodology", href: routes.methodology },
       { label: "Security", href: routes.security },
+      { label: "Try Live Demo", href: routes.demo },
     ],
   },
   {

@@ -295,9 +295,18 @@ const MethodologyPage = () => {
             is an independent evaluation layer. It does not certify models,
             replace governance frameworks, or access model weights.
           </Typography>
-          <Button variant="contained" onClick={() => navigate(routes.contact)}>
-            Request Evaluation
-          </Button>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={1.5}
+            justifyContent="center"
+          >
+            <Button variant="contained" onClick={() => navigate(routes.contact)}>
+              Request Evaluation
+            </Button>
+            <Button variant="outlined" onClick={() => navigate(routes.demo)}>
+              Try Live Demo
+            </Button>
+          </Stack>
         </Container>
       </Box>
     </Page>

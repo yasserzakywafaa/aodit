@@ -7,14 +7,12 @@ import Page from "src/components/shared/Page/Page";
 import PhoneAuth from "src/components/shared/SocialLogins/PhoneAuth";
 import SocialLogin from "src/components/Modals/LoginModal/features/SocialLogin/SocialLogin";
 import { routes } from "src/application/routes";
-import { useAppConfig } from "src/application/context/AppConfigContext";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { isOnPrem } = useAppConfig();
   const {
     store: {
       state: { auth },
@@ -83,7 +81,7 @@ const LoginPage = () => {
         </Box>
 
         <Box display="flex" flexDirection="column" gap={2} alignItems="center">
-          {!isOnPrem && (
+          {!APP_CONSTANTS.IS_ON_PREM && (
             <>
               <SocialLogin authType="login" />
               <PhoneAuth authType="login" />

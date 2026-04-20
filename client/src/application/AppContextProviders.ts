@@ -1,4 +1,3 @@
-import { AppConfigProvider } from "./context/AppConfigContext";
 import { ApplicationContextProvider } from "./store/Provider";
 import { CancelSubscriptionModalContextProvider } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { ContactContextProvider } from "src/Pages/Contact/store/Provider";
@@ -24,7 +23,6 @@ import { RegisterModalContextProvider } from "src/components/Modals/RegisterModa
 import combineProviders from "./shared/combineProviders";
 
 const contextProviders = [
-  AppConfigProvider, // Must be first — all other providers and pages can call useAppConfig()
   ApplicationContextProvider,
   PricingModalContextProvider,
   ContactContextProvider,

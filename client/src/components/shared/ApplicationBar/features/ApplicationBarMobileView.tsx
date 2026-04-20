@@ -141,8 +141,8 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     <UserAccountMenuButton user={auth.user as User} />
                   </MenuItem>
                 ) : (
-                  // TODO: Remove this after going live to PROD
-                  (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
+                  // Show Login/Register in dev, local, or on-prem mode
+                  (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL || APP_CONSTANTS.IS_ON_PREM) && (
                     <>
                       <MenuItem onClick={handleToggleRegisterModal}>
                         <LockOpenOutlined

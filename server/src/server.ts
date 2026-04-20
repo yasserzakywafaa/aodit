@@ -5,7 +5,6 @@ import express, { NextFunction, Request, Response } from "express";
 import CONFIG from "./config";
 import { agendaInit } from "./services/agenda/agendaService";
 import authRoutes from "./routes/authRoutes";
-import configRoutes from "./routes/configRoutes";
 import compression from "compression";
 import path from "path";
 import contactRoutes from "./routes/contactRoutes";
@@ -46,9 +45,6 @@ handleCorsConfig(expressApp);
 // Place here because Stripe gateway need the request raw body
 // which is manipulated but the "express.json()" middleware
 expressApp.use(paymentWebhooksRouter);
-
-// Public config endpoint — must be registered before rate limiter and auth middleware
-expressApp.use(configRoutes);
 
 // Security middleware
 expressApp.use(

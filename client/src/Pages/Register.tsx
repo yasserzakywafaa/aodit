@@ -6,14 +6,13 @@ import Page from "src/components/shared/Page/Page";
 import PhoneAuth from "src/components/shared/SocialLogins/PhoneAuth";
 import SocialRegister from "src/components/Modals/RegisterModal/features/SocialRegister/SocialRegister";
 import { routes } from "src/application/routes";
-import { useAppConfig } from "src/application/context/AppConfigContext";
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { isOnPrem } = useAppConfig();
   const {
     store: {
       state: { auth },
@@ -52,11 +51,11 @@ const RegisterPage = () => {
           <LockOutlined color="primary" sx={{ m: 1 }} />
 
           <Typography component="h1" variant="h5">
-            {isOnPrem ? "Access Restricted" : "Create a new account"}
+            {APP_CONSTANTS.IS_ON_PREM ? "Access Restricted" : "Create a new account"}
           </Typography>
         </Box>
 
-        {isOnPrem ? (
+        {APP_CONSTANTS.IS_ON_PREM ? (
           <Box
             display="flex"
             flexDirection="column"

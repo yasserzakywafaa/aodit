@@ -12,6 +12,7 @@ const APP_CONSTANTS = {
   IS_LOCAL: import.meta.env.REACT_APP_ENV === "local",
   IS_DEV: import.meta.env.REACT_APP_ENV === "development",
   IS_PROD: import.meta.env.REACT_APP_ENV === "production",
+  IS_ON_PREM: import.meta.env.REACT_APP_ON_PREM === "true",
 
   // Tracking
   GOOGLE_ANALYTICS_ID: import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID,

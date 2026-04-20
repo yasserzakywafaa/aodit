@@ -74,6 +74,8 @@ export const getAuthSourceLabel = (provider?: AuthProviderEnum): string => {
       return "LinkedIn";
     case AuthProviderEnum.phone:
       return "Phone";
+    case AuthProviderEnum.email:
+      return "Email";
     default:
       return "—";
   }

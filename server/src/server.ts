@@ -1,26 +1,26 @@
 import { closeDatabase, databaseInit } from "./models/mongoDb";
-import { resumeStuckRuns } from "./services/reports/executionEngine";
 import express, { NextFunction, Request, Response } from "express";
 
 import CONFIG from "./config";
 import { agendaInit } from "./services/agenda/agendaService";
 import authRoutes from "./routes/authRoutes";
 import compression from "compression";
-import path from "path";
 import contactRoutes from "./routes/contactRoutes";
-import leadMagnetRoutes from "./routes/leadMagnetRoutes";
 import cookieParser from "cookie-parser";
 import dashboardRoutes from "./routes/dashboardRoutes";
 import handleCorsConfig from "./cors-config";
 import helmet from "helmet";
 import { initializePassport } from "./services/passportService";
+import leadMagnetRoutes from "./routes/leadMagnetRoutes";
 import openaiRoutes from "./routes/openaiRoutes";
+import path from "path";
 import paymentWebhooksRouter from "./routes/paymentsWebhooksRoutes";
 import paymentsRoutes from "./routes/paymentsRoutes";
+import publicDemoRoutes from "./routes/publicDemoRoutes";
 import rateLimit from "express-rate-limit";
+import { resumeStuckRuns } from "./services/reports/executionEngine";
 import scheduleRoutes from "./routes/scheduleRoutes";
 import testRoutes from "./routes/testRoutes";
-import publicDemoRoutes from "./routes/publicDemoRoutes";
 
 const expressApp = express();
 
@@ -80,7 +80,7 @@ expressApp.use(express.urlencoded({ extended: true, limit: "5mb" }));
 expressApp.set("trust proxy", 1);
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // Limit each IP to 100 requests per window
+  max: 1000, // Limit each IP to 100 requests per window
 });
 // Apply the rate limiter globally
 expressApp.use(limiter);

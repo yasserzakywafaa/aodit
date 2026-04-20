@@ -23,6 +23,8 @@
  * already exists.
  */
 
+import { AuthProviderEnum, UserRole, UserStatus } from "src/models/types";
+
 import { MongoClient } from "mongodb";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
@@ -31,7 +33,6 @@ import { randomUUID } from "crypto";
 
 // Load .env from the server root (one level above scripts/)
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
-
 
 async function seedAdmin() {
   const email = process.env.ADMIN_EMAIL;
@@ -80,9 +81,9 @@ async function seedAdmin() {
       passwordHash,
       name: { givenName: firstName, familyName: lastName },
       picture: "",
-      role: "admin",
-      status: "active",
-      provider: "email",
+      role: UserRole.admin,
+      status: UserStatus.active,
+      provider: AuthProviderEnum.email,
       verified: true,
       isPaidUser: false,
       projectCount: 0,

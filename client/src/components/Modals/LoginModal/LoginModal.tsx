@@ -4,6 +4,7 @@ import { Close, LockOpenOutlined } from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import EmailPasswordForm from "src/components/shared/Auth/EmailPasswordForm";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
@@ -77,10 +78,14 @@ export const LoginModal = () => {
               sx={{ mt: 4 }}
               className="social-login-wrapper"
             >
-              <SocialLogin authType="login" />
-              <PhoneAuth authType="login" onAuthSuccess={handleCloseModal} />
-
-              <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+              {/* Hide social logins in on-prem mode (air-gapped) */}
+              {!APP_CONSTANTS.IS_ON_PREM && (
+                <>
+                  <SocialLogin authType="login" />
+                  <PhoneAuth authType="login" onAuthSuccess={handleCloseModal} />
+                  <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+                </>
+              )}
               <EmailPasswordForm mode="login" />
             </Box>
           </Box>

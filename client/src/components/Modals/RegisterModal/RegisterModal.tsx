@@ -4,6 +4,7 @@ import { Close, LockOutlined } from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import EmailPasswordForm from "src/components/shared/Auth/EmailPasswordForm";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
@@ -29,6 +30,56 @@ export const RegisterModal = () => {
     handleIsFetching(false);
     handleToggleRegisterModal();
   };
+
+  // In on-prem mode, show Access Restricted
+  if (APP_CONSTANTS.IS_ON_PREM) {
+    return (
+      <Dialog
+        maxWidth="sm"
+        scroll="body"
+        fullWidth={true}
+        open={state.isVisible}
+        onClose={onCloseModal}
+      >
+        <DialogContent sx={{ position: "relative" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+              py: 4,
+              textAlign: "center",
+            }}
+          >
+            <LockOutlined color="primary" sx={{ m: 1 }} />
+            <Typography component="h1" variant="h5">
+              Access Restricted
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Account creation is managed by your IT administrator.
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Please contact your system administrator to request access.
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            size="small"
+            type="button"
+            color="primary"
+            aria-label="close"
+            variant="contained"
+            startIcon={<Close />}
+            onClick={handleCloseModal}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
 
   return (
     <>
@@ -76,7 +127,6 @@ export const RegisterModal = () => {
             >
               <SocialRegister authType="register" />
               <PhoneAuth authType="register" onAuthSuccess={handleCloseModal} />
-
               <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
               <EmailPasswordForm mode="register" />
             </Box>

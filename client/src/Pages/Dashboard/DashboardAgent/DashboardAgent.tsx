@@ -16,12 +16,12 @@ import {
   Typography,
 } from "@mui/material";
 import { ExpandMore, Save } from "@mui/icons-material";
-import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ReportStatus } from "src/shared/types/report";
 import { routes } from "src/application/routes";
 import { useDashboardAgentContext } from "./store/Provider";
+import { useEffect } from "react";
 
 const DashboardAgent = () => {
   const { agentId } = useParams<{ agentId: string }>();
@@ -156,7 +156,8 @@ const DashboardAgent = () => {
               sx={{ mb: 2 }}
             />
             <TextField
-              label="Agent URL (optional)"
+              required
+              label="Agent URL"
               name="agentUrl"
               value={agent?.agentUrl ?? ""}
               onChange={handleChange}
@@ -167,7 +168,7 @@ const DashboardAgent = () => {
               helperText={
                 !isValidUrl(agent?.agentUrl)
                   ? "Enter a valid https:// URL"
-                  : "Required only for Agent-to-Agent evaluation mode"
+                  : "Required for Agent-to-Agent evaluation mode. This will be used to probe the agent during evaluation."
               }
             />
           </Box>

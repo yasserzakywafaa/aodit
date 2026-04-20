@@ -1,7 +1,7 @@
 /**
  * seed-admin.ts
  *
- * Bootstraps the first super_admin account in a fresh MongoDB instance.
+ * Bootstraps the first admin account in a fresh MongoDB instance.
  * Run ONCE after first deployment:
  *
  *   docker compose -f docker-compose.onprem.yml exec aodit \
@@ -23,15 +23,15 @@
  * already exists.
  */
 
+import { MongoClient } from "mongodb";
+import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import path from "path";
+import { randomUUID } from "crypto";
 
 // Load .env from the server root (one level above scripts/)
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
-import bcrypt from "bcryptjs";
-import { MongoClient } from "mongodb";
-import { randomUUID } from "crypto";
 
 async function seedAdmin() {
   const email = process.env.ADMIN_EMAIL;
@@ -67,9 +67,7 @@ async function seedAdmin() {
     const existing = await users.findOne({ email: normalizedEmail });
 
     if (existing) {
-      console.log(
-        `ℹ️   Admin user already exists: ${normalizedEmail}. Skipping.`,
-      );
+      console.log(`ℹ️   Admin already exists: ${normalizedEmail}. Skipping.`);
       return;
     }
 
@@ -82,7 +80,7 @@ async function seedAdmin() {
       passwordHash,
       name: { givenName: firstName, familyName: lastName },
       picture: "",
-      role: "super_admin",
+      role: "admin",
       status: "active",
       provider: "email",
       verified: true,
@@ -111,10 +109,10 @@ async function seedAdmin() {
       },
     });
 
-    console.log(`✅  Super admin created: ${normalizedEmail}`);
+    console.log(`✅  Admin created: ${normalizedEmail}`);
     console.log(
       "ℹ️   You can now log in with the email and password you set.\n" +
-        "    Then create additional users from the Admin → Users page.",
+        "    Then create additional users from the Dashboard → Admin → Users page.",
     );
   } finally {
     await client.close();

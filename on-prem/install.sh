@@ -228,5 +228,5 @@ fi
 printf '\nInstall complete.\n'
 printf 'App URL: http://server-ip:16006\n'
 printf 'Useful commands:\n'
-printf '  docker compose -f %s ps\n' "${COMPOSE_FILE}"
-printf '  docker compose -f %s logs -f aodit\n' "${COMPOSE_FILE}"
+printf '  docker compose --env-file %s -f %s ps\n' "${ENV_FILE}" "${COMPOSE_FILE}"
+printf '  docker compose --env-file %s -f %s logs -f aodit\n' "${ENV_FILE}" "${COMPOSE_FILE}"

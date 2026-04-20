@@ -2,9 +2,13 @@
 # aodit — On-Premises Docker Compose  |  Bank Deployment
 #
 # Usage (run from the repo root or the on-prem/ directory):
-#   docker compose -f on-prem/docker-compose.onprem.yml up -d        # start
-#   docker compose -f on-prem/docker-compose.onprem.yml down         # stop
-#   docker compose -f on-prem/docker-compose.onprem.yml logs -f      # tail logs
+#   docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml up -d     # start
+#   docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml down      # stop
+#   docker compose --env-file on-prem/.env.onprem -f on-prem/docker-compose.onprem.yml logs -f   # tail logs
+#
+# NOTE: --env-file is REQUIRED. This file uses ${VAR} interpolation (e.g. for
+# MongoDB credentials), which Compose only resolves from --env-file or a `.env`
+# file next to this compose file — NOT from `env_file:` entries in services.
 #
 # Prerequisites:
 #   Copy on-prem/.env.onprem.example to on-prem/.env.onprem and fill in all REQUIRED values.

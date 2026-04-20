@@ -153,7 +153,7 @@ nano .env.onprem        # or use any text editor
 ## Step 3 — Start the stack
 
 ```bash
-docker compose -f docker-compose.onprem.yml up -d
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml up -d
 ```
 
 Docker will:
@@ -163,7 +163,7 @@ Docker will:
 Watch it come up:
 
 ```bash
-docker compose -f docker-compose.onprem.yml logs -f
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml logs -f
 ```
 
 Press `Ctrl+C` to stop following logs — the containers keep running.
@@ -171,7 +171,7 @@ Press `Ctrl+C` to stop following logs — the containers keep running.
 Verify both containers are healthy:
 
 ```bash
-docker compose -f docker-compose.onprem.yml ps
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml ps
 ```
 
 Both should show `healthy` in the STATUS column. The app is now reachable at `http://server-ip:16006`.
@@ -183,7 +183,7 @@ Both should show `healthy` in the STATUS column. The app is now reachable at `ht
 **Run this once only**, after the stack is healthy:
 
 ```bash
-docker compose -f docker-compose.onprem.yml exec aodit \
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml exec aodit \
   sh -c "ADMIN_EMAIL=admin@bank.internal \
          ADMIN_PASSWORD=YourAdminPassword \
          ADMIN_FIRST_NAME=Admin \
@@ -222,7 +222,7 @@ Expected output:
 Port `27017` is intentionally **not published** to the host network (security requirement). To inspect the database, open a shell inside the running container:
 
 ```bash
-docker compose -f docker-compose.onprem.yml exec mongodb \
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml exec mongodb \
   mongosh "mongodb://aodit_user:YOUR_DB_PASSWORD@localhost:27017/aodit_prod?authSource=admin"
 ```
 
@@ -243,26 +243,26 @@ Then connect Compass to: `mongodb://aodit_user:PASSWORD@localhost:27017/?authSou
 
 ```bash
 # Stop all containers (data is preserved in the named volume)
-docker compose -f docker-compose.onprem.yml down
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml down
 
 # Start after a server reboot
-docker compose -f docker-compose.onprem.yml up -d
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml up -d
 
 # View live application logs
-docker compose -f docker-compose.onprem.yml logs -f aodit
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml logs -f aodit
 
 # View live database logs
-docker compose -f docker-compose.onprem.yml logs -f mongodb
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml logs -f mongodb
 
 # Check container health
-docker compose -f docker-compose.onprem.yml ps
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml ps
 
 # Update to a new image version
 docker load < aodit-v2.tar.gz
-docker compose -f docker-compose.onprem.yml up -d   # restarts with new image
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml up -d   # restarts with new image
 
 # Backup the database (produces a compressed archive)
-docker compose -f docker-compose.onprem.yml exec mongodb \
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml exec mongodb \
   mongodump \
     --uri="mongodb://aodit_user:YOUR_DB_PASSWORD@localhost:27017/aodit_prod?authSource=admin" \
     --archive \
@@ -270,7 +270,7 @@ docker compose -f docker-compose.onprem.yml exec mongodb \
 
 # Restore from backup
 gunzip -c backup-20260101-120000.gz | \
-  docker compose -f docker-compose.onprem.yml exec -T mongodb \
+  docker compose --env-file .env.onprem -f docker-compose.onprem.yml exec -T mongodb \
     mongorestore --uri="mongodb://aodit_user:YOUR_DB_PASSWORD@localhost:27017/?authSource=admin" \
     --archive --drop
 ```

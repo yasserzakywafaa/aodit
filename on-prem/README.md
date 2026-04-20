@@ -42,16 +42,16 @@ IMAGE_TAG=v2 OUTPUT_TARBALL=aodit-v2.tar.gz ./on-prem/package-image.sh
 ## 3) Start/stop stack (customer side)
 
 ```bash
-docker compose -f docker-compose.onprem.yml up -d
-docker compose -f docker-compose.onprem.yml down
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml up -d
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml down
 ```
 
 ## 4) Health and logs
 
 ```bash
-docker compose -f docker-compose.onprem.yml ps
-docker compose -f docker-compose.onprem.yml logs -f aodit
-docker compose -f docker-compose.onprem.yml logs -f mongodb
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml ps
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml logs -f aodit
+docker compose --env-file .env.onprem -f docker-compose.onprem.yml logs -f mongodb
 ```
 
 For full deployment steps, see `on-prem/DEPLOYMENT.md`.

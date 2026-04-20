@@ -251,6 +251,13 @@ const sendPhoneRegisterOtp = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // Block phone registration in on-prem mode
+  if (CONFIG.ON_PREM) {
+    return res.status(403).json({
+      message: "Self-registration is disabled in on-premises mode.",
+    });
+  }
+
   try {
     const { phoneNumber } = req.body as PhoneOtpRequestBody;
     const normalizedPhoneNumber = normalizeAndValidatePhoneNumber(phoneNumber);
@@ -292,6 +299,13 @@ const verifyPhoneRegisterOtp = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // Block phone verification in on-prem mode
+  if (CONFIG.ON_PREM) {
+    return res.status(403).json({
+      message: "Self-registration is disabled in on-premises mode.",
+    });
+  }
+
   try {
     const { phoneNumber, otpCode, firstName, lastName } =
       req.body as PhoneRegisterVerifyRequestBody;
@@ -530,6 +544,13 @@ const emailRegister = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // Block self-registration in on-prem mode - admins create users
+  if (CONFIG.ON_PREM) {
+    return res.status(403).json({
+      message: "Self-registration is disabled in on-premises mode. Please contact your IT administrator to create an account.",
+    });
+  }
+
   try {
     const { email, password, firstName, lastName } =
       req.body as EmailRegisterRequestBody;

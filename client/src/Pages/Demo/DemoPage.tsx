@@ -235,64 +235,7 @@ const DemoPage = () => {
           bgcolor: isDark ? alpha("#000", 0.4) : alpha(primaryColor, 0.025),
         }}
       >
-        <Container maxWidth="md">
-          {/* Panel */}
-          <Box
-            sx={{
-              border: `1px solid ${alpha(primaryColor, 0.25)}`,
-              borderRadius: "4px",
-              bgcolor: isDark ? alpha(secondaryColor, 0.12) : "#fff",
-              boxShadow: `0 0 0 1px ${alpha(primaryColor, 0.06)}, 0 8px 48px ${alpha(secondaryColor, 0.08)}`,
-              overflow: "hidden",
-            }}
-          >
-            {/* Panel header bar */}
-            <Box
-              sx={{
-                px: 2.5,
-                py: 1.25,
-                borderBottom: `1px solid ${alpha(primaryColor, 0.15)}`,
-                bgcolor: isDark
-                  ? alpha(secondaryColor, 0.25)
-                  : primaryColorOpaqueEight,
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              {/* Traffic-light dots */}
-              {["#ff5f57", "#febc2e", primaryColor].map((c, i) => (
-                <Box
-                  key={i}
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    bgcolor: c,
-                  }}
-                />
-              ))}
-              <Typography
-                variant="caption"
-                fontWeight={700}
-                color="text.secondary"
-                sx={{
-                  ml: 1,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  fontSize: "0.65rem",
-                }}
-              >
-                aodit · Demo Sandbox
-              </Typography>
-            </Box>
-
-            {/* Playground component */}
-            <Box sx={{ p: { xs: 2, sm: 3 } }}>
-              <AoditDemoPlayground />
-            </Box>
-          </Box>
-        </Container>
+        <AoditDemoPlayground />
       </Box>
 
       {/* ================================================================== */}

@@ -12,6 +12,7 @@ import {
   Box,
   Button,
   Chip,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -24,8 +25,14 @@ import {
   TextField,
   Tooltip,
   Typography,
+  alpha,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import {
+  primaryColor,
+  primaryColorOpaqueEight,
+  secondaryColor,
+} from "src/application/shared/themes";
 
 import AoditDemoPDF from "./AoditDemoPDF";
 import END_POINTS from "../../application/shared/endpoints";
@@ -34,6 +41,7 @@ import LoaderSpinner from "./Loader/LoaderSpinner";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
 import { pdf } from "@react-pdf/renderer";
+import { useApplicationContext } from "src/application/store/Provider";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -317,7 +325,10 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
           label={`${score}/5 · ${scoreLabel(score)}`}
           color={scoreColor(score)}
           size="small"
-          sx={{ fontWeight: 700, maxWidth: { xs: "calc(100% - 48px)", sm: "none" } }}
+          sx={{
+            fontWeight: 700,
+            maxWidth: { xs: "calc(100% - 48px)", sm: "none" },
+          }}
         />
         <IconButton
           size="small"
@@ -366,6 +377,14 @@ const AoditDemoPlayground: React.FC = () => {
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hasHydratedRef = useRef(false);
+
+  const {
+    store: {
+      state: { themeMode },
+    },
+  } = useApplicationContext();
+
+  const isDark = themeMode === "dark";
 
   useEffect(() => {
     const snapshot = readPersistedDemoSnapshot();
@@ -544,403 +563,488 @@ const AoditDemoPlayground: React.FC = () => {
   const turns = demoStatus?.turns ?? [];
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, sm: 3 } }}>
-      {/* ------------------------------------------------------------------ */}
-      {/* Header                                                              */}
-      {/* ------------------------------------------------------------------ */}
-      <Typography variant="h6" fontWeight={700} gutterBottom>
-        aodit Demo
-      </Typography>
-      <Typography variant="body2" color="text.secondary" mb={3}>
-        Run an 8-turn adversarial test against your AI agent. No account
-        required.
-      </Typography>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* Input form                                                          */}
-      {/* ------------------------------------------------------------------ */}
-      {!sessionId && (
-        <Box display="flex" flexDirection="column" gap={2}>
-          <TextField
-            label="Agent Instructions"
-            multiline
-            minRows={4}
-            maxRows={10}
-            fullWidth
-            value={systemPrompt}
-            onChange={(e) => setSystemPrompt(e.target.value)}
-            placeholder="e.g. You are a customer service agent for Acme Bank. You help users with account queries, card issues, and loan applications. You must never share account details without identity verification..."
-            inputProps={{ maxLength: 2000 }}
-            helperText={`${systemPrompt.length} / 2000 — paste the instructions your agent follows`}
-            disabled={isStarting}
-          />
-
-          <FormControl fullWidth>
-            <InputLabel id="model-select-label">Model</InputLabel>
-            <Select
-              labelId="model-select-label"
-              value={modelId}
-              label="Model"
-              onChange={(e) => setModelId(e.target.value)}
-              disabled={isStarting}
-            >
-              {MODEL_OPTIONS.map((m) => (
-                <MenuItem key={m.id} value={m.id}>
-                  {m.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {startError && (
-            <Typography variant="body2" color="error">
-              {startError}
-            </Typography>
-          )}
-
-          <Button
-            variant="contained"
-            onClick={handleStart}
-            disabled={isStarting || !systemPrompt.trim()}
-            startIcon={
-              isStarting ? (
-                <LoaderSpinner size={LoaderSizeEnum.Small} />
-              ) : undefined
-            }
-            sx={{ alignSelf: "flex-start" }}
+    <Container maxWidth="md">
+      {/* Panel */}
+      <Box
+        sx={{
+          border: `1px solid ${alpha(primaryColor, 0.25)}`,
+          borderRadius: "4px",
+          bgcolor: isDark ? alpha(secondaryColor, 0.12) : "#fff",
+          boxShadow: `0 0 0 1px ${alpha(primaryColor, 0.06)}, 0 8px 48px ${alpha(secondaryColor, 0.08)}`,
+          overflow: "hidden",
+        }}
+      >
+        {/* Panel header bar */}
+        <Box
+          sx={{
+            px: 2.5,
+            py: 1.25,
+            borderBottom: `1px solid ${alpha(primaryColor, 0.15)}`,
+            bgcolor: isDark
+              ? alpha(secondaryColor, 0.25)
+              : primaryColorOpaqueEight,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          {/* Traffic-light dots */}
+          {["#ff5f57", "#febc2e", primaryColor].map((c, i) => (
+            <Box
+              key={i}
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                bgcolor: c,
+              }}
+            />
+          ))}
+          <Typography
+            variant="caption"
+            fontWeight={700}
+            color="text.secondary"
+            sx={{
+              ml: 1,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              fontSize: "0.65rem",
+            }}
           >
-            {isStarting ? "Launching audit…" : "Audit My Agent — Free"}
-          </Button>
+            aodit · Demo Sandbox
+          </Typography>
         </Box>
-      )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Live feed                                                           */}
-      {/* ------------------------------------------------------------------ */}
-      {sessionId && (
-        <Box>
-          {/* Turn progress dots */}
-          <Box
-            display="flex"
-            alignItems="center"
-            gap={1}
-            mb={3}
-            flexWrap="wrap"
-          >
-            {Array.from({ length: TOTAL_TURNS }, (_, i) => {
-              const turnNum = i + 1;
-              const completed = turns.some((t) => t.turnIndex === turnNum);
-              const active = !completed && turnNum === activeTurnIndex;
-              return (
-                <Tooltip key={turnNum} title={TURN_NAMES[i]} placement="top">
-                  <Box
-                    sx={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: "50%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      bgcolor: completed
-                        ? "success.main"
-                        : active
-                          ? "warning.main"
-                          : "action.disabledBackground",
-                      color: completed || active ? "#fff" : "text.disabled",
-                      animation: active
-                        ? "pulse 1.2s ease-in-out infinite"
-                        : undefined,
-                      "@keyframes pulse": {
-                        "0%, 100%": { opacity: 1 },
-                        "50%": { opacity: 0.45 },
-                      },
-                    }}
-                  >
-                    {turnNum}
-                  </Box>
-                </Tooltip>
-              );
-            })}
-
-            <Box
-              ml={{ xs: 0, sm: "auto" }}
-              width={{ xs: "100%", sm: "auto" }}
-              display="flex"
-              alignItems="center"
-              justifyContent={{ xs: "space-between", sm: "flex-start" }}
-              gap={1}
-            >
-              {isRunning && (
-                <>
-                  <LoaderSpinner
-                    size={LoaderSizeEnum.Small}
-                    position="relative"
-                  />
-                  <Typography variant="caption" color="text.secondary">
-                    Turn {activeTurnIndex}/{TOTAL_TURNS}
-                  </Typography>
-                  <Button
-                    size="small"
-                    color="error"
-                    variant="outlined"
-                    onClick={handleStop}
-                    disabled={isStopping}
-                    startIcon={<StopCircle sx={{ fontSize: 16 }} />}
-                    sx={{ ml: 0.5, py: 0.25, fontSize: 11 }}
-                  >
-                    {isStopping ? "Stopping…" : "Stop"}
-                  </Button>
-                </>
-              )}
-              {isCompleted && demoStatus?.rawScore != null && (
-                <Chip
-                  label={`Avg ${demoStatus.rawScore.toFixed(1)}/5`}
-                  color={scoreColor(Math.round(demoStatus.rawScore))}
-                  size="small"
-                  sx={{ fontWeight: 700 }}
-                />
-              )}
-              {isFailed && <Chip label="Failed" color="error" size="small" />}
-              {isCancelled && (
-                <Chip label="Stopped" color="default" size="small" />
-              )}
-            </Box>
-          </Box>
-
-          <Divider sx={{ mb: 2 }} />
-
-          {/* Waiting state before first turn arrives */}
-          {turns.length === 0 && isRunning && (
-            <Box
-              display="flex"
-              alignItems="center"
-              gap={1.5}
-              py={4}
-              justifyContent="center"
-            >
-              <LoaderSpinner size={LoaderSizeEnum.Small} position="relative" />
-              <Typography variant="body2" color="text.secondary">
-                Generating adversarial prompts…
-              </Typography>
-            </Box>
-          )}
-
-          {/* Error state */}
-          {isFailed && (
-            <Typography variant="body2" color="error" mb={2}>
-              {demoStatus?.error ?? "An error occurred during the demo run."}
+        {/* Playground component */}
+        <Box sx={{ p: { xs: 2, sm: 3 } }}>
+          <Box sx={{ maxWidth: 800, mx: "auto", p: { xs: 2, sm: 3 } }}>
+            {/* ------------------------------------------------------------------ */}
+            {/* Header                                                              */}
+            {/* ------------------------------------------------------------------ */}
+            <Typography variant="h6" fontWeight={700} gutterBottom>
+              aodit Demo
             </Typography>
-          )}
+            <Typography variant="body2" color="text.secondary" mb={3}>
+              Run an 8-turn adversarial test against your AI agent. No account
+              required.
+            </Typography>
 
-          {/* Turn cards */}
-          <Box display="flex" flexDirection="column" gap={2}>
-            {turns.map((turn) => {
-              const expanded = expandedTurns.has(turn.turnIndex);
-              return (
-                <Box
-                  key={turn.turnIndex}
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                  }}
+            {/* ------------------------------------------------------------------ */}
+            {/* Input form                                                          */}
+            {/* ------------------------------------------------------------------ */}
+            {!sessionId && (
+              <Box display="flex" flexDirection="column" gap={2}>
+                <TextField
+                  label="Agent Instructions"
+                  multiline
+                  minRows={4}
+                  maxRows={10}
+                  fullWidth
+                  value={systemPrompt}
+                  onChange={(e) => setSystemPrompt(e.target.value)}
+                  placeholder="e.g. You are a customer service agent for Acme Bank. You help users with account queries, card issues, and loan applications. You must never share account details without identity verification..."
+                  inputProps={{ maxLength: 2000 }}
+                  helperText={`${systemPrompt.length} / 2000 — paste the instructions your agent follows`}
+                  disabled={isStarting}
+                />
+
+                <FormControl fullWidth>
+                  <InputLabel id="model-select-label">Model</InputLabel>
+                  <Select
+                    labelId="model-select-label"
+                    value={modelId}
+                    label="Model"
+                    onChange={(e) => setModelId(e.target.value)}
+                    disabled={isStarting}
+                  >
+                    {MODEL_OPTIONS.map((m) => (
+                      <MenuItem key={m.id} value={m.id}>
+                        {m.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                {startError && (
+                  <Typography variant="body2" color="error">
+                    {startError}
+                  </Typography>
+                )}
+
+                <Button
+                  variant="contained"
+                  onClick={handleStart}
+                  disabled={isStarting || !systemPrompt.trim()}
+                  startIcon={
+                    isStarting ? (
+                      <LoaderSpinner size={LoaderSizeEnum.Small} />
+                    ) : undefined
+                  }
+                  sx={{ alignSelf: "flex-start" }}
                 >
-                  {/* Turn header — click to toggle */}
+                  {isStarting ? "Launching audit…" : "Audit My Agent — Free"}
+                </Button>
+              </Box>
+            )}
+
+            {/* ------------------------------------------------------------------ */}
+            {/* Live feed                                                           */}
+            {/* ------------------------------------------------------------------ */}
+            {sessionId && (
+              <Box>
+                {/* Turn progress dots */}
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  mb={3}
+                  flexWrap="wrap"
+                >
+                  {Array.from({ length: TOTAL_TURNS }, (_, i) => {
+                    const turnNum = i + 1;
+                    const completed = turns.some(
+                      (t) => t.turnIndex === turnNum,
+                    );
+                    const active = !completed && turnNum === activeTurnIndex;
+                    return (
+                      <Tooltip
+                        key={turnNum}
+                        title={TURN_NAMES[i]}
+                        placement="top"
+                      >
+                        <Box
+                          sx={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            bgcolor: completed
+                              ? "success.main"
+                              : active
+                                ? "warning.main"
+                                : "action.disabledBackground",
+                            color:
+                              completed || active ? "#fff" : "text.disabled",
+                            animation: active
+                              ? "pulse 1.2s ease-in-out infinite"
+                              : undefined,
+                            "@keyframes pulse": {
+                              "0%, 100%": { opacity: 1 },
+                              "50%": { opacity: 0.45 },
+                            },
+                          }}
+                        >
+                          {turnNum}
+                        </Box>
+                      </Tooltip>
+                    );
+                  })}
+
                   <Box
-                    px={{ xs: 1.5, sm: 2 }}
-                    py={{ xs: 1.25, sm: 1 }}
+                    ml={{ xs: 0, sm: "auto" }}
+                    width={{ xs: "100%", sm: "auto" }}
                     display="flex"
                     alignItems="center"
-                    gap={{ xs: 0.75, sm: 1 }}
-                    flexWrap="wrap"
-                    onClick={() => toggleTurn(turn.turnIndex)}
-                    sx={{
-                      bgcolor: "action.hover",
-                      cursor: "pointer",
-                      userSelect: "none",
-                      "&:hover": { bgcolor: "action.selected" },
-                    }}
+                    justifyContent={{ xs: "space-between", sm: "flex-start" }}
+                    gap={1}
                   >
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={{ xs: 0.75, sm: 1 }}
-                      minWidth={0}
-                      flex="1 1 auto"
-                    >
-                      {expanded ? (
-                        <ExpandLess sx={{ fontSize: 18, opacity: 0.6 }} />
-                      ) : (
-                        <ExpandMore sx={{ fontSize: 18, opacity: 0.6 }} />
-                      )}
-                      <Typography
-                        variant="caption"
-                        fontWeight={700}
-                        sx={{ flexShrink: 0 }}
-                      >
-                        Turn {turn.turnIndex}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{ display: { xs: "none", sm: "block" } }}
-                      >
-                        ·
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        noWrap
-                        sx={{
-                          minWidth: 0,
-                          maxWidth: { xs: "100%", sm: 220 },
-                          textOverflow: "ellipsis",
-                          overflow: "hidden",
-                        }}
-                      >
-                        {turn.turnType}
-                      </Typography>
-                    </Box>
-
-                    {/* Score chip + reasoning button */}
-                    <Box
-                      ml={{ xs: 0, sm: "auto" }}
-                      width={{ xs: "100%", sm: "auto" }}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent={{ xs: "space-between", sm: "flex-end" }}
-                      gap={0.75}
-                    >
-                      <Chip
-                        label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
-                        color={scoreColor(turn.score)}
-                        size="small"
-                        sx={{ fontWeight: 700, maxWidth: { xs: "70%", sm: "none" } }}
-                      />
-                      <Button
-                        size="small"
-                        variant="text"
-                        startIcon={<InfoOutlined />}
-                        aria-label="View evaluation details"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openReasoning(turn);
-                        }}
-                        sx={{
-                          minWidth: 0,
-                          px: { xs: 0.75, sm: 1 },
-                          fontSize: { xs: 11, sm: 12 },
-                          "& .MuiButton-startIcon": {
-                            mr: { xs: 0, sm: 0.5 },
-                            ml: 0,
-                          },
-                        }}
-                      >
-                        <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
-                          Evaluation
-                        </Box>
-                      </Button>
-                    </Box>
-                  </Box>
-
-                  {expanded && (
-                    <>
-                      {/* Adversary prompt */}
-                      <Box px={2} py={1.5}>
-                        <Chip
-                          icon={<Bolt sx={{ fontSize: 16 }} />}
-                          label="Adversary"
+                    {isRunning && (
+                      <>
+                        <LoaderSpinner
+                          size={LoaderSizeEnum.Small}
+                          position="relative"
+                        />
+                        <Typography variant="caption" color="text.secondary">
+                          Turn {activeTurnIndex}/{TOTAL_TURNS}
+                        </Typography>
+                        <Button
                           size="small"
                           color="error"
                           variant="outlined"
+                          onClick={handleStop}
+                          disabled={isStopping}
+                          startIcon={<StopCircle sx={{ fontSize: 16 }} />}
+                          sx={{ ml: 0.5, py: 0.25, fontSize: 11 }}
+                        >
+                          {isStopping ? "Stopping…" : "Stop"}
+                        </Button>
+                      </>
+                    )}
+                    {isCompleted && demoStatus?.rawScore != null && (
+                      <Chip
+                        label={`Avg ${demoStatus.rawScore.toFixed(1)}/5`}
+                        color={scoreColor(Math.round(demoStatus.rawScore))}
+                        size="small"
+                        sx={{ fontWeight: 700 }}
+                      />
+                    )}
+                    {isFailed && (
+                      <Chip label="Failed" color="error" size="small" />
+                    )}
+                    {isCancelled && (
+                      <Chip label="Stopped" color="default" size="small" />
+                    )}
+                  </Box>
+                </Box>
+
+                <Divider sx={{ mb: 2 }} />
+
+                {/* Waiting state before first turn arrives */}
+                {turns.length === 0 && isRunning && (
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    gap={1.5}
+                    py={4}
+                    justifyContent="center"
+                  >
+                    <LoaderSpinner
+                      size={LoaderSizeEnum.Small}
+                      position="relative"
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      Generating adversarial prompts…
+                    </Typography>
+                  </Box>
+                )}
+
+                {/* Error state */}
+                {isFailed && (
+                  <Typography variant="body2" color="error" mb={2}>
+                    {demoStatus?.error ??
+                      "An error occurred during the demo run."}
+                  </Typography>
+                )}
+
+                {/* Turn cards */}
+                <Box display="flex" flexDirection="column" gap={2}>
+                  {turns.map((turn) => {
+                    const expanded = expandedTurns.has(turn.turnIndex);
+                    return (
+                      <Box
+                        key={turn.turnIndex}
+                        sx={{
+                          border: "1px solid",
+                          borderColor: "divider",
+                          borderRadius: 2,
+                          overflow: "hidden",
+                        }}
+                      >
+                        {/* Turn header — click to toggle */}
+                        <Box
+                          px={{ xs: 1.5, sm: 2 }}
+                          py={{ xs: 1.25, sm: 1 }}
+                          display="flex"
+                          alignItems="center"
+                          gap={{ xs: 0.75, sm: 1 }}
+                          flexWrap="wrap"
+                          onClick={() => toggleTurn(turn.turnIndex)}
                           sx={{
-                            fontWeight: 700,
-                            fontSize: 12,
-                            mb: 1,
-                            "& .MuiChip-icon": { ml: 0.5 },
-                          }}
-                        />
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            whiteSpace: "pre-wrap",
-                            wordBreak: "break-word",
+                            bgcolor: "action.hover",
+                            cursor: "pointer",
+                            userSelect: "none",
+                            "&:hover": { bgcolor: "action.selected" },
                           }}
                         >
-                          {turn.prompt}
-                        </Typography>
-                      </Box>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            gap={{ xs: 0.75, sm: 1 }}
+                            minWidth={0}
+                            flex="1 1 auto"
+                          >
+                            {expanded ? (
+                              <ExpandLess sx={{ fontSize: 18, opacity: 0.6 }} />
+                            ) : (
+                              <ExpandMore sx={{ fontSize: 18, opacity: 0.6 }} />
+                            )}
+                            <Typography
+                              variant="caption"
+                              fontWeight={700}
+                              sx={{ flexShrink: 0 }}
+                            >
+                              Turn {turn.turnIndex}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                              sx={{ display: { xs: "none", sm: "block" } }}
+                            >
+                              ·
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                              noWrap
+                              sx={{
+                                minWidth: 0,
+                                maxWidth: { xs: "100%", sm: 220 },
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                              }}
+                            >
+                              {turn.turnType}
+                            </Typography>
+                          </Box>
 
-                      <Divider />
-
-                      {/* Agent response — rendered as markdown */}
-                      <Box px={2} py={1.5}>
-                        <Chip
-                          icon={<SmartToy sx={{ fontSize: 16 }} />}
-                          label="Agent"
-                          size="small"
-                          color="primary"
-                          variant="outlined"
-                          sx={{
-                            fontWeight: 700,
-                            fontSize: 12,
-                            mb: 1,
-                            "& .MuiChip-icon": { ml: 0.5 },
-                          }}
-                        />
-                        <Box sx={mdSx}>
-                          <ReactMarkdown>{turn.response}</ReactMarkdown>
+                          {/* Score chip + reasoning button */}
+                          <Box
+                            ml={{ xs: 0, sm: "auto" }}
+                            width={{ xs: "100%", sm: "auto" }}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent={{
+                              xs: "space-between",
+                              sm: "flex-end",
+                            }}
+                            gap={0.75}
+                          >
+                            <Chip
+                              label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
+                              color={scoreColor(turn.score)}
+                              size="small"
+                              sx={{
+                                fontWeight: 700,
+                                maxWidth: { xs: "70%", sm: "none" },
+                              }}
+                            />
+                            <Button
+                              size="small"
+                              variant="text"
+                              startIcon={<InfoOutlined />}
+                              aria-label="View evaluation details"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openReasoning(turn);
+                              }}
+                              sx={{
+                                minWidth: 0,
+                                px: { xs: 0.75, sm: 1 },
+                                fontSize: { xs: 11, sm: 12 },
+                                "& .MuiButton-startIcon": {
+                                  mr: { xs: 0, sm: 0.5 },
+                                  ml: 0,
+                                },
+                              }}
+                            >
+                              <Box
+                                component="span"
+                                sx={{ display: { xs: "none", sm: "inline" } }}
+                              >
+                                Evaluation
+                              </Box>
+                            </Button>
+                          </Box>
                         </Box>
+
+                        {expanded && (
+                          <>
+                            {/* Adversary prompt */}
+                            <Box px={2} py={1.5}>
+                              <Chip
+                                icon={<Bolt sx={{ fontSize: 16 }} />}
+                                label="Adversary"
+                                size="small"
+                                color="error"
+                                variant="outlined"
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: 12,
+                                  mb: 1,
+                                  "& .MuiChip-icon": { ml: 0.5 },
+                                }}
+                              />
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  whiteSpace: "pre-wrap",
+                                  wordBreak: "break-word",
+                                }}
+                              >
+                                {turn.prompt}
+                              </Typography>
+                            </Box>
+
+                            <Divider />
+
+                            {/* Agent response — rendered as markdown */}
+                            <Box px={2} py={1.5}>
+                              <Chip
+                                icon={<SmartToy sx={{ fontSize: 16 }} />}
+                                label="Agent"
+                                size="small"
+                                color="primary"
+                                variant="outlined"
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: 12,
+                                  mb: 1,
+                                  "& .MuiChip-icon": { ml: 0.5 },
+                                }}
+                              />
+                              <Box sx={mdSx}>
+                                <ReactMarkdown>{turn.response}</ReactMarkdown>
+                              </Box>
+                            </Box>
+                          </>
+                        )}
                       </Box>
-                    </>
-                  )}
+                    );
+                  })}
                 </Box>
-              );
-            })}
+
+                {/* Run another demo */}
+                {(isCompleted || isFailed || isCancelled) && (
+                  <Box mt={3} display="flex" gap={1.5} flexWrap="wrap">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={handleDownloadPDF}
+                      disabled={isDownloadingPdf}
+                      startIcon={
+                        isDownloadingPdf ? (
+                          <LoaderSpinner size={LoaderSizeEnum.Small} />
+                        ) : (
+                          <PictureAsPdf sx={{ fontSize: 18 }} />
+                        )
+                      }
+                    >
+                      {isDownloadingPdf
+                        ? "Generating PDF…"
+                        : "Download PDF Report"}
+                    </Button>
+                    {!isCompleted && (
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={handleReset}
+                      >
+                        Run Another Demo
+                      </Button>
+                    )}
+                  </Box>
+                )}
+              </Box>
+            )}
+
+            {/* ------------------------------------------------------------------ */}
+            {/* Reasoning dialog                                                    */}
+            {/* ------------------------------------------------------------------ */}
+            <ReasoningDialog
+              open={reasoningDialog.open}
+              reasoning={reasoningDialog.reasoning}
+              score={reasoningDialog.score}
+              turnIndex={reasoningDialog.turnIndex}
+              onClose={() => setReasoningDialog((s) => ({ ...s, open: false }))}
+            />
           </Box>
-
-          {/* Run another demo */}
-          {(isCompleted || isFailed || isCancelled) && (
-            <Box mt={3} display="flex" gap={1.5} flexWrap="wrap">
-              <Button
-                variant="contained"
-                size="small"
-                onClick={handleDownloadPDF}
-                disabled={isDownloadingPdf}
-                startIcon={
-                  isDownloadingPdf ? (
-                    <LoaderSpinner size={LoaderSizeEnum.Small} />
-                  ) : (
-                    <PictureAsPdf sx={{ fontSize: 18 }} />
-                  )
-                }
-              >
-                {isDownloadingPdf ? "Generating PDF…" : "Download PDF Report"}
-              </Button>
-              {!isCompleted && (
-                <Button variant="outlined" size="small" onClick={handleReset}>
-                  Run Another Demo
-                </Button>
-              )}
-            </Box>
-          )}
         </Box>
-      )}
-
-      {/* ------------------------------------------------------------------ */}
-      {/* Reasoning dialog                                                    */}
-      {/* ------------------------------------------------------------------ */}
-      <ReasoningDialog
-        open={reasoningDialog.open}
-        reasoning={reasoningDialog.reasoning}
-        score={reasoningDialog.score}
-        turnIndex={reasoningDialog.turnIndex}
-        onClose={() => setReasoningDialog((s) => ({ ...s, open: false }))}
-      />
-    </Box>
+      </Box>
+    </Container>
   );
 };
 

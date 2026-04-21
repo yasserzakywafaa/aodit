@@ -27,6 +27,7 @@ import {
   primaryColorOpaqueEight,
 } from "src/application/shared/themes";
 
+import AoditDemoPlayground from "src/components/shared/AoditDemoPlayground";
 import { ArrowForward } from "@mui/icons-material";
 import ComplianceLogosSection from "./features/ComplianceLogosSection";
 import DownloadReportSection from "./features/DownloadReportSection";
@@ -142,6 +143,10 @@ const FeaturesPage = () => {
             />
           </Stack>
         </Container>
+      </Box>
+
+      <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
+        <AoditDemoPlayground />
       </Box>
 
       {/* ===== SECTION 3 — FEATURED REPORT ===== */}

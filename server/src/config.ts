@@ -4,7 +4,8 @@ import path from "path";
 dotenv.config();
 
 /** Default OpenRouter cloud API; override with OPENROUTER_BASE_URL for on-prem / local LLM. */
-const DEFAULT_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
+// const DEFAULT_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
+const DEFAULT_OPENROUTER_BASE_URL = "http://192.168.1.113:1234/v1";
 
 const resolvedOpenRouterBaseUrl =
   process.env.OPENROUTER_BASE_URL || DEFAULT_OPENROUTER_BASE_URL;

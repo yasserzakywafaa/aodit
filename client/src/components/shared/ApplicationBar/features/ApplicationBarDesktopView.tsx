@@ -110,7 +110,9 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               <UserAccountMenuButton user={auth.user as User} />
             ) : (
               // Show Login in dev/local/on-prem (users need to log in)
-              (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL || APP_CONSTANTS.IS_ON_PREM) && (
+              (APP_CONSTANTS.IS_DEV ||
+                APP_CONSTANTS.IS_LOCAL ||
+                APP_CONSTANTS.IS_ON_PREM) && (
                 <>
                   <MenuItem
                     sx={{ ...buttonHoverStyleSecondary }}
@@ -129,22 +131,23 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               )
             )}
 
-{/* Show Register only in dev/local (NOT on-prem - admin creates users) */}
-            {!auth.isAuthenticated && (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
-              <MenuItem
-                sx={{ ...buttonHoverStyleSecondary }}
-                onClick={handleToggleRegisterModal}
-              >
-                <LockOpenOutlined
-                  fontSize="small"
-                  color="primary"
-                  sx={{ mr: 0.5 }}
-                />
-                <Typography variant="body2" color="text.primary">
-                  Register
-                </Typography>
-              </MenuItem>
-            )}
+            {/* Show Register only in dev/local (NOT on-prem - admin creates users) */}
+            {!auth.isAuthenticated &&
+              (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
+                <MenuItem
+                  sx={{ ...buttonHoverStyleSecondary }}
+                  onClick={handleToggleRegisterModal}
+                >
+                  <LockOpenOutlined
+                    fontSize="small"
+                    color="primary"
+                    sx={{ mr: 0.5 }}
+                  />
+                  <Typography variant="body2" color="text.primary">
+                    Register
+                  </Typography>
+                </MenuItem>
+              )}
 
             <Button
               component="a"

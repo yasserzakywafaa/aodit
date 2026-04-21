@@ -74,6 +74,7 @@ export const routes = {
 
 export const prerenderPaths: string[] = [
   routes.features,
+  routes.demo,
   routes.methodology,
   routes.security,
   routes.about,

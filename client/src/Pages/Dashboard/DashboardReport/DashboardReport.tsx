@@ -41,7 +41,7 @@ import ReportConfig from "./features/ReportConfig";
 import { ReportRun } from "src/shared/types/reportRun";
 import type { ScenarioResult } from "src/shared/types/scenarioResult";
 import axios from "axios";
-import { hasAdminRights } from "src/shared/utils/getUserRoles";
+import { hasSuperAdminRights } from "src/shared/utils/getUserRoles";
 import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
@@ -86,7 +86,7 @@ const DashboardReport = () => {
       state: { auth },
     },
   } = useApplicationContext();
-  const isAdmin = hasAdminRights(auth.user);
+  const isSuperAdmin = hasSuperAdminRights(auth.user);
 
   const selectedAgent = agents.find((a) => a._id === report?.agentId) ?? null;
   const isAgentConnectionTesting = agentConnectionStatus === "testing";
@@ -100,7 +100,7 @@ const DashboardReport = () => {
 
   // Tab: 0 = Evaluate Your Agent, 1 = Benchmark Frontier Models
   // Non-admin users can only use agent evaluation mode
-  const evaluationMode = isAdmin
+  const evaluationMode = isSuperAdmin
     ? (report?.evaluationMode ?? "benchmark")
     : "agent";
   const activeTab = evaluationMode === "agent" ? 0 : 1;
@@ -324,7 +324,7 @@ const DashboardReport = () => {
       ) : (
         <Paper variant="outlined" sx={{ mt: 2, overflow: "hidden" }}>
           {/* Tab switcher — only shown for admins */}
-          {isAdmin && (
+          {isSuperAdmin && (
             <Tabs
               value={activeTab}
               onChange={handleTabChange}
@@ -549,7 +549,7 @@ const DashboardReport = () => {
             )}
 
             {/* ── TAB 1: Benchmark Frontier Models (admin only) ── */}
-            {isAdmin && activeTab === 1 && (
+            {isSuperAdmin && activeTab === 1 && (
               <>
                 <Typography variant="h5" color="primary" sx={{ mb: 1 }}>
                   Benchmark Frontier Models

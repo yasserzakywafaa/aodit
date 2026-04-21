@@ -2,6 +2,12 @@ import { SubscriptionPlanEnum, User, UserRole } from "../types/user";
 
 import { UserType } from "src/application/store/state";
 
+export const hasSuperAdminRights = (user: User | null): boolean => {
+  if (!user) return false;
+
+  return user.role === UserRole.super_admin;
+};
+
 export const hasAdminRights = (user: User | null): boolean => {
   if (!user) return false;
 

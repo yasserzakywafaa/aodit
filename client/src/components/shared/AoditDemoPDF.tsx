@@ -238,6 +238,87 @@ const s = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 4,
   },
+
+  // Full-report upsell (mirrors DemoCompletionUpsell in AoditDemoPlayground)
+  upsellCard: {
+    marginTop: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderLeftWidth: 4,
+    borderLeftColor: GREEN,
+    borderRadius: 4,
+    backgroundColor: "#FFFFFF",
+    paddingBottom: 4,
+  },
+  upsellHeaderRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    paddingHorizontal: 14,
+    paddingTop: 14,
+  },
+  upsellAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: PASS_BG,
+    marginRight: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  upsellAvatarGlyph: {
+    fontSize: 14,
+    color: GREEN,
+    fontFamily: "Helvetica-Bold",
+  },
+  upsellTitle: {
+    flex: 1,
+    fontSize: 11,
+    fontFamily: "Helvetica-Bold",
+    color: DARK,
+    lineHeight: 1.35,
+  },
+  upsellBody: {
+    fontSize: 9.5,
+    color: MID_GRAY,
+    lineHeight: 1.65,
+    paddingHorizontal: 14,
+    marginTop: 10,
+  },
+  upsellEmphasis: {
+    fontFamily: "Helvetica-Bold",
+    color: TEXT,
+  },
+  upsellBrand: {
+    fontFamily: "Helvetica-Bold",
+    color: GREEN,
+  },
+  upsellActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingHorizontal: 14,
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
+  upsellCtaWrap: {
+    backgroundColor: GREEN,
+    paddingVertical: 8,
+    paddingHorizontal: 18,
+    borderRadius: 3,
+    alignItems: "center",
+  },
+  upsellCtaText: {
+    color: DARK,
+    fontSize: 9,
+    fontFamily: "Helvetica-Bold",
+  },
+  upsellCtaUrl: {
+    marginTop: 5,
+    fontSize: 7,
+    color: GREEN,
+    fontFamily: "Helvetica-Bold",
+    textAlign: "right",
+  },
 });
 
 // ─── Markdown renderer ───────────────────────────────────────────────────────
@@ -515,6 +596,55 @@ const PageFooter = () => (
   </View>
 );
 
+/** Matches the in-app DemoCompletionUpsell card (completed demos only). */
+const DemoCompletionUpsellPDF = () => (
+  <View style={s.upsellCard}>
+    <View style={s.upsellHeaderRow} wrap={false}>
+      <View style={s.upsellAvatar}>
+        <Text style={s.upsellAvatarGlyph}>↗</Text>
+      </View>
+      <Text style={s.upsellTitle}>You got a taste — not the full meal.</Text>
+    </View>
+
+    <Text style={s.upsellBody}>
+      <Text>Eight turns, </Text>
+      <Text style={s.upsellEmphasis}>one</Text>
+      <Text>
+        {" "}
+        adversarial storyline: enough to feel how we probe your agent, not
+        enough to call the job done. That is the point of the sandbox — quick
+        signal, low commitment.
+      </Text>
+    </Text>
+
+    <Text style={{ ...s.upsellBody, marginTop: 8 }}>
+      <Text>A production </Text>
+      <Text style={s.upsellBrand}>aodit</Text>
+      <Text>
+        {" "}
+        deep report stacks more scenarios, tougher corners, and evidence that
+        holds up under scrutiny. Ballpark{" "}
+      </Text>
+      <Text style={s.upsellEmphasis}>~1%</Text>
+      <Text> of that depth is what you just saw here. Hungry for the rest? </Text>
+      <Text style={s.upsellEmphasis}>Talk to us</Text>
+      <Text>
+        {" "}
+        — we will show you what a full engagement actually looks like.
+      </Text>
+    </Text>
+
+    <View style={s.upsellActions} wrap={false}>
+      <View>
+        <View style={s.upsellCtaWrap}>
+          <Text style={s.upsellCtaText}>Request full report</Text>
+        </View>
+        <Text style={s.upsellCtaUrl}>aodit.ai/contact</Text>
+      </View>
+    </View>
+  </View>
+);
+
 const SpeakerChip = ({ kind }: { kind: "adversary" | "agent" | "judge" }) => {
   const cfg =
     kind === "adversary"
@@ -703,6 +833,10 @@ const AoditDemoPDF: React.FC<AoditDemoPDFProps> = ({
                 </View>
               );
             })}
+
+            {status === "completed" && turns.length > 0 ? (
+              <DemoCompletionUpsellPDF />
+            ) : null}
 
             {/* System prompt appendix */}
             <View style={{ marginTop: 16 }}>

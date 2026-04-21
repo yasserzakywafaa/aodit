@@ -1,4 +1,5 @@
 import {
+  AutoGraph,
   Bolt,
   Close,
   ExpandLess,
@@ -11,6 +12,10 @@ import {
 import {
   Box,
   Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
   Chip,
   Container,
   Dialog,
@@ -39,8 +44,10 @@ import END_POINTS from "../../application/shared/endpoints";
 import { LoaderSizeEnum } from "src/shared/types/types";
 import LoaderSpinner from "./Loader/LoaderSpinner";
 import ReactMarkdown from "react-markdown";
+import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import { pdf } from "@react-pdf/renderer";
+import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 
 // ---------------------------------------------------------------------------
@@ -351,6 +358,105 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
       </Typography>
     </DialogContent>
   </Dialog>
+);
+
+// ---------------------------------------------------------------------------
+// Completion upsell
+// ---------------------------------------------------------------------------
+
+const DemoCompletionUpsell: React.FC = () => (
+  <Card
+    component="section"
+    variant="outlined"
+    aria-labelledby="demo-completion-upsell-heading"
+    sx={{
+      mt: 3,
+      borderLeft: `4px solid ${primaryColor}`,
+    }}
+  >
+    <CardHeader
+      avatar={
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: (theme) =>
+              alpha(primaryColor, theme.palette.mode === "dark" ? 0.2 : 0.12),
+            color: primaryColor,
+          }}
+        >
+          <AutoGraph sx={{ fontSize: 22 }} aria-hidden />
+        </Box>
+      }
+      title={
+        <Typography
+          id="demo-completion-upsell-heading"
+          variant="subtitle1"
+          component="div"
+          fontWeight={700}
+          sx={{ lineHeight: 1.35 }}
+        >
+          You got a taste — not the full meal.
+        </Typography>
+      }
+    />
+    <CardContent sx={{ pt: 1.5, pb: 1 }}>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        component="div"
+        sx={{ lineHeight: 1.7, mb: 1.25 }}
+      >
+        Eight turns,{" "}
+        <Box component="span" fontWeight={700} color="text.primary">
+          one
+        </Box>{" "}
+        adversarial storyline: enough to feel how we probe your agent, not
+        enough to call the job done. That is the point of the sandbox — quick
+        signal, low commitment.
+      </Typography>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        component="div"
+        sx={{ lineHeight: 1.7 }}
+      >
+        A production{" "}
+        <Box component="span" fontWeight={700} color="primary.main">
+          aodit
+        </Box>{" "}
+        deep report stacks more scenarios, tougher corners, and evidence that
+        holds up under scrutiny. Ballpark{" "}
+        <Box component="span" fontWeight={700} color="text.primary">
+          ~1%
+        </Box>{" "}
+        of that depth is what you just saw here. Hungry for the rest?{" "}
+        <Box component="span" fontWeight={600} color="text.primary">
+          Talk to us
+        </Box>{" "}
+        — we will show you what a full engagement actually looks like.
+      </Typography>
+    </CardContent>
+    <CardActions
+      sx={{
+        justifyContent: { xs: "stretch", sm: "flex-end" },
+      }}
+    >
+      <Button
+        variant="contained"
+        size="small"
+        component={RouterLink}
+        to={routes.contact}
+        sx={{ width: { xs: "100%", sm: "auto" } }}
+      >
+        Request full report
+      </Button>
+    </CardActions>
+  </Card>
 );
 
 // ---------------------------------------------------------------------------
@@ -996,6 +1102,8 @@ const AoditDemoPlayground: React.FC = () => {
                     );
                   })}
                 </Box>
+
+                {isCompleted && turns.length > 0 && <DemoCompletionUpsell />}
 
                 {/* Run another demo */}
                 {(isCompleted || isFailed || isCancelled) && (

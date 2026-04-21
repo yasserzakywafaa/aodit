@@ -116,7 +116,7 @@ If no description is provided (legacy reports), it falls back to "General purpos
 
 - **What:** One "campaign" of evaluations.
 - **Where:** `server/src/models/types/report.ts`, `client/src/shared/types/report.ts`.
-- **Key fields:** `_id`, `name`, `description` (required — used as sector context for prompts), `status` (draft → running → completed/failed), `reportType`, `frameworkVersion` (`aodit_v1` or `aodit_v2`), `userId`, `agentId` (linked agent — required before running), `modelsToTest` (string[]), `modelsToEvaluate` (string[]), `scenariosPerDimension` (number), `dimensionWeights` (Record), `createdAt`, `updatedAt`.
+- **Key fields:** `_id`, `name`, `description` (required — used as sector context for prompts), `status` (draft → running → completed/failed), `reportType`, `frameworkVersion` (`aodit_v1` or `aodit_v2`), `userId`, `agentId` (linked agent — required before running), `modelsToTest` (string[]), `modelsToEvaluate` (string[] — judge model: friendly label from the evaluator registry or a **direct model id** for on-prem/local LLM), `scenariosPerDimension` (number), `dimensionWeights` (Record), `createdAt`, `updatedAt`.
 
 ### Agent
 

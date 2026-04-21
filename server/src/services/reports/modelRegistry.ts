@@ -28,10 +28,15 @@ export const DEFAULT_EVALUATOR_MODEL = "openai/gpt-5-mini";
 
 /** Available evaluator/judge models — extensible registry. */
 export const EVALUATOR_REGISTRY: Record<string, string> = {
-  "GPT-5 Mini": "openai/gpt-5-mini",
   Claude: "anthropic/claude-sonnet-4",
-  GPT: "openai/gpt-4o",
-  Gemini: "google/gemini-2.5-flash",
+  GPT: "openai/gpt-5-mini",
+  Gemini: "google/gemini-3.1-flash-lite-preview",
+  Grok: "x-ai/grok-4.1-fast",
+  Deepseek: "deepseek/deepseek-v3.2",
+  Kimi: "moonshotai/kimi-k2.5",
+  Llama: "meta-llama/llama-4-maverick",
+  Gemma: "google/gemma-4-26b-a4b-it",
+  Qwen: "qwen/qwen3.6-plus",
 };
 
 /** Resolve a friendly model name to its OpenRouter model ID for testing. */
@@ -52,6 +57,15 @@ export const resolveEvaluatorModelId = (
   if (!modelsToEvaluate || modelsToEvaluate.length === 0) {
     return DEFAULT_EVALUATOR_MODEL;
   }
-  const name = modelsToEvaluate[0];
-  return EVALUATOR_REGISTRY[name] ?? DEFAULT_EVALUATOR_MODEL;
+  const name = modelsToEvaluate[0]?.trim() ?? "";
+  if (!name) {
+    return DEFAULT_EVALUATOR_MODEL;
+  }
+  // Friendly label from EVALUATOR_REGISTRY (e.g. "Claude", "GPT-5 Mini")
+  const mapped = EVALUATOR_REGISTRY[name];
+  if (mapped !== undefined) {
+    return mapped;
+  }
+  // Direct model id for on-prem / LM Studio / custom OpenAI-compatible servers
+  return name;
 };

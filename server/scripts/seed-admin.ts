@@ -23,7 +23,7 @@
  * already exists.
  */
 
-import { AuthProviderEnum, UserRole, UserStatus } from "src/models/types";
+import { AuthProviderEnum, UserRole, UserStatus } from "../src/models/types";
 
 import { MongoClient } from "mongodb";
 import bcrypt from "bcryptjs";

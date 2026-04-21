@@ -301,6 +301,35 @@ server {
 
 ---
 
+## LLM: transport vs judge model (full-local test and revert)
+
+**Transport**
+
+- `OPENROUTER_BASE_URL` controls **where** OpenAI-compatible completion requests go (evaluator prompts/scoring in all modes, and benchmark runs). On-prem: set this to your internal base URL (typically ending in `/v1`).
+
+**Judge model**
+
+- Report field `modelsToEvaluate` (first entry) is the **model** string sent in the request body. Use a UI preset label (e.g. `Claude`) that maps on the server, or type a **direct model id** your stack understands (e.g. LM Studio’s loaded model id).
+
+**Evaluator JSON response format**
+
+- Scoring calls request structured output. Set `EVALUATOR_JSON_RESPONSE_FORMAT` to `json_object` (OpenRouter) or `text` (many local servers such as LM Studio). If unset, the server defaults to `json_object` when the base URL contains `openrouter.ai`, otherwise `text`.
+
+**Temporary full-local test (e.g. LM Studio)**
+
+1. Point `OPENROUTER_BASE_URL` at your local server (e.g. `http://127.0.0.1:1234/v1`).
+2. In the report **Evaluator (judge model)** field, enter the exact model id your server expects (or a preset that resolves to it).
+3. In agent mode, keep the **Agent URL** pointed at your integration endpoint as today.
+
+**Revert to cloud OpenRouter**
+
+1. Set `OPENROUTER_BASE_URL=https://openrouter.ai/api/v1` (or remove the variable to use the default).
+2. Restore valid `OPENROUTER_API_KEY_DEV` / `OPENROUTER_API_KEY_PROD` for your environment.
+3. In the report UI, set **Evaluator** back to a cloud preset (e.g. Claude, GPT-5 Mini).
+4. Optionally unset `EVALUATOR_JSON_RESPONSE_FORMAT` so auto-detection applies again.
+
+---
+
 ## Support
 
 Contact your aodit vendor representative for assistance.

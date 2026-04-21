@@ -12,6 +12,9 @@ interface ReportConfigProps {
   totalScenarios: number;
   datapoints: number;
   evaluationMode?: "benchmark" | "agent";
+  /** First entry maps to server evaluator (friendly label or direct model id). */
+  evaluatorSelection: string;
+  onEvaluatorChange: (value: string) => void;
 }
 
 const ReportConfig = ({
@@ -19,6 +22,8 @@ const ReportConfig = ({
   totalScenarios,
   datapoints,
   evaluationMode = "benchmark",
+  evaluatorSelection,
+  onEvaluatorChange,
 }: ReportConfigProps) => {
   return (
     <>
@@ -37,7 +42,10 @@ const ReportConfig = ({
 
       <Divider sx={{ mt: 3, mb: 6 }} />
 
-      <ModelsToEvaluateSection />
+      <ModelsToEvaluateSection
+        value={evaluatorSelection}
+        onChange={onEvaluatorChange}
+      />
 
       <Divider sx={{ mt: 3, mb: 6 }} />
 

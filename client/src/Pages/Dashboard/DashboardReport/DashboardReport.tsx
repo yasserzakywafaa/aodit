@@ -178,8 +178,10 @@ const DashboardReport = () => {
             `${d.slice(0, 3).toUpperCase()} ${Math.round((framework.weights[d] ?? 0) * 100)}%`,
         )
   ).join(" · ");
-  // // Models to Evaluate: Claude only for now (fixed)
-  // const modelsToEvaluate = ["Claude"];
+  /** Default judge label; maps via server EVALUATOR_REGISTRY. */
+  const defaultEvaluatorLabel = "Claude";
+  const evaluatorSelection =
+    report?.modelsToEvaluate?.[0]?.trim() || defaultEvaluatorLabel;
 
   useEffect(() => {
     if (reportId) {
@@ -197,6 +199,11 @@ const DashboardReport = () => {
     setReport({ ...report, [name as string]: value });
   };
 
+  const handleEvaluatorChange = (value: string) => {
+    if (!report) return;
+    setReport({ ...report, modelsToEvaluate: [value] });
+  };
+
   const buildUpdatePayload = () => ({
     name: report?.name,
     description: report?.description,
@@ -204,7 +211,11 @@ const DashboardReport = () => {
     frameworkVersion,
     dimensionWeights: report?.dimensionWeights,
     modelsToTest: report?.modelsToTest,
-    modelsToEvaluate: ["Claude"],
+    modelsToEvaluate:
+      report?.modelsToEvaluate?.length &&
+      report.modelsToEvaluate[0]?.trim().length
+        ? report.modelsToEvaluate
+        : [defaultEvaluatorLabel],
     agentId: report?.agentId,
     evaluationMode,
   });
@@ -318,6 +329,8 @@ const DashboardReport = () => {
               totalScenarios={totalScenarios}
               datapoints={datapoints}
               evaluationMode={evaluationMode}
+              evaluatorSelection={evaluatorSelection}
+              onEvaluatorChange={handleEvaluatorChange}
             />
           </AccordionDetails>
         </Accordion>
@@ -544,6 +557,8 @@ const DashboardReport = () => {
                   totalScenarios={totalScenarios}
                   datapoints={totalScenarios * 8}
                   evaluationMode="agent"
+                  evaluatorSelection={evaluatorSelection}
+                  onEvaluatorChange={handleEvaluatorChange}
                 />
               </>
             )}
@@ -569,6 +584,8 @@ const DashboardReport = () => {
                   totalScenarios={totalScenarios}
                   datapoints={datapoints}
                   evaluationMode="benchmark"
+                  evaluatorSelection={evaluatorSelection}
+                  onEvaluatorChange={handleEvaluatorChange}
                 />
               </>
             )}

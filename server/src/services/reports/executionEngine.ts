@@ -49,6 +49,7 @@ import { ObjectId } from "mongodb";
 import { Report } from "../../models/types/report";
 import { Scenario } from "../../models/types/scenario";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
+import CONFIG from "../../config";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -69,7 +70,10 @@ const callModel = async (
 ): Promise<string> => {
   const options: any = { max_tokens: 2000 };
   if (jsonMode) {
-    options.response_format = { type: "json_object" };
+    // json_object: OpenRouter / OpenAI; text: LM Studio and many on-prem servers
+    options.response_format = {
+      type: CONFIG.EVALUATOR_JSON_RESPONSE_FORMAT,
+    };
   }
 
   const response = await handleOpenRouterAIRequest(modelId, messages, options);

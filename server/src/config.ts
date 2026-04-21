@@ -3,6 +3,25 @@ import path from "path";
 
 dotenv.config();
 
+/** Default OpenRouter cloud API; override with OPENROUTER_BASE_URL for on-prem / local LLM. */
+const DEFAULT_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
+
+const resolvedOpenRouterBaseUrl =
+  process.env.OPENROUTER_BASE_URL || DEFAULT_OPENROUTER_BASE_URL;
+
+/**
+ * Evaluator scoring uses response_format. OpenRouter accepts json_object; many
+ * local OpenAI-compatible servers (e.g. LM Studio) only allow json_schema or text.
+ * Override with EVALUATOR_JSON_RESPONSE_FORMAT=json_object|text.
+ */
+const resolveEvaluatorJsonResponseFormat = (): "json_object" | "text" => {
+  const env = process.env.EVALUATOR_JSON_RESPONSE_FORMAT;
+  if (env === "json_object" || env === "text") return env;
+  return resolvedOpenRouterBaseUrl.includes("openrouter.ai")
+    ? "json_object"
+    : "text";
+};
+
 const CONFIG = {
   DEV_PORT: process.env.DEV_PORT,
   PROD_PORT: process.env.PROD_PORT,
@@ -27,7 +46,8 @@ const CONFIG = {
 
   // Paths
   FRONTEND_DEV_PATH: path.resolve("../client/public"),
-  FRONTEND_BUILD_PATH: process.env.FRONTEND_BUILD_PATH || path.resolve("../client/dist"),
+  FRONTEND_BUILD_PATH:
+    process.env.FRONTEND_BUILD_PATH || path.resolve("../client/dist"),
   SERVE_STATIC_CONTENT: process.env.SERVE_STATIC_CONTENT,
 
   // GitLab
@@ -60,11 +80,14 @@ const CONFIG = {
   // // APIs keys for AI
 
   // AI / LLM provider
-  // OPENROUTER_BASE_URL: for on-prem deployments, set this to the bank's internal
-  // OpenAI-compatible endpoint (e.g., http://llm.bank.internal:11434/v1 for Ollama,
-  // or an Azure OpenAI endpoint). Defaults to openrouter.ai for cloud deployments.
-  OPENROUTER_BASE_URL:
-    process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",
+  // OPENROUTER_BASE_URL: transport only — where completion requests are sent.
+  // For on-prem, set to your internal OpenAI-compatible base (e.g. http://host:11434/v1).
+  // Model ids are chosen separately (report modelsToEvaluate / model registry).
+  OPENROUTER_BASE_URL: resolvedOpenRouterBaseUrl,
+
+  /** Used for evaluator JSON scoring requests; independent of OPENROUTER_BASE_URL. */
+  EVALUATOR_JSON_RESPONSE_FORMAT: resolveEvaluatorJsonResponseFormat(),
+
   OPENROUTER_API_KEY:
     process.env.NODE_ENV === "development"
       ? process.env.OPENROUTER_API_KEY_DEV

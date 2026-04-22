@@ -10,5 +10,4 @@ export interface DemoSession {
   rawScore?: number;
   error?: string;
   createdAt: string;
-  expiresAt: string;
 }

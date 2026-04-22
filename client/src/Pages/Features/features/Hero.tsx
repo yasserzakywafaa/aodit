@@ -17,23 +17,39 @@ import { fontFamilyInter, primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 
-const HERO_BULLETS = [
-  {
-    icon: <LockOutlined sx={{ fontSize: 18 }} />,
-    text: "Fully on-premise, airgapped deployment",
-  },
-  {
-    icon: <CloudOffOutlined sx={{ fontSize: 18 }} />,
-    text: "No access to client data or outputs",
-  },
-  {
-    icon: <VerifiedUserOutlined sx={{ fontSize: 18 }} />,
-    text: "Independent behavioral evaluation (not self-assessment)",
-  },
+export interface HeroContent {
+  titleLead: string;
+  titleHighlight: string;
+  subtitleLine1: string;
+  subtitleLine2: string;
+  bullets: string[];
+}
+
+const DEFAULT_CONTENT: HeroContent = {
+  titleLead: "How Does Your AI Agent Behave Under",
+  titleHighlight: "Pressure?",
+  subtitleLine1: "We break your AI Agent",
+  subtitleLine2: "before Regulators do",
+  bullets: [
+    "Independent behavioral stress-testing with clear risk evidence",
+    "Adversarial scenarios mapped to real business workflows",
+    "Actionable findings for product, risk, and compliance teams",
+  ],
+};
+
+const BULLET_ICONS = [
+  <LockOutlined key="lock" sx={{ fontSize: 18 }} />,
+  <CloudOffOutlined key="cloud-off" sx={{ fontSize: 18 }} />,
+  <VerifiedUserOutlined key="verified" sx={{ fontSize: 18 }} />,
 ];
 
-const Hero = () => {
+interface HeroProps {
+  content?: HeroContent;
+}
+
+const Hero = ({ content }: HeroProps = {}) => {
   const navigate = useNavigate();
+  const resolved = content ?? DEFAULT_CONTENT;
 
   return (
     <Box
@@ -60,14 +76,14 @@ const Hero = () => {
             letterSpacing: "-0.02em",
           }}
         >
-          How Does Your AI Agent Behave Under{" "}
+          {resolved.titleLead}{" "}
           <Typography
             component="span"
             fontSize="inherit"
             fontFamily="inherit"
             color="primary.main"
           >
-            Pressure?
+            {resolved.titleHighlight}
           </Typography>
         </Typography>
 
@@ -82,21 +98,23 @@ const Hero = () => {
             mb: 4,
           }}
         >
-          We break your AI Agent <br />
+          {resolved.subtitleLine1} <br />
           <Typography
             component="span"
             fontSize="inherit"
             fontFamily="inherit"
             className="text-underline"
           >
-            before Regulators do
+            {resolved.subtitleLine2}
           </Typography>
         </Typography>
 
         <Stack spacing={1.5} sx={{ my: 5 }}>
-          {HERO_BULLETS.map(({ icon, text }) => (
+          {resolved.bullets.map((text, idx) => (
             <Stack key={text} direction="row" alignItems="center" gap={1.5}>
-              <Box sx={{ color: primaryColor, display: "flex" }}>{icon}</Box>
+              <Box sx={{ color: primaryColor, display: "flex" }}>
+                {BULLET_ICONS[idx % BULLET_ICONS.length]}
+              </Box>
               <Typography sx={{ fontSize: 15, color: "text.primary" }}>
                 {text}
               </Typography>

@@ -148,7 +148,6 @@ const createIndexes = async () => {
 
     const demoSessions = database.collection(DBCollectionsEnum.demo_sessions);
     await demoSessions.createIndex({ createdAt: -1 });
-    await demoSessions.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
   } catch (error) {
     console.error("❌ Error creating index:", error);
   }

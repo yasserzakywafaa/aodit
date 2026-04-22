@@ -1,4 +1,7 @@
+import { landingPagesRoutes } from "./shared/landingPages";
+
 export const routes = {
+  ...landingPagesRoutes,
   features: `/`,
   demo: `/demo`,
   methodology: `/ai-agent-testing-methodology`,
@@ -19,6 +22,11 @@ export const routes = {
     login: "/login",
     register: "/register",
   },
+
+  // Industry / use-case SEO landing pages
+  // Mirrors the spread above so callers can use either routes.<key>
+  // or routes.landingPages.<key>.
+  landingPages: landingPagesRoutes,
 
   // Dashboard (Admin)
   dashboard: {
@@ -87,4 +95,6 @@ export const prerenderPaths: string[] = [
   routes.dataProcessingAgreement,
   routes.auth.login,
   routes.auth.register,
+  // Industry / use-case SEO landing pages
+  ...Object.values(landingPagesRoutes),
 ];

@@ -32,7 +32,6 @@ export const createDemoSession = async (
   modelId: string,
 ): Promise<string> => {
   const now = new Date();
-  const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
   const session: Omit<DemoSession, "_id"> = {
     systemPrompt,
@@ -41,7 +40,6 @@ export const createDemoSession = async (
     currentTurnIndex: 0,
     turns: [],
     createdAt: now.toISOString(),
-    expiresAt: expiresAt.toISOString(),
   };
 
   const insertedId = await createDocument(session, DBCollectionsEnum.demo_sessions);

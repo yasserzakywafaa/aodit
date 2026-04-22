@@ -12,7 +12,6 @@ interface ReportConfigProps {
   totalScenarios: number;
   datapoints: number;
   evaluationMode?: "benchmark" | "agent";
-  /** First entry maps to server evaluator (friendly label or direct model id). */
   evaluatorSelection: string;
   onEvaluatorChange: (value: string) => void;
 }

@@ -50,4 +50,145 @@
     <lastmod>2026-03-24T00:00:00.000Z</lastmod>
     <priority>0.4</priority>
   </url>
+
+  <!-- Industry / use-case SEO landing pages (Customer Experience) -->
+  <url>
+    <loc>https://www.aodit.ai/industries/customer-service-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/ecommerce-shopping-concierge</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/returns-refunds-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/live-chat-escalation-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Industry / use-case SEO landing pages (Sales & Revenue) -->
+  <url>
+    <loc>https://www.aodit.ai/industries/ai-sdr-outbound-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/lead-qualification-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/crm-automation-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/sales-call-analysis-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Industry / use-case SEO landing pages (Developer & IT) -->
+  <url>
+    <loc>https://www.aodit.ai/industries/ai-coding-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/it-helpdesk-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/devops-automation-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/cybersecurity-threat-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Industry / use-case SEO landing pages (Finance & Operations) -->
+  <url>
+    <loc>https://www.aodit.ai/industries/invoice-processing-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/expense-auditing-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/financial-forecasting-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/procurement-supply-chain-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Industry / use-case SEO landing pages (HR & Recruiting) -->
+  <url>
+    <loc>https://www.aodit.ai/industries/recruitment-screening-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/employee-onboarding-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/hr-policy-payroll-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Industry / use-case SEO landing pages (Healthcare) -->
+  <url>
+    <loc>https://www.aodit.ai/industries/patient-intake-triage-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/clinical-documentation-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/prior-authorization-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Industry / use-case SEO landing pages (Legal & Compliance) -->
+  <url>
+    <loc>https://www.aodit.ai/industries/contract-review-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.aodit.ai/industries/regulatory-compliance-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Industry / use-case SEO landing pages (Marketing) -->
+  <url>
+    <loc>https://www.aodit.ai/industries/content-seo-agent</loc>
+    <lastmod>2026-04-22T00:00:00.000Z</lastmod>
+    <priority>0.7</priority>
+  </url>
 </urlset>

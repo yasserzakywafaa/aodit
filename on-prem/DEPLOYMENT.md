@@ -309,7 +309,7 @@ server {
 
 **Judge model**
 
-- Report field `modelsToEvaluate` (first entry) is the **model** string sent in the request body. Use a UI preset label (e.g. `Claude`) that maps on the server, or type a **direct model id** your stack understands (e.g. LM Studio’s loaded model id).
+- On-prem evaluator settings are **agent-scoped**. Configure `evaluatorUrl` and `evaluatorModel` once on the Agent page. Report-level model selection is disabled in on-prem mode.
 
 **Evaluator JSON response format**
 
@@ -318,14 +318,14 @@ server {
 **Temporary full-local test (e.g. LM Studio)**
 
 1. Point `OPENROUTER_BASE_URL` at your local server (e.g. `http://127.0.0.1:1234/v1`).
-2. In the report **Evaluator (judge model)** field, enter the exact model id your server expects (or a preset that resolves to it).
+2. On the Agent page, set **Evaluator URL** and **Default evaluator model** to the exact endpoint/model id your local server expects.
 3. In agent mode, keep the **Agent URL** pointed at your integration endpoint as today.
 
 **Revert to cloud OpenRouter**
 
 1. Set `OPENROUTER_BASE_URL=https://openrouter.ai/api/v1` (or remove the variable to use the default).
 2. Restore valid `OPENROUTER_API_KEY_DEV` / `OPENROUTER_API_KEY_PROD` for your environment.
-3. In the report UI, set **Evaluator** back to a cloud preset (e.g. Claude, GPT-5 Mini).
+3. In cloud mode, use the report UI **Evaluator** picker (e.g. Claude, GPT-5 Mini).
 4. Optionally unset `EVALUATOR_JSON_RESPONSE_FORMAT` so auto-detection applies again.
 
 ---

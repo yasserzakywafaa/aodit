@@ -21,7 +21,12 @@ import { Agent } from "../../models/types/agent";
 import { ObjectId } from "mongodb";
 import { Report } from "../../models/types/report";
 import { ReportRun } from "../../models/types/reportRun";
-import { AgentUnreachableError, checkAgentLiveness } from "../../utils/agentClient";
+import {
+  AgentUnreachableError,
+  checkAgentLiveness,
+  checkEvaluatorLiveness,
+  fetchEvaluatorModels,
+} from "../../utils/agentClient";
 import crypto from "crypto";
 import { executeAgentReport, executeReport } from "./executionEngine";
 
@@ -217,6 +222,108 @@ export const testAgentConnection = async (
     agentName: agent.name,
     agentUrl: agent.agentUrl,
     replyPreview,
+  };
+};
+
+/**
+ * Probe the per-agent evaluator endpoint (if configured) to verify that the
+ * judge model is reachable. Mirrors testAgentConnection but targets an
+ * OpenAI-compatible endpoint.
+ */
+export const testEvaluatorConnection = async (
+  agentId: string,
+  overrides?: {
+    evaluatorUrl?: string;
+    evaluatorApiKey?: string;
+    evaluatorModel?: string;
+  },
+): Promise<{
+  success: true;
+  message: string;
+  agentId: string;
+  agentName: string;
+  evaluatorUrl: string;
+  replyPreview: string;
+}> => {
+  const agent = (await readDocument(
+    new ObjectId(agentId),
+    DBCollectionsEnum.agents,
+  )) as unknown as Agent | null;
+
+  if (!agent) throw new Error(`Agent ${agentId} not found`);
+
+  const evaluatorUrl = overrides?.evaluatorUrl?.trim() || agent.evaluatorUrl?.trim();
+  const evaluatorApiKey =
+    overrides?.evaluatorApiKey?.trim() || agent.evaluatorApiKey?.trim() || undefined;
+  const evaluatorModel =
+    overrides?.evaluatorModel?.trim() || agent.evaluatorModel?.trim() || undefined;
+
+  if (!evaluatorUrl) {
+    throw new Error(
+      `Agent "${agent.name}" does not have an Evaluator URL configured. ` +
+        "Add it under Evaluator (Judge) Endpoint before testing.",
+    );
+  }
+
+  const reply = await checkEvaluatorLiveness(evaluatorUrl, evaluatorApiKey, evaluatorModel);
+  const replyPreview = reply.length > 200 ? `${reply.slice(0, 197)}...` : reply;
+
+  return {
+    success: true,
+    message: `Evaluator connection successful for agent "${agent.name}".`,
+    agentId: String(agent._id),
+    agentName: agent.name,
+    evaluatorUrl,
+    replyPreview,
+  };
+};
+
+/**
+ * Discover available model IDs from a per-agent evaluator endpoint.
+ * Uses in-form overrides (URL/API key) when provided, mirroring evaluator test behavior.
+ */
+export const getEvaluatorModels = async (
+  agentId: string,
+  overrides?: {
+    evaluatorUrl?: string;
+    evaluatorApiKey?: string;
+  },
+): Promise<{
+  success: true;
+  agentId: string;
+  agentName: string;
+  evaluatorUrl: string;
+  models: string[];
+}> => {
+  const agent = (await readDocument(
+    new ObjectId(agentId),
+    DBCollectionsEnum.agents,
+  )) as unknown as Agent | null;
+
+  if (!agent) throw new Error(`Agent ${agentId} not found`);
+
+  const evaluatorUrl =
+    overrides?.evaluatorUrl?.trim() || agent.evaluatorUrl?.trim();
+  const evaluatorApiKey =
+    overrides?.evaluatorApiKey?.trim() ||
+    agent.evaluatorApiKey?.trim() ||
+    undefined;
+
+  if (!evaluatorUrl) {
+    throw new Error(
+      `Agent "${agent.name}" does not have an Evaluator URL configured. ` +
+        "Add it under Evaluator (Judge) Endpoint before fetching models.",
+    );
+  }
+
+  const models = await fetchEvaluatorModels(evaluatorUrl, evaluatorApiKey);
+
+  return {
+    success: true,
+    agentId: String(agent._id),
+    agentName: agent.name,
+    evaluatorUrl,
+    models,
   };
 };
 

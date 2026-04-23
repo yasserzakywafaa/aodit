@@ -12,6 +12,46 @@ import {
 } from "../models/mongoDb/crudOperations";
 
 import { Agent } from "src/models/types/agent";
+import CONFIG from "../config";
+
+/**
+ * On-prem invariant: every agent must carry its own evaluator endpoint and
+ * default evaluator model id. Without them the judge model would silently
+ * fall back to CONFIG.OPENROUTER_BASE_URL and leak out of the tenant's
+ * network. Cloud mode keeps both fields optional.
+ */
+const assertOnPremEvaluatorFields = (data: Partial<Agent>): void => {
+  if (!CONFIG.ON_PREM) return;
+
+  const url = data.evaluatorUrl?.trim();
+  const model = data.evaluatorModel?.trim();
+
+  if (!url) {
+    throw new Error(
+      "On-prem: Evaluator URL is required on the agent. " +
+        "Configure Evaluator (Judge) Endpoint on the Agent page.",
+    );
+  }
+
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      throw new Error("invalid protocol");
+    }
+  } catch {
+    throw new Error(
+      "On-prem: Evaluator URL must be a valid http(s):// base URL " +
+        "(e.g. http://10.0.0.5:1234/v1).",
+    );
+  }
+
+  if (!model) {
+    throw new Error(
+      "On-prem: Default evaluator model is required on the agent. " +
+        "Set the model id loaded on your evaluator endpoint.",
+    );
+  }
+};
 
 const getAgentsCount = async (): Promise<number> => {
   const collection: Collection<Agent> = database.collection<Agent>(
@@ -21,6 +61,7 @@ const getAgentsCount = async (): Promise<number> => {
 };
 
 const createAgent = async (data: any): Promise<Agent> => {
+  assertOnPremEvaluatorFields(data);
   const now = new Date().toISOString();
   const payload = {
     ...data,
@@ -67,8 +108,22 @@ const getAllAgents = async (page: number, limit: number) => {
 
 const updateAgent = async (
   agentId: string,
-  data: Partial<Pick<Agent, "name" | "description" | "intent" | "ownerName" | "agentUrl" | "status">>,
+  data: Partial<
+    Pick<
+      Agent,
+      | "name"
+      | "description"
+      | "intent"
+      | "ownerName"
+      | "agentUrl"
+      | "evaluatorUrl"
+      | "evaluatorApiKey"
+      | "evaluatorModel"
+      | "status"
+    >
+  >,
 ): Promise<Agent | null> => {
+  assertOnPremEvaluatorFields(data);
   const now = new Date().toISOString();
   const payload = {
     ...data,

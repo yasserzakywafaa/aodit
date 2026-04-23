@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import { alpha } from "@mui/material/styles";
 import { fontFamilyPlayfairDisplay } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
@@ -58,6 +59,7 @@ const DashboardCreateAgent = () => {
     )
       return;
     if (!isValidUrl(agent.agentUrl)) return;
+    if (!isValidUrl(agent.evaluatorUrl)) return;
     try {
       const created = await handleCreateAgent(agent);
       if (created?._id) {
@@ -90,11 +92,17 @@ const DashboardCreateAgent = () => {
 
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <Box component="form" onSubmit={handleSubmit}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            display="flex"
+            flexDirection="column"
+            gap={2}
+          >
             <Card variant="outlined" sx={{ borderWidth: 1 }}>
               <CardContent>
                 <Typography
-                  variant="subtitle1"
+                  variant="body1"
                   color="primary"
                   fontWeight={600}
                   sx={{ mb: 2 }}
@@ -163,6 +171,77 @@ const DashboardCreateAgent = () => {
                 />
               </CardContent>
             </Card>
+
+            {APP_CONSTANTS.IS_ON_PREM && (
+              <Card variant="outlined" sx={{ borderWidth: 1 }}>
+                <CardContent>
+                  <Typography
+                    variant="body1"
+                    color="primary"
+                    fontWeight={600}
+                    sx={{ mb: 2 }}
+                  >
+                    Evaluator (Judge) Endpoint
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
+                    Required in on-prem / air-gapped deployments. The judge
+                    model must run on an OpenAI-compatible endpoint you
+                    control — no requests leave your network. For methodology
+                    reasons, the judge should be a different model (and
+                    ideally a different endpoint) than the agent under test.
+                  </Typography>
+
+                  <TextField
+                    required
+                    label="Evaluator URL"
+                    name="evaluatorUrl"
+                    value={agent.evaluatorUrl ?? ""}
+                    onChange={handleChange}
+                    placeholder="http://10.0.0.5:1234/v1"
+                    fullWidth
+                    type="url"
+                    error={!isValidUrl(agent.evaluatorUrl)}
+                    helperText={
+                      !isValidUrl(agent.evaluatorUrl)
+                        ? "Enter a valid http(s):// URL"
+                        : "OpenAI-compatible /v1 base URL (e.g. LM Studio, Ollama, vLLM)."
+                    }
+                    sx={{ mb: 2 }}
+                  />
+
+                  <TextField
+                    label="Evaluator API Key (optional)"
+                    name="evaluatorApiKey"
+                    value={agent.evaluatorApiKey ?? ""}
+                    onChange={handleChange}
+                    placeholder="leave blank for keyless local servers"
+                    fullWidth
+                    type="password"
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    required
+                    label="Default evaluator model"
+                    name="evaluatorModel"
+                    value={agent.evaluatorModel ?? ""}
+                    onChange={handleChange}
+                    placeholder="e.g. google/gemma-3-4b"
+                    fullWidth
+                    error={!agent.evaluatorModel?.trim()}
+                    helperText={
+                      !agent.evaluatorModel?.trim()
+                        ? "Required on-prem — enter the model id loaded on your evaluator endpoint."
+                        : "Used when a report does not specify its own judge model."
+                    }
+                  />
+                </CardContent>
+              </Card>
+            )}
+
             <Button
               type="submit"
               variant="contained"
@@ -172,7 +251,11 @@ const DashboardCreateAgent = () => {
                 !agent.description?.trim() ||
                 !agent.intent?.trim() ||
                 !agent.ownerName?.trim() ||
-                !isValidUrl(agent.agentUrl)
+                !isValidUrl(agent.agentUrl) ||
+                !isValidUrl(agent.evaluatorUrl) ||
+                (APP_CONSTANTS.IS_ON_PREM &&
+                  (!agent.evaluatorUrl?.trim() ||
+                    !agent.evaluatorModel?.trim()))
               }
               sx={{ mt: 3 }}
             >

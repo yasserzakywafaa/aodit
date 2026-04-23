@@ -16,6 +16,7 @@ import {
   TableRow,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import {
@@ -33,6 +34,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import { AoditReportPDF } from "./ReportPDF/AoditReportPDF";
 import CircularProgress from "@mui/material/CircularProgress";
 import END_POINTS from "src/application/shared/endpoints";
@@ -104,6 +106,8 @@ const DashboardReport = () => {
     ? (report?.evaluationMode ?? "benchmark")
     : "agent";
   const activeTab = evaluationMode === "agent" ? 0 : 1;
+  const isOnPremAgentMode =
+    APP_CONSTANTS.IS_ON_PREM && evaluationMode === "agent";
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     if (!report) return;
@@ -201,6 +205,7 @@ const DashboardReport = () => {
 
   const handleEvaluatorChange = (value: string) => {
     if (!report) return;
+    if (isOnPremAgentMode) return;
     setReport({ ...report, modelsToEvaluate: [value] });
   };
 
@@ -211,11 +216,13 @@ const DashboardReport = () => {
     frameworkVersion,
     dimensionWeights: report?.dimensionWeights,
     modelsToTest: report?.modelsToTest,
-    modelsToEvaluate:
-      report?.modelsToEvaluate?.length &&
-      report.modelsToEvaluate[0]?.trim().length
-        ? report.modelsToEvaluate
-        : [defaultEvaluatorLabel],
+    ...(!isOnPremAgentMode && {
+      modelsToEvaluate:
+        report?.modelsToEvaluate?.length &&
+        report.modelsToEvaluate[0]?.trim().length
+          ? report.modelsToEvaluate
+          : [defaultEvaluatorLabel],
+    }),
     agentId: report?.agentId,
     evaluationMode,
   });
@@ -331,6 +338,7 @@ const DashboardReport = () => {
               evaluationMode={evaluationMode}
               evaluatorSelection={evaluatorSelection}
               onEvaluatorChange={handleEvaluatorChange}
+              agentId={report?.agentId}
             />
           </AccordionDetails>
         </Accordion>
@@ -559,6 +567,9 @@ const DashboardReport = () => {
                   evaluationMode="agent"
                   evaluatorSelection={evaluatorSelection}
                   onEvaluatorChange={handleEvaluatorChange}
+                  agentId={report?.agentId}
+                  agentEvaluatorUrl={selectedAgent?.evaluatorUrl}
+                  agentEvaluatorModel={selectedAgent?.evaluatorModel}
                 />
               </>
             )}
@@ -586,6 +597,7 @@ const DashboardReport = () => {
                   evaluationMode="benchmark"
                   evaluatorSelection={evaluatorSelection}
                   onEvaluatorChange={handleEvaluatorChange}
+                  agentId={report?.agentId}
                 />
               </>
             )}
@@ -597,27 +609,50 @@ const DashboardReport = () => {
         <Box
           sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            startIcon={<PlayArrow />}
-            onClick={handleRunReport}
-            disabled={
-              !reportId ||
-              !report ||
-              report?.status === "running" ||
-              // Benchmark mode: must have at least one model selected
-              (evaluationMode === "benchmark" && modelsToTest.length < 1) ||
-              // Agent mode: must select an agent that has a URL configured
-              (evaluationMode === "agent" &&
-                (!report?.agentId ||
-                  !selectedAgent?.agentUrl ||
-                  !isAgentConnectionValidForSelection))
+          <Tooltip
+            title={
+              APP_CONSTANTS.IS_ON_PREM &&
+              evaluationMode === "agent" &&
+              !!selectedAgent &&
+              !selectedAgent.evaluatorUrl?.trim()
+                ? "Set an Evaluator URL on the Agent page to run this report on-prem."
+                : ""
+            }
+            disableHoverListener={
+              !APP_CONSTANTS.IS_ON_PREM ||
+              evaluationMode !== "agent" ||
+              !!selectedAgent?.evaluatorUrl?.trim()
             }
           >
-            RUN REPORT
-          </Button>
+            <span>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                startIcon={<PlayArrow />}
+                onClick={handleRunReport}
+                disabled={
+                  !reportId ||
+                  !report ||
+                  report?.status === "running" ||
+                  // Benchmark mode: must have at least one model selected
+                  (evaluationMode === "benchmark" && modelsToTest.length < 1) ||
+                  // Agent mode: must select an agent that has a URL configured
+                  (evaluationMode === "agent" &&
+                    (!report?.agentId ||
+                      !selectedAgent?.agentUrl ||
+                      !isAgentConnectionValidForSelection)) ||
+                  // On-prem: the agent must expose its own evaluator endpoint
+                  // so the judge never falls back to OpenRouter.
+                  (APP_CONSTANTS.IS_ON_PREM &&
+                    evaluationMode === "agent" &&
+                    !selectedAgent?.evaluatorUrl?.trim())
+                }
+              >
+                RUN REPORT
+              </Button>
+            </span>
+          </Tooltip>
           {report?.status === "running" && (
             <Button
               variant="outlined"

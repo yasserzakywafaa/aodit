@@ -18,8 +18,14 @@ const DimensionWeightsSection = () => {
 
   return (
     <>
-      <Typography variant="h6" color="primary" mb={1.5}>
+      <Typography variant="h6" color="primary" mb={1}>
         Dimension weights - <i>must total 100%</i>
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+        These weights determine how each dimension contributes to the final
+        composite rating (AAA–D). They do not change how many scenarios run
+        per dimension — every dimension is tested at the selected scenario
+        count.
       </Typography>
       <Box sx={{ px: 1, mb: 3 }}>
         {AODIT_DIMENSIONS.map((dim) => (

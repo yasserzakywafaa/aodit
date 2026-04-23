@@ -12,6 +12,12 @@ export interface DashboardAgentStore {
   setIsFetching: (isFetching: boolean) => void;
   setAgent: (agent: Agent | undefined) => void;
   setAgentReports: (reports: Report[]) => void;
+  setEvaluatorModelsStatus: (
+    status: DashboardAgentState["evaluatorModelsStatus"],
+  ) => void;
+  setEvaluatorModels: (models: string[]) => void;
+  setEvaluatorModelsError: (error?: string) => void;
+  resetEvaluatorModelsState: () => void;
 }
 
 const useDashboardAgentStore = (): DashboardAgentStore => {
@@ -39,11 +45,47 @@ const useDashboardAgentStore = (): DashboardAgentStore => {
     }));
   };
 
+  const setEvaluatorModelsStatus = (
+    evaluatorModelsStatus: DashboardAgentState["evaluatorModelsStatus"],
+  ) => {
+    setState((prev) => ({
+      ...prev,
+      evaluatorModelsStatus,
+    }));
+  };
+
+  const setEvaluatorModels = (evaluatorModels: string[]) => {
+    setState((prev) => ({
+      ...prev,
+      evaluatorModels,
+    }));
+  };
+
+  const setEvaluatorModelsError = (evaluatorModelsError?: string) => {
+    setState((prev) => ({
+      ...prev,
+      evaluatorModelsError,
+    }));
+  };
+
+  const resetEvaluatorModelsState = () => {
+    setState((prev) => ({
+      ...prev,
+      evaluatorModels: [],
+      evaluatorModelsStatus: "idle",
+      evaluatorModelsError: undefined,
+    }));
+  };
+
   return {
     state,
     setIsFetching,
     setAgent,
     setAgentReports,
+    setEvaluatorModelsStatus,
+    setEvaluatorModels,
+    setEvaluatorModelsError,
+    resetEvaluatorModelsState,
   };
 };
 

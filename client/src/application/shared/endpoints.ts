@@ -114,6 +114,10 @@ const END_POINTS = {
         `${publicApiUrl}/api/v1/dashboard/agents/delete/${agentId}`,
       GET_REPORTS_BY_AGENT_ID: (agentId: string) =>
         `${publicApiUrl}/api/v1/dashboard/agents/${agentId}/reports`,
+      TEST_EVALUATOR_CONNECTION: (agentId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/agents/${agentId}/test-evaluator-connection`,
+      GET_EVALUATOR_MODELS: (agentId: string) =>
+        `${publicApiUrl}/api/v1/dashboard/agents/${agentId}/evaluator-models`,
     },
     REPORTS: {
       CREATE_REPORT: `${publicApiUrl}/api/v1/dashboard/reports/create`,

@@ -97,6 +97,16 @@ dashboardRoutes.delete(
   DashboardController.deleteAgent,
 );
 
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.AGENTS.TEST_EVALUATOR_CONNECTION(":agentId"),
+  DashboardController.testAgentEvaluatorConnection,
+);
+
+dashboardRoutes.post(
+  END_POINTS.DASHBOARD.AGENTS.GET_EVALUATOR_MODELS(":agentId"),
+  DashboardController.getAgentEvaluatorModels,
+);
+
 dashboardRoutes.get(
   END_POINTS.DASHBOARD.AGENTS.GET_REPORTS_BY_AGENT_ID(":agentId"),
   DashboardController.getReportsByAgentId,

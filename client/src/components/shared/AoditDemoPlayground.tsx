@@ -50,10 +50,6 @@ import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
 interface TurnResult {
   turnIndex: number;
   turnType: string;
@@ -110,7 +106,7 @@ const TURN_NAMES = [
 
 const POLL_INTERVAL_MS = 3000;
 const TOTAL_TURNS = 8;
-const LOCAL_STORAGE_KEY = "aodit.publicDemo.v1";
+const DEFAULT_LOCAL_STORAGE_KEY = "aodit.publicDemo.v1";
 const LOCAL_STORAGE_VERSION = 1;
 
 const SAMPLE_SYSTEM_PROMPT =
@@ -173,11 +169,13 @@ const isValidDemoStatus = (value: unknown): value is DemoStatus => {
   );
 };
 
-const readPersistedDemoSnapshot = (): PersistedDemoSnapshot | null => {
+const readPersistedDemoSnapshot = (
+  storageKey: string,
+): PersistedDemoSnapshot | null => {
   if (typeof window === "undefined") return null;
 
   try {
-    const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+    const raw = window.localStorage.getItem(storageKey);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as PersistedDemoSnapshot;
 
@@ -205,12 +203,13 @@ const readPersistedDemoSnapshot = (): PersistedDemoSnapshot | null => {
   }
 };
 
-const clearPersistedDemoSnapshot = () => {
+const clearPersistedDemoSnapshot = (storageKey: string) => {
   if (typeof window === "undefined") return;
-  window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+  window.localStorage.removeItem(storageKey);
 };
 
 const writePersistedDemoSnapshot = (
+  storageKey: string,
   snapshot: Omit<PersistedDemoSnapshot, "version" | "savedAt">,
 ) => {
   if (typeof window === "undefined") return;
@@ -219,7 +218,7 @@ const writePersistedDemoSnapshot = (
     savedAt: new Date().toISOString(),
     ...snapshot,
   };
-  window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(payload));
+  window.localStorage.setItem(storageKey, JSON.stringify(payload));
 };
 
 // ---------------------------------------------------------------------------
@@ -463,8 +462,28 @@ const DemoCompletionUpsell: React.FC = () => (
 // Component
 // ---------------------------------------------------------------------------
 
-const AoditDemoPlayground: React.FC = () => {
-  const [systemPrompt, setSystemPrompt] = useState(SAMPLE_SYSTEM_PROMPT);
+interface AoditDemoPlaygroundProps {
+  /**
+   * Pre-filled agent instructions (system prompt). Shown to the user as the
+   * initial value of the editable textarea. Falls back to the generic banking
+   * sample when omitted.
+   */
+  defaultSystemPrompt?: string;
+  /**
+   * localStorage key used to persist this playground's session snapshot.
+   * Pass a unique value per landing page (e.g. including the slug) so runs
+   * on different industry pages don't overwrite each other.
+   */
+  storageKey?: string;
+}
+
+const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
+  defaultSystemPrompt,
+  storageKey,
+}) => {
+  const initialPrompt = defaultSystemPrompt ?? SAMPLE_SYSTEM_PROMPT;
+  const activeStorageKey = storageKey ?? DEFAULT_LOCAL_STORAGE_KEY;
+  const [systemPrompt, setSystemPrompt] = useState(initialPrompt);
   const [modelId, setModelId] = useState(MODEL_OPTIONS[0].id);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [demoStatus, setDemoStatus] = useState<DemoStatus | null>(null);
@@ -493,9 +512,15 @@ const AoditDemoPlayground: React.FC = () => {
   const isDark = themeMode === "dark";
 
   useEffect(() => {
-    const snapshot = readPersistedDemoSnapshot();
+    hasHydratedRef.current = false;
+    const snapshot = readPersistedDemoSnapshot(activeStorageKey);
 
     if (!snapshot) {
+      setSystemPrompt(initialPrompt);
+      setModelId(MODEL_OPTIONS[0].id);
+      setSessionId(null);
+      setDemoStatus(null);
+      setRunStartedAt(null);
       hasHydratedRef.current = true;
       return;
     }
@@ -504,30 +529,32 @@ const AoditDemoPlayground: React.FC = () => {
       (option) => option.id === snapshot.modelId,
     );
 
-    setSystemPrompt(snapshot.systemPrompt || SAMPLE_SYSTEM_PROMPT);
+    setSystemPrompt(snapshot.systemPrompt || initialPrompt);
     setModelId(hasModel ? snapshot.modelId : MODEL_OPTIONS[0].id);
     setSessionId(snapshot.sessionId);
     setDemoStatus(snapshot.demoStatus);
     setRunStartedAt(snapshot.runStartedAt);
     hasHydratedRef.current = true;
-  }, []);
+  }, [activeStorageKey, initialPrompt]);
 
   useEffect(() => {
     if (!hasHydratedRef.current) return;
 
-    if (!sessionId && !demoStatus) {
-      clearPersistedDemoSnapshot();
-      return;
-    }
-
-    writePersistedDemoSnapshot({
+    writePersistedDemoSnapshot(activeStorageKey, {
       sessionId,
       demoStatus,
       systemPrompt,
       modelId,
       runStartedAt,
     });
-  }, [sessionId, demoStatus, systemPrompt, modelId, runStartedAt]);
+  }, [
+    activeStorageKey,
+    sessionId,
+    demoStatus,
+    systemPrompt,
+    modelId,
+    runStartedAt,
+  ]);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -643,7 +670,7 @@ const AoditDemoPlayground: React.FC = () => {
 
   const handleReset = () => {
     if (pollRef.current) clearInterval(pollRef.current);
-    clearPersistedDemoSnapshot();
+    clearPersistedDemoSnapshot(activeStorageKey);
     setSessionId(null);
     setDemoStatus(null);
     setStartError(null);

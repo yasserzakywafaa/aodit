@@ -4,6 +4,7 @@ import Logo, { LogoComponentEnum } from "../../Logo";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { Authentication } from "src/application/store/state";
+import IndustriesDropdown from "src/components/navbar/IndustriesDropdown";
 import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
@@ -12,6 +13,7 @@ import { routes } from "src/application/routes";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
+  { id: "industries", label: "Industries", route: null },
   { id: "methodology", label: "Methodology", route: routes.methodology },
   {
     id: "compliance-finma",
@@ -72,30 +74,29 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               sx={{
                 display: { xs: "none", md: "flex" },
                 alignItems: "center",
-                gap: 4,
+                gap: 2,
               }}
             >
               <Logo variant="small" component={LogoComponentEnum.ANCHOR} />
 
-              {NAV_LINKS.map((item) => (
-                <>
-                  {/* TODO: Uncomment this when EU AI Act is live */}
-                  {/* {id === "compliance-finma" ? (
-                    <ComplianceDropdown />
-                  ) : ( */}
+              {NAV_LINKS.map((item) => {
+                if (item.id === "industries") {
+                  return <IndustriesDropdown key={item.id} />;
+                }
+
+                return (
                   <Button
                     key={item.id}
                     component="a"
-                    href={item.route}
+                    href={item.route ?? undefined}
                     sx={{ color: "text.primary", fontSize: 14 }}
                     variant="text"
                     onClick={handleOnMenuItemClickEvent(item.id)}
                   >
                     {item.label}
                   </Button>
-                  {/* // )} */}
-                </>
-              ))}
+                );
+              })}
             </Box>
           </Box>
 
@@ -149,25 +150,28 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 </MenuItem>
               )}
 
-            <Button
-              component="a"
-              href={routes.contact}
-              variant="contained"
-              size="small"
-              onClick={handleOnMenuItemClickEvent("request-evaluation")}
-              sx={{ ml: 1 }}
-            >
-              Request Evaluation
-            </Button>
-            <Button
-              component="a"
-              href={routes.demo}
-              variant="outlined"
-              size="small"
-              onClick={handleOnMenuItemClickEvent("demo")}
-            >
-              Demo
-            </Button>
+            <Box display="flex" flexWrap="wrap" gap={1}>
+              <Button
+                component="a"
+                href={routes.contact}
+                variant="contained"
+                size="small"
+                onClick={handleOnMenuItemClickEvent("request-evaluation")}
+                sx={{ ml: 1 }}
+              >
+                Request Evaluation
+              </Button>
+              <Button
+                component="a"
+                href={routes.demo}
+                variant="outlined"
+                size="small"
+                onClick={handleOnMenuItemClickEvent("demo")}
+                sx={{ ml: 1 }}
+              >
+                Demo
+              </Button>
+            </Box>
 
             <MenuItem sx={{ ...buttonHoverStyleSecondary }}>
               <SettingsMenuButton

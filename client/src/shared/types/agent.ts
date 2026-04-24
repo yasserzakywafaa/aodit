@@ -15,6 +15,15 @@ export interface Agent {
    * still be used for Benchmark (Frontier Model) mode.
    */
   agentUrl?: string;
+  /**
+   * Optional OpenAI-compatible chat-completions endpoint for the judge model
+   * used to evaluate this agent. When set, the judge runs against this URL
+   * instead of the platform-wide OpenRouter endpoint — enabling on-prem /
+   * air-gapped deployments.
+   */
+  evaluatorUrl?: string;
+  evaluatorApiKey?: string;
+  evaluatorModel?: string;
   userId: string;
   status: AgentStatus;
   createdAt: string;

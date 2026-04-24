@@ -16,6 +16,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import Hero, { HeroContent } from "./features/Hero";
 import {
   createBreadcrumbSchema,
   createOrganizationSchemaForSite,
@@ -31,7 +32,10 @@ import AoditDemoPlayground from "src/components/shared/AoditDemoPlayground";
 import { ArrowForward } from "@mui/icons-material";
 import ComplianceLogosSection from "./features/ComplianceLogosSection";
 import DownloadReportSection from "./features/DownloadReportSection";
-import Hero from "./features/Hero";
+import {
+  DEFAULT_TRUST_BLOCK_COPY,
+  type LandingPageContent,
+} from "src/application/shared/landingPages";
 import Page from "src/components/shared/Page/Page";
 import { alpha } from "@mui/material/styles";
 import euHostedImg from "src/assets/images/eu_hosted.webp";
@@ -41,7 +45,25 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-const FeaturesPage = () => {
+const DEFAULT_PAGE_TITLE =
+  "AI Agent Evaluation for Fintech & Insurers (FINMA & EU AI Act Ready) | aodit";
+const DEFAULT_SCHEMA_NAME = "AI Agent Evaluation for Fintech & Insurers";
+const DEFAULT_SCHEMA_DESCRIPTION =
+  "Independent AI agent evaluation for fintechs and insurance companies with on-premise deployment and no client data access by default.";
+const DEFAULT_CTA_TITLE = "We break your AI before regulators do.";
+const DEFAULT_CTA_SUBTITLE =
+  "Independent evaluation delivered in 2–3 weeks. Fully on-premise.";
+
+interface FeaturesPageProps {
+  /**
+   * Optional landing-page content overrides. When provided, the page renders as
+   * an industry-specific SEO landing variant. When omitted, the page behaves
+   * exactly like the original home/features page.
+   */
+  landingContent?: LandingPageContent;
+}
+
+const FeaturesPage = ({ landingContent }: FeaturesPageProps = {}) => {
   const navigate = useNavigate();
   const {
     store: {
@@ -49,36 +71,50 @@ const FeaturesPage = () => {
     },
   } = useApplicationContext();
 
+  const pageTitle = landingContent?.pageTitle ?? DEFAULT_PAGE_TITLE;
+  const schemaName = landingContent?.schemaName ?? DEFAULT_SCHEMA_NAME;
+  const schemaDescription =
+    landingContent?.schemaDescription ?? DEFAULT_SCHEMA_DESCRIPTION;
+  const canonicalPath = landingContent?.slug ?? routes.features;
+  const ctaTitle = landingContent?.cta.title ?? DEFAULT_CTA_TITLE;
+  const ctaSubtitle = landingContent?.cta.subtitle ?? DEFAULT_CTA_SUBTITLE;
+  const heroContent: HeroContent | undefined = landingContent?.hero;
+  const trustBlockCopy = landingContent?.trustBlock ?? DEFAULT_TRUST_BLOCK_COPY;
+
+  const demoDefaultSystemPrompt = landingContent?.defaultSystemPrompt;
+  const demoStorageKey = landingContent
+    ? `aodit.publicDemo.landing.${landingContent.key}.v1`
+    : undefined;
+
+  const schemaKeySuffix = landingContent?.key ?? "home";
+
   const organizationSchema = useMemo(
     () => createOrganizationSchemaForSite(),
     [],
   );
   const webPageSchema = useMemo(
-    () =>
-      createWebPageSchema(
-        "AI Agent Evaluation for Banks",
-        "Independent AI agent evaluation for fintechs and insurance companies with on-premise deployment and no client data access by default.",
-        routes.features,
-      ),
-    [],
+    () => createWebPageSchema(schemaName, schemaDescription, canonicalPath),
+    [schemaName, schemaDescription, canonicalPath],
   );
-  const breadcrumbSchema = useMemo(
-    () => createBreadcrumbSchema([{ name: "Home", url: routes.features }]),
-    [],
-  );
+  const breadcrumbSchema = useMemo(() => {
+    const crumbs = [{ name: "Home", url: routes.features }];
+    if (landingContent) {
+      crumbs.push({
+        name: landingContent.breadcrumbLabel,
+        url: landingContent.slug,
+      });
+    }
+    return createBreadcrumbSchema(crumbs);
+  }, [landingContent]);
 
   useSchemaOrg(organizationSchema, "organization-schema");
-  useSchemaOrg(webPageSchema, "homepage-webpage-schema");
-  useSchemaOrg(breadcrumbSchema, "homepage-breadcrumb-schema");
+  useSchemaOrg(webPageSchema, `webpage-schema-${schemaKeySuffix}`);
+  useSchemaOrg(breadcrumbSchema, `breadcrumb-schema-${schemaKeySuffix}`);
 
   return (
-    <Page
-      title="AI Agent Evaluation for Banks (FINMA & EU AI Act Ready) | aodit"
-      className="features-page"
-      isLoading={isFetching}
-    >
+    <Page title={pageTitle} className="features-page" isLoading={isFetching}>
       {/* ===== SECTION 1 — HERO ===== */}
-      <Hero />
+      <Hero content={heroContent} />
 
       {/* ===== SECTION 2 — TRUST BLOCK ===== */}
       <Box
@@ -98,7 +134,7 @@ const FeaturesPage = () => {
               color: "text.primary",
             }}
           >
-            Data never leaves your infrastructure
+            {trustBlockCopy.title}
           </Typography>
           <Stack spacing={1.5}>
             <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
@@ -109,16 +145,13 @@ const FeaturesPage = () => {
               >
                 aodit
               </Typography>{" "}
-              is deployed fully on-premise within your environment. SwissLI AG
-              does not access, store, or process client data by default.
+              {trustBlockCopy.line1}
             </Typography>
             <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
-              All AI agent inputs, outputs, and transcripts remain exclusively
-              within your infrastructure.
+              {trustBlockCopy.line2}
             </Typography>
             <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
-              Designed for Swiss banking secrecy and on-premise deployment
-              requirements.
+              {trustBlockCopy.line3}
             </Typography>
           </Stack>
 
@@ -146,7 +179,10 @@ const FeaturesPage = () => {
       </Box>
 
       <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
-        <AoditDemoPlayground />
+        <AoditDemoPlayground
+          defaultSystemPrompt={demoDefaultSystemPrompt}
+          storageKey={demoStorageKey}
+        />
       </Box>
 
       {/* ===== SECTION 3 — FEATURED REPORT ===== */}
@@ -438,13 +474,13 @@ const FeaturesPage = () => {
               lineHeight: 1.2,
             }}
           >
-            We break your AI before regulators do.
+            {ctaTitle}
           </Typography>
           <Typography
             color="text.secondary"
             sx={{ mb: 4, fontSize: { xs: 16, md: 18 }, lineHeight: 1.75 }}
           >
-            Independent evaluation delivered in 2–3 weeks. Fully on-premise.
+            {ctaSubtitle}
           </Typography>
           <Stack
             direction={{ xs: "column", sm: "row" }}

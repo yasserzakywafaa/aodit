@@ -1,5 +1,6 @@
 import CONFIG from "../config";
 import { OpenAI } from "openai";
+import { getEvaluatorOverride } from "./evaluatorContext";
 
 export const createOpenRouterClient = (externalApiKey?: string): OpenAI => {
   // Scenario 1: User provided their own OpenAI key - use OpenAI directly
@@ -56,6 +57,40 @@ export const handleOpenRouterAIRequest = async (
     externalOpenAiApiKey?: string;
   } = {},
 ): Promise<any> => {
+  // Evaluator override (per-agent on-prem endpoint) — takes precedence over
+  // OpenRouter / direct OpenAI paths. Set by runWithEvaluatorOverride().
+  const override = getEvaluatorOverride();
+
+  // On-prem air-gap guard: if no override is active and the caller did not
+  // supply a direct OpenAI key, refuse to let the request leak to the
+  // configured OPENROUTER_BASE_URL. This is the belt-and-braces safety net
+  // protecting any code path that bypasses runWithEvaluatorOverride().
+  if (CONFIG.ON_PREM && !override && !options.externalOpenAiApiKey) {
+    throw new Error(
+      `On-prem: refusing to call ${CONFIG.OPENROUTER_BASE_URL} without an evaluator override. ` +
+        "Configure the agent's Evaluator URL on the Agent page.",
+    );
+  }
+
+  if (override) {
+    const client = new OpenAI({
+      apiKey: override.apiKey || "no-key",
+      baseURL: override.baseURL,
+    });
+    // Local/on-prem servers (LM Studio, Ollama, vLLM) often can't honor
+    // json_object response_format. Drop it here — callers parse JSON defensively.
+    const response_format =
+      options.response_format?.type === "json_object"
+        ? undefined
+        : options.response_format;
+    return await client.chat.completions.create({
+      model: modelName,
+      messages: messages as any,
+      ...(response_format && { response_format: response_format as any }),
+      max_tokens: options.max_tokens || CONFIG.AI_MAX_TOKENS.DEFAULT,
+    });
+  }
+
   // Use direct OpenAI if external key is provided
   if (options.externalOpenAiApiKey) {
     const openai = createOpenRouterClient(options.externalOpenAiApiKey);
@@ -102,6 +137,16 @@ export const handleOpenRouterHttpRequest = async (
     provider?: { only: string[] };
   } = {},
 ): Promise<any> => {
+  // On-prem air-gap guard: this helper posts directly to
+  // CONFIG.OPENROUTER_BASE_URL (not the evaluator override). In on-prem mode
+  // we refuse to make the call at all.
+  if (CONFIG.ON_PREM) {
+    throw new Error(
+      `On-prem: refusing to call ${CONFIG.OPENROUTER_BASE_URL}. ` +
+        "Direct OpenRouter HTTP requests are disabled in air-gapped deployments.",
+    );
+  }
+
   console.log("🔍 Making OpenRouter request to fetch URL data:", {
     model,
     hasProvider: !!options.provider,

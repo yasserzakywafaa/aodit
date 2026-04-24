@@ -91,7 +91,10 @@ export const callAgentUrl = async (
     return body.choices[0].text.trim();
   }
   // Anthropic-compatible shape
-  if (Array.isArray(body?.content) && typeof body.content[0]?.text === "string") {
+  if (
+    Array.isArray(body?.content) &&
+    typeof body.content[0]?.text === "string"
+  ) {
     return body.content[0].text.trim();
   }
 
@@ -114,9 +117,192 @@ export class AgentUnreachableError extends Error {
   }
 }
 
-export const checkAgentLiveness = async (
-  agentUrl: string,
+const normalizeEvaluatorBaseUrl = (baseURL: string): string =>
+  baseURL
+    .trim()
+    .replace(/\/+$/, "")
+    // Allow full endpoint paste (.../v1/chat/completions)
+    .replace(/\/chat\/completions$/i, "");
+
+const parseModelIdsFromResponse = (body: any): string[] => {
+  const fromData = Array.isArray(body?.data)
+    ? body.data
+        .map((entry: any) =>
+          typeof entry?.id === "string" ? entry.id.trim() : "",
+        )
+        .filter(Boolean)
+    : [];
+
+  const fromModels = Array.isArray(body?.models)
+    ? body.models
+        .map((entry: any) =>
+          typeof entry === "string"
+            ? entry.trim()
+            : typeof entry?.id === "string"
+              ? entry.id.trim()
+              : "",
+        )
+        .filter(Boolean)
+    : [];
+
+  return [...new Set([...fromData, ...fromModels])];
+};
+
+export const fetchEvaluatorModels = async (
+  baseURL: string,
+  apiKey?: string,
+): Promise<string[]> => {
+  const normalizedBase = normalizeEvaluatorBaseUrl(baseURL);
+  const modelsUrl = `${normalizedBase}/models`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), LIVENESS_TIMEOUT_MS);
+
+  let response: Response;
+  try {
+    response = await fetch(modelsUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+      },
+      signal: controller.signal,
+    });
+  } catch (err: any) {
+    throw new AgentUnreachableError(
+      `Evaluator at ${modelsUrl} did not respond while fetching models: ${err.message ?? String(err)}`,
+    );
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!response.ok) {
+    const errText = await response.text().catch(() => "");
+    throw new AgentUnreachableError(
+      `Evaluator at ${modelsUrl} returned HTTP ${response.status}: ${response.statusText}${
+        errText ? ` — ${errText.slice(0, 200)}` : ""
+      }`,
+    );
+  }
+
+  const body: any = await response.json().catch(() => ({}));
+  const modelIds = parseModelIdsFromResponse(body);
+  if (modelIds.length === 0) {
+    throw new AgentUnreachableError(
+      `Evaluator at ${modelsUrl} returned no models. Expected OpenAI-compatible response with data[].id.`,
+    );
+  }
+  return modelIds;
+};
+
+/**
+ * Probe an OpenAI-compatible evaluator endpoint (LM Studio, Ollama, vLLM,
+ * OpenRouter, etc.) with a short chat completion and return a preview of
+ * the reply. Used by the Agent admin "Test Evaluator Connection" button.
+ */
+export const checkEvaluatorLiveness = async (
+  baseURL: string,
+  apiKey?: string,
+  model?: string,
 ): Promise<string> => {
+  const normalizedBase = normalizeEvaluatorBaseUrl(baseURL);
+  const url = `${normalizedBase}/chat/completions`;
+  const requestedModel = model?.trim();
+
+  // Strict model-id validation (when a model is provided):
+  // ask the remote OpenAI-compatible server for /models and verify the model id
+  // exists there before running the completion probe.
+  if (requestedModel) {
+    const listedModelIds = await fetchEvaluatorModels(normalizedBase, apiKey);
+    if (!listedModelIds.includes(requestedModel)) {
+      throw new AgentUnreachableError(
+        `Evaluator model "${requestedModel}" is not listed by ${normalizedBase}/models. ` +
+          `Available models: ${listedModelIds.slice(0, 10).join(", ")}`,
+      );
+    }
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), LIVENESS_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+      },
+      body: JSON.stringify({
+        model: requestedModel || "gemma-3-4b",
+        messages: [
+          {
+            role: "user",
+            content:
+              "Reply with exactly one short word (OK) and no extra formatting.",
+          },
+        ],
+        // Some reasoning-enabled local models may consume tokens on internal
+        // reasoning before emitting final assistant content. Keep this modest
+        // but high enough to avoid false "empty completion" negatives.
+        max_tokens: 64,
+      }),
+      signal: controller.signal,
+    });
+  } catch (err: any) {
+    throw new AgentUnreachableError(
+      `Evaluator at ${url} did not respond: ${err.message ?? String(err)}`,
+    );
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!response.ok) {
+    const errText = await response.text().catch(() => "");
+    throw new AgentUnreachableError(
+      `Evaluator at ${url} returned HTTP ${response.status}: ${response.statusText}${
+        errText ? ` — ${errText.slice(0, 200)}` : ""
+      }`,
+    );
+  }
+
+  const body: any = await response.json().catch(() => ({}));
+  const msg = body?.choices?.[0]?.message;
+  const content = msg?.content;
+  const replyFromContent =
+    typeof content === "string"
+      ? content.trim()
+      : Array.isArray(content)
+        ? content
+            .map((part: any) =>
+              typeof part === "string"
+                ? part
+                : typeof part?.text === "string"
+                  ? part.text
+                  : "",
+            )
+            .join(" ")
+            .trim()
+        : "";
+
+  // Fallbacks for local OpenAI-compatible variants that may emit text in
+  // non-standard fields even when message.content is empty.
+  const reply: string =
+    replyFromContent ||
+    body?.choices?.[0]?.text?.trim?.() ||
+    msg?.reasoning_content?.trim?.() ||
+    body?.response?.trim?.() ||
+    "";
+
+  if (!reply) {
+    throw new AgentUnreachableError(
+      `Evaluator at ${url} returned an empty completion. ` +
+        `Check model id and server logs (raw keys: ${Object.keys(body || {}).join(", ") || "none"}).`,
+    );
+  }
+
+  return reply;
+};
+
+export const checkAgentLiveness = async (agentUrl: string): Promise<string> => {
   const probeMessages: AgentTurnMessage[] = [
     {
       role: "user",

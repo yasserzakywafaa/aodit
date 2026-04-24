@@ -18,6 +18,17 @@ export interface Agent {
    * Required for Agent-to-Agent evaluation mode; optional for Benchmark mode.
    */
   agentUrl?: string;
+  /**
+   * Optional OpenAI-compatible chat-completions endpoint for the judge model
+   * used to evaluate this agent. If unset, falls back to the global
+   * OPENROUTER_BASE_URL. Enables on-prem / air-gapped deployments to point
+   * the evaluator at an internal LLM.
+   */
+  evaluatorUrl?: string;
+  /** Optional API key for the evaluator endpoint. */
+  evaluatorApiKey?: string;
+  /** Optional default model id for this agent's judge (e.g. "google/gemma-3-4b"). */
+  evaluatorModel?: string;
   /** Creator user id */
   userId: string;
   status: AgentStatus;

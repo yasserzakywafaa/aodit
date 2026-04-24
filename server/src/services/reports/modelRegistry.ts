@@ -2,6 +2,8 @@
  * Model registry — maps friendly display names to OpenRouter model IDs.
  */
 
+import CONFIG from "../../config";
+
 export interface ModelEntry {
   id: string; // OpenRouter model ID
   displayName: string;
@@ -60,6 +62,13 @@ export const resolveEvaluatorModelId = (
   const name = modelsToEvaluate[0]?.trim() ?? "";
   if (!name) {
     return DEFAULT_EVALUATOR_MODEL;
+  }
+  // On-prem: never remap via EVALUATOR_REGISTRY — those ids are
+  // OpenRouter-namespaced (e.g. "x-ai/grok-4.1-fast") and won't exist on the
+  // tenant's local LLM server. Treat whatever the user typed as a literal
+  // model id loaded on their evaluator endpoint.
+  if (CONFIG.ON_PREM) {
+    return name;
   }
   // Friendly label from EVALUATOR_REGISTRY (e.g. "Claude", "GPT-5 Mini")
   const mapped = EVALUATOR_REGISTRY[name];

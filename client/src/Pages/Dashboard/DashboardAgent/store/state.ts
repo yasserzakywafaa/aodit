@@ -5,6 +5,9 @@ export interface DashboardAgentState {
   isFetching: boolean;
   agent: Agent | undefined;
   agentReports: Report[];
+  evaluatorModels: string[];
+  evaluatorModelsStatus: "idle" | "loading" | "loaded" | "error";
+  evaluatorModelsError?: string;
 }
 
 export const getDashboardAgentInitialState = (): DashboardAgentState => {
@@ -12,5 +15,8 @@ export const getDashboardAgentInitialState = (): DashboardAgentState => {
     isFetching: false,
     agent: undefined,
     agentReports: [],
+    evaluatorModels: [],
+    evaluatorModelsStatus: "idle",
+    evaluatorModelsError: undefined,
   };
 };

@@ -8,6 +8,7 @@ import { NextFunction, Request, Response } from "express";
 
 import AgentServices from "../services/agentService";
 import { AgentUnreachableError } from "../utils/agentClient";
+import CONFIG from "../config";
 import DashboardServices from "../services/dashboardService";
 import ReportServices from "../services/reportService";
 import { ScenarioResult } from "../models/types/scenarioResult";
@@ -298,6 +299,72 @@ const testReportAgentConnection = async (
   }
 };
 
+const testAgentEvaluatorConnection = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!CONFIG.ON_PREM) {
+      response.status(404).json({
+        message:
+          "On-prem Evaluator Connection Test is only supported in on-prem mode.",
+      });
+      return;
+    }
+    const { agentId } = request.params;
+    const { evaluatorUrl, evaluatorApiKey, evaluatorModel } = request.body ?? {};
+    const result = await ReportRunService.testEvaluatorConnection(agentId, {
+      evaluatorUrl,
+      evaluatorApiKey,
+      evaluatorModel,
+    });
+    response.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AgentUnreachableError) {
+      response.status(502).json({ message: error.message });
+      return;
+    }
+    if (error instanceof Error) {
+      response.status(400).json({ message: error.message });
+      return;
+    }
+    next(error);
+  }
+};
+
+const getAgentEvaluatorModels = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!CONFIG.ON_PREM) {
+      response.status(404).json({
+        message: "Evaluator model discovery is only supported in on-prem mode.",
+      });
+      return;
+    }
+    const { agentId } = request.params;
+    const { evaluatorUrl, evaluatorApiKey } = request.body ?? {};
+    const result = await ReportRunService.getEvaluatorModels(agentId, {
+      evaluatorUrl,
+      evaluatorApiKey,
+    });
+    response.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AgentUnreachableError) {
+      response.status(502).json({ message: error.message });
+      return;
+    }
+    if (error instanceof Error) {
+      response.status(400).json({ message: error.message });
+      return;
+    }
+    next(error);
+  }
+};
+
 const getRunStatus = async (
   request: Request,
   response: Response,
@@ -420,14 +487,26 @@ const updateAgent = async (
 ) => {
   try {
     const agentId = request.params.agentId;
-    const { name, description, intent, ownerName, agentUrl, status } =
-      request.body;
+    const {
+      name,
+      description,
+      intent,
+      ownerName,
+      agentUrl,
+      evaluatorUrl,
+      evaluatorApiKey,
+      evaluatorModel,
+      status,
+    } = request.body;
     const updated = await AgentServices.updateAgent(agentId, {
       name,
       description,
       intent,
       ownerName,
       agentUrl,
+      evaluatorUrl,
+      evaluatorApiKey,
+      evaluatorModel,
       status,
     });
     response.status(200).json(updated);
@@ -606,6 +685,8 @@ const DashboardController = {
   deleteAgent: deleteAgentHandler,
   getAllAgents,
   getReportsByAgentId,
+  testAgentEvaluatorConnection,
+  getAgentEvaluatorModels,
 };
 
 export default DashboardController;

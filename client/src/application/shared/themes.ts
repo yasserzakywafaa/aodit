@@ -141,6 +141,14 @@ export const theme = createTheme({
           },
         },
       },
+      // Shrink the label by default
+      defaultProps: {
+        slotProps: {
+          inputLabel: {
+            shrink: true,
+          },
+        },
+      },
     },
     MuiPaper: {
       styleOverrides: {

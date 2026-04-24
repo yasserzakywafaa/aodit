@@ -8,6 +8,7 @@
  * 4. Aggregate scores and finalize the ReportRun
  */
 
+import { AgentTurnMessage, callAgentUrl } from "../../utils/agentClient";
 import {
   DBCollectionsEnum,
   getDocumentsByQueryFromDb,
@@ -44,12 +45,13 @@ import {
 } from "./executiveSummaryService";
 import { resolveEvaluatorModelId, resolveModelId } from "./modelRegistry";
 
-import { AgentTurnMessage, callAgentUrl } from "../../utils/agentClient";
+import { Agent } from "../../models/types/agent";
+import CONFIG from "../../config";
 import { ObjectId } from "mongodb";
 import { Report } from "../../models/types/report";
 import { Scenario } from "../../models/types/scenario";
 import { handleOpenRouterAIRequest } from "../../utils/openRouterClient";
-import CONFIG from "../../config";
+import { runWithEvaluatorOverride } from "../../utils/evaluatorContext";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -283,8 +285,13 @@ export const executeScenario = async (params: {
     // --- Send prompt to model under test ---
     conversationHistory.push({ role: "user", content: userPrompt });
 
-    const modelMessages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
-      ...(systemPrompt ? [{ role: "system" as const, content: systemPrompt }] : []),
+    const modelMessages: Array<{
+      role: "system" | "user" | "assistant";
+      content: string;
+    }> = [
+      ...(systemPrompt
+        ? [{ role: "system" as const, content: systemPrompt }]
+        : []),
       ...conversationHistory.map((m) => ({
         role: m.role as "system" | "user" | "assistant",
         content: m.content,
@@ -1101,9 +1108,17 @@ export const executeAgentScenario = async (params: {
     const score = Math.max(1, Math.min(5, Math.round(parsed.score)));
 
     if (turnType === "SelfAssessment") {
-      const selfScoreMessages = buildSelfScoreExtractionPrompt({ modelResponse });
-      const selfScoreRaw = await callWithRetry(evaluatorModelId, selfScoreMessages, true);
-      const selfParsed = parseJsonSafe<{ selfScore: number }>(selfScoreRaw, { selfScore: 3 });
+      const selfScoreMessages = buildSelfScoreExtractionPrompt({
+        modelResponse,
+      });
+      const selfScoreRaw = await callWithRetry(
+        evaluatorModelId,
+        selfScoreMessages,
+        true,
+      );
+      const selfParsed = parseJsonSafe<{ selfScore: number }>(selfScoreRaw, {
+        selfScore: 3,
+      });
       selfScore = Math.max(1, Math.min(5, Math.round(selfParsed.selfScore)));
     }
 
@@ -1165,8 +1180,12 @@ const executeAgentModelRun = async (params: {
     { reportRunId: runId } as any,
     DBCollectionsEnum.scenarioResults,
   );
-  const completedScenarioIds = new Set(existingResults.map((r) => r.scenarioId));
-  const allScenarioResults: ScenarioResult[] = [...(existingResults as unknown as ScenarioResult[])];
+  const completedScenarioIds = new Set(
+    existingResults.map((r) => r.scenarioId),
+  );
+  const allScenarioResults: ScenarioResult[] = [
+    ...(existingResults as unknown as ScenarioResult[]),
+  ];
   const scenarioResultIds: string[] = existingResults.map((r) => String(r._id));
   let completedScenarios = existingResults.length;
 
@@ -1183,12 +1202,19 @@ const executeAgentModelRun = async (params: {
     );
     const sortedByTime = [...existingResults]
       .filter((r) => r.createdAt)
-      .sort((a, b) => new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime());
+      .sort(
+        (a, b) =>
+          new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime(),
+      );
 
     const localDimCounters: Record<string, number> = {};
     const DIM_PREFIX: Record<string, string> = {
-      reliability: "R", integrity: "I", confidentiality: "C",
-      judgment: "J", resistance: "T", resilience: "Z",
+      reliability: "R",
+      integrity: "I",
+      confidentiality: "C",
+      judgment: "J",
+      resistance: "T",
+      resilience: "Z",
     };
     const allRebuilt: FeedItem[] = sortedByTime.map((r) => {
       const prefix = DIM_PREFIX[r.dimensionId.toLowerCase()] ?? "X";
@@ -1199,7 +1225,9 @@ const executeAgentModelRun = async (params: {
         dim: r.dimensionId.toUpperCase(),
         model: r.modelName.toUpperCase(),
         turn: lastTurn?.turnIndex ?? 8,
-        text: lastTurn ? `${lastTurn.turnType} — score ${lastTurn.score}/5` : "",
+        text: lastTurn
+          ? `${lastTurn.turnType} — score ${lastTurn.score}/5`
+          : "",
         score: String(r.rawScore),
         type: classifyScore(r.rawScore),
         scenarioTitle: scenarioTitleMap.get(r.scenarioId) ?? "",
@@ -1267,16 +1295,26 @@ const executeAgentModelRun = async (params: {
         updatedAt: now,
       };
 
-      const insertedId = await createDocument(scenarioResult, DBCollectionsEnum.scenarioResults);
+      const insertedId = await createDocument(
+        scenarioResult,
+        DBCollectionsEnum.scenarioResults,
+      );
       scenarioResultIds.push(String(insertedId));
       allScenarioResults.push(scenarioResult as ScenarioResult);
 
       const lastTurn = result.turns[result.turns.length - 1];
-      dimCompleted[scenario.categoryId] = (dimCompleted[scenario.categoryId] ?? 0) + 1;
+      dimCompleted[scenario.categoryId] =
+        (dimCompleted[scenario.categoryId] ?? 0) + 1;
 
-      const dimPrefix = (
-        { reliability: "R", integrity: "I", confidentiality: "C", judgment: "J", resistance: "T", resilience: "Z" }
-      )[scenario.categoryId.toLowerCase()] ?? "X";
+      const dimPrefix =
+        {
+          reliability: "R",
+          integrity: "I",
+          confidentiality: "C",
+          judgment: "J",
+          resistance: "T",
+          resilience: "Z",
+        }[scenario.categoryId.toLowerCase()] ?? "X";
       dimCounters[dimPrefix] = (dimCounters[dimPrefix] ?? 0) + 1;
 
       const feedItem: FeedItem = {
@@ -1294,10 +1332,14 @@ const executeAgentModelRun = async (params: {
       if (feedItems.length > MAX_FEED_ITEMS) feedItems.pop();
 
       completedScenarios++;
-      const progress = computeProgressPercent(completedScenarios, totalScenarios);
+      const progress = computeProgressPercent(
+        completedScenarios,
+        totalScenarios,
+      );
       const dimensionProgress = Object.fromEntries(
         Object.entries(dimTotals).map(([dim, total]) => [
-          dim, { completed: dimCompleted[dim] ?? 0, total },
+          dim,
+          { completed: dimCompleted[dim] ?? 0, total },
         ]),
       );
       await updateRunProgress(runId, {
@@ -1308,39 +1350,69 @@ const executeAgentModelRun = async (params: {
         dimensionProgress,
       });
     } catch (err: any) {
-      console.error(`[aodit] Agent scenario ${scenario._id} failed: ${err.message}`);
+      console.error(
+        `[aodit] Agent scenario ${scenario._id} failed: ${err.message}`,
+      );
       const now = new Date().toISOString();
       await createDocument(
         {
-          reportRunId: runId, reportId, scenarioId: String(scenario._id),
-          modelName: agentName, dimensionId: scenario.categoryId,
-          severity: scenario.severity, turns: [], rawScore: 0, weightedScore: 0,
-          status: "failed", error: err.message, createdAt: now, updatedAt: now,
+          reportRunId: runId,
+          reportId,
+          scenarioId: String(scenario._id),
+          modelName: agentName,
+          dimensionId: scenario.categoryId,
+          severity: scenario.severity,
+          turns: [],
+          rawScore: 0,
+          weightedScore: 0,
+          status: "failed",
+          error: err.message,
+          createdAt: now,
+          updatedAt: now,
         },
         DBCollectionsEnum.scenarioResults,
       );
       completedScenarios++;
-      const progress = computeProgressPercent(completedScenarios, totalScenarios);
-      await updateRunProgress(runId, { completedScenarios, progress, currentStep: getProgressStep(progress) });
+      const progress = computeProgressPercent(
+        completedScenarios,
+        totalScenarios,
+      );
+      await updateRunProgress(runId, {
+        completedScenarios,
+        progress,
+        currentStep: getProgressStep(progress),
+      });
     }
   }
 
   // --- Aggregation (identical to benchmark mode) ---
-  await updateRunProgress(runId, { progress: 92, currentStep: "Calculating scores" });
+  await updateRunProgress(runId, {
+    progress: 92,
+    currentStep: "Calculating scores",
+  });
 
-  const completedResults = allScenarioResults.filter((sr) => sr.status === "completed");
+  const completedResults = allScenarioResults.filter(
+    (sr) => sr.status === "completed",
+  );
   if (completedResults.length === 0) {
     await updateRunProgress(runId, {
-      status: "failed", progress: 100, currentStep: "Generating report",
+      status: "failed",
+      progress: 100,
+      currentStep: "Generating report",
       completedAt: new Date().toISOString(),
     });
     return;
   }
 
-  const dimScores = aggregateDimensionScores(completedResults, dimensionWeights, frameworkVersion);
+  const dimScores = aggregateDimensionScores(
+    completedResults,
+    dimensionWeights,
+    frameworkVersion,
+  );
   const compositeScore = computeComposite(dimScores);
   const rating = getRating(compositeScore);
-  const { calibrationDelta, calibrationGap } = computeCalibrationMetrics(completedResults);
+  const { calibrationDelta, calibrationGap } =
+    computeCalibrationMetrics(completedResults);
   const outlook = determineOutlook(dimScores, calibrationGap);
   const deploymentVerdict = determineDeploymentVerdict(rating);
 
@@ -1350,7 +1422,10 @@ const executeAgentModelRun = async (params: {
   const scenariosById = new Map(scenarios.map((s) => [String(s._id), s]));
 
   try {
-    await updateRunProgress(runId, { progress: 95, currentStep: "Generating executive summaries" });
+    await updateRunProgress(runId, {
+      progress: 95,
+      currentStep: "Generating executive summaries",
+    });
 
     const summaryResult = await generateExecutiveSummaries({
       evaluatorModelId,
@@ -1368,10 +1443,13 @@ const executeAgentModelRun = async (params: {
     executiveSummary = summaryResult.overallSummary || undefined;
     dimensionScoresToSave = dimScores.map((d) => ({
       ...d,
-      executiveSummary: summaryResult.dimensionSummaries[d.dimensionId]?.trim() || undefined,
+      executiveSummary:
+        summaryResult.dimensionSummaries[d.dimensionId]?.trim() || undefined,
     }));
   } catch (err: any) {
-    console.warn(`[aodit] Executive summary generation failed for agent run ${runId}: ${err.message}`);
+    console.warn(
+      `[aodit] Executive summary generation failed for agent run ${runId}: ${err.message}`,
+    );
   }
 
   try {
@@ -1386,12 +1464,17 @@ const executeAgentModelRun = async (params: {
     for (const dimScore of dimScores) {
       const dimId = dimScore.dimensionId;
       const categoryDefs = framework.dimensionCategories[dimId] ?? [];
-      const dimResults = completedResults.filter((r) => r.dimensionId === dimId);
+      const dimResults = completedResults.filter(
+        (r) => r.dimensionId === dimId,
+      );
 
       const categoryTotals = new Map<string, { sum: number; count: number }>();
       for (const result of dimResults) {
         const scenario = scenariosById.get(result.scenarioId);
-        const code = getCategoryCodeFromScenario(scenario, framework.dimensionCategories);
+        const code = getCategoryCodeFromScenario(
+          scenario,
+          framework.dimensionCategories,
+        );
         if (!code) continue;
         const prev = categoryTotals.get(code) ?? { sum: 0, count: 0 };
         prev.sum += result.rawScore;
@@ -1401,21 +1484,35 @@ const executeAgentModelRun = async (params: {
 
       const categories = categoryDefs.map((c) => {
         const stats = categoryTotals.get(c.id);
-        return { id: c.id, name: c.name, score: stats && stats.count > 0 ? stats.sum / stats.count : null };
+        return {
+          id: c.id,
+          name: c.name,
+          score: stats && stats.count > 0 ? stats.sum / stats.count : null,
+        };
       });
 
       byDimension[dimId] = {
         categories,
-        executiveSummary: dimensionScoresToSave.find((d) => d.dimensionId === dimId)?.executiveSummary || undefined,
+        executiveSummary:
+          dimensionScoresToSave.find((d) => d.dimensionId === dimId)
+            ?.executiveSummary || undefined,
         insights: [],
       };
 
-      deepDiveInput.push({ dimensionId: dimId, score: dimScore.score, categories, evidence: buildDimensionEvidence(dimResults) });
+      deepDiveInput.push({
+        dimensionId: dimId,
+        score: dimScore.score,
+        categories,
+        evidence: buildDimensionEvidence(dimResults),
+      });
     }
 
     try {
       const aiDeepDive = await generateDimensionDeepDive({
-        evaluatorModelId, frameworkVersion, modelName: agentName, reportType,
+        evaluatorModelId,
+        frameworkVersion,
+        modelName: agentName,
+        reportType,
         dimensions: deepDiveInput,
       });
       for (const dim of deepDiveInput) {
@@ -1423,20 +1520,29 @@ const executeAgentModelRun = async (params: {
         if (!ai) continue;
         byDimension[dim.dimensionId] = {
           categories: byDimension[dim.dimensionId]?.categories.map((c) => {
-            const commentary = ai.categories.find((ac) => ac.id === c.id)?.commentary;
+            const commentary = ai.categories.find(
+              (ac) => ac.id === c.id,
+            )?.commentary;
             return { ...c, commentary: commentary || undefined };
           }),
-          executiveSummary: ai.executiveSummary || byDimension[dim.dimensionId]?.executiveSummary || undefined,
+          executiveSummary:
+            ai.executiveSummary ||
+            byDimension[dim.dimensionId]?.executiveSummary ||
+            undefined,
           insights: ai.insights ?? [],
         };
       }
     } catch (aiErr: any) {
-      console.warn(`[aodit] Agent deep-dive AI generation failed for run ${runId}: ${aiErr.message}`);
+      console.warn(
+        `[aodit] Agent deep-dive AI generation failed for run ${runId}: ${aiErr.message}`,
+      );
     }
 
     dimensionDeepDive = byDimension;
   } catch (deepDiveErr: any) {
-    console.warn(`[aodit] Failed to build dimensionDeepDive for agent run ${runId}: ${deepDiveErr.message}`);
+    console.warn(
+      `[aodit] Failed to build dimensionDeepDive for agent run ${runId}: ${deepDiveErr.message}`,
+    );
   }
 
   await updateRunProgress(runId, {
@@ -1482,74 +1588,150 @@ export const executeAgentReport = async (
       return;
     }
 
-    const scenarios = await getDocumentsByQueryFromDb<Scenario>(
-      { reportId } as any,
-      DBCollectionsEnum.scenarios,
-    );
+    // Load the Agent so we can apply any per-agent evaluator endpoint override
+    // to every downstream judge call made during this run.
+    let agent: Agent | null = null;
+    let evaluatorOverride: { baseURL: string; apiKey?: string } | undefined;
+    if (report.agentId) {
+      agent = (await readDocument(
+        new ObjectId(report.agentId),
+        DBCollectionsEnum.agents,
+      )) as unknown as Agent | null;
+      if (agent?.evaluatorUrl && agent.evaluatorUrl.trim() !== "") {
+        evaluatorOverride = {
+          baseURL: agent.evaluatorUrl.trim(),
+          apiKey: agent.evaluatorApiKey?.trim() || undefined,
+        };
+        console.log(
+          `[aodit] Using per-agent evaluator endpoint: ${evaluatorOverride.baseURL}`,
+        );
+      }
+    }
 
-    if (!scenarios || scenarios.length === 0) {
-      console.error(`[aodit] No scenarios found for report ${reportId} (agent run)`);
+    // On-prem: refuse to run if the agent has no evaluator URL. Without an
+    // override every downstream judge call would silently fall back to
+    // CONFIG.OPENROUTER_BASE_URL, breaking the air-gap invariant.
+    if (CONFIG.ON_PREM && !evaluatorOverride) {
+      const reason =
+        "On-prem mode requires an Evaluator URL on the agent. " +
+        "Open the Agent page and configure Evaluator (Judge) Endpoint before running a report.";
+      console.error(`[aodit] ${reason}`);
       for (const [, runId] of runIds) {
         await updateRunProgress(runId, {
-          status: "failed", progress: 100, completedAt: new Date().toISOString(),
+          status: "failed",
+          progress: 100,
+          currentStep: reason,
+          completedAt: new Date().toISOString(),
         });
       }
       return;
     }
 
-    const evaluatorModelId = resolveEvaluatorModelId(report.modelsToEvaluate);
-    const frameworkVersion = resolveFrameworkVersion(report.frameworkVersion, "aodit_v1");
+    return await runWithEvaluatorOverride(evaluatorOverride, async () => {
+      const scenarios = await getDocumentsByQueryFromDb<Scenario>(
+        { reportId } as any,
+        DBCollectionsEnum.scenarios,
+      );
 
-    console.log(
-      `[aodit] Starting agent execution: ${runIds.size} agent(s) × ${scenarios.length} scenarios, judge: ${evaluatorModelId}`,
-    );
-
-    for (const [agentName, runId] of runIds) {
-      const latestReport = (await readDocument(new ObjectId(reportId), DBCollectionsEnum.reports)) as any;
-      if (latestReport?.status !== "running") {
-        console.log(`[aodit] Report ${reportId} is no longer running. Stopping agent run.`);
-        break;
+      if (!scenarios || scenarios.length === 0) {
+        console.error(
+          `[aodit] No scenarios found for report ${reportId} (agent run)`,
+        );
+        for (const [, runId] of runIds) {
+          await updateRunProgress(runId, {
+            status: "failed",
+            progress: 100,
+            completedAt: new Date().toISOString(),
+          });
+        }
+        return;
       }
 
-      try {
-        await executeAgentModelRun({
-          reportId,
-          runId,
-          batchId,
-          frameworkVersion,
-          agentName,
-          agentUrl,
-          evaluatorModelId,
-          scenarios: scenarios as unknown as Scenario[],
-          reportDescription: report.description,
-          reportType: report.reportType ?? getFrameworkDefinition(frameworkVersion).marketingLabel,
-          dimensionWeights: report.dimensionWeights,
-        });
-        console.log(`[aodit] Completed agent run: ${agentName}`);
-      } catch (err: any) {
-        console.error(`[aodit] Agent run failed for ${agentName}: ${err.message}`);
-        await updateRunProgress(runId, {
-          status: "failed", progress: 100, currentStep: "Generating report",
-          completedAt: new Date().toISOString(),
-        });
+      // On-prem: ignore any report-level evaluator override and always use the
+      // agent's configured evaluatorModel (single source of truth).
+      // Cloud: keep existing behavior where report-level model can override.
+      const reportEvaluatorModel = CONFIG.ON_PREM
+        ? agent?.evaluatorModel
+          ? [agent.evaluatorModel]
+          : undefined
+        : report.modelsToEvaluate && report.modelsToEvaluate.length > 0
+          ? report.modelsToEvaluate
+          : agent?.evaluatorModel
+            ? [agent.evaluatorModel]
+            : undefined;
+      const evaluatorModelId = resolveEvaluatorModelId(reportEvaluatorModel);
+      const frameworkVersion = resolveFrameworkVersion(
+        report.frameworkVersion,
+        "aodit_v1",
+      );
+
+      console.log(
+        `[aodit] Starting agent execution: ${runIds.size} agent(s) × ${scenarios.length} scenarios, judge: ${evaluatorModelId}`,
+      );
+
+      for (const [agentName, runId] of runIds) {
+        const latestReport = (await readDocument(
+          new ObjectId(reportId),
+          DBCollectionsEnum.reports,
+        )) as any;
+        if (latestReport?.status !== "running") {
+          console.log(
+            `[aodit] Report ${reportId} is no longer running. Stopping agent run.`,
+          );
+          break;
+        }
+
+        try {
+          await executeAgentModelRun({
+            reportId,
+            runId,
+            batchId,
+            frameworkVersion,
+            agentName,
+            agentUrl,
+            evaluatorModelId,
+            scenarios: scenarios as unknown as Scenario[],
+            reportDescription: report.description,
+            reportType:
+              report.reportType ??
+              getFrameworkDefinition(frameworkVersion).marketingLabel,
+            dimensionWeights: report.dimensionWeights,
+          });
+          console.log(`[aodit] Completed agent run: ${agentName}`);
+        } catch (err: any) {
+          console.error(
+            `[aodit] Agent run failed for ${agentName}: ${err.message}`,
+          );
+          await updateRunProgress(runId, {
+            status: "failed",
+            progress: 100,
+            currentStep: "Generating report",
+            completedAt: new Date().toISOString(),
+          });
+        }
       }
-    }
 
-    const allRunStatuses: string[] = [];
-    for (const [, runId] of runIds) {
-      const run = await readDocument(new ObjectId(runId), DBCollectionsEnum.reportRuns);
-      if (run) allRunStatuses.push((run as any).status);
-    }
-    const allFailed = allRunStatuses.every((s) => s === "failed");
-    const finalStatus = allFailed ? "failed" : "completed";
+      const allRunStatuses: string[] = [];
+      for (const [, runId] of runIds) {
+        const run = await readDocument(
+          new ObjectId(runId),
+          DBCollectionsEnum.reportRuns,
+        );
+        if (run) allRunStatuses.push((run as any).status);
+      }
+      const allFailed = allRunStatuses.every((s) => s === "failed");
+      const finalStatus = allFailed ? "failed" : "completed";
 
-    await updateDocument<Report>(
-      reportId,
-      { status: finalStatus as any, updatedAt: new Date().toISOString() },
-      DBCollectionsEnum.reports,
-    );
+      await updateDocument<Report>(
+        reportId,
+        { status: finalStatus as any, updatedAt: new Date().toISOString() },
+        DBCollectionsEnum.reports,
+      );
 
-    console.log(`[aodit] Agent report ${reportId} execution complete — status: ${finalStatus}`);
+      console.log(
+        `[aodit] Agent report ${reportId} execution complete — status: ${finalStatus}`,
+      );
+    });
   } catch (err: any) {
     console.error(`[aodit] Fatal error in executeAgentReport: ${err.message}`);
     try {

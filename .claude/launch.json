@@ -5,7 +5,7 @@
       "name": "client",
       "runtimeExecutable": "/Users/yasserzaky/.nvm/versions/node/v22.22.0/bin/node",
       "runtimeArgs": ["/Users/yasserzaky/.nvm/versions/node/v22.22.0/bin/npx", "vite"],
-      "port": 1607,
+      "port": 1606,
       "cwd": "client",
       "env": {
         "PATH": "/Users/yasserzaky/.nvm/versions/node/v22.22.0/bin:/usr/bin:/bin:/usr/sbin:/sbin"

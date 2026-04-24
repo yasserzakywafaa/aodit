@@ -1,5 +1,7 @@
-import { Box, Button, Drawer, MenuItem, Typography } from "@mui/material";
+import { Box, Button, Collapse, Drawer, MenuItem, Typography } from "@mui/material";
 import {
+  ExpandLessRounded,
+  ExpandMoreRounded,
   LockOpenOutlined,
   MenuOutlined,
   VpnKeyOutlined,
@@ -12,11 +14,18 @@ import { PagesMatch } from "../ApplicationBar";
 import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
+import {
+  type LandingPageCategoryId,
+  getLandingPagesGrouped,
+} from "src/application/shared/landingPages";
 import { routes } from "src/application/routes";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
   { id: "home", label: "Home", route: routes.features },
+  { id: "industries", label: "Industries", route: null },
   { id: "methodology", label: "Methodology", route: routes.methodology },
   {
     id: "compliance-finma",
@@ -51,11 +60,31 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
     handleOnMenuItemClick,
   } = props;
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const [isIndustriesOpen, setIsIndustriesOpen] = useState(false);
+  const [expandedCategoryId, setExpandedCategoryId] =
+    useState<LandingPageCategoryId | null>(null);
+  const navigate = useNavigate();
+  const landingGroups = getLandingPagesGrouped();
 
   const handleOnMenuItemClickEvent =
     (sectionId: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
       event.preventDefault();
       handleOnMenuItemClick(sectionId);
+    };
+
+  const handleToggleCategory = (categoryId: LandingPageCategoryId) => () => {
+    setExpandedCategoryId((current) =>
+      current === categoryId ? null : categoryId,
+    );
+  };
+
+  const handleLandingPageClick =
+    (slug: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      setIsIndustriesOpen(false);
+      setExpandedCategoryId(null);
+      handleSetDrawer(false)();
+      navigate(slug);
     };
 
   return (
@@ -100,27 +129,109 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
               }}
             >
               <Box>
-                {NAV_LINKS.map((item) => (
-                  <>
-                    {/* TODO: Uncomment this when EU AI Act is live */}
-                    {/* {id === "compliance-finma" ? (
-                      <MenuItem>
-                        <ComplianceDropdown />
-                      </MenuItem>
-                    ) : ( */}
+                {NAV_LINKS.map((item) => {
+                  if (item.id === "industries") {
+                    return (
+                      <Box key={item.id}>
+                        <MenuItem
+                          onClick={() =>
+                            setIsIndustriesOpen((prev) => !prev)
+                          }
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="body2" color="text.primary">
+                            {item.label}
+                          </Typography>
+                          {isIndustriesOpen ? (
+                            <ExpandLessRounded fontSize="small" />
+                          ) : (
+                            <ExpandMoreRounded fontSize="small" />
+                          )}
+                        </MenuItem>
+                        <Collapse in={isIndustriesOpen} timeout="auto" unmountOnExit>
+                          <Box sx={{ pl: 1, pb: 0.5 }}>
+                            {landingGroups.map((group) => {
+                              const isExpanded =
+                                expandedCategoryId === group.category.id;
+                              return (
+                                <Box key={group.category.id}>
+                                  <MenuItem
+                                    onClick={handleToggleCategory(
+                                      group.category.id,
+                                    )}
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "space-between",
+                                      py: 0.75,
+                                    }}
+                                  >
+                                    <Typography
+                                      variant="body2"
+                                      color="text.primary"
+                                      sx={{ fontSize: 13, fontWeight: 600 }}
+                                    >
+                                      {group.category.label}
+                                    </Typography>
+                                    {isExpanded ? (
+                                      <ExpandLessRounded fontSize="small" />
+                                    ) : (
+                                      <ExpandMoreRounded fontSize="small" />
+                                    )}
+                                  </MenuItem>
+                                  <Collapse
+                                    in={isExpanded}
+                                    timeout="auto"
+                                    unmountOnExit
+                                  >
+                                    <Box sx={{ pl: 1.5, pb: 0.5 }}>
+                                      {group.pages.map((page) => (
+                                        <MenuItem
+                                          key={page.key}
+                                          component="a"
+                                          href={page.slug}
+                                          onClick={handleLandingPageClick(
+                                            page.slug,
+                                          )}
+                                          sx={{ py: 0.5 }}
+                                        >
+                                          <Typography
+                                            variant="body2"
+                                            color="text.primary"
+                                            sx={{ fontSize: 12.5 }}
+                                          >
+                                            {page.title}
+                                          </Typography>
+                                        </MenuItem>
+                                      ))}
+                                    </Box>
+                                  </Collapse>
+                                </Box>
+                              );
+                            })}
+                          </Box>
+                        </Collapse>
+                      </Box>
+                    );
+                  }
+
+                  return (
                     <MenuItem
                       key={item.id}
                       component="a"
-                      href={item.route}
+                      href={item.route ?? undefined}
                       onClick={handleOnMenuItemClickEvent(item.id)}
                     >
                       <Typography variant="body2" color="text.primary">
                         {item.label}
                       </Typography>
                     </MenuItem>
-                    {/* // )} */}
-                  </>
-                ))}
+                  );
+                })}
 
                 <Box sx={{ mt: 2, px: 2 }}>
                   <Button

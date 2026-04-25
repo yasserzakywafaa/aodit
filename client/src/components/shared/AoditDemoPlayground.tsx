@@ -83,10 +83,10 @@ interface PersistedDemoSnapshot {
 
 const MODEL_OPTIONS: { label: string; id: string }[] = [
   { label: "Claude Opus 4.7", id: "anthropic/claude-opus-4.7" },
-  { label: "GPT-5.4 Mini", id: "openai/gpt-5.4-mini" },
+  { label: "GPT-5.5", id: "openai/gpt-5.5" },
   { label: "Gemini 3 Flash", id: "google/gemini-3-flash-preview" },
   { label: "Grok 4.1 Fast", id: "x-ai/grok-4.1-fast" },
-  { label: "DeepSeek v3.2", id: "deepseek/deepseek-v3.2" },
+  { label: "DeepSeek v4 Flash", id: "deepseek/deepseek-v4-flash" },
   { label: "Kimi K2.5", id: "moonshotai/kimi-k2.5" },
   { label: "Llama 4 Maverick", id: "meta-llama/llama-4-maverick" },
   { label: "Gemma 4.26b A4b", id: "google/gemma-4-26b-a4b-it" },

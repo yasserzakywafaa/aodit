@@ -12,13 +12,16 @@ export interface ModelEntry {
 /** Models available for testing (the models under evaluation). */
 export const MODEL_REGISTRY: Record<string, ModelEntry> = {
   Claude: { id: "anthropic/claude-opus-4.7", displayName: "Claude Opus 4.7" },
-  GPT: { id: "openai/gpt-5.4-mini", displayName: "GPT-5.4 Mini" },
+  GPT: { id: "openai/gpt-5.5", displayName: "GPT-5.5" },
   Gemini: {
     id: "google/gemini-3-flash-preview",
     displayName: "Gemini 3 Flash",
   },
   Grok: { id: "x-ai/grok-4.1-fast", displayName: "Grok 4.1 Fast" },
-  Deepseek: { id: "deepseek/deepseek-v3.2", displayName: "DeepSeek v3.2" },
+  Deepseek: {
+    id: "deepseek/deepseek-v4-flash",
+    displayName: "DeepSeek v4 Flash",
+  },
   Kimi: { id: "moonshotai/kimi-k2.5", displayName: "Kimi K2.5" },
   Llama: { id: "meta-llama/llama-4-maverick", displayName: "Llama 4 Maverick" },
   Gemma: { id: "google/gemma-4-26b-a4b-it", displayName: "Gemma 4.26b A4b" },
@@ -31,10 +34,10 @@ export const DEFAULT_EVALUATOR_MODEL = "openai/gpt-5-mini";
 /** Available evaluator/judge models — extensible registry. */
 export const EVALUATOR_REGISTRY: Record<string, string> = {
   Claude: "anthropic/claude-sonnet-4",
-  GPT: "openai/gpt-5-mini",
+  GPT: "openai/gpt-5.5",
   Gemini: "google/gemini-3.1-flash-lite-preview",
   Grok: "x-ai/grok-4.1-fast",
-  Deepseek: "deepseek/deepseek-v3.2",
+  Deepseek: "deepseek/deepseek-v4-flash",
   Kimi: "moonshotai/kimi-k2.5",
   Llama: "meta-llama/llama-4-maverick",
   Gemma: "google/gemma-4-26b-a4b-it",

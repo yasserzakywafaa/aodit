@@ -13,9 +13,9 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import type { Style } from "@react-pdf/types";
 
 import React from "react";
+import type { Style } from "@react-pdf/types";
 import aoditLogo from "src/assets/images/aodit_logo.png";
 
 // ─── Brand tokens (mirrored from AoditReportPDF) ────────────────────────────
@@ -485,9 +485,7 @@ const MarkdownBlocks = ({
             marginBottom: 6,
           }}
         >
-          <Text
-            style={{ ...baseStyle, fontFamily: "Courier", fontSize: 8 }}
-          >
+          <Text style={{ ...baseStyle, fontFamily: "Courier", fontSize: 8 }}>
             {codeLines.join("\n")}
           </Text>
         </View>,
@@ -626,7 +624,10 @@ const DemoCompletionUpsellPDF = () => (
         holds up under scrutiny. Ballpark{" "}
       </Text>
       <Text style={s.upsellEmphasis}>~1%</Text>
-      <Text> of that depth is what you just saw here. Hungry for the rest? </Text>
+      <Text>
+        {" "}
+        of that depth is what you just saw here. Hungry for the rest?{" "}
+      </Text>
       <Text style={s.upsellEmphasis}>Talk to us</Text>
       <Text>
         {" "}

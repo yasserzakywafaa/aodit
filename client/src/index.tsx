@@ -3,7 +3,13 @@ import "./application/shared/axiosConfig"; // Initialize Axios interceptors
 import App from "./application/App";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import { Buffer } from "buffer";
 import { createRoot } from "react-dom/client";
+
+// react-pdf expects Node's Buffer to exist in browser contexts.
+if (!globalThis.Buffer) {
+  globalThis.Buffer = Buffer;
+}
 
 // --- CSP Nonce Handling for MUI ---
 // 1. Read the nonce from the meta tag added by generate-nonce.js

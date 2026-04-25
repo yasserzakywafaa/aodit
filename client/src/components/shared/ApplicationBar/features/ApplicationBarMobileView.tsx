@@ -87,6 +87,16 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
       navigate(slug);
     };
 
+  const handleViewAllIndustriesClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+  ) => {
+    event.preventDefault();
+    setIsIndustriesOpen(false);
+    setExpandedCategoryId(null);
+    handleSetDrawer(false)();
+    navigate(routes.industries);
+  };
+
   return (
     <>
       {(isTablet || isMobile) && !isDesktop && (
@@ -213,6 +223,22 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                                 </Box>
                               );
                             })}
+                            <Box sx={{ mt: 0.5, pt: 0.5, borderTop: "1px solid", borderColor: "divider" }}>
+                              <MenuItem
+                                component="a"
+                                href={routes.industries}
+                                onClick={handleViewAllIndustriesClick}
+                                sx={{ py: 0.75 }}
+                              >
+                                <Typography
+                                  variant="body2"
+                                  color="text.primary"
+                                  sx={{ fontSize: 13, fontWeight: 600 }}
+                                >
+                                  View All Industries
+                                </Typography>
+                              </MenuItem>
+                            </Box>
                           </Box>
                         </Collapse>
                       </Box>

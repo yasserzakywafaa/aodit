@@ -46,6 +46,9 @@ const PricingPage = lazy(() => import("../Pages/Pricing/Pricing"));
 const MethodologyPage = lazy(() => import("../Pages/Methodology/Methodology"));
 const SecurityPage = lazy(() => import("../Pages/Security/Security"));
 const AboutPage = lazy(() => import("../Pages/About/About"));
+const IndustriesHubPage = lazy(
+  () => import("../Pages/Industries/IndustriesHub"),
+);
 
 const LoginPage = lazy(() => import("../Pages/Login"));
 const RegisterPage = lazy(() => import("../Pages/Register"));
@@ -156,6 +159,7 @@ const AppContent = () => {
 
             {/* Public Routes */}
             <Route index path={routes.features} element={<FeaturesPage />} />
+            <Route path={routes.industries} element={<IndustriesHubPage />} />
 
             {/* Industry / use-case SEO landing pages */}
             {LANDING_PAGES.map((landingPage) => (

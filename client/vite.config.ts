@@ -3,8 +3,77 @@ import { defineConfig, loadEnv } from "vite";
 import fs from "node:fs";
 import path from "path";
 import prerender from "vite-plugin-prerender";
-import { prerenderPaths } from "./src/application/routes";
+import { LANDING_PAGES } from "./src/application/shared/landingPages";
+import { prerenderPaths, routes } from "./src/application/routes";
 import react from "@vitejs/plugin-react";
+
+const SITEMAP_OUTPUT_PATH = path.join(
+  __dirname,
+  "public/sitemaps/sitemap.xml",
+);
+const SITEMAP_DEFAULT_PRIORITY = "0.7";
+
+function normalizeRoute(route: string): string {
+  if (!route.startsWith("/")) {
+    return `/${route}`;
+  }
+  return route;
+}
+
+function toSitemapUrlNode(
+  baseUrl: string,
+  route: string,
+  lastmod: string,
+  priority: string,
+): string {
+  return [
+    "  <url>",
+    `    <loc>${baseUrl}${route}</loc>`,
+    `    <lastmod>${lastmod}</lastmod>`,
+    `    <priority>${priority}</priority>`,
+    "  </url>",
+  ].join("\n");
+}
+
+function writeSitemap(baseUrl: string): void {
+  const nowIsoDate = new Date().toISOString();
+  const staticRoutes: string[] = [
+    routes.features,
+    routes.industries,
+    routes.demo,
+    routes.methodology,
+    routes.security,
+    routes.about,
+    routes.pricing,
+    routes.compliance.finma,
+    routes.compliance.euAiAct,
+    routes.contact,
+    routes.privacyPolicy,
+    routes.termsAndConditions,
+    routes.dataProcessingAgreement,
+  ];
+
+  const industryRoutes = LANDING_PAGES.map((page) => page.slug);
+  const allRoutes = Array.from(
+    new Set([...staticRoutes, ...industryRoutes].map(normalizeRoute)),
+  );
+
+  const nodes = allRoutes.map((route) => {
+    const priority = route === "/" ? "1.0" : SITEMAP_DEFAULT_PRIORITY;
+    return toSitemapUrlNode(baseUrl, route, nowIsoDate, priority);
+  });
+
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...nodes,
+    "</urlset>",
+    "",
+  ].join("\n");
+
+  fs.mkdirSync(path.dirname(SITEMAP_OUTPUT_PATH), { recursive: true });
+  fs.writeFileSync(SITEMAP_OUTPUT_PATH, xml, "utf8");
+}
 
 /**
  * vite-plugin-prerender depends on puppeteer@1.x; we override puppeteer to
@@ -73,6 +142,9 @@ async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
 export default defineConfig(async ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "REACT_APP_");
   const puppeteerOptions = await getPuppeteerOptions();
+  const sitemapBaseUrl = "https://www.aodit.ai";
+
+  writeSitemap(sitemapBaseUrl);
 
   return {
     plugins: [
@@ -101,7 +173,7 @@ export default defineConfig(async ({ mode }) => {
       }),
     ],
     optimizeDeps: {
-      include: ["@emotion/styled", "@emotion/react"],
+      include: ["@emotion/styled", "@emotion/react", "buffer"],
     },
     server: {
       port: Number(env.REACT_APP_PORT),

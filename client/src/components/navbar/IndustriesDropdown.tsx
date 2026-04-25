@@ -15,6 +15,7 @@ import {
   type LandingPageCategoryId,
   getLandingPagesGrouped,
 } from "src/application/shared/landingPages";
+import { routes } from "src/application/routes";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -50,6 +51,11 @@ const IndustriesDropdown = () => {
   const handlePageClick = (slug: string) => () => {
     handleClose();
     navigate(slug);
+  };
+
+  const handleViewAllIndustries = () => {
+    handleClose();
+    navigate(routes.industries);
   };
 
   return (
@@ -113,6 +119,14 @@ const IndustriesDropdown = () => {
                   </Box>
                 </MenuItem>
               )),
+              <Divider key="__view-all-divider" />,
+              <MenuItem
+                key="__view-all-industries"
+                onClick={handleViewAllIndustries}
+                sx={{ py: 1, fontWeight: 600 }}
+              >
+                View All Industries
+              </MenuItem>,
             ]
           : groups.map(({ category }) => (
               <MenuItem
@@ -131,7 +145,16 @@ const IndustriesDropdown = () => {
                 </Typography>
                 <ChevronRightRounded fontSize="small" sx={{ opacity: 0.6 }} />
               </MenuItem>
-            ))}
+            )).concat([
+              <Divider key="__view-all-divider" />,
+              <MenuItem
+                key="__view-all-industries"
+                onClick={handleViewAllIndustries}
+                sx={{ py: 1, fontWeight: 600 }}
+              >
+                View All Industries
+              </MenuItem>,
+            ])}
       </Menu>
     </>
   );

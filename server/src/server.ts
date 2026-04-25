@@ -52,6 +52,7 @@ expressApp.use(
     contentSecurityPolicy: {
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "script-src": ["'self'", "'wasm-unsafe-eval'"],
         "img-src": ["'self'", CONFIG.APP_URL],
       },
     },

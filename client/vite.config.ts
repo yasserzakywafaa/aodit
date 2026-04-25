@@ -101,7 +101,7 @@ export default defineConfig(async ({ mode }) => {
       }),
     ],
     optimizeDeps: {
-      include: ["@emotion/styled", "@emotion/react"],
+      include: ["@emotion/styled", "@emotion/react", "buffer"],
     },
     server: {
       port: Number(env.REACT_APP_PORT),

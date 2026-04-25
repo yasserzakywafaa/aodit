@@ -14,6 +14,7 @@ const FOOTER_SECTIONS = [
   {
     title: "Product",
     links: [
+      { label: "Industries", href: routes.industries },
       { label: "Methodology", href: routes.methodology },
       { label: "Security", href: routes.security },
       { label: "Try Live Demo", href: routes.demo },

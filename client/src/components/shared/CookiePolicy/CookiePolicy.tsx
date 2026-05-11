@@ -25,15 +25,16 @@ const CookiePolicy = () => {
     >
       <Paper
         elevation={6}
-        sx={{
+        sx={
           p: 2,
           overflow: "hidden",
           position: "relative",
-        }}
+          backgroundColor: "red",
+        }
       >
         <Box
           component="span"
-          sx={{
+          sx={
             zIndex: 1,
             opacity: 0.25,
             top: "-2.5rem",
@@ -41,7 +42,7 @@ const CookiePolicy = () => {
             fontSize: "11rem",
             position: "absolute",
             pointerEvents: "none",
-          }}
+          }
         >
           🍪
         </Box>

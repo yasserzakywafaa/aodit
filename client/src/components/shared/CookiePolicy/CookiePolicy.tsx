@@ -29,6 +29,7 @@ const CookiePolicy = () => {
           p: 2,
           overflow: "hidden",
           position: "relative",
+          backgroundColor: "red !important",
         }}
       >
         <Box

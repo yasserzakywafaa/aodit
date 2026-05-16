@@ -27,7 +27,7 @@
     "@aws-sdk/client-s3": "3.591.0",
     "@aws-sdk/credential-provider-node": "3.590.0",
     "@types/puppeteer": "^7.0.4",
-    "axios": "^1.15.0",
+    "axios": "^1.16.1",
     "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
     "cors": "2.8.5",

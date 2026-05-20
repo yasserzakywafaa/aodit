@@ -82,6 +82,7 @@ const PrivacyPolicyPage = () => {
       title="Privacy Policy | aodit"
       className="privacy-policy-page"
       isLoading={false}
+      noIndex
     >
       {/* Hero */}
       <Box

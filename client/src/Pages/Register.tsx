@@ -1,12 +1,12 @@
 import { Box, Container, Divider, Typography } from "@mui/material";
 
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import EmailPasswordForm from "src/components/shared/Auth/EmailPasswordForm";
 import { LockOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import PhoneAuth from "src/components/shared/SocialLogins/PhoneAuth";
 import SocialRegister from "src/components/Modals/RegisterModal/features/SocialRegister/SocialRegister";
 import { routes } from "src/application/routes";
-import APP_CONSTANTS from "src/application/shared/app_constants";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <Page title="Register | aodit">
+    <Page title="Register | aodit" noIndex>
       <Container
         sx={{
           display: "flex",
@@ -51,7 +51,9 @@ const RegisterPage = () => {
           <LockOutlined color="primary" sx={{ m: 1 }} />
 
           <Typography component="h1" variant="h5">
-            {APP_CONSTANTS.IS_ON_PREM ? "Access Restricted" : "Create a new account"}
+            {APP_CONSTANTS.IS_ON_PREM
+              ? "Access Restricted"
+              : "Create a new account"}
           </Typography>
         </Box>
 

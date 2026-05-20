@@ -60,6 +60,7 @@ const AboutPage = () => {
       title="About SwissLI AG | Independent AI Evaluation"
       className="about-page"
       isLoading={false}
+      noIndex
     >
       {/* ===== HERO ===== */}
       <Box

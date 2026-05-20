@@ -80,6 +80,7 @@ const TermsAndConditions = () => {
       title="Terms & Conditions | aodit"
       className="terms-and-conditions-page"
       isLoading={false}
+      noIndex
     >
       {/* Hero */}
       <Box

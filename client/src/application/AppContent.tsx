@@ -38,6 +38,9 @@ const ResetAndRedirectHome = () => {
 };
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
+const FeaturesHomeRoute = lazy(
+  () => import("../Pages/Features/FeaturesHomeRoute"),
+);
 const IndustryLandingPage = lazy(
   () => import("../Pages/Features/IndustryLandingPage"),
 );
@@ -158,7 +161,15 @@ const AppContent = () => {
             )}
 
             {/* Public Routes */}
-            <Route index path={routes.features} element={<FeaturesPage />} />
+            <Route
+              index
+              path={routes.features}
+              element={<FeaturesHomeRoute />}
+            />
+            <Route
+              path={routes.featuresCh}
+              element={<FeaturesPage region="swiss" />}
+            />
             <Route path={routes.industries} element={<IndustriesHubPage />} />
 
             {/* Industry / use-case SEO landing pages */}

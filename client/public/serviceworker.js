@@ -1,5 +1,5 @@
 const _this = this;
-const version = "20260425-124218"; // Increment this on every deploy
+const version = "20260520-114012"; // Increment this on every deploy
 const host = _this.location.origin;
 const CACHE_NAME = `blogz-v${version}`;
 const urlsToCache = ["/", "/settings", "/index.html"];

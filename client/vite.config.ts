@@ -1,16 +1,13 @@
 import { defineConfig, loadEnv } from "vite";
+import { prerenderPaths, routes } from "./src/application/routes";
 
+import { LANDING_PAGES } from "./src/application/shared/landingPages";
 import fs from "node:fs";
 import path from "path";
 import prerender from "vite-plugin-prerender";
-import { LANDING_PAGES } from "./src/application/shared/landingPages";
-import { prerenderPaths, routes } from "./src/application/routes";
 import react from "@vitejs/plugin-react";
 
-const SITEMAP_OUTPUT_PATH = path.join(
-  __dirname,
-  "public/sitemaps/sitemap.xml",
-);
+const SITEMAP_OUTPUT_PATH = path.join(__dirname, "public/sitemaps/sitemap.xml");
 const SITEMAP_DEFAULT_PRIORITY = "0.7";
 
 function normalizeRoute(route: string): string {
@@ -48,9 +45,6 @@ function writeSitemap(baseUrl: string): void {
     routes.compliance.finma,
     routes.compliance.euAiAct,
     routes.contact,
-    routes.privacyPolicy,
-    routes.termsAndConditions,
-    routes.dataProcessingAgreement,
   ];
 
   const industryRoutes = LANDING_PAGES.map((page) => page.slug);

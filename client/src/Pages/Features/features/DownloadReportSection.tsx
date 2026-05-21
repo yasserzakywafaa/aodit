@@ -22,24 +22,21 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { useState } from "react";
-
-const FEATURED_REPORT = {
-  title: "2026 Banking AI Risk Report",
-  subtitle:
-    "AODIT evaluated leading AI systems across multi-turn adversarial scenarios covering customer interactions, fraud handling, and escalation behavior.",
-  description:
-    "Independent evaluation of AI agent behavior under adversarial banking scenarios aligned with FINMA expectations.",
-  ctaLabel: "Download Executive Summary",
-};
+import {
+  FEATURED_REPORT_CONTENT,
+  type Region,
+} from "src/application/shared/regionContent";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const EXECUTIVE_SUMMARY_LEAD = {
-  reportOfInterest: "Banking AI Risk Assessment - Executive Summary",
-  message: "Executive summary download lead magnet",
-};
+interface DownloadReportSectionProps {
+  region?: Region;
+}
 
-const DownloadReportSection = () => {
+const DownloadReportSection = ({
+  region = "global",
+}: DownloadReportSectionProps) => {
+  const featuredReport = FEATURED_REPORT_CONTENT[region];
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const executiveSummaryUrl = APP_CONSTANTS.FEATURED_REPORT_PDF_URL;
@@ -105,8 +102,8 @@ const DownloadReportSection = () => {
           name: name.trim(),
           company: company.trim(),
           email: email.trim(),
-          reportOfInterest: EXECUTIVE_SUMMARY_LEAD.reportOfInterest,
-          message: EXECUTIVE_SUMMARY_LEAD.message,
+          reportOfInterest: featuredReport.reportOfInterest,
+          message: featuredReport.message,
         },
         {
           headers: {
@@ -189,7 +186,7 @@ const DownloadReportSection = () => {
               color: "text.primary",
             }}
           >
-            {FEATURED_REPORT.title}
+            {featuredReport.title}
           </Typography>
 
           <Typography
@@ -200,7 +197,7 @@ const DownloadReportSection = () => {
               pt: 1,
             }}
           >
-            {FEATURED_REPORT.description}
+            {featuredReport.description}
           </Typography>
 
           <Typography
@@ -211,7 +208,7 @@ const DownloadReportSection = () => {
               maxWidth: 560,
             }}
           >
-            {FEATURED_REPORT.subtitle}
+            {featuredReport.subtitle}
           </Typography>
 
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
@@ -222,7 +219,7 @@ const DownloadReportSection = () => {
               onClick={openExecutiveSummaryLeadDialog}
               startIcon={<PDF />}
             >
-              {hasPdf ? FEATURED_REPORT.ctaLabel : "PDF coming soon"}
+              {hasPdf ? featuredReport.ctaLabel : "PDF coming soon"}
             </Button>
           </Box>
         </Box>

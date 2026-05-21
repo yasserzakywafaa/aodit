@@ -22,8 +22,17 @@ import { routes } from "src/application/routes";
 import { scrollToTop } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
 
+export interface HreflangAlternate {
+  hreflang: string;
+  href: string;
+}
+
 export interface PageProps {
   title: string;
+  description?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  hreflangAlternates?: HreflangAlternate[];
   id?: string;
   className?: string;
   isLoading?: boolean;
@@ -37,6 +46,10 @@ const Page = (params: PageProps) => {
   const {
     id,
     title,
+    description,
+    ogTitle,
+    ogDescription,
+    hreflangAlternates,
     style,
     children,
     isLoading,
@@ -172,6 +185,68 @@ const Page = (params: PageProps) => {
       ogUrlMeta.setAttribute("content", canonicalUrl);
     }
   }, [location.pathname]);
+
+  useEffect(() => {
+    const setMetaContent = (
+      selector: string,
+      attribute: "name" | "property",
+      attrValue: string,
+      content: string | undefined,
+    ) => {
+      if (content === undefined) return;
+      let el = document.querySelector(
+        `meta[${attribute}='${attrValue}']`,
+      ) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attribute, attrValue);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    setMetaContent("", "name", "description", description);
+    setMetaContent("", "property", "og:title", ogTitle ?? title);
+    setMetaContent("", "property", "og:description", ogDescription ?? description);
+
+    const twitterTitle = document.querySelector(
+      "meta[name='twitter:title']",
+    ) as HTMLMetaElement | null;
+    if (twitterTitle && (ogTitle ?? title)) {
+      twitterTitle.setAttribute("content", ogTitle ?? title);
+    }
+
+    const twitterDesc = document.querySelector(
+      "meta[name='twitter:description']",
+    ) as HTMLMetaElement | null;
+    if (twitterDesc && (ogDescription ?? description)) {
+      twitterDesc.setAttribute("content", ogDescription ?? description ?? "");
+    }
+  }, [title, description, ogTitle, ogDescription]);
+
+  useEffect(() => {
+    const existing = document.querySelectorAll(
+      "link[data-aodit-hreflang='true']",
+    );
+    existing.forEach((el) => el.remove());
+
+    if (!hreflangAlternates?.length) return;
+
+    hreflangAlternates.forEach(({ hreflang, href }) => {
+      const link = document.createElement("link");
+      link.rel = "alternate";
+      link.hreflang = hreflang;
+      link.href = href;
+      link.setAttribute("data-aodit-hreflang", "true");
+      document.head.appendChild(link);
+    });
+
+    return () => {
+      document
+        .querySelectorAll("link[data-aodit-hreflang='true']")
+        .forEach((el) => el.remove());
+    };
+  }, [hreflangAlternates]);
 
   useEffect(() => {
     // Prevent scrolling while page is loading

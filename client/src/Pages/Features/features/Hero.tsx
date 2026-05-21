@@ -25,18 +25,6 @@ export interface HeroContent {
   bullets: string[];
 }
 
-const DEFAULT_CONTENT: HeroContent = {
-  titleLead: "How Does Your AI Agent Behave Under",
-  titleHighlight: "Pressure?",
-  subtitleLine1: "We break your AI Agent",
-  subtitleLine2: "before Regulators do",
-  bullets: [
-    "Independent behavioral stress-testing with clear risk evidence",
-    "Adversarial scenarios mapped to real business workflows",
-    "Actionable findings for product, risk, and compliance teams",
-  ],
-};
-
 const BULLET_ICONS = [
   <LockOutlined key="lock" sx={{ fontSize: 18 }} />,
   <CloudOffOutlined key="cloud-off" sx={{ fontSize: 18 }} />,
@@ -44,12 +32,12 @@ const BULLET_ICONS = [
 ];
 
 interface HeroProps {
-  content?: HeroContent;
+  content: HeroContent;
 }
 
-const Hero = ({ content }: HeroProps = {}) => {
+const Hero = ({ content }: HeroProps) => {
   const navigate = useNavigate();
-  const resolved = content ?? DEFAULT_CONTENT;
+  const resolved = content;
 
   return (
     <Box

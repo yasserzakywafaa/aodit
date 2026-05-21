@@ -17,15 +17,21 @@ function normalizeRoute(route: string): string {
   return route;
 }
 
+function hreflangLink(hreflang: string, href: string): string {
+  return `    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${href}" />`;
+}
+
 function toSitemapUrlNode(
   baseUrl: string,
   route: string,
   lastmod: string,
   priority: string,
+  extraLines: string[] = [],
 ): string {
   return [
     "  <url>",
     `    <loc>${baseUrl}${route}</loc>`,
+    ...extraLines,
     `    <lastmod>${lastmod}</lastmod>`,
     `    <priority>${priority}</priority>`,
     "  </url>",
@@ -36,6 +42,7 @@ function writeSitemap(baseUrl: string): void {
   const nowIsoDate = new Date().toISOString();
   const staticRoutes: string[] = [
     routes.features,
+    routes.featuresCh,
     routes.industries,
     routes.demo,
     routes.methodology,
@@ -52,14 +59,27 @@ function writeSitemap(baseUrl: string): void {
     new Set([...staticRoutes, ...industryRoutes].map(normalizeRoute)),
   );
 
+  const homeHreflang = [
+    hreflangLink("en", `${baseUrl}${routes.features}`),
+    hreflangLink("en-CH", `${baseUrl}${routes.featuresCh}`),
+    hreflangLink("x-default", `${baseUrl}${routes.features}`),
+  ];
+
   const nodes = allRoutes.map((route) => {
-    const priority = route === "/" ? "1.0" : SITEMAP_DEFAULT_PRIORITY;
-    return toSitemapUrlNode(baseUrl, route, nowIsoDate, priority);
+    const priority =
+      route === routes.features || route === routes.featuresCh
+        ? "1.0"
+        : SITEMAP_DEFAULT_PRIORITY;
+    const hreflang =
+      route === routes.features || route === routes.featuresCh
+        ? homeHreflang
+        : [];
+    return toSitemapUrlNode(baseUrl, route, nowIsoDate, priority, hreflang);
   });
 
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
     ...nodes,
     "</urlset>",
     "",

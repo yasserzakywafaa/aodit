@@ -1,3 +1,4 @@
+import type { Region } from "src/application/shared/regionContent";
 import {
   ReviewData,
   createAggregateRatingSchema,
@@ -5,13 +6,23 @@ import {
 } from "./reviewSchema";
 import { getAbsoluteUrl, getImageUrl } from "./schemaGenerators";
 
+const ORGANIZATION_DESCRIPTIONS: Record<Region, string> = {
+  swiss:
+    "Independent AI agent evaluation platform for fintechs and insurance companies.",
+  global:
+    "Independent AI customer support agent evaluation — stress testing, deployment verdicts, and audit-ready evidence.",
+};
+
 /**
  * Create Organization schema for the company
  */
-export const createOrganizationSchemaForSite = (aggregateRating?: {
-  ratingValue: number;
-  reviewCount: number;
-}): object => {
+export const createOrganizationSchemaForSite = (
+  aggregateRating?: {
+    ratingValue: number;
+    reviewCount: number;
+  },
+  region: Region = "global",
+): object => {
   const baseUrl = getAbsoluteUrl("");
 
   const organization: any = {
@@ -20,8 +31,7 @@ export const createOrganizationSchemaForSite = (aggregateRating?: {
     name: "Swiss Lab of Intelligence (SwissLI AG)",
     url: baseUrl,
     logo: getImageUrl("/icons/icon_512x512.png"),
-    description:
-      "Independent AI agent evaluation platform for fintechs and insurance companies.",
+    description: ORGANIZATION_DESCRIPTIONS[region],
     sameAs: [
       // Add social media links if available
       // "https://twitter.com/aodit",

@@ -107,7 +107,10 @@ const DemoPage = () => {
   const isDark = themeMode === "dark";
 
   return (
-    <Page title="Live AI Agent Demo — aodit" className="demo-page">
+    <Page
+      title="Live Customer Support AI Agent Demo — aodit"
+      className="demo-page"
+    >
       {/* ================================================================== */}
       {/* HERO                                                                */}
       {/* ================================================================== */}
@@ -165,7 +168,7 @@ const DemoPage = () => {
               letterSpacing: "-0.02em",
             }}
           >
-            See Your AI Agent's{" "}
+            Stress-Test Your Support Agent's{" "}
             <Box
               component="span"
               sx={{
@@ -198,9 +201,10 @@ const DemoPage = () => {
               fontSize: "1.05rem",
             }}
           >
-            Paste your agent's instructions, pick a model, and watch an 8-turn
-            adversarial stress-test run in real time. An independent AI judge
-            scores every turn on Factual Consistency — completely free.
+            Paste your customer support agent instructions, pick a model, and
+            watch an 8-turn adversarial run—refunds, policy pushes, and
+            escalation pressure. An independent AI judge scores every turn in
+            real time. Free, no account required.
           </Typography>
 
           {/* Stat pills */}
@@ -269,13 +273,13 @@ const DemoPage = () => {
           >
             <HowItWorksStep
               number="01"
-              title="Write your system prompt"
-              body="Describe your agent's role and constraints exactly as it runs in production. The more specific, the more useful the results."
+              title="Paste your support agent prompt"
+              body="Use the same instructions your bot follows for refunds, billing, and escalations. The closer to production, the more useful the stress test."
             />
             <HowItWorksStep
               number="02"
               title="8 turns of escalating pressure"
-              body="An adversary AI opens with a baseline question, then systematically contradicts, challenges, and manipulates — mirroring real-world misuse patterns."
+              body="Scenarios push for exceptions, policy bends, and angry follow-ups—the kinds of messages that break support bots in the wild."
             />
             <HowItWorksStep
               number="03"

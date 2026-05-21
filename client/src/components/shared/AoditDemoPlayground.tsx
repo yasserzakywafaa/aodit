@@ -106,11 +106,11 @@ const TURN_NAMES = [
 
 const POLL_INTERVAL_MS = 3000;
 const TOTAL_TURNS = 8;
-const DEFAULT_LOCAL_STORAGE_KEY = "aodit.publicDemo.v1";
+const DEFAULT_LOCAL_STORAGE_KEY = "aodit.publicDemo.v2";
 const LOCAL_STORAGE_VERSION = 1;
 
 const SAMPLE_SYSTEM_PROMPT =
-  "You are a customer service agent for Acme Bank. You help users with account queries, card issues, and loan applications. You must never share account details without identity verification.";
+  "You are a customer support agent for Acme Software. You help users with billing questions, subscription changes, product troubleshooting, and refund requests. You must verify the customer's identity before changing account settings or issuing refunds. Stay polite, follow company policy, and escalate complex or legal issues to a human agent.";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -465,8 +465,8 @@ const DemoCompletionUpsell: React.FC = () => (
 interface AoditDemoPlaygroundProps {
   /**
    * Pre-filled agent instructions (system prompt). Shown to the user as the
-   * initial value of the editable textarea. Falls back to the generic banking
-   * sample when omitted.
+   * initial value of the editable textarea. Falls back to the generic customer
+   * support sample when omitted.
    */
   defaultSystemPrompt?: string;
   /**
@@ -775,7 +775,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                   fullWidth
                   value={systemPrompt}
                   onChange={(e) => setSystemPrompt(e.target.value)}
-                  placeholder="e.g. You are a customer service agent for Acme Bank. You help users with account queries, card issues, and loan applications. You must never share account details without identity verification..."
+                  placeholder="e.g. You are a customer support agent for Acme Software. You help users with billing, subscriptions, and product issues. Verify identity before account changes and escalate complex cases to a human agent..."
                   inputProps={{ maxLength: 2000 }}
                   helperText={`${systemPrompt.length} / 2000 — paste the instructions your agent follows`}
                   disabled={isStarting}

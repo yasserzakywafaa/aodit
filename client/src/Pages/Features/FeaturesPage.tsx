@@ -32,38 +32,40 @@ import AoditDemoPlayground from "src/components/shared/AoditDemoPlayground";
 import { ArrowForward } from "@mui/icons-material";
 import ComplianceLogosSection from "./features/ComplianceLogosSection";
 import DownloadReportSection from "./features/DownloadReportSection";
-import {
-  DEFAULT_TRUST_BLOCK_COPY,
-  type LandingPageContent,
-} from "src/application/shared/landingPages";
+import type { LandingPageContent } from "src/application/shared/landingPages";
 import Page from "src/components/shared/Page/Page";
 import { alpha } from "@mui/material/styles";
+import APP_CONSTANTS from "src/application/shared/app_constants";
 import euHostedImg from "src/assets/images/eu_hosted.webp";
 import { routes } from "src/application/routes";
 import swissMadeImg from "src/assets/images/swiss_made.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-
-const DEFAULT_PAGE_TITLE =
-  "AI Agent Evaluation for Fintech & Insurers (FINMA & EU AI Act Ready) | aodit";
-const DEFAULT_SCHEMA_NAME = "AI Agent Evaluation for Fintech & Insurers";
-const DEFAULT_SCHEMA_DESCRIPTION =
-  "Independent AI agent evaluation for fintechs and insurance companies with on-premise deployment and no client data access by default.";
-const DEFAULT_CTA_TITLE = "We break your AI before regulators do.";
-const DEFAULT_CTA_SUBTITLE =
-  "Independent evaluation delivered in 2–3 weeks. Fully on-premise.";
+import {
+  type Region,
+  createWebsiteSchema,
+  getHomeContent,
+  getHreflangAlternates,
+} from "src/application/shared/regionContent";
 
 interface FeaturesPageProps {
   /**
+   * Home page region variant. "global" is the default for `/`; "swiss" for `/ch`.
+   */
+  region?: Region;
+  /**
    * Optional landing-page content overrides. When provided, the page renders as
-   * an industry-specific SEO landing variant. When omitted, the page behaves
-   * exactly like the original home/features page.
+   * an industry-specific SEO landing variant. When omitted, copy comes from
+   * HOME_CONTENT for the given region.
    */
   landingContent?: LandingPageContent;
 }
 
-const FeaturesPage = ({ landingContent }: FeaturesPageProps = {}) => {
+const FeaturesPage = ({
+  region = "global",
+  landingContent,
+}: FeaturesPageProps = {}) => {
   const navigate = useNavigate();
   const {
     store: {
@@ -71,26 +73,44 @@ const FeaturesPage = ({ landingContent }: FeaturesPageProps = {}) => {
     },
   } = useApplicationContext();
 
-  const pageTitle = landingContent?.pageTitle ?? DEFAULT_PAGE_TITLE;
-  const schemaName = landingContent?.schemaName ?? DEFAULT_SCHEMA_NAME;
+  const homeContent = getHomeContent(region);
+
+  const pageTitle = landingContent?.pageTitle ?? homeContent.pageTitle;
+  const metaDescription =
+    landingContent?.metaDescription ?? homeContent.metaDescription;
+  const ogTitle = landingContent?.pageTitle ?? homeContent.ogTitle;
+  const ogDescription =
+    landingContent?.metaDescription ?? homeContent.ogDescription;
+  const schemaName = landingContent?.schemaName ?? homeContent.schemaName;
   const schemaDescription =
-    landingContent?.schemaDescription ?? DEFAULT_SCHEMA_DESCRIPTION;
-  const canonicalPath = landingContent?.slug ?? routes.features;
-  const ctaTitle = landingContent?.cta.title ?? DEFAULT_CTA_TITLE;
-  const ctaSubtitle = landingContent?.cta.subtitle ?? DEFAULT_CTA_SUBTITLE;
-  const heroContent: HeroContent | undefined = landingContent?.hero;
-  const trustBlockCopy = landingContent?.trustBlock ?? DEFAULT_TRUST_BLOCK_COPY;
+    landingContent?.schemaDescription ?? homeContent.schemaDescription;
+  const canonicalPath = landingContent?.slug ?? homeContent.canonicalPath;
+  const ctaTitle = landingContent?.cta.title ?? homeContent.cta.title;
+  const ctaSubtitle = landingContent?.cta.subtitle ?? homeContent.cta.subtitle;
+  const heroContent: HeroContent | undefined =
+    landingContent?.hero ?? homeContent.hero;
+  const trustBlockCopy =
+    landingContent?.trustBlock ?? homeContent.trustBlock;
 
   const demoDefaultSystemPrompt = landingContent?.defaultSystemPrompt;
   const demoStorageKey = landingContent
     ? `aodit.publicDemo.landing.${landingContent.key}.v1`
     : undefined;
 
-  const schemaKeySuffix = landingContent?.key ?? "home";
+  const schemaKeySuffix = landingContent?.key ?? `home-${region}`;
+
+  const baseUrl = APP_CONSTANTS.APP_URL || "https://www.aodit.ai";
+  const hreflangAlternates = landingContent
+    ? undefined
+    : getHreflangAlternates(baseUrl);
 
   const organizationSchema = useMemo(
-    () => createOrganizationSchemaForSite(),
-    [],
+    () => createOrganizationSchemaForSite(undefined, region),
+    [region],
+  );
+  const websiteSchema = useMemo(
+    () => createWebsiteSchema(region),
+    [region],
   );
   const webPageSchema = useMemo(
     () => createWebPageSchema(schemaName, schemaDescription, canonicalPath),
@@ -107,12 +127,24 @@ const FeaturesPage = ({ landingContent }: FeaturesPageProps = {}) => {
     return createBreadcrumbSchema(crumbs);
   }, [landingContent]);
 
-  useSchemaOrg(organizationSchema, "organization-schema");
+  useSchemaOrg(organizationSchema, `organization-schema-${schemaKeySuffix}`);
+  useSchemaOrg(websiteSchema, `website-schema-${schemaKeySuffix}`);
   useSchemaOrg(webPageSchema, `webpage-schema-${schemaKeySuffix}`);
   useSchemaOrg(breadcrumbSchema, `breadcrumb-schema-${schemaKeySuffix}`);
 
+  const showSwissBadges = region === "swiss" && !landingContent;
+  const showFinmaRegulatory = region === "swiss" && !landingContent;
+
   return (
-    <Page title={pageTitle} className="features-page" isLoading={isFetching}>
+    <Page
+      title={pageTitle}
+      description={metaDescription}
+      ogTitle={ogTitle}
+      ogDescription={ogDescription}
+      hreflangAlternates={hreflangAlternates}
+      className="features-page"
+      isLoading={isFetching}
+    >
       {/* ===== SECTION 1 — HERO ===== */}
       <Hero content={heroContent} />
 
@@ -155,26 +187,28 @@ const FeaturesPage = ({ landingContent }: FeaturesPageProps = {}) => {
             </Typography>
           </Stack>
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            flexWrap="wrap"
-            gap={2}
-            mt={4}
-          >
-            <Box
-              component="img"
-              src={euHostedImg}
-              alt="EU Hosted (EU AI Act Ready)"
-              sx={{ maxWidth: "200px" }}
-            />
-            <Box
-              component="img"
-              src={swissMadeImg}
-              alt="Swiss Made Software"
-              sx={{ maxWidth: "200px" }}
-            />
-          </Stack>
+          {showSwissBadges && (
+            <Stack
+              direction="row"
+              alignItems="center"
+              flexWrap="wrap"
+              gap={2}
+              mt={4}
+            >
+              <Box
+                component="img"
+                src={euHostedImg}
+                alt="EU Hosted (EU AI Act Ready)"
+                sx={{ maxWidth: "200px" }}
+              />
+              <Box
+                component="img"
+                src={swissMadeImg}
+                alt="Swiss Made Software"
+                sx={{ maxWidth: "200px" }}
+              />
+            </Stack>
+          )}
         </Container>
       </Box>
 
@@ -188,7 +222,7 @@ const FeaturesPage = ({ landingContent }: FeaturesPageProps = {}) => {
       {/* ===== SECTION 3 — FEATURED REPORT ===== */}
       <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
         <Container maxWidth="md">
-          <DownloadReportSection />
+          <DownloadReportSection region={landingContent ? "global" : region} />
         </Container>
       </Box>
 
@@ -403,56 +437,57 @@ const FeaturesPage = ({ landingContent }: FeaturesPageProps = {}) => {
       </Box>
 
       {/* ===== SECTION 7 — REGULATORY CONTEXT ===== */}
-      <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
-        <Container maxWidth="md">
-          <Paper
-            variant="outlined"
-            sx={{
-              p: { xs: 3, md: 4 },
-              borderLeft: `4px solid ${primaryColor}`,
-            }}
-          >
-            <Typography
-              variant="h4"
+      {!landingContent && (
+        <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
+          <Container maxWidth="md">
+            <Paper
+              variant="outlined"
               sx={{
-                fontSize: { xs: "1.5rem", md: "1.85rem" },
-                mb: 2.5,
-                color: "text.primary",
+                p: { xs: 3, md: 4 },
+                borderLeft: `4px solid ${primaryColor}`,
               }}
             >
-              Built for FINMA-regulated environments
-            </Typography>
-            <Typography
-              color="text.secondary"
-              sx={{ mb: 1.5, lineHeight: 1.75 }}
-            >
-              FINMA Guidance 08/2024 and the EU AI Act require institutions to
-              demonstrate effective governance, testing, and monitoring of AI
-              systems.
-            </Typography>
-            <Typography
-              color="text.secondary"
-              sx={{ mb: 1.5, lineHeight: 1.75 }}
-            >
-              Most institutions lack independent validation of how their AI
-              behaves under stress.
-            </Typography>
-            <Typography
-              sx={{ fontWeight: 600, color: "text.primary", lineHeight: 1.75 }}
-            >
-              <Typography component="span" color="primary.main">
-                aodit
-              </Typography>{" "}
-              provides that independent evidence layer.
-            </Typography>
-          </Paper>
-        </Container>
-      </Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontSize: { xs: "1.5rem", md: "1.85rem" },
+                  mb: 2.5,
+                  color: "text.primary",
+                }}
+              >
+                {homeContent.regulatorySectionTitle}
+              </Typography>
+              <Typography
+                color="text.secondary"
+                sx={{ mb: 1.5, lineHeight: 1.75 }}
+              >
+                {homeContent.regulatorySectionBody1}
+              </Typography>
+              <Typography
+                color="text.secondary"
+                sx={{ mb: 1.5, lineHeight: 1.75 }}
+              >
+                {homeContent.regulatorySectionBody2}
+              </Typography>
+              <Typography
+                sx={{ fontWeight: 600, color: "text.primary", lineHeight: 1.75 }}
+              >
+                <Typography component="span" color="primary.main">
+                  aodit
+                </Typography>{" "}
+                {homeContent.regulatorySectionBody3}
+              </Typography>
+            </Paper>
+          </Container>
+        </Box>
+      )}
 
-      {/* ===== SECTION 8 — COMPLIANCE LOGOS ===== */}
-      <Box component="section" sx={{ pb: { xs: 6, md: 8 } }}>
-        <ComplianceLogosSection />
-      </Box>
+      {/* ===== SECTION 8 — COMPLIANCE LOGOS (Swiss only) ===== */}
+      {showFinmaRegulatory && (
+        <Box component="section" sx={{ pb: { xs: 6, md: 8 } }}>
+          <ComplianceLogosSection />
+        </Box>
+      )}
 
       {/* ===== SECTION 9 — CTA ===== */}
       <Box

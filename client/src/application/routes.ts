@@ -3,6 +3,7 @@ import { landingPagesRoutes } from "./shared/landingPages";
 export const routes = {
   ...landingPagesRoutes,
   features: `/`,
+  featuresCh: `/ch`,
   industries: `/industries`,
   demo: `/demo`,
   methodology: `/ai-agent-testing-methodology`,
@@ -83,6 +84,7 @@ export const routes = {
 
 export const prerenderPaths: string[] = [
   routes.features,
+  routes.featuresCh,
   routes.industries,
   routes.demo,
   routes.methodology,

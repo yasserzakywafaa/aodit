@@ -1,16 +1,23 @@
 import "./Footer.scss";
 
 import Logo, { LogoComponentEnum } from "../Logo";
+import {
+  getEffectiveRegion,
+  setRegionCookie,
+} from "src/application/shared/regionContent";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { routes } from "src/application/routes";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-const FOOTER_SECTIONS = [
+const FOOTER_SECTIONS_GLOBAL = [
   {
     title: "Product",
     links: [
@@ -44,12 +51,30 @@ const FOOTER_SECTIONS = [
   },
 ] as const;
 
+const REGION_LABELS = {
+  global: "Global (English)",
+  swiss: "Switzerland",
+} as const;
+
 const Footer = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const region = getEffectiveRegion(location.pathname, location.search);
+  const [regionAnchor, setRegionAnchor] = useState<null | HTMLElement>(null);
 
   const handleSectionClick = (href: string) => (e: React.MouseEvent) => {
     e.preventDefault();
     navigate(href);
+  };
+
+  const handleRegionSelect = (target: "ch" | "global") => {
+    setRegionAnchor(null);
+    setRegionCookie(target);
+    if (target === "ch") {
+      navigate(routes.featuresCh);
+      return;
+    }
+    navigate(routes.features);
   };
 
   const linkStyle = {
@@ -95,33 +120,99 @@ const Footer = () => {
           </Typography>
         </Grid>
 
-        {/* Footer sections */}
-        {FOOTER_SECTIONS.map(({ title, links }) => (
-          <Grid key={title} size={{ xs: 6, sm: 3, md: 2 }}>
-            <Typography
+        {/* Link columns + Region (flex row so Swiss extra Compliance column does not push Region off-screen) */}
+        <Grid size={{ xs: 12, md: 9 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: { xs: 4, md: 3 },
+              rowGap: 4,
+            }}
+          >
+            {FOOTER_SECTIONS_GLOBAL.map(({ title, links }) => (
+              <Box
+                key={title}
+                sx={{
+                  flex: "1 1 140px",
+                  minWidth: { xs: "45%", sm: 120, md: 130 },
+                  maxWidth: { md: 200 },
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "text.primary",
+                    mb: 2,
+                  }}
+                >
+                  {title}
+                </Typography>
+                {links.map(({ label, href }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    onClick={handleSectionClick(href)}
+                    sx={linkStyle}
+                  >
+                    {label}
+                  </Link>
+                ))}
+              </Box>
+            ))}
+
+            <Box
               sx={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "text.primary",
-                mb: 2,
+                flex: "1 1 140px",
+                minWidth: { xs: "45%", sm: 120, md: 130 },
+                maxWidth: { md: 200 },
               }}
             >
-              {title}
-            </Typography>
-            {links.map(({ label, href }) => (
-              <Link
-                key={label}
-                href={href}
-                onClick={handleSectionClick(href)}
-                sx={linkStyle}
+              <Typography
+                sx={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "text.primary",
+                  mb: 2,
+                }}
               >
-                {label}
+                Region
+              </Typography>
+              <Link
+                component="button"
+                type="button"
+                onClick={(e) => setRegionAnchor(e.currentTarget)}
+                sx={{
+                  ...linkStyle,
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  p: 0,
+                }}
+              >
+                {REGION_LABELS[region]} ▾
               </Link>
-            ))}
-          </Grid>
-        ))}
+              <Menu
+                anchorEl={regionAnchor}
+                open={Boolean(regionAnchor)}
+                onClose={() => setRegionAnchor(null)}
+              >
+                <MenuItem onClick={() => handleRegionSelect("global")}>
+                  Global (English)
+                </MenuItem>
+                <MenuItem onClick={() => handleRegionSelect("ch")}>
+                  Switzerland
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Box>
+        </Grid>
       </Grid>
 
       {/* Disclaimer */}

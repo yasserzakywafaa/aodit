@@ -1,9 +1,10 @@
 import { useState, type MouseEvent } from "react";
 import { ExpandMoreRounded } from "@mui/icons-material";
 import { Box, Button, Menu, MenuItem, Stack, Typography } from "@mui/material";
-// import EuFlag from "src/assets/images/eu_flag.png";
 import SwissFlag from "src/assets/images/switzerland_flag.png";
 import { routes } from "src/application/routes";
+import { getEffectiveRegion } from "src/application/shared/regionContent";
+import { useLocation } from "react-router-dom";
 
 const COMPLIANCE_ITEMS = [
   {
@@ -21,8 +22,14 @@ const COMPLIANCE_ITEMS = [
 ] as const;
 
 const ComplianceDropdown = () => {
+  const location = useLocation();
+  const region = getEffectiveRegion(location.pathname, location.search);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  if (region === "global") {
+    return null;
+  }
 
   const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

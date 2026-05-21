@@ -38,6 +38,7 @@ const DashboardOverview = () => {
         userAgentsCount,
         allReportsCount,
         allAgentsCount,
+        allDemosCount,
       },
     },
     manager: { setUp },
@@ -153,6 +154,15 @@ const DashboardOverview = () => {
                     value: allAgentsCount,
                     description: "Agents created by all users",
                     path: routes.dashboard.admin.agents.base,
+                    isAdminCard: true,
+                  })}
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  {renderStatCard({
+                    title: "All Demos",
+                    value: allDemosCount,
+                    description: "Free demos run across all pages",
+                    path: routes.dashboard.admin.demos.base,
                     isAdminCard: true,
                   })}
                 </Grid>

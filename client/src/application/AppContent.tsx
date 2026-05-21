@@ -130,6 +130,13 @@ const DashboardAdminReportsPage = lazy(
   () =>
     import("../Pages/Dashboard/Admin/DashboardAdminReports/DashboardAdminReports"),
 );
+const DashboardAdminDemosPage = lazy(
+  () =>
+    import("../Pages/Dashboard/Admin/DashboardAdminDemos/DashboardAdminDemos"),
+);
+const DashboardAdminDemoPage = lazy(
+  () => import("../Pages/Dashboard/Admin/DashboardAdminDemo/DashboardAdminDemo"),
+);
 
 const AppContent = () => {
   const {
@@ -282,6 +289,16 @@ const AppContent = () => {
                       <Route
                         path={routes.dashboard.admin.reports.base}
                         element={<DashboardAdminReportsPage />}
+                      />
+
+                      <Route
+                        path={routes.dashboard.admin.demos.base}
+                        element={<DashboardAdminDemosPage />}
+                      />
+
+                      <Route
+                        path={routes.dashboard.admin.demos.demoById(":demoId")}
+                        element={<DashboardAdminDemoPage />}
                       />
                     </>
                   )}

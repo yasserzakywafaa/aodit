@@ -216,6 +216,11 @@ const FeaturesPage = ({
         <AoditDemoPlayground
           defaultSystemPrompt={demoDefaultSystemPrompt}
           storageKey={demoStorageKey}
+          sourceLabel={
+            landingContent?.breadcrumbLabel ??
+            landingContent?.schemaName ??
+            "Home"
+          }
         />
       </Box>
 

@@ -19,9 +19,11 @@ const startDemo = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { systemPrompt, modelId } = req.body as {
+    const { systemPrompt, modelId, sourcePath, sourceLabel } = req.body as {
       systemPrompt?: string;
       modelId?: string;
+      sourcePath?: string;
+      sourceLabel?: string;
     };
 
     if (!systemPrompt || typeof systemPrompt !== "string" || systemPrompt.trim().length === 0) {
@@ -41,7 +43,15 @@ const startDemo = async (
       return;
     }
 
-    const sessionId = await createDemoSession(systemPrompt.trim(), modelId);
+    const sanitizeSource = (value?: string): string | undefined =>
+      typeof value === "string" && value.trim().length > 0
+        ? value.trim().slice(0, 300)
+        : undefined;
+
+    const sessionId = await createDemoSession(systemPrompt.trim(), modelId, {
+      sourcePath: sanitizeSource(sourcePath),
+      sourceLabel: sanitizeSource(sourceLabel),
+    });
 
     // Fire-and-forget — do not await
     runDemoAsync(sessionId, systemPrompt.trim(), modelId).catch((err) => {

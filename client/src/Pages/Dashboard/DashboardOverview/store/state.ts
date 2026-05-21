@@ -4,6 +4,7 @@ export interface DashboardOverviewState {
   userAgentsCount: number | null;
   allReportsCount: number | null;
   allAgentsCount: number | null;
+  allDemosCount: number | null;
 }
 
 export const getDashboardOverviewInitialState = (): DashboardOverviewState => {
@@ -13,5 +14,6 @@ export const getDashboardOverviewInitialState = (): DashboardOverviewState => {
     userAgentsCount: null,
     allReportsCount: null,
     allAgentsCount: null,
+    allDemosCount: null,
   };
 };

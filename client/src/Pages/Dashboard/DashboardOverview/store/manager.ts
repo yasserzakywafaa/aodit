@@ -18,6 +18,7 @@ export interface DashboardOverviewManager {
   handleFetchUserAgentsCount: () => Promise<void>;
   handleFetchAllReportsCount: () => Promise<void>;
   handleFetchAllAgentsCount: () => Promise<void>;
+  handleFetchAllDemosCount: () => Promise<void>;
 }
 
 export const useDashboardOverviewManager = (
@@ -39,7 +40,11 @@ export const useDashboardOverviewManager = (
       ];
 
       if (hasAdminRights(auth.user)) {
-        handlers.push(handleFetchAllReportsCount(), handleFetchAllAgentsCount());
+        handlers.push(
+          handleFetchAllReportsCount(),
+          handleFetchAllAgentsCount(),
+          handleFetchAllDemosCount(),
+        );
       }
 
       await Promise.all(handlers);
@@ -144,11 +149,30 @@ export const useDashboardOverviewManager = (
     }
   };
 
+  const handleFetchAllDemosCount = async (): Promise<void> => {
+    try {
+      const response: AxiosResponse<{ count: { total: number } }> =
+        await axios.get(END_POINTS.DASHBOARD.OVERVIEW.GET_DEMOS_COUNT);
+
+      store.setAllDemosCount(response.data.count?.total ?? 0);
+    } catch (error) {
+      console.error("❌ Failed to fetch all demos count:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        Notify({
+          content:
+            error.response.data.message || "Failed to fetch all demos count",
+          type: ToastTypes.Error,
+        });
+      }
+    }
+  };
+
   return {
     setUp,
     handleFetchUserReportsCount,
     handleFetchUserAgentsCount,
     handleFetchAllReportsCount,
     handleFetchAllAgentsCount,
+    handleFetchAllDemosCount,
   };
 };

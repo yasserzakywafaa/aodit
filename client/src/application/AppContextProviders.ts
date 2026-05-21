@@ -7,6 +7,8 @@ import { DashboardCreateAgentContextProvider } from "src/Pages/Dashboard/Dashboa
 import { DashboardAgentContextProvider } from "src/Pages/Dashboard/DashboardAgent/store/Provider";
 import { DashboardAdminAgentsContextProvider } from "src/Pages/Dashboard/Admin/DashboardAdminAgents/store/Provider";
 import { DashboardAdminReportsContextProvider } from "src/Pages/Dashboard/Admin/DashboardAdminReports/store/Provider";
+import { DashboardDemosContextProvider } from "src/Pages/Dashboard/Admin/DashboardAdminDemos/store/Provider";
+import { DashboardDemoContextProvider } from "src/Pages/Dashboard/Admin/DashboardAdminDemo/store/Provider";
 import { DashboardOverviewContextProvider } from "src/Pages/Dashboard/DashboardOverview/store/Provider";
 import { DashboardProfileContextProvider } from "src/Pages/Dashboard/DashboardProfile/store/Provider";
 import { DashboardReportContextProvider } from "src/Pages/Dashboard/DashboardReport/store/Provider";
@@ -46,6 +48,8 @@ const contextProviders = [
   DashboardAgentContextProvider,
   DashboardAdminAgentsContextProvider,
   DashboardAdminReportsContextProvider,
+  DashboardDemosContextProvider,
+  DashboardDemoContextProvider,
 
   // Modals
   LoginModalContextProvider,

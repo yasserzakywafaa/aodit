@@ -76,6 +76,7 @@ const END_POINTS = {
     OVERVIEW: {
       GET_USERS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/users-count`,
       GET_REPORTS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/reports-count`,
+      GET_DEMOS_COUNT: `${publicApiUrl}/api/v1/dashboard/overview/demos-count`,
     },
     ADMIN: {
       USERS: {
@@ -91,6 +92,13 @@ const END_POINTS = {
       },
       AGENTS: {
         GET_ALL_AGENTS: `${publicApiUrl}/api/v1/dashboard/admin/agents`,
+      },
+      DEMOS: {
+        GET_ALL_DEMOS: `${publicApiUrl}/api/v1/dashboard/admin/demos`,
+        GET_DEMO_BY_ID: (demoId: string) =>
+          `${publicApiUrl}/api/v1/dashboard/admin/demos/${demoId}`,
+        DELETE_DEMO: (demoId: string) =>
+          `${publicApiUrl}/api/v1/dashboard/admin/demos/delete/${demoId}`,
       },
     },
     USERS: {

@@ -9,5 +9,7 @@ export interface DemoSession {
   turns: TurnResult[];
   rawScore?: number;
   error?: string;
+  sourcePath?: string;
+  sourceLabel?: string;
   createdAt: string;
 }

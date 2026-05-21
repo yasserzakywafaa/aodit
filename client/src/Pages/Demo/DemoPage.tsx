@@ -239,7 +239,7 @@ const DemoPage = () => {
           bgcolor: isDark ? alpha("#000", 0.4) : alpha(primaryColor, 0.025),
         }}
       >
-        <AoditDemoPlayground />
+        <AoditDemoPlayground sourceLabel="Demo Page" />
       </Box>
 
       {/* ================================================================== */}

@@ -126,6 +126,35 @@ dashboardRoutes.get(
   DashboardController.getAllReports,
 );
 
+// Admin Demos routes — admin-only
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.OVERVIEW.GET_DEMOS_COUNT,
+  authMiddleware,
+  requireAdminRole,
+  DashboardController.getDemosCount,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.ADMIN.DEMOS.GET_ALL_DEMOS,
+  authMiddleware,
+  requireAdminRole,
+  DashboardController.getAllDemos,
+);
+
+dashboardRoutes.delete(
+  END_POINTS.DASHBOARD.ADMIN.DEMOS.DELETE_DEMO(":demoId"),
+  authMiddleware,
+  requireAdminRole,
+  DashboardController.deleteDemo,
+);
+
+dashboardRoutes.get(
+  END_POINTS.DASHBOARD.ADMIN.DEMOS.GET_DEMO_BY_ID(":demoId"),
+  authMiddleware,
+  requireAdminRole,
+  DashboardController.getDemoById,
+);
+
 // Report Routes
 dashboardRoutes.post(
   END_POINTS.DASHBOARD.REPORTS.CREATE_REPORT,

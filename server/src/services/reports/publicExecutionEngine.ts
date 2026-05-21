@@ -30,6 +30,7 @@ const DEMO_SCENARIO = {
 export const createDemoSession = async (
   systemPrompt: string,
   modelId: string,
+  source?: { sourcePath?: string; sourceLabel?: string },
 ): Promise<string> => {
   const now = new Date();
 
@@ -39,6 +40,8 @@ export const createDemoSession = async (
     status: "pending",
     currentTurnIndex: 0,
     turns: [],
+    sourcePath: source?.sourcePath,
+    sourceLabel: source?.sourceLabel,
     createdAt: now.toISOString(),
   };
 

@@ -475,11 +475,17 @@ interface AoditDemoPlaygroundProps {
    * on different industry pages don't overwrite each other.
    */
   storageKey?: string;
+  /**
+   * Human-readable label for the page/industry hosting this playground.
+   * Recorded against the demo session so admins can see where it ran.
+   */
+  sourceLabel?: string;
 }
 
 const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
   defaultSystemPrompt,
   storageKey,
+  sourceLabel,
 }) => {
   const initialPrompt = defaultSystemPrompt ?? SAMPLE_SYSTEM_PROMPT;
   const activeStorageKey = storageKey ?? DEFAULT_LOCAL_STORAGE_KEY;
@@ -602,7 +608,12 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
     try {
       const res = await axios.post<{ sessionId: string }>(
         END_POINTS.PUBLIC_DEMO.START,
-        { systemPrompt: systemPrompt.trim(), modelId },
+        {
+          systemPrompt: systemPrompt.trim(),
+          modelId,
+          sourcePath: window.location.pathname,
+          sourceLabel: sourceLabel ?? "Home",
+        },
       );
       setSessionId(res.data.sessionId);
     } catch (err: any) {

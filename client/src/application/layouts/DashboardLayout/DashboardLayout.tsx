@@ -8,6 +8,7 @@ import {
   ExpandMore,
   Menu as MenuIcon,
   People as PeopleIcon,
+  PlayCircleOutline as PlayCircleOutlineIcon,
   SmartToy as SmartToyIcon,
 } from "@mui/icons-material";
 import {
@@ -64,6 +65,7 @@ const DashboardLayout = () => {
       routes.dashboard.admin.users.base,
       routes.dashboard.admin.reports.base,
       routes.dashboard.admin.agents.base,
+      routes.dashboard.admin.demos.base,
     ];
 
     const isOnAdminSubPage = adminSubPaths.some((subPath) =>
@@ -116,6 +118,11 @@ const DashboardLayout = () => {
           label: "Agents",
           path: routes.dashboard.admin.agents.base,
           icon: <SmartToyIcon />,
+        },
+        {
+          label: "Demos",
+          path: routes.dashboard.admin.demos.base,
+          icon: <PlayCircleOutlineIcon />,
         },
       ],
     },

@@ -78,6 +78,10 @@ export const routes = {
         reportsByUserId: (userId: string) =>
           `/dashboard/admin/users/${userId}/reports/`,
       },
+      demos: {
+        base: "/dashboard/admin/demos",
+        demoById: (demoId: string) => `/dashboard/admin/demos/${demoId}`,
+      },
     },
   },
 };

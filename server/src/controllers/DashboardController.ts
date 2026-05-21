@@ -653,6 +653,74 @@ const createUser = async (
   return;
 };
 
+// Demos
+const getDemosCount = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const demosCount = await DashboardServices.getDemosCount();
+    response.status(200).json({ count: demosCount });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllDemos = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const pageNumber = parseInt(request.query.pageNumber as string) || 1;
+  const pageSize = parseInt(request.query.pageSize as string) || 10;
+
+  try {
+    const { results, paging } = await DashboardServices.getAllDemos(
+      pageNumber,
+      pageSize,
+    );
+
+    response.status(200).json({
+      results,
+      paging: paging || {
+        pageNumber: 1,
+        pageSize: 10,
+        totalCount: 0,
+        totalPagesCount: 0,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getDemoById = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const demo = await DashboardServices.getDemoById(request.params.demoId);
+    response.status(200).json(demo);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteDemo = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await DashboardServices.deleteDemo(request.params.demoId);
+    response.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const DashboardController = {
   getUsersCount,
   getAllUsers,
@@ -687,6 +755,11 @@ const DashboardController = {
   getReportsByAgentId,
   testAgentEvaluatorConnection,
   getAgentEvaluatorModels,
+  // Demos
+  getDemosCount,
+  getAllDemos,
+  getDemoById,
+  deleteDemo,
 };
 
 export default DashboardController;

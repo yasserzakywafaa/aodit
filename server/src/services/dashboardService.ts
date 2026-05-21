@@ -16,6 +16,7 @@ import {
 } from "../models/types";
 import { deleteDocument, readDocument } from "../models/mongoDb/crudOperations";
 
+import { DemoSession } from "../models/types/demoSession";
 import { randomUUID } from "crypto";
 
 import { ObjectId } from "mongodb";
@@ -124,6 +125,42 @@ const createUser = async (input: CreateUserInput): Promise<User> => {
   return { ...newUser, _id: newUserId };
 };
 
+const getDemosCount = async () => {
+  const collection = database.collection(DBCollectionsEnum.demo_sessions);
+  const total = await collection.countDocuments();
+  return { total };
+};
+
+const getAllDemos = async (pageNumber: number, pageSize: number) => {
+  const { results, paging } = await getPaginatedDocuments<DemoSession>(
+    {},
+    DBCollectionsEnum.demo_sessions,
+    { pageNumber, pageSize },
+    {
+      sort: { createdAt: -1 },
+    },
+  );
+  return {
+    results,
+    paging,
+  };
+};
+
+const getDemoById = async (demoId: string) => {
+  try {
+    return await readDocument(
+      new ObjectId(demoId),
+      DBCollectionsEnum.demo_sessions,
+    );
+  } catch (e) {
+    throw new Error("Demo session not found");
+  }
+};
+
+const deleteDemo = async (demoId: string) => {
+  return await deleteDocument(demoId, DBCollectionsEnum.demo_sessions);
+};
+
 const DashboardServices = {
   getUsersCount,
   getAllUsers,
@@ -133,6 +170,10 @@ const DashboardServices = {
   unblockUser,
   deleteUser,
   createUser,
+  getDemosCount,
+  getAllDemos,
+  getDemoById,
+  deleteDemo,
 };
 
 export default DashboardServices;

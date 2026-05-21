@@ -12,6 +12,7 @@ export interface DashboardOverviewStore {
   setUserAgentsCount: (userAgentsCount: number) => void;
   setAllReportsCount: (allReportsCount: number) => void;
   setAllAgentsCount: (allAgentsCount: number) => void;
+  setAllDemosCount: (allDemosCount: number) => void;
 }
 
 const useDashboardOverviewStore = (): DashboardOverviewStore => {
@@ -53,6 +54,13 @@ const useDashboardOverviewStore = (): DashboardOverviewStore => {
     }));
   };
 
+  const setAllDemosCount = (allDemosCount: number) => {
+    setState((prev) => ({
+      ...prev,
+      allDemosCount,
+    }));
+  };
+
   return {
     state,
     setIsFetching,
@@ -60,6 +68,7 @@ const useDashboardOverviewStore = (): DashboardOverviewStore => {
     setUserAgentsCount,
     setAllReportsCount,
     setAllAgentsCount,
+    setAllDemosCount,
   };
 };
 

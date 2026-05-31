@@ -336,13 +336,15 @@ export const handleWebhookEvents = async (
           console.error(`❌  Failed to update user subscription!`, error);
         }
 
-        try {
-          await handleSendSubscriptionToGoogleAnalytics(invoice);
-        } catch (error) {
-          console.error(
-            `❌  Failed to send subscription to Google Analytics!`,
-            error,
-          );
+        if (CONFIG.IS_PROD) {
+          try {
+            await handleSendSubscriptionToGoogleAnalytics(invoice);
+          } catch (error) {
+            console.error(
+              `❌  Failed to send subscription to Google Analytics!`,
+              error,
+            );
+          }
         }
       }
 

@@ -19,6 +19,7 @@ export interface PaymentManager {
     priceObject: Price,
     plan: SubscriptionPlanEnum,
     user: User | null,
+    options?: { mode?: "payment" | "subscription"; credits?: number },
   ) => Promise<void>;
 }
 
@@ -50,13 +51,10 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
 
       store.setPublishableKey(response.data.publishableKey);
 
-      const stripePromise = await loadStripe(response.data.publishableKey);
-      store.setStripePromise(stripePromise);
-
       return response.data;
     } catch (error) {
       getAxiosError(error);
-      console.error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
+      throw new Error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
     }
   };
 
@@ -77,13 +75,11 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
       return response.data;
     } catch (error) {
       getAxiosError(error);
-      console.error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
+      throw new Error(`❌  Failed to get Stripe Publishable Key!  ${error}`);
     }
   };
 
-  const handleGetProductsListWithPrices = async (): Promise<
-    Product[] | void
-  > => {
+  const handleGetProductsListWithPrices = async (): Promise<Product[]> => {
     try {
       const response: AxiosResponse<any> = await axios.get(
         END_POINTS.PAYMENTS.GET_PRODUCTS_LIST_WITH_PRICES,
@@ -100,7 +96,9 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
       return response.data;
     } catch (error) {
       getAxiosError(error);
-      console.error(`❌  Failed to get Stripe Product with Prices!  ${error}`);
+      throw new Error(
+        `❌  Failed to get Stripe Product with Prices!  ${error}`,
+      );
     }
   };
 
@@ -109,6 +107,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     priceObject: Price,
     subscriptionPlan: SubscriptionPlanEnum,
     user: User | null,
+    options?: { mode?: "payment" | "subscription"; credits?: number },
   ): Promise<any> => {
     if (!user) return;
 
@@ -127,6 +126,8 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
             )}`,
             cancel_url: `${window.location.href}`,
             googleAnalyticsClientId: trackingInfo.clientId,
+            mode: options?.mode ?? "subscription",
+            credits: options?.credits,
           },
           headers: {
             "Content-Type": "application/json",
@@ -136,9 +137,11 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
       );
       const { sessionId } = response.data;
 
-      // Redirect to the Stripe Checkout page
-      const stripe = store.state.stripePromise;
+      // Load Stripe only when the user actually starts checkout
+      const publishableKey = store.state.publishableKey;
+      if (!publishableKey) return;
 
+      const stripe = await loadStripe(publishableKey);
       if (!stripe) return;
 
       const { error } = await stripe.redirectToCheckout({ sessionId });

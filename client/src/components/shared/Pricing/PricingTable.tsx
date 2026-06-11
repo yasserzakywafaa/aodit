@@ -26,6 +26,7 @@ import {
 
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
+import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePricing } from "./usePricing";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -36,6 +37,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 interface PricingTableProps {}
 
 const PricingTable: React.FC<PricingTableProps> = () => {
+  usePaymentCatalog();
+
   const { plansForTable, getPrice, getCurrency } = usePricing();
   const tableFeatures = Object.keys(plansForTable[0].features);
   const {

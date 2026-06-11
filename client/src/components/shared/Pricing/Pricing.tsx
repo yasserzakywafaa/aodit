@@ -13,9 +13,12 @@ import LoaderSpinner from "../Loader/LoaderSpinner";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
 import { alpha } from "@mui/material/styles";
+import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePricing } from "./usePricing";
 
 export const Pricing = () => {
+  usePaymentCatalog();
+
   const { plans, prices, getPrice, getCurrency } = usePricing();
 
   return (

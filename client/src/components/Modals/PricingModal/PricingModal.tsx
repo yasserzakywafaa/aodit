@@ -45,7 +45,7 @@ export const PricingModal = () => {
           {state.isVisible && !prices.length && (
             <LoaderSpinner position="absolute" />
           )}
-          <Pricing />
+          {state.isVisible && <Pricing />}
         </DialogContent>
 
         <DialogActions>

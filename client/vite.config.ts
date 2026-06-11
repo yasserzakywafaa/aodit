@@ -171,7 +171,9 @@ export default defineConfig(async ({ mode }) => {
         renderer: new prerender.PuppeteerRenderer({
           viewport: { width: 1280, height: 800 },
           renderAfterTime: 5000,
-          maxConcurrentRoutes: 2,
+          maxConcurrentRoutes: 1,
+          skipThirdPartyRequests: true, // blocks js.stripe.com, GA, etc.
+          inject: { isPrerendering: true },
           ...puppeteerOptions,
         }),
         postProcess(renderedRoute) {

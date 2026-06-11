@@ -6,6 +6,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { loadStripe } from "@stripe/stripe-js";
+import { isPrerendering } from "src/shared/utils/prerender";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 
@@ -32,6 +33,8 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
   } = useApplicationContext();
 
   const setUp = async () => {
+    if (isPrerendering()) return;
+
     handleGetPublishableKey();
     handleGetPricesList();
     handleGetProductsListWithPrices();
@@ -110,6 +113,7 @@ export const usePaymentManager = (store: PaymentStore): PaymentManager => {
     options?: { mode?: "payment" | "subscription"; credits?: number },
   ): Promise<any> => {
     if (!user) return;
+    if (isPrerendering()) return;
 
     try {
       // Create a Checkout Session on the server and get the sessionId

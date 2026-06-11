@@ -10,7 +10,6 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import LoaderSpinner from "../Loader/LoaderSpinner";
-import PaymentWrapper from "../Payment/Payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import Typography from "@mui/material/Typography";
 import { alpha } from "@mui/material/styles";
@@ -20,9 +19,6 @@ export const Pricing = () => {
   const { plans, prices, getPrice, getCurrency } = usePricing();
 
   return (
-    <>
-      <PaymentWrapper />
-
       <Container
         id="pricing-cards"
         sx={{
@@ -193,6 +189,5 @@ export const Pricing = () => {
           })}
         </Grid>
       </Container>
-    </>
   );
 };

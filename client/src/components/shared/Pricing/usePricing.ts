@@ -5,6 +5,7 @@ import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
+import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePaymentContext } from "../Payment/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
@@ -32,6 +33,8 @@ interface SubscriptionPlanTableProps {
 }
 
 export const usePricing = () => {
+  usePaymentCatalog();
+
   const navigate = useNavigate();
   const {
     store: {

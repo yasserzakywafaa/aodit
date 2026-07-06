@@ -9,6 +9,7 @@ import { useState } from "react";
 export interface DashboardProfileStore {
   state: DashboardProfileState;
   setIsFetching: (isFetching: boolean) => void;
+  setIsDeletingAccount: (isDeletingAccount: boolean) => void;
   setSubscriptionDetails: (subscription: UserSubscription) => void;
 }
 
@@ -23,6 +24,13 @@ const useDashboardProfileStore = (): DashboardProfileStore => {
     }));
   };
 
+  const setIsDeletingAccount = (isDeletingAccount: boolean) => {
+    setState((prev) => ({
+      ...prev,
+      isDeletingAccount,
+    }));
+  };
+
   const setSubscriptionDetails = (subscription: UserSubscription) => {
     setState((prev) => ({
       ...prev,
@@ -33,6 +41,7 @@ const useDashboardProfileStore = (): DashboardProfileStore => {
   return {
     state,
     setIsFetching,
+    setIsDeletingAccount,
     setSubscriptionDetails,
   };
 };

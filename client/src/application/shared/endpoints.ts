@@ -61,6 +61,7 @@ const END_POINTS = {
     // Email + password auth
     EMAIL_REGISTER: `${publicApiUrl}/api/v1/auth/register/email`,
     EMAIL_LOGIN: `${publicApiUrl}/api/v1/auth/login/email`,
+    DELETE_ACCOUNT: `${publicApiUrl}/api/v1/auth/delete-account`,
   },
   PAYMENTS: {
     CONFIG: `${publicApiUrl}/api/v1/payments/config`,

@@ -2,6 +2,7 @@ import "./DashboardProfile.scss";
 
 import {
   ArticleOutlined,
+  DeleteOutlined,
   ModeNightOutlined,
   VisibilityOutlined,
   WbSunnyOutlined,
@@ -25,10 +26,12 @@ import { useEffect, useState } from "react";
 
 import { AvatarSquareStyle } from "src/application/shared/themes";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
+import DeleteAccountDialog from "./features/DeleteAccountDialog";
 import SubscriptionSection from "./features/Subscription";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDashboardProfileContext } from "./store/Provider";
+import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { useNavigate } from "react-router-dom";
 
 interface TabPanelProps {
@@ -54,9 +57,18 @@ const DashboardProfilePage = () => {
   const navigate = useNavigate();
   const { store } = useApplicationContext();
   const [activeTab, setActiveTab] = useState(0);
+  const [isDeleteAccountDialogOpen, setIsDeleteAccountDialogOpen] =
+    useState(false);
 
   const {
-    manager: { handleGetSubscriptionDetails, handleUpdateUserInfo },
+    store: {
+      state: { isDeletingAccount },
+    },
+    manager: {
+      handleGetSubscriptionDetails,
+      handleUpdateUserInfo,
+      handleDeleteAccount,
+    },
   } = useDashboardProfileContext();
 
   const { state } = store;
@@ -67,6 +79,8 @@ const DashboardProfilePage = () => {
   } = state;
 
   if (!user) return null;
+
+  const showDeleteAccount = !hasAdminRights(user);
 
   const handleOnDarkModeSwitchChange = async () => {
     await handleUpdateUserInfo({
@@ -365,6 +379,36 @@ const DashboardProfilePage = () => {
               </Grid>
             </Card>
           </Grid>
+
+          {showDeleteAccount && (
+            <Grid size={{ xs: 12 }}>
+              <Card
+                elevation={3}
+                sx={{
+                  padding: 3,
+                  border: "1px solid",
+                  borderColor: "error.main",
+                }}
+              >
+                <Typography variant="h5" color="error" sx={{ mb: 1 }}>
+                  Danger Zone
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Permanently delete your account and all associated reports,
+                  agents, API keys, and subscription data. Running audits will be
+                  stopped immediately.
+                </Typography>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<DeleteOutlined />}
+                  onClick={() => setIsDeleteAccountDialogOpen(true)}
+                >
+                  Delete Account
+                </Button>
+              </Card>
+            </Grid>
+          )}
         </Grid>
       </TabPanel>
 
@@ -374,6 +418,25 @@ const DashboardProfilePage = () => {
           <SubscriptionSection />
         </Grid>
       </TabPanel>
+
+      <DeleteAccountDialog
+        isOpen={isDeleteAccountDialogOpen}
+        isDeleting={isDeletingAccount}
+        impactItems={[
+          `${user.reportsCount} report${user.reportsCount === 1 ? "" : "s"}`,
+          "Compliance agents and API keys",
+          "Subscription and billing data",
+        ]}
+        warningMessage="Running audits will be stopped immediately."
+        onClose={() => setIsDeleteAccountDialogOpen(false)}
+        onConfirm={async (confirmationPhrase) => {
+          const deleted = await handleDeleteAccount(confirmationPhrase);
+          if (deleted) {
+            setIsDeleteAccountDialogOpen(false);
+            navigate(routes.features);
+          }
+        }}
+      />
     </Container>
   );
 };

@@ -11,8 +11,10 @@ import { AgentUnreachableError } from "../utils/agentClient";
 import CONFIG from "../config";
 import DashboardServices from "../services/dashboardService";
 import ReportServices from "../services/reportService";
+import { deleteUserAccount } from "../services/userDeletionService";
 import { ScenarioResult } from "../models/types/scenarioResult";
 import { UserRole } from "../models/types";
+import { ObjectId } from "mongodb";
 import bcrypt from "bcryptjs";
 
 const getUsersCount = async (
@@ -122,10 +124,29 @@ const deleteUser = async (
   response: Response,
   next: NextFunction,
 ) => {
+  const userId = request.params.userId;
+
+  if (!userId || !ObjectId.isValid(userId)) {
+    response.status(400).json({ message: "❌ Invalid user ID" });
+    return;
+  }
+
   try {
-    const user = await DashboardServices.deleteUser(request.params.userId);
-    response.status(200).json(user);
+    const result = await deleteUserAccount(userId);
+
+    response.status(200).json({
+      message: "✅ User deleted successfully",
+      deleted: result.deleted,
+      warnings: result.warnings,
+    });
   } catch (error) {
+    console.error("❌ Failed to delete user:", error);
+
+    if (error instanceof Error && error.message === "User not found") {
+      response.status(404).json({ message: "❌ User not found" });
+      return;
+    }
+
     next(error);
   }
 };

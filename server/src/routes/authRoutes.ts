@@ -53,5 +53,10 @@ authRouter.post(
   authMiddleware,
   AuthController.updateUserInfo
 );
+authRouter.delete(
+  END_POINTS.AUTH.DELETE_ACCOUNT,
+  authMiddleware,
+  AuthController.deleteAccount
+);
 
 export default authRouter;

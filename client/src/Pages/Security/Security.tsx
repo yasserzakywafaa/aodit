@@ -1,6 +1,6 @@
 import {
   ArrowForward,
-  CheckCircleOutline,
+  CheckCircleOutlined,
   GppGoodOutlined,
   SecurityOutlined,
   VerifiedUserOutlined,
@@ -300,7 +300,7 @@ const SecurityPage = () => {
                       mb: 1.5,
                     }}
                   >
-                    <CheckCircleOutline
+                    <CheckCircleOutlined
                       sx={{ fontSize: 18, color: primaryColor, mt: 0.3 }}
                     />
                     <Typography color="text.secondary" sx={{ lineHeight: 1.6 }}>
@@ -336,7 +336,7 @@ const SecurityPage = () => {
                       mb: 1.5,
                     }}
                   >
-                    <CheckCircleOutline
+                    <CheckCircleOutlined
                       sx={{ fontSize: 18, color: primaryColor, mt: 0.3 }}
                     />
                     <Typography color="text.secondary" sx={{ lineHeight: 1.6 }}>
@@ -406,7 +406,7 @@ const SecurityPage = () => {
                       mb: 1,
                     }}
                   >
-                    <CheckCircleOutline
+                    <CheckCircleOutlined
                       sx={{ fontSize: 16, color: primaryColor }}
                     />
                     <Typography color="text.secondary">{item}</Typography>

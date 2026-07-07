@@ -61,8 +61,7 @@
   // },
   "include": [
     "src/**/*.ts",
-    "src/models/types/express.d.ts",
-    "scripts/**/*.ts"
+    "src/models/types/express.d.ts"
   ],
   "exclude": ["node_modules"]
 }

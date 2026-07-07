@@ -8,7 +8,7 @@ import {
   ExpandMore,
   Menu as MenuIcon,
   People as PeopleIcon,
-  PlayCircleOutline as PlayCircleOutlineIcon,
+  PlayCircleOutlined as PlayCircleOutlineIcon,
   SmartToy as SmartToyIcon,
 } from "@mui/icons-material";
 import {

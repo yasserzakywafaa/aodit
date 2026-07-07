@@ -13,7 +13,7 @@ import {
 } from "src/shared/constants/regulatoryAlignment";
 import {
   ArrowForward,
-  CheckCircleOutline,
+  CheckCircleOutlinedd,
   FormatQuoteRounded,
   WarningAmberRounded,
 } from "@mui/icons-material";
@@ -654,7 +654,7 @@ const ComplianceFinmaPage = () => {
                 alignItems="flex-start"
                 gap={1.5}
               >
-                <CheckCircleOutline
+                <CheckCircleOutlined
                   sx={{ color: primaryColor, fontSize: 20, mt: 0.25 }}
                 />
                 <Typography

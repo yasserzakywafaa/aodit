@@ -57,7 +57,7 @@ const LoaderSpinner = (props: LoaderSpinnerProps) => {
               ...style,
               position,
             }}
-            className="loader-spinner-wrapper flex justify--center align--center"
+            className="loader-spinner-wrapper"
           >
             <CircularProgress color="primary" />
           </div>

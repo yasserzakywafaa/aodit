@@ -33,20 +33,15 @@ const ReportConfig = ({
   return (
     <>
       <ScenariosPerDimensionSection />
-
       <Divider sx={{ mt: 3, mb: 6 }} />
-
       <DimensionWeightsSection />
-
       {evaluationMode === "benchmark" && (
         <>
           <Divider sx={{ mt: 3, mb: 6 }} />
           <ModelsToTestSection />
         </>
       )}
-
       <Divider sx={{ mt: 3, mb: 6 }} />
-
       <ModelsToEvaluateSection
         value={evaluatorSelection}
         onChange={onEvaluatorChange}
@@ -59,11 +54,8 @@ const ReportConfig = ({
         }
         showAgentInheritance={evaluationMode === "agent"}
       />
-
       <Divider sx={{ mt: 3, mb: 6 }} />
-
       <ScenarioTurnsSection />
-
       {/* Estimates bar */}
       <Paper
         variant="outlined"
@@ -96,19 +88,20 @@ const ReportConfig = ({
               "&:last-of-type": { borderRight: "none" },
             }}
           >
-            <Typography variant="h5" color="primary" fontWeight={600}>
+            <Typography variant="h5" color="primary" sx={{
+              fontWeight: 600
+            }}>
               {totalScenarios}
             </Typography>
             <Typography
               variant="caption"
-              color="text.secondary"
               sx={{
+                color: "text.secondary",
                 display: "block",
                 mt: 0.5,
                 textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
+                letterSpacing: 0.5
+              }}>
               Total scenarios
             </Typography>
           </Box>
@@ -124,19 +117,20 @@ const ReportConfig = ({
               "&:last-of-type": { borderRight: "none" },
             }}
           >
-            <Typography variant="h5" color="primary" fontWeight={600}>
+            <Typography variant="h5" color="primary" sx={{
+              fontWeight: 600
+            }}>
               {modelsCount}
             </Typography>
             <Typography
               variant="caption"
-              color="text.secondary"
               sx={{
+                color: "text.secondary",
                 display: "block",
                 mt: 0.5,
                 textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
+                letterSpacing: 0.5
+              }}>
               {evaluationMode === "agent" ? "Agents" : "Models"}
             </Typography>
           </Box>
@@ -152,19 +146,20 @@ const ReportConfig = ({
               "&:last-of-type": { borderRight: "none" },
             }}
           >
-            <Typography variant="h5" color="primary" fontWeight={600}>
+            <Typography variant="h5" color="primary" sx={{
+              fontWeight: 600
+            }}>
               8
             </Typography>
             <Typography
               variant="caption"
-              color="text.secondary"
               sx={{
+                color: "text.secondary",
                 display: "block",
                 mt: 0.5,
                 textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
+                letterSpacing: 0.5
+              }}>
               Turns / scenario
             </Typography>
           </Box>
@@ -177,19 +172,20 @@ const ReportConfig = ({
               justifyContent: "center",
             }}
           >
-            <Typography variant="h5" color="primary" fontWeight={600}>
+            <Typography variant="h5" color="primary" sx={{
+              fontWeight: 600
+            }}>
               {datapoints.toLocaleString()}
             </Typography>
             <Typography
               variant="caption"
-              color="text.secondary"
               sx={{
+                color: "text.secondary",
                 display: "block",
                 mt: 0.5,
                 textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
+                letterSpacing: 0.5
+              }}>
               Datapoints
             </Typography>
           </Box>

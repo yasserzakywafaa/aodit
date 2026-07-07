@@ -76,14 +76,19 @@ const MethodologyPage = () => {
             AI Agent Testing Methodology
           </Typography>
           <Typography
-            color="text.secondary"
-            sx={{ maxWidth: 800, mb: 2, lineHeight: 1.7, fontSize: 17 }}
-          >
+            sx={{
+              color: "text.secondary",
+              maxWidth: 800,
+              mb: 2,
+              lineHeight: 1.7,
+              fontSize: 17
+            }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             evaluates how AI agents behave under stress, contradiction, and
@@ -109,7 +114,11 @@ const MethodologyPage = () => {
             >
               Who this is for
             </Typography>
-            <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                fontSize: 14
+              }}>
               Risk teams, compliance officers, and audit functions who need
               independent behavioral evidence rather than vendor-supplied
               benchmarks.
@@ -117,7 +126,6 @@ const MethodologyPage = () => {
           </Paper>
         </Container>
       </Box>
-
       {/* ===== SIX DIMENSIONS ===== */}
       <Box component="section" sx={{ py: { xs: 5, md: 7 } }}>
         <Container maxWidth="lg">
@@ -131,11 +139,21 @@ const MethodologyPage = () => {
           >
             Six evaluation dimensions
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              mb: 2
+            }}>
             Each dimension measures a distinct behavioral risk class using
             structured multi-turn scenarios.
           </Typography>
-          <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mb: 4 }}>
+          <Stack
+            direction="row"
+            sx={{
+              flexWrap: "wrap",
+              gap: 1,
+              mb: 4
+            }}>
             {framework.dimensions.map((dimension) => (
               <Chip key={dimension} label={dimension} color="primary" />
             ))}
@@ -160,12 +178,20 @@ const MethodologyPage = () => {
                     {dimension}
                   </Typography>
                   <Typography
-                    color="text.secondary"
-                    sx={{ mb: 1.5, fontSize: 14, lineHeight: 1.6 }}
-                  >
+                    sx={{
+                      color: "text.secondary",
+                      mb: 1.5,
+                      fontSize: 14,
+                      lineHeight: 1.6
+                    }}>
                     {framework.dimensionQuestions[dimension]}
                   </Typography>
-                  <Stack direction="row" flexWrap="wrap" gap={0.75}>
+                  <Stack
+                    direction="row"
+                    sx={{
+                      flexWrap: "wrap",
+                      gap: 0.75
+                    }}>
                     {(framework.categories[dimension] ?? []).map((category) => (
                       <Chip
                         key={category.id}
@@ -182,7 +208,6 @@ const MethodologyPage = () => {
           </Grid>
         </Container>
       </Box>
-
       {/* ===== EIGHT-TURN PROTOCOL ===== */}
       <Box component="section" sx={{ py: { xs: 5, md: 7 } }}>
         <Container maxWidth="lg">
@@ -196,7 +221,12 @@ const MethodologyPage = () => {
           >
             Eight-turn adversarial protocol
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 4, maxWidth: 700 }}>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              mb: 4,
+              maxWidth: 700
+            }}>
             Every evaluation runs an eight-turn sequence that increases pressure
             progressively and then tests recovery.
           </Typography>
@@ -255,7 +285,11 @@ const MethodologyPage = () => {
                   <Typography sx={{ fontWeight: 600, color: "text.primary" }}>
                     {turn.name}
                   </Typography>
-                  <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+                  <Typography
+                    sx={{
+                      color: "text.secondary",
+                      fontSize: 14
+                    }}>
                     {turn.description}
                   </Typography>
                 </Box>
@@ -264,7 +298,6 @@ const MethodologyPage = () => {
           </Box>
         </Container>
       </Box>
-
       {/* ===== CTA ===== */}
       <Box
         component="section"
@@ -284,12 +317,18 @@ const MethodologyPage = () => {
           >
             Independent by design
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 3, lineHeight: 1.7 }}>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              mb: 3,
+              lineHeight: 1.7
+            }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             is an independent evaluation layer. It does not certify models,
@@ -298,7 +337,9 @@ const MethodologyPage = () => {
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={1.5}
-            justifyContent="center"
+            sx={{
+              justifyContent: "center"
+            }}
           >
             <Button variant="contained" onClick={() => navigate(routes.contact)}>
               Request Evaluation

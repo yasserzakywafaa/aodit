@@ -13,10 +13,11 @@ const ScenariosPerDimensionSection = () => {
 
   return (
     <>
-      <Typography variant="h6" color="primary" mb={1.5}>
+      <Typography variant="h6" color="primary" sx={{
+        mb: 1.5
+      }}>
         Scenarios per dimension
       </Typography>
-
       <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3 }}>
         {SCENARIOS_PER_DIMENSION_OPTIONS.map((opt) => {
           const selected = (report?.scenariosPerDimension ?? 20) === opt.value;
@@ -52,10 +53,14 @@ const ScenariosPerDimensionSection = () => {
                 },
               }}
             >
-              <Typography variant="h5" component="div" fontWeight="bold">
+              <Typography variant="h5" component="div" sx={{
+                fontWeight: "bold"
+              }}>
                 {opt.label}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 {opt.total} total
               </Typography>
             </Box>

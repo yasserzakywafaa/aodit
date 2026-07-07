@@ -67,7 +67,6 @@ const DashboardCreateReport = () => {
           Create New Report
         </Typography>
       </Box>
-
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid size={{ xs: 12, md: 6 }}>
           <Box component="form" onSubmit={handleSubmit}>
@@ -76,9 +75,10 @@ const DashboardCreateReport = () => {
                 <Typography
                   variant="subtitle1"
                   color="primary"
-                  fontWeight={600}
-                  sx={{ mb: 2 }}
-                >
+                  sx={{
+                    fontWeight: 600,
+                    mb: 2
+                  }}>
                   Report details
                 </Typography>
                 <TextField
@@ -150,9 +150,10 @@ const DashboardCreateReport = () => {
               and evaluate. You can then run the report and view results in the
               <Typography
                 component="span"
-                fontSize="inherit"
-                color="primary.main"
-              >
+                sx={{
+                  fontSize: "inherit",
+                  color: "primary.main"
+                }}>
                 aodit
               </Typography>{" "}
               framework.

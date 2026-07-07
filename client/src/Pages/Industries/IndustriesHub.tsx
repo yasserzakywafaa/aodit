@@ -95,7 +95,9 @@ const IndustriesHub = () => {
         }}
       >
         <Container maxWidth="lg">
-          <Stack spacing={2.5} alignItems="flex-start">
+          <Stack spacing={2.5} sx={{
+            alignItems: "flex-start"
+          }}>
             <Typography
               component="h1"
               sx={{
@@ -108,13 +110,12 @@ const IndustriesHub = () => {
               AI Agent Risk Testing Across Industries
             </Typography>
             <Typography
-              color="text.secondary"
               sx={{
+                color: "text.secondary",
                 maxWidth: 760,
                 fontSize: { xs: "1rem", md: "1.15rem" },
-                lineHeight: 1.7,
-              }}
-            >
+                lineHeight: 1.7
+              }}>
               Evaluate mission-critical AI agents with independent stress tests
               designed for regulated and high-impact business environments.
             </Typography>
@@ -130,7 +131,6 @@ const IndustriesHub = () => {
           </Stack>
         </Container>
       </Box>
-
       <Box component="section" sx={{ py: { xs: 6, md: 9 } }}>
         <Container maxWidth="lg">
           <Box
@@ -170,11 +170,12 @@ const IndustriesHub = () => {
                   <CardContent sx={{ p: { xs: 1.5, sm: 2 }, flexGrow: 1 }}>
                     <Stack
                       direction="row"
-                      alignItems="flex-start"
-                      justifyContent="space-between"
                       spacing={1}
-                      sx={{ mb: 1.5 }}
-                    >
+                      sx={{
+                        alignItems: "flex-start",
+                        justifyContent: "space-between",
+                        mb: 1.5
+                      }}>
                       <Box
                         sx={{
                           display: "inline-flex",
@@ -210,12 +211,11 @@ const IndustriesHub = () => {
                       {page.title}
                     </Typography>
                     <Typography
-                      color="text.secondary"
                       sx={{
+                        color: "text.secondary",
                         fontSize: { xs: "0.86rem", sm: "0.93rem" },
-                        lineHeight: 1.6,
-                      }}
-                    >
+                        lineHeight: 1.6
+                      }}>
                       {toShortDescription(page.metaDescription)}
                     </Typography>
                   </CardContent>

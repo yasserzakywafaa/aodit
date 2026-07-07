@@ -17,28 +17,32 @@ const NotFoundPage = () => {
       <Box component="div" className="not-found-page">
         <Page title="Not Found | Aodit">
           <Box
-            sx={{ p: 3 }}
-            display="flex"
             component="div"
-            alignItems="center"
-            flexDirection="column"
-            justifyContent="center"
             className="not-found-card-wrapper "
-          >
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "center",
+              p: 3
+            }}>
             <Box component="div">
               <img src={""} width="100%" />
             </Box>
 
             <Box
-              marginY={4}
-              display="flex"
               component="div"
-              alignItems="center"
-              flexDirection="column"
-              justifyContent="center"
               className="unauthorized-card-wrapper"
-            >
-              <Typography variant="h5" textAlign="center">
+              sx={{
+                marginY: 4,
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}>
+              <Typography variant="h5" sx={{
+                textAlign: "center"
+              }}>
                 Page Not Found
               </Typography>
 

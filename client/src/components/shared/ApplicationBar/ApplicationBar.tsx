@@ -11,6 +11,7 @@ import { routes } from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
+import useDeviceSize from "src/shared/hooks/useDeviceSize";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
@@ -34,6 +35,7 @@ const ApplicationBar = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { isDesktop } = useDeviceSize();
   const { isScrolledFromTop } = useDetectScroll();
 
   const {
@@ -141,26 +143,28 @@ const ApplicationBar = () => {
                 py: 1,
               }}
             >
-              <ApplicationBarDesktopView
-                auth={auth}
-                pagesMatch={pagesMatch}
-                handleToggleLoginModal={handleToggleLoginModal}
-                handleToggleRegisterModal={handleToggleRegisterModal}
-                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
-                handleOnMenuItemClick={handleOnMenuItemClick}
-              />
-
-              <ApplicationBarMobileView
-                auth={auth}
-                pagesMatch={pagesMatch}
-                isDrawerOpen={isDrawerOpen}
-                isScrolledFromTop={isScrolledFromTop}
-                handleSetDrawer={handleSetDrawer}
-                handleToggleLoginModal={handleToggleLoginModal}
-                handleToggleRegisterModal={handleToggleRegisterModal}
-                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
-                handleOnMenuItemClick={handleOnMenuItemClick}
-              />
+              {isDesktop ? (
+                <ApplicationBarDesktopView
+                  auth={auth}
+                  pagesMatch={pagesMatch}
+                  handleToggleLoginModal={handleToggleLoginModal}
+                  handleToggleRegisterModal={handleToggleRegisterModal}
+                  setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+                  handleOnMenuItemClick={handleOnMenuItemClick}
+                />
+              ) : (
+                <ApplicationBarMobileView
+                  auth={auth}
+                  pagesMatch={pagesMatch}
+                  isDrawerOpen={isDrawerOpen}
+                  isScrolledFromTop={isScrolledFromTop}
+                  handleSetDrawer={handleSetDrawer}
+                  handleToggleLoginModal={handleToggleLoginModal}
+                  handleToggleRegisterModal={handleToggleRegisterModal}
+                  setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+                  handleOnMenuItemClick={handleOnMenuItemClick}
+                />
+              )}
             </Toolbar>
           </Container>
         </AppBar>

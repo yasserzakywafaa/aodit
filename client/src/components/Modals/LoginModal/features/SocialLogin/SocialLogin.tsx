@@ -9,7 +9,13 @@ interface SocialLoginProps {
 
 const SocialLogin = (props: SocialLoginProps): JSX.Element => {
   return (
-    <Box display="flex" flexDirection="column" gap={2} width="100%">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        width: "100%"
+      }}>
       <GoogleAuth authType={props.authType || "login"} />
       {/* <LinkedInAuth authType={props.authType || "login"} /> */}
     </Box>

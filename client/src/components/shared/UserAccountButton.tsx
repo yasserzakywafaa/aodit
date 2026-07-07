@@ -112,22 +112,21 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
         <Typography
           variant="body1"
-          color="text.primary"
           sx={{
+            color: "text.primary",
+            marginLeft: 1,
             maxWidth: "100px",
             overflowX: "hidden",
             whiteSpace: "nowrap",
             textOverflow: "ellipsis",
+
             "&.MuiTypography-root:hover": {
               color: "primary.main",
-            },
-          }}
-          marginLeft={1}
-        >
+            }
+          }}>
           {userFullName}
         </Typography>
       </Box>
-
       <Menu
         open={isOpen}
         anchorEl={element}
@@ -146,7 +145,9 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
           <ListItemIcon>
             <PersonOutlined fontSize="medium" color="primary" sx={{ mr: 1 }} />
           </ListItemIcon>
-          <Typography variant="body1" color="text.primary">
+          <Typography variant="body1" sx={{
+            color: "text.primary"
+          }}>
             Profile
           </Typography>
         </MenuItem>

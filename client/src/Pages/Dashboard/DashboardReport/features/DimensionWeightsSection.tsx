@@ -18,10 +18,17 @@ const DimensionWeightsSection = () => {
 
   return (
     <>
-      <Typography variant="h6" color="primary" mb={1}>
+      <Typography variant="h6" color="primary" sx={{
+        mb: 1
+      }}>
         Dimension weights - <i>must total 100%</i>
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          mb: 1.5
+        }}>
         These weights determine how each dimension contributes to the final
         composite rating (AAA–D). They do not change how many scenarios run
         per dimension — every dimension is tested at the selected scenario
@@ -38,7 +45,12 @@ const DimensionWeightsSection = () => {
               mb: 1.5,
             }}
           >
-            <Typography sx={{ minWidth: 120 }} variant="body2" fontWeight={500}>
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: 500,
+                minWidth: 120
+              }}>
               {dim.toUpperCase()}
             </Typography>
             <Slider
@@ -72,7 +84,6 @@ const DimensionWeightsSection = () => {
           </Box>
         ))}
       </Box>
-
       <Box
         sx={{
           mb: 3,
@@ -89,13 +100,23 @@ const DimensionWeightsSection = () => {
           ml: "auto",
         }}
       >
-        <Typography variant="caption" fontWeight={600} color="inherit">
+        <Typography
+          variant="caption"
+          sx={{
+            fontWeight: 600,
+            color: "inherit"
+          }}>
           {weightsOk
             ? ` TOTAL: ${Math.round(total * 100)}%`
             : ` TOTAL: ${Math.round(total * 100)}%`}
         </Typography>
         {!weightsOk && (
-          <Typography variant="caption" fontWeight={600} color="inherit">
+          <Typography
+            variant="caption"
+            sx={{
+              fontWeight: 600,
+              color: "inherit"
+            }}>
             must equal 100%
           </Typography>
         )}

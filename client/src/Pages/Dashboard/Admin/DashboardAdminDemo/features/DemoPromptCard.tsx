@@ -6,7 +6,12 @@ const DemoPromptCard = ({ systemPrompt }: { systemPrompt: string }) => {
   return (
     <Card>
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <DescriptionIcon color="primary" sx={{ mr: 1 }} />
           <Typography variant="h6">System Prompt</Typography>
         </Box>

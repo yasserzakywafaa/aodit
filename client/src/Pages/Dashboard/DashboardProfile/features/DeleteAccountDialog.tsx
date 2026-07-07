@@ -62,12 +62,16 @@ const DeleteAccountDialog = ({
       disableEscapeKeyDown={isDeleting}
     >
       <DialogTitle>
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1
+          }}>
           <DeleteOutlined color="error" fontSize="large" />
           <Typography variant="h5">Delete Account</Typography>
         </Box>
       </DialogTitle>
-
       <DialogContent>
         <Typography variant="body2" sx={{ mb: 2 }}>
           This will permanently delete your account and remove all associated
@@ -83,7 +87,12 @@ const DeleteAccountDialog = ({
         </Box>
 
         {warningMessage && (
-          <Typography variant="body2" color="warning.main" sx={{ mb: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "warning.main",
+              mb: 2
+            }}>
             {warningMessage}
           </Typography>
         )}
@@ -110,7 +119,6 @@ const DeleteAccountDialog = ({
           helperText={`Type "${DELETE_ACCOUNT_CONFIRMATION_PHRASE}" to confirm`}
         />
       </DialogContent>
-
       <DialogActions>
         <Button variant="outlined" onClick={handleClose} disabled={isDeleting}>
           Cancel

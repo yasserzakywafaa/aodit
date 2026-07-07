@@ -76,14 +76,19 @@ const SecurityPage = () => {
             On-Premise by Design
           </Typography>
           <Typography
-            color="text.secondary"
-            sx={{ mb: 4, maxWidth: 750, lineHeight: 1.7, fontSize: 17 }}
-          >
+            sx={{
+              color: "text.secondary",
+              mb: 4,
+              maxWidth: 750,
+              lineHeight: 1.7,
+              fontSize: 17
+            }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             is deployed fully within client infrastructure. No data leaves your
@@ -93,7 +98,9 @@ const SecurityPage = () => {
 
           {/* Deployment flow */}
           <Paper variant="outlined" sx={{ p: { xs: 3, md: 4 } }}>
-            <Grid container spacing={3} alignItems="center">
+            <Grid container spacing={3} sx={{
+              alignItems: "center"
+            }}>
               <Grid size={{ xs: 12, md: 3 }}>
                 <Box
                   sx={{
@@ -108,7 +115,9 @@ const SecurityPage = () => {
                   <Typography sx={{ fontWeight: 600, color: "text.primary" }}>
                     Your Infrastructure
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     On-premise / airgapped
                   </Typography>
                 </Box>
@@ -143,14 +152,17 @@ const SecurityPage = () => {
                   <Typography sx={{ fontWeight: 600, color: "text.primary" }}>
                     <Typography
                       component="span"
-                      fontSize="inherit"
-                      color="primary.main"
-                    >
+                      sx={{
+                        fontSize: "inherit",
+                        color: "primary.main"
+                      }}>
                       aodit
                     </Typography>{" "}
                     Evaluation
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     Runs inside your environment
                   </Typography>
                 </Box>
@@ -184,7 +196,9 @@ const SecurityPage = () => {
                   <Typography sx={{ fontWeight: 600, color: "text.primary" }}>
                     Results Stay In-House
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     No external data transfer
                   </Typography>
                 </Box>
@@ -193,7 +207,6 @@ const SecurityPage = () => {
           </Paper>
         </Container>
       </Box>
-
       {/* ===== ARCHITECTURE & DATA PROTECTION (2 columns) ===== */}
       <Box component="section" sx={{ py: { xs: 5, md: 7 } }}>
         <Container maxWidth="lg">
@@ -234,12 +247,17 @@ const SecurityPage = () => {
                 >
                   Development and testing environments
                 </Typography>
-                <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    lineHeight: 1.7
+                  }}>
                   <Typography
                     component="span"
-                    fontSize="inherit"
-                    color="primary.main"
-                  >
+                    sx={{
+                      fontSize: "inherit",
+                      color: "primary.main"
+                    }}>
                     aodit
                   </Typography>{" "}
                   evaluation frameworks and adversarial scenarios are developed
@@ -260,13 +278,19 @@ const SecurityPage = () => {
                   Client-controlled access
                 </Typography>
                 <Typography
-                  color="text.secondary"
-                  sx={{ mb: 1, lineHeight: 1.7 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    mb: 1,
+                    lineHeight: 1.7
+                  }}>
                   Where required, SwissLI AG may access systems via temporary
                   API endpoints or secure tunneled connections.
                 </Typography>
-                <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    lineHeight: 1.7
+                  }}>
                   All access is explicitly approved by the client, time-limited,
                   logged, and auditable.
                 </Typography>
@@ -303,7 +327,11 @@ const SecurityPage = () => {
                     <CheckCircleOutlined
                       sx={{ fontSize: 18, color: primaryColor, mt: 0.3 }}
                     />
-                    <Typography color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                    <Typography
+                      sx={{
+                        color: "text.secondary",
+                        lineHeight: 1.6
+                      }}>
                       {item}
                     </Typography>
                   </Box>
@@ -339,7 +367,11 @@ const SecurityPage = () => {
                     <CheckCircleOutlined
                       sx={{ fontSize: 18, color: primaryColor, mt: 0.3 }}
                     />
-                    <Typography color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                    <Typography
+                      sx={{
+                        color: "text.secondary",
+                        lineHeight: 1.6
+                      }}>
                       {item}
                     </Typography>
                   </Box>
@@ -349,7 +381,6 @@ const SecurityPage = () => {
           </Grid>
         </Container>
       </Box>
-
       {/* ===== SWISS GOVERNANCE ===== */}
       <Box component="section" sx={{ py: { xs: 5, md: 7 } }}>
         <Container maxWidth="lg">
@@ -369,14 +400,19 @@ const SecurityPage = () => {
                 >
                   Swiss governance
                 </Typography>
-                <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    lineHeight: 1.7
+                  }}>
                   SwissLI AG is a Swiss company headquartered in Luzern and
                   governed by Swiss law.{" "}
                   <Typography
                     component="span"
-                    fontSize="inherit"
-                    color="primary.main"
-                  >
+                    sx={{
+                      fontSize: "inherit",
+                      color: "primary.main"
+                    }}>
                     aodit
                   </Typography>{" "}
                   is designed for Swiss banking secrecy and FINMA-regulated
@@ -393,7 +429,11 @@ const SecurityPage = () => {
                 >
                   Documentation
                 </Typography>
-                <Typography color="text.secondary" sx={{ mb: 2 }}>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    mb: 2
+                  }}>
                   Available under NDA during vendor onboarding:
                 </Typography>
                 {documentationItems.map((item) => (
@@ -409,7 +449,9 @@ const SecurityPage = () => {
                     <CheckCircleOutlined
                       sx={{ fontSize: 16, color: primaryColor }}
                     />
-                    <Typography color="text.secondary">{item}</Typography>
+                    <Typography sx={{
+                      color: "text.secondary"
+                    }}>{item}</Typography>
                   </Box>
                 ))}
                 <Stack

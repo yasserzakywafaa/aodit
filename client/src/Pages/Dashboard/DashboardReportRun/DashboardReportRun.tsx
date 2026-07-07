@@ -221,7 +221,12 @@ const DashboardReportRun = () => {
             textAlign: "center",
           }}
         >
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "text.secondary",
+              mb: 2
+            }}>
             No active run found for this report.
           </Typography>
           {reportId && (
@@ -313,7 +318,9 @@ const DashboardReportRun = () => {
             />
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               {completedScenarios} / {displayTotal} completed
             </Typography>
             <Typography variant="caption" color="primary">
@@ -347,9 +354,10 @@ const DashboardReportRun = () => {
                 >
                   <Typography
                     variant="caption"
-                    color="text.secondary"
-                    sx={{ letterSpacing: 1 }}
-                  >
+                    sx={{
+                      color: "text.secondary",
+                      letterSpacing: 1
+                    }}>
                     {dim.toUpperCase()}
                   </Typography>
                   <Typography variant="caption" color="primary">
@@ -375,7 +383,7 @@ const DashboardReportRun = () => {
                 <Box sx={{ display: "flex", gap: 0.75, flexWrap: "wrap" }}>
                   {report?.evaluationMode === "agent" ? (
                     /* Agent evaluation mode: show agent chip */
-                    <Tooltip
+                    (<Tooltip
                       title={agent?.agentUrl ?? ""}
                       placement="right"
                       arrow
@@ -394,10 +402,10 @@ const DashboardReportRun = () => {
                           {(agent?.name ?? "AGENT").toUpperCase()}
                         </Typography>
                       </Box>
-                    </Tooltip>
+                    </Tooltip>)
                   ) : (
                     /* Benchmark mode: show model chips */
-                    (report?.modelsToTest ?? []).map((m) => (
+                    ((report?.modelsToTest ?? []).map((m) => (
                       <Box
                         key={m}
                         sx={{
@@ -412,7 +420,7 @@ const DashboardReportRun = () => {
                           {m.toUpperCase()}
                         </Typography>
                       </Box>
-                    ))
+                    )))
                   )}
                 </Box>
               </Box>
@@ -420,7 +428,6 @@ const DashboardReportRun = () => {
           })}
         </Box>
       </Box>
-
       {/* ── RIGHT PANEL ── */}
       <Box
         sx={{
@@ -448,7 +455,9 @@ const DashboardReportRun = () => {
               LIVE SCENARIO FEED
             </Typography>
             {report?.evaluationMode === "agent" && agent && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 Evaluating:{" "}
                 <Box component="span" sx={{ color: "primary.main" }}>
                   {agent.name}
@@ -536,7 +545,9 @@ const DashboardReportRun = () => {
                 >
                   {val}
                 </Typography>
-                <Typography variant="caption" color="text.primary">
+                <Typography variant="caption" sx={{
+                  color: "text.primary"
+                }}>
                   {key}
                 </Typography>
               </Box>
@@ -586,7 +597,9 @@ const DashboardReportRun = () => {
         >
           {feedItems.length === 0 && !isFinished && (
             <Box sx={{ py: 4, textAlign: "center" }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Starting up…
               </Typography>
             </Box>
@@ -594,7 +607,9 @@ const DashboardReportRun = () => {
 
           {feedItems.length === 0 && isFinished && (
             <Box sx={{ py: 4, textAlign: "center" }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 No feed items recorded.
               </Typography>
             </Box>
@@ -638,7 +653,9 @@ const DashboardReportRun = () => {
                 {item.scenarioTitle ?? item.dim}
               </Typography>
               {/* Model */}
-              <Typography variant="caption" color="text.primary">
+              <Typography variant="caption" sx={{
+                color: "text.primary"
+              }}>
                 {item.model.toUpperCase()}
               </Typography>
               {/* Score */}
@@ -708,7 +725,9 @@ const DashboardReportRun = () => {
             ))}
           </Box>
           {/* Turn type label */}
-          <Typography variant="caption" color="text.primary">
+          <Typography variant="caption" sx={{
+            color: "text.primary"
+          }}>
             TURN:{" "}
             <Box component="span" sx={{ color: "primary.main" }}>
               {currentTurnName}
@@ -719,7 +738,9 @@ const DashboardReportRun = () => {
             sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 2 }}
           >
             {latestItem && !isFinished && (
-              <Typography variant="caption" color="text.primary">
+              <Typography variant="caption" sx={{
+                color: "text.primary"
+              }}>
                 {latestItem.id} ·{" "}
                 {report?.evaluationMode === "agent"
                   ? (agent?.name ?? latestItem.model).toUpperCase()
@@ -741,7 +762,6 @@ const DashboardReportRun = () => {
           </Box>
         </Box>
       </Box>
-
       {/* Stop confirmation dialog — Dialog uses a Portal so it renders at body level */}
       <Dialog
         open={stopDialogOpen}
@@ -750,7 +770,12 @@ const DashboardReportRun = () => {
         fullWidth
       >
         <DialogTitle>
-          <Box display="flex" alignItems="center" gap={1}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1
+            }}>
             <StopCircleOutlined color="error" fontSize="large" />
             <Typography variant="h5">Stop Report</Typography>
           </Box>

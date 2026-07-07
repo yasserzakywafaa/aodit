@@ -6,12 +6,16 @@ import { getDemoStatusColor } from "../../DashboardAdminDemos/features/dataGridC
 
 const Field = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <Box>
-    <Typography variant="caption" color="text.secondary">
+    <Typography variant="caption" sx={{
+      color: "text.secondary"
+    }}>
       {label}
     </Typography>
     <Box sx={{ mt: 0.5 }}>
       {typeof value === "string" || typeof value === "number" ? (
-        <Typography variant="body1" fontWeight="medium">
+        <Typography variant="body1" sx={{
+          fontWeight: "medium"
+        }}>
           {value}
         </Typography>
       ) : (
@@ -33,7 +37,12 @@ const DemoOverviewCard = ({ demo }: { demo: DemoSession }) => {
   return (
     <Card>
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <InfoIcon color="primary" sx={{ mr: 1 }} />
           <Typography variant="h6">Demo Overview</Typography>
         </Box>

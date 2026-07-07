@@ -30,18 +30,23 @@ const ModelsToEvaluateSection = ({
 
   return (
     <>
-      <Typography variant="h6" color="primary" mb={1.5}>
+      <Typography variant="h6" color="primary" sx={{
+        mb: 1.5
+      }}>
         Models to Evaluate
       </Typography>
-
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          mb: 1
+        }}>
         {showOnPremSummaryOnly
           ? "On-prem evaluator settings are inherited from the selected Agent."
           : isOnPrem
           ? "Model used to judge the results (scenario prompts and scoring). Enter the model id loaded on your evaluator endpoint — leave blank to use the agent's default."
           : "Model used to judge the results (scenario prompts and scoring). Pick a preset or type a direct model id for local / on-prem OpenAI-compatible servers."}
       </Typography>
-
       {showOnPremSummaryOnly ? (
         <Box
           sx={{
@@ -56,14 +61,17 @@ const ModelsToEvaluateSection = ({
         >
           {hasRequiredEvaluatorConfig ? (
             <>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Evaluator:
                 <Typography
                   component="span"
                   variant="body2"
-                  color="primary.main"
-                  fontWeight={600}
-                >
+                  sx={{
+                    color: "primary.main",
+                    fontWeight: 600
+                  }}>
                   {" "}
                   {trimmedAgentModel}
                 </Typography>{" "}
@@ -71,9 +79,10 @@ const ModelsToEvaluateSection = ({
                 <Typography
                   component="span"
                   variant="body2"
-                  color="success.main"
-                  fontWeight={600}
-                >
+                  sx={{
+                    color: "success.main",
+                    fontWeight: 600
+                  }}>
                   {trimmedAgentUrl}
                 </Typography>
               </Typography>
@@ -89,7 +98,9 @@ const ModelsToEvaluateSection = ({
               )}
             </>
           ) : (
-            <Typography variant="caption" color="error.main">
+            <Typography variant="caption" sx={{
+              color: "error.main"
+            }}>
               The selected agent is missing evaluator settings. On-prem runs
               require both Evaluator URL and Default evaluator model on the
               Agent page.
@@ -133,16 +144,19 @@ const ModelsToEvaluateSection = ({
           sx={{ maxWidth: 560, mb: 1 }}
         />
       )}
-
       {showAgentInheritance && isOnPrem && !showOnPremSummaryOnly && (
         <Box sx={{ maxWidth: 560, mb: 2 }}>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{
+            color: "text.secondary"
+          }}>
             Evaluator endpoint:{" "}
             <Typography
               component="span"
               variant="caption"
               color={trimmedAgentUrl ? "success.main" : "error.main"}
-              fontWeight={600}
+              sx={{
+                fontWeight: 600
+              }}
             >
               {trimmedAgentUrl || "OpenRouter (platform default)"}
             </Typography>

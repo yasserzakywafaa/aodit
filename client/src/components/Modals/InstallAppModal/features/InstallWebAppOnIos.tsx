@@ -4,14 +4,16 @@ import { Typography } from "@mui/material";
 const InstallWebAppOnIos: React.FC = () => {
   return (
     <>
-      <Typography variant="body1" textAlign="center">
+      <Typography variant="body1" sx={{
+        textAlign: "center"
+      }}>
         Install this app on your iPhone or iPad and enjoy the mobile application
         functionality.
       </Typography>
-
       <br />
-
-      <Typography variant="body1" textAlign="center">
+      <Typography variant="body1" sx={{
+        textAlign: "center"
+      }}>
         From
         <span className="bold"> Safari </span> browser, <br />
         simply tap the <IosShareOutlined color="primary" /> icon and then

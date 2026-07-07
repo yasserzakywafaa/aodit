@@ -121,7 +121,9 @@ const DashboardBreadcrumbs = () => {
 
         if (crumb.isLast) {
           return (
-            <Typography key={index} color="text.primary" variant="body1">
+            <Typography key={index} variant="body1" sx={{
+              color: "text.primary"
+            }}>
               {crumb.label}
             </Typography>
           );

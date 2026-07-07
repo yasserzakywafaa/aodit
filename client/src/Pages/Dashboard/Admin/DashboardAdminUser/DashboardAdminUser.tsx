@@ -46,11 +46,12 @@ const DashboardUser = () => {
   if (isFetching && !user) {
     return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="400px"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "400px"
+        }}>
         <CircularProgress />
       </Box>
     );
@@ -62,7 +63,9 @@ const DashboardUser = () => {
         <Typography variant="h4" component="h1" color="primary" gutterBottom>
           User Not Found
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body1" sx={{
+          color: "text.secondary"
+        }}>
           The user you're looking for doesn't exist or has been deleted.
         </Typography>
       </Box>
@@ -74,10 +77,14 @@ const DashboardUser = () => {
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
         User Details
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
         View and manage user information, projects, campaigns, and permissions.
       </Typography>
-
       <Grid container spacing={3}>
         <Grid container size={{ xs: 12, sm: 12, md: 12 }}>
           <Grid size={{ xs: 12, md: 6 }}>
@@ -127,7 +134,12 @@ const DashboardUser = () => {
 
         {/* Global Update Profile Button */}
         <Grid size={{ xs: 12 }}>
-          <Box display="flex" justifyContent="flex-end" my={2}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              my: 2
+            }}>
             <Button
               variant="contained"
               color="primary"

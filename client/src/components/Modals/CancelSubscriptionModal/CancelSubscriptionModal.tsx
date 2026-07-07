@@ -62,7 +62,9 @@ export const CancelSubscriptionModal = () => {
             Are you sure you want to cancel your subscription?
           </Typography>
 
-          <Typography variant="h6" component="h6" marginTop={2}>
+          <Typography variant="h6" component="h6" sx={{
+            marginTop: 2
+          }}>
             You will lose access to all the Premium benefits
           </Typography>
 

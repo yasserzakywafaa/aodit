@@ -83,23 +83,31 @@ const AboutPage = () => {
             About SwissLI AG
           </Typography>
           <Typography
-            color="text.secondary"
-            sx={{ maxWidth: 750, lineHeight: 1.7, fontSize: 17, mb: 2 }}
-          >
+            sx={{
+              color: "text.secondary",
+              maxWidth: 750,
+              lineHeight: 1.7,
+              fontSize: 17,
+              mb: 2
+            }}>
             Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI
             lab founded in 2021 and headquartered in Luzern. The lab focuses on
             building and evaluating AI systems with a strong focus on real-world
             behavior, safety, and system performance.
           </Typography>
           <Typography
-            color="text.secondary"
-            sx={{ maxWidth: 750, lineHeight: 1.7, fontSize: 17 }}
-          >
+            sx={{
+              color: "text.secondary",
+              maxWidth: 750,
+              lineHeight: 1.7,
+              fontSize: 17
+            }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             is SwissLI&apos;s platform for independent evaluation of AI agents
@@ -108,7 +116,6 @@ const AboutPage = () => {
           </Typography>
         </Container>
       </Box>
-
       {/* ===== MISSION ===== */}
       <Box component="section" sx={{ py: { xs: 5, md: 7 } }}>
         <Container maxWidth="lg">
@@ -142,7 +149,6 @@ const AboutPage = () => {
           </Paper>
         </Container>
       </Box>
-
       {/* ===== WHAT MAKES US DIFFERENT ===== */}
       <Box component="section" sx={{ py: { xs: 5, md: 7 } }}>
         <Container maxWidth="lg">
@@ -174,7 +180,11 @@ const AboutPage = () => {
                   >
                     {title}
                   </Typography>
-                  <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                  <Typography
+                    sx={{
+                      color: "text.secondary",
+                      lineHeight: 1.7
+                    }}>
                     {description}
                   </Typography>
                 </Paper>
@@ -183,11 +193,12 @@ const AboutPage = () => {
           </Grid>
         </Container>
       </Box>
-
       {/* ===== EXPERTISE ===== */}
       <Box component="section" sx={{ py: { xs: 5, md: 7 } }}>
         <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
+          <Grid container spacing={4} sx={{
+            alignItems: "center"
+          }}>
             <Grid size={{ xs: 12, md: 6 }}>
               <Typography
                 variant="h4"
@@ -200,14 +211,20 @@ const AboutPage = () => {
                 Built with security expertise
               </Typography>
               <Typography
-                color="text.secondary"
-                sx={{ lineHeight: 1.7, mb: 2 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  lineHeight: 1.7,
+                  mb: 2
+                }}>
                 SwissLI AG works with experienced security specialists in
                 cybersecurity, infrastructure protection, and adversarial
                 testing to support robust evaluation methodologies.
               </Typography>
-              <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
+              <Typography
+                sx={{
+                  color: "text.secondary",
+                  lineHeight: 1.7
+                }}>
                 Our evaluation framework is informed by real-world failure
                 patterns observed in production AI deployments across financial
                 services.
@@ -232,15 +249,14 @@ const AboutPage = () => {
                 ].map((item) => (
                   <Typography
                     key={item}
-                    color="text.secondary"
                     sx={{
+                      color: "text.secondary",
                       py: 0.75,
                       pl: 2,
                       borderLeft: `2px solid ${primaryColor}`,
                       mb: 1,
-                      fontSize: 14,
-                    }}
-                  >
+                      fontSize: 14
+                    }}>
                     {item}
                   </Typography>
                 ))}
@@ -249,7 +265,6 @@ const AboutPage = () => {
           </Grid>
         </Container>
       </Box>
-
       {/* ===== CTA ===== */}
       <Box
         component="section"
@@ -266,14 +281,21 @@ const AboutPage = () => {
           >
             Start a conversation
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 3, lineHeight: 1.7 }}>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              mb: 3,
+              lineHeight: 1.7
+            }}>
             We work with banks, fintechs, and insurers operating in
             FINMA-regulated environments. Let us know how we can help.
           </Typography>
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={1.5}
-            justifyContent="center"
+            sx={{
+              justifyContent: "center"
+            }}
           >
             <Button
               variant="contained"

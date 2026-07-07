@@ -20,10 +20,17 @@ const ScenarioTurnsSection = () => {
       }}
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
-        <Typography variant="subtitle2" color="primary" fontWeight={600}>
+        <Typography variant="subtitle2" color="primary" sx={{
+          fontWeight: 600
+        }}>
           Scenario Turns
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            ml: 1
+          }}>
           8 turns per scenario
         </Typography>
       </AccordionSummary>
@@ -44,22 +51,27 @@ const ScenarioTurnsSection = () => {
                 <Typography
                   variant="subtitle2"
                   color="primary"
-                  fontWeight={600}
+                  sx={{
+                    fontWeight: 600
+                  }}
                 >
                   Turn {turn} — {name}
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 0.5 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    mt: 0.5
+                  }}>
                   {question}
                 </Typography>
                 <Typography
                   variant="caption"
-                  color="text.secondary"
-                  sx={{ display: "block", mt: 0.25 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    display: "block",
+                    mt: 0.25
+                  }}>
                   {instruction}
                 </Typography>
               </Box>

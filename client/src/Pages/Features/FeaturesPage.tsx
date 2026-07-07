@@ -147,7 +147,6 @@ const FeaturesPage = ({
     >
       {/* ===== SECTION 1 — HERO ===== */}
       <Hero content={heroContent} />
-
       {/* ===== SECTION 2 — TRUST BLOCK ===== */}
       <Box
         component="section"
@@ -169,20 +168,33 @@ const FeaturesPage = ({
             {trustBlockCopy.title}
           </Typography>
           <Stack spacing={1.5}>
-            <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                lineHeight: 1.75
+              }}>
               <Typography
                 component="span"
-                fontSize="inherit"
-                color="primary.main"
-              >
+                sx={{
+                  fontSize: "inherit",
+                  color: "primary.main"
+                }}>
                 aodit
               </Typography>{" "}
               {trustBlockCopy.line1}
             </Typography>
-            <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                lineHeight: 1.75
+              }}>
               {trustBlockCopy.line2}
             </Typography>
-            <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                lineHeight: 1.75
+              }}>
               {trustBlockCopy.line3}
             </Typography>
           </Stack>
@@ -190,11 +202,12 @@ const FeaturesPage = ({
           {showSwissBadges && (
             <Stack
               direction="row"
-              alignItems="center"
-              flexWrap="wrap"
-              gap={2}
-              mt={4}
-            >
+              sx={{
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 2,
+                mt: 4
+              }}>
               <Box
                 component="img"
                 src={euHostedImg}
@@ -211,7 +224,6 @@ const FeaturesPage = ({
           )}
         </Container>
       </Box>
-
       <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
         <AoditDemoPlayground
           defaultSystemPrompt={demoDefaultSystemPrompt}
@@ -223,14 +235,12 @@ const FeaturesPage = ({
           }
         />
       </Box>
-
       {/* ===== SECTION 3 — FEATURED REPORT ===== */}
       <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
         <Container maxWidth="md">
           <DownloadReportSection region={landingContent ? "global" : region} />
         </Container>
       </Box>
-
       {/* ===== SECTION 4 — WHERE AODIT FITS ===== */}
       <Box
         component="section"
@@ -254,11 +264,10 @@ const FeaturesPage = ({
             Where{" "}
             <Typography
               component="span"
-              color="primary.main"
               sx={{
-                fontSize: { xs: "1.5rem", md: "1.85rem" },
-              }}
-            >
+                color: "primary.main",
+                fontSize: { xs: "1.5rem", md: "1.85rem" }
+              }}>
               aodit
             </Typography>{" "}
             fits in your AI lifecycle
@@ -326,7 +335,6 @@ const FeaturesPage = ({
           </Paper>
         </Container>
       </Box>
-
       {/* ===== SECTION 5 — WHAT AODIT DOES ===== */}
       <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
         <Container maxWidth="md">
@@ -342,20 +350,27 @@ const FeaturesPage = ({
               Independent behavioral testing under stress
             </Typography>
             <Typography
-              color="text.secondary"
-              sx={{ mb: 1.5, lineHeight: 1.75 }}
-            >
+              sx={{
+                color: "text.secondary",
+                mb: 1.5,
+                lineHeight: 1.75
+              }}>
               <Typography
                 component="span"
-                fontSize="inherit"
-                color="primary.main"
-              >
+                sx={{
+                  fontSize: "inherit",
+                  color: "primary.main"
+                }}>
                 aodit
               </Typography>{" "}
               evaluates how AI agents behave under pressure, contradiction, and
               adversarial input.
             </Typography>
-            <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                lineHeight: 1.75
+              }}>
               Each evaluation uses a structured multi-turn protocol to simulate
               real-world failure scenarios and produce decision-ready evidence
               for risk, audit, and compliance functions.
@@ -363,7 +378,6 @@ const FeaturesPage = ({
           </Box>
         </Container>
       </Box>
-
       {/* ===== SECTION 6 — SCOPE BOUNDARIES ===== */}
       <Box
         component="section"
@@ -386,12 +400,18 @@ const FeaturesPage = ({
           >
             Scope and boundaries
           </Typography>
-          <Typography color="text.secondary" sx={{ mb: 2, lineHeight: 1.75 }}>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              mb: 2,
+              lineHeight: 1.75
+            }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             currently focuses on independent behavioral evaluation of AI agents.
@@ -401,7 +421,9 @@ const FeaturesPage = ({
             <Typography
               sx={{ fontWeight: 600, mb: 1.5, color: "text.primary" }}
             >
-              <Typography component="span" color="primary.main">
+              <Typography component="span" sx={{
+                color: "primary.main"
+              }}>
                 aodit
               </Typography>{" "}
               does not:
@@ -432,15 +454,16 @@ const FeaturesPage = ({
           </Paper>
 
           <Typography
-            color="text.secondary"
-            sx={{ fontStyle: "italic", fontSize: 14 }}
-          >
+            sx={{
+              color: "text.secondary",
+              fontStyle: "italic",
+              fontSize: 14
+            }}>
             Monitoring and real-time control capabilities may be introduced as
             part of future product extensions.
           </Typography>
         </Container>
       </Box>
-
       {/* ===== SECTION 7 — REGULATORY CONTEXT ===== */}
       {!landingContent && (
         <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
@@ -463,21 +486,27 @@ const FeaturesPage = ({
                 {homeContent.regulatorySectionTitle}
               </Typography>
               <Typography
-                color="text.secondary"
-                sx={{ mb: 1.5, lineHeight: 1.75 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mb: 1.5,
+                  lineHeight: 1.75
+                }}>
                 {homeContent.regulatorySectionBody1}
               </Typography>
               <Typography
-                color="text.secondary"
-                sx={{ mb: 1.5, lineHeight: 1.75 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mb: 1.5,
+                  lineHeight: 1.75
+                }}>
                 {homeContent.regulatorySectionBody2}
               </Typography>
               <Typography
                 sx={{ fontWeight: 600, color: "text.primary", lineHeight: 1.75 }}
               >
-                <Typography component="span" color="primary.main">
+                <Typography component="span" sx={{
+                  color: "primary.main"
+                }}>
                   aodit
                 </Typography>{" "}
                 {homeContent.regulatorySectionBody3}
@@ -486,14 +515,12 @@ const FeaturesPage = ({
           </Container>
         </Box>
       )}
-
       {/* ===== SECTION 8 — COMPLIANCE LOGOS (Swiss only) ===== */}
       {showFinmaRegulatory && (
         <Box component="section" sx={{ pb: { xs: 6, md: 8 } }}>
           <ComplianceLogosSection />
         </Box>
       )}
-
       {/* ===== SECTION 9 — CTA ===== */}
       <Box
         component="section"
@@ -517,15 +544,20 @@ const FeaturesPage = ({
             {ctaTitle}
           </Typography>
           <Typography
-            color="text.secondary"
-            sx={{ mb: 4, fontSize: { xs: 16, md: 18 }, lineHeight: 1.75 }}
-          >
+            sx={{
+              color: "text.secondary",
+              mb: 4,
+              fontSize: { xs: 16, md: 18 },
+              lineHeight: 1.75
+            }}>
             {ctaSubtitle}
           </Typography>
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={1.5}
-            justifyContent="center"
+            sx={{
+              justifyContent: "center"
+            }}
           >
             <Button
               variant="contained"

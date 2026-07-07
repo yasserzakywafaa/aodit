@@ -67,10 +67,11 @@ const Hero = ({ content }: HeroProps) => {
           {resolved.titleLead}{" "}
           <Typography
             component="span"
-            fontSize="inherit"
-            fontFamily="inherit"
-            color="primary.main"
-          >
+            sx={{
+              fontSize: "inherit",
+              fontFamily: "inherit",
+              color: "primary.main"
+            }}>
             {resolved.titleHighlight}
           </Typography>
         </Typography>
@@ -78,28 +79,34 @@ const Hero = ({ content }: HeroProps) => {
         <Typography
           variant="h3"
           component="span"
-          color="text.secondary"
-          display="block"
           sx={{
+            color: "text.secondary",
+            display: "block",
             fontSize: { xs: "1.5rem", sm: "2rem", md: "2.75rem" },
             fontFamily: fontFamilyInter,
-            mb: 4,
-          }}
-        >
+            mb: 4
+          }}>
           {resolved.subtitleLine1} <br />
           <Typography
             component="span"
-            fontSize="inherit"
-            fontFamily="inherit"
             className="text-underline"
-          >
+            sx={{
+              fontSize: "inherit",
+              fontFamily: "inherit"
+            }}>
             {resolved.subtitleLine2}
           </Typography>
         </Typography>
 
         <Stack spacing={1.5} sx={{ my: 5 }}>
           {resolved.bullets.map((text, idx) => (
-            <Stack key={text} direction="row" alignItems="center" gap={1.5}>
+            <Stack
+              key={text}
+              direction="row"
+              sx={{
+                alignItems: "center",
+                gap: 1.5
+              }}>
               <Box sx={{ color: primaryColor, display: "flex" }}>
                 {BULLET_ICONS[idx % BULLET_ICONS.length]}
               </Box>

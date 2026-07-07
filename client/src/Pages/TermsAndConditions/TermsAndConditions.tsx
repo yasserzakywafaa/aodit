@@ -127,7 +127,6 @@ const TermsAndConditions = () => {
           </Typography>
         </Container>
       </Box>
-
       {/* Content */}
       <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 3, md: 0 } }}>
         <Container maxWidth="md">
@@ -140,9 +139,10 @@ const TermsAndConditions = () => {
             the{" "}
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             platform, related software components, reports, and services.
@@ -179,9 +179,10 @@ const TermsAndConditions = () => {
             All services provided by SwissLI AG are advisory in nature.{" "}
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             :
@@ -288,9 +289,10 @@ const TermsAndConditions = () => {
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             methodology, scenario architecture, category structures, scoring
@@ -337,9 +339,10 @@ const TermsAndConditions = () => {
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             is designed to operate within client-controlled infrastructure.

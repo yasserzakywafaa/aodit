@@ -769,7 +769,6 @@ const AoditDemoPDF: React.FC<AoditDemoPDFProps> = ({
         </View>
         <PageFooter />
       </Page>
-
       {/* ─── Transcript pages (one turn card per section, wrapping naturally) ── */}
       {turns.length > 0 && (
         <Page size="A4" style={s.page}>
@@ -799,21 +798,17 @@ const AoditDemoPDF: React.FC<AoditDemoPDFProps> = ({
                       {t.score}/5 · {scoreLabelText(t.score)}
                     </Text>
                   </View>
-
                   {/* Adversary */}
                   <View style={s.turnSection}>
                     <SpeakerChip kind="adversary" />
                     <MarkdownBlocks raw={t.prompt} baseStyle={s.turnText} />
                   </View>
-
                   <View style={s.turnDivider} />
-
                   {/* Agent */}
                   <View style={s.turnSection}>
                     <SpeakerChip kind="agent" />
                     <MarkdownBlocks raw={t.response} baseStyle={s.turnText} />
                   </View>
-
                   {/* Judge */}
                   {t.evaluatorReasoning ? (
                     <>

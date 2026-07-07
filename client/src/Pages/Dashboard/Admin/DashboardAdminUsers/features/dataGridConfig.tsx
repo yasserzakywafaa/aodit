@@ -129,13 +129,19 @@ export const getDashboardUsersDataGridConfig = (
 
         return (
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-start"
-            gap={1.5}
-            sx={{ height: "100%" }}
-          >
-            <Box display="flex" alignItems="center" justifyContent="center">
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: 1.5,
+              height: "100%"
+            }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
               <ProfileAvatar
                 user={user}
                 avatarSize={{ width: 32, height: 32 }}
@@ -143,15 +149,20 @@ export const getDashboardUsersDataGridConfig = (
               />
             </Box>
             <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              sx={{ height: "100%" }}
-            >
-              <Typography variant="body2" fontWeight="medium">
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                height: "100%"
+              }}>
+              <Typography variant="body2" sx={{
+                fontWeight: "medium"
+              }}>
                 {user.name.givenName} {user.name.familyName}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 ID {displayId}
               </Typography>
             </Box>

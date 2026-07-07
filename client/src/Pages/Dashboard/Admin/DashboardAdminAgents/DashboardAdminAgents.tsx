@@ -31,12 +31,16 @@ const DashboardAdminAgents = () => {
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
         Agents
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
         {paging.totalCount
           ? `${paging.totalCount} total`
           : "Manage all agents across users from here."}
       </Typography>
-
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid
           showToolbar

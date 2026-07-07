@@ -146,9 +146,10 @@ const ComplianceFinmaPage = () => {
             How{" "}
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             maps to Swiss financial market supervision requirements for AI in
@@ -173,7 +174,6 @@ const ComplianceFinmaPage = () => {
           </Paper>
         </Container>
       </Box>
-
       {/* ===== INTRO + KEY PRINCIPLE ===== */}
       <Box component="section" sx={sectionSx}>
         <Container maxWidth="md">
@@ -191,7 +191,13 @@ const ComplianceFinmaPage = () => {
               border: `1px solid ${alpha(primaryColor, 0.15)}`,
             }}
           >
-            <Stack direction="row" alignItems="flex-start" gap={1.5} mb={1.5}>
+            <Stack
+              direction="row"
+              sx={{
+                alignItems: "flex-start",
+                gap: 1.5,
+                mb: 1.5
+              }}>
               <FormatQuoteRounded
                 sx={{ color: primaryColor, fontSize: 28, mt: 0.25 }}
               />
@@ -220,7 +226,6 @@ const ComplianceFinmaPage = () => {
           </Paper>
         </Container>
       </Box>
-
       {/* ===== LIFECYCLE ===== */}
       <Box component="section" sx={altBgSx}>
         <Container maxWidth="md">
@@ -235,9 +240,10 @@ const ComplianceFinmaPage = () => {
             Where{" "}
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             Fits in the Lifecycle
@@ -287,7 +293,6 @@ const ComplianceFinmaPage = () => {
           </Grid>
         </Container>
       </Box>
-
       {/* ===== OFFICIAL DOCUMENT ===== */}
       <Box component="section" sx={sectionSx}>
         <Container maxWidth="md">
@@ -299,7 +304,13 @@ const ComplianceFinmaPage = () => {
           >
             <Grid container spacing={0}>
               <Grid size={{ xs: 12, sm: 8 }} sx={{ p: { xs: 3, md: 4 } }}>
-                <Stack direction="row" alignItems="center" gap={1.5} mb={1.5}>
+                <Stack
+                  direction="row"
+                  sx={{
+                    alignItems: "center",
+                    gap: 1.5,
+                    mb: 1.5
+                  }}>
                   <PictureAsPdfRoundedIcon
                     sx={{ color: primaryColor, fontSize: 26 }}
                   />
@@ -318,9 +329,10 @@ const ComplianceFinmaPage = () => {
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 2.5 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    mb: 2.5
+                  }}>
                   {FINMA_OFFICIAL_NOTICE.authority} · Published{" "}
                   {FINMA_OFFICIAL_NOTICE.publishedDate}
                 </Typography>
@@ -376,7 +388,6 @@ const ComplianceFinmaPage = () => {
           </Paper>
         </Container>
       </Box>
-
       {/* ===== FINMA SCORECARD TABLE ===== */}
       <Box component="section" sx={altBgSx}>
         <Container maxWidth="md">
@@ -413,10 +424,11 @@ const ComplianceFinmaPage = () => {
                 >
                   <Stack
                     direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mb={1.5}
-                  >
+                    sx={{
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 1.5
+                    }}>
                     <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
                       {row.principle}
                     </Typography>
@@ -449,9 +461,10 @@ const ComplianceFinmaPage = () => {
                     <TableCell sx={{ ...tableHeaderSx, width: "14%" }}>
                       <Typography
                         component="span"
-                        fontSize="inherit"
-                        color="primary.main"
-                      >
+                        sx={{
+                          fontSize: "inherit",
+                          color: "primary.main"
+                        }}>
                         aodit
                       </Typography>{" "}
                       Level
@@ -505,7 +518,6 @@ const ComplianceFinmaPage = () => {
           )}
         </Container>
       </Box>
-
       {/* ===== OTHER STANDARDS TABLE ===== */}
       <Box component="section" sx={sectionSx}>
         <Container maxWidth="md">
@@ -539,10 +551,11 @@ const ComplianceFinmaPage = () => {
                 >
                   <Stack
                     direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mb={1.5}
-                  >
+                    sx={{
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 1.5
+                    }}>
                     <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
                       {row.standard}
                     </Typography>
@@ -624,7 +637,6 @@ const ComplianceFinmaPage = () => {
           )}
         </Container>
       </Box>
-
       {/* ===== aodit ADDED VALUE ===== */}
       <Box component="section" sx={altBgSx}>
         <Container maxWidth="md">
@@ -639,9 +651,10 @@ const ComplianceFinmaPage = () => {
             Three Things{" "}
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             Adds That No Standard Currently Requires
@@ -651,9 +664,10 @@ const ComplianceFinmaPage = () => {
               <Stack
                 key={point}
                 direction="row"
-                alignItems="flex-start"
-                gap={1.5}
-              >
+                sx={{
+                  alignItems: "flex-start",
+                  gap: 1.5
+                }}>
                 <CheckCircleOutlined
                   sx={{ color: primaryColor, fontSize: 20, mt: 0.25 }}
                 />
@@ -667,11 +681,16 @@ const ComplianceFinmaPage = () => {
           </Stack>
         </Container>
       </Box>
-
       {/* ===== RISK IF NOT USED ===== */}
       <Box component="section" sx={sectionSx}>
         <Container maxWidth="md">
-          <Stack direction="row" alignItems="center" gap={1.5} mb={3}>
+          <Stack
+            direction="row"
+            sx={{
+              alignItems: "center",
+              gap: 1.5,
+              mb: 3
+            }}>
             <WarningAmberRounded sx={{ color: "#D97706", fontSize: 26 }} />
             <Typography
               variant="h4"
@@ -707,7 +726,6 @@ const ComplianceFinmaPage = () => {
           </Paper>
         </Container>
       </Box>
-
       {/* ===== SCOPE DISCLAIMER ===== */}
       <Box component="section" sx={{ ...altBgSx, pb: { xs: 3, md: 4 } }}>
         <Container maxWidth="md">
@@ -728,7 +746,6 @@ const ComplianceFinmaPage = () => {
           </Typography>
         </Container>
       </Box>
-
       {/* ===== CTA ===== */}
       <Box
         component="section"
@@ -762,9 +779,10 @@ const ComplianceFinmaPage = () => {
             Request an evaluation to see how{" "}
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             maps to your institution's FINMA compliance requirements.
@@ -772,7 +790,9 @@ const ComplianceFinmaPage = () => {
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={1.5}
-            justifyContent="center"
+            sx={{
+              justifyContent: "center"
+            }}
           >
             <Button
               variant="contained"

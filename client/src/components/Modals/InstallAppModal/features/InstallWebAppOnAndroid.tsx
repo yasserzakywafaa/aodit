@@ -60,16 +60,21 @@ const InstallWebAppOnAndroid: React.FC = () => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Typography variant="body1" textAlign="center" mb={2}>
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+      <Typography
+        variant="body1"
+        sx={{
+          textAlign: "center",
+          mb: 2
+        }}>
         Install this app on your device and enjoy the native application
         functionality
       </Typography>
-
       <Button variant="contained" color="primary" onClick={handleInstallClick}>
         Install App
       </Button>

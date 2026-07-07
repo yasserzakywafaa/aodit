@@ -61,17 +61,17 @@ const ComplianceLogosSection = () => {
               key={item.id}
               src={item.src}
               alt={item.label}
-              width={100}
-              height={100}
               sx={{
+                width: 100,
+                height: 100,
                 width: "100%",
                 maxWidth: "40%",
                 height: "100%",
-                objectFit: "cover",
+
                 // border: "1px solid",
                 // borderColor: "primary.main",
-              }}
-            />
+                objectFit: "cover"
+              }} />
           ))}
         </Grid>
       </Box>

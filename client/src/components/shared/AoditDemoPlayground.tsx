@@ -304,16 +304,19 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
       >
         <Typography
           variant="subtitle1"
-          fontWeight={700}
-          sx={{ lineHeight: 1.25, width: "100%" }}
-        >
+          sx={{
+            fontWeight: 700,
+            lineHeight: 1.25,
+            width: "100%"
+          }}>
           Judge's Reasoning
         </Typography>
         <Typography
           variant="caption"
-          color="text.secondary"
-          sx={{ whiteSpace: "nowrap" }}
-        >
+          sx={{
+            color: "text.secondary",
+            whiteSpace: "nowrap"
+          }}>
           Turn {turnIndex}
         </Typography>
       </Box>
@@ -350,9 +353,10 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
     <DialogContent dividers>
       <Typography
         variant="body2"
-        color="text.secondary"
-        sx={{ lineHeight: 1.7 }}
-      >
+        sx={{
+          color: "text.secondary",
+          lineHeight: 1.7
+        }}>
         {reasoning}
       </Typography>
     </DialogContent>
@@ -396,9 +400,10 @@ const DemoCompletionUpsell: React.FC = () => (
           id="demo-completion-upsell-heading"
           variant="subtitle1"
           component="div"
-          fontWeight={700}
-          sx={{ lineHeight: 1.35 }}
-        >
+          sx={{
+            fontWeight: 700,
+            lineHeight: 1.35
+          }}>
           You got a taste — not the full meal.
         </Typography>
       }
@@ -406,12 +411,19 @@ const DemoCompletionUpsell: React.FC = () => (
     <CardContent sx={{ pt: 1.5, pb: 1 }}>
       <Typography
         variant="body2"
-        color="text.secondary"
         component="div"
-        sx={{ lineHeight: 1.7, mb: 1.25 }}
-      >
+        sx={{
+          color: "text.secondary",
+          lineHeight: 1.7,
+          mb: 1.25
+        }}>
         Eight turns,{" "}
-        <Box component="span" fontWeight={700} color="text.primary">
+        <Box
+          component="span"
+          sx={{
+            fontWeight: 700,
+            color: "text.primary"
+          }}>
           one
         </Box>{" "}
         adversarial storyline: enough to feel how we probe your agent, not
@@ -420,21 +432,37 @@ const DemoCompletionUpsell: React.FC = () => (
       </Typography>
       <Typography
         variant="body2"
-        color="text.secondary"
         component="div"
-        sx={{ lineHeight: 1.7 }}
-      >
+        sx={{
+          color: "text.secondary",
+          lineHeight: 1.7
+        }}>
         A production{" "}
-        <Box component="span" fontWeight={700} color="primary.main">
+        <Box
+          component="span"
+          sx={{
+            fontWeight: 700,
+            color: "primary.main"
+          }}>
           aodit
         </Box>{" "}
         deep report stacks more scenarios, tougher corners, and evidence that
         holds up under scrutiny. Ballpark{" "}
-        <Box component="span" fontWeight={700} color="text.primary">
+        <Box
+          component="span"
+          sx={{
+            fontWeight: 700,
+            color: "text.primary"
+          }}>
           ~1%
         </Box>{" "}
         of that depth is what you just saw here. Hungry for the rest?{" "}
-        <Box component="span" fontWeight={600} color="text.primary">
+        <Box
+          component="span"
+          sx={{
+            fontWeight: 600,
+            color: "text.primary"
+          }}>
           Talk to us
         </Box>{" "}
         — we will show you what a full engagement actually looks like.
@@ -746,15 +774,14 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
           ))}
           <Typography
             variant="caption"
-            fontWeight={700}
-            color="text.secondary"
             sx={{
+              fontWeight: 700,
+              color: "text.secondary",
               ml: 1,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              fontSize: "0.65rem",
-            }}
-          >
+              fontSize: "0.65rem"
+            }}>
             aodit · Demo Sandbox
           </Typography>
         </Box>
@@ -765,10 +792,17 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
             {/* ------------------------------------------------------------------ */}
             {/* Header                                                              */}
             {/* ------------------------------------------------------------------ */}
-            <Typography variant="h6" fontWeight={700} gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{
+              fontWeight: 700
+            }}>
               aodit Demo
             </Typography>
-            <Typography variant="body2" color="text.secondary" mb={3}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mb: 3
+              }}>
               Run an 8-turn adversarial test against your AI agent. No account
               required.
             </Typography>
@@ -777,7 +811,12 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
             {/* Input form                                                          */}
             {/* ------------------------------------------------------------------ */}
             {!sessionId && (
-              <Box display="flex" flexDirection="column" gap={2}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2
+                }}>
                 <TextField
                   label="Agent Instructions"
                   multiline
@@ -787,7 +826,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                   value={systemPrompt}
                   onChange={(e) => setSystemPrompt(e.target.value)}
                   placeholder="e.g. You are a customer support agent for Acme Software. You help users with billing, subscriptions, and product issues. Verify identity before account changes and escalate complex cases to a human agent..."
-                  inputProps={{ maxLength: 2000 }}
+                  slotProps={{ htmlInput: { maxLength: 2000 } }}
                   helperText={`${systemPrompt.length} / 2000 — paste the instructions your agent follows`}
                   disabled={isStarting}
                 />
@@ -838,12 +877,13 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
               <Box>
                 {/* Turn progress dots */}
                 <Box
-                  display="flex"
-                  alignItems="center"
-                  gap={1}
-                  mb={3}
-                  flexWrap="wrap"
-                >
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 3,
+                    flexWrap: "wrap"
+                  }}>
                   {Array.from({ length: TOTAL_TURNS }, (_, i) => {
                     const turnNum = i + 1;
                     const completed = turns.some(
@@ -889,20 +929,23 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                   })}
 
                   <Box
-                    ml={{ xs: 0, sm: "auto" }}
-                    width={{ xs: "100%", sm: "auto" }}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent={{ xs: "space-between", sm: "flex-start" }}
-                    gap={1}
-                  >
+                    sx={{
+                      ml: { xs: 0, sm: "auto" },
+                      width: { xs: "100%", sm: "auto" },
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: { xs: "space-between", sm: "flex-start" },
+                      gap: 1
+                    }}>
                     {isRunning && (
                       <>
                         <LoaderSpinner
                           size={LoaderSizeEnum.Small}
                           position="relative"
                         />
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                          color: "text.secondary"
+                        }}>
                           Turn {activeTurnIndex}/{TOTAL_TURNS}
                         </Typography>
                         <Button
@@ -940,17 +983,20 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                 {/* Waiting state before first turn arrives */}
                 {turns.length === 0 && isRunning && (
                   <Box
-                    display="flex"
-                    alignItems="center"
-                    gap={1.5}
-                    py={4}
-                    justifyContent="center"
-                  >
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                      py: 4,
+                      justifyContent: "center"
+                    }}>
                     <LoaderSpinner
                       size={LoaderSizeEnum.Small}
                       position="relative"
                     />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: "text.secondary"
+                    }}>
                       Generating adversarial prompts…
                     </Typography>
                   </Box>
@@ -958,14 +1004,21 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
 
                 {/* Error state */}
                 {isFailed && (
-                  <Typography variant="body2" color="error" mb={2}>
+                  <Typography variant="body2" color="error" sx={{
+                    mb: 2
+                  }}>
                     {demoStatus?.error ??
                       "An error occurred during the demo run."}
                   </Typography>
                 )}
 
                 {/* Turn cards */}
-                <Box display="flex" flexDirection="column" gap={2}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2
+                  }}>
                   {turns.map((turn) => {
                     const expanded = expandedTurns.has(turn.turnIndex);
                     return (
@@ -980,27 +1033,27 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                       >
                         {/* Turn header — click to toggle */}
                         <Box
-                          px={{ xs: 1.5, sm: 2 }}
-                          py={{ xs: 1.25, sm: 1 }}
-                          display="flex"
-                          alignItems="center"
-                          gap={{ xs: 0.75, sm: 1 }}
-                          flexWrap="wrap"
                           onClick={() => toggleTurn(turn.turnIndex)}
                           sx={{
+                            px: { xs: 1.5, sm: 2 },
+                            py: { xs: 1.25, sm: 1 },
+                            display: "flex",
+                            alignItems: "center",
+                            gap: { xs: 0.75, sm: 1 },
+                            flexWrap: "wrap",
                             bgcolor: "action.hover",
                             cursor: "pointer",
                             userSelect: "none",
-                            "&:hover": { bgcolor: "action.selected" },
-                          }}
-                        >
+                            "&:hover": { bgcolor: "action.selected" }
+                          }}>
                           <Box
-                            display="flex"
-                            alignItems="center"
-                            gap={{ xs: 0.75, sm: 1 }}
-                            minWidth={0}
-                            flex="1 1 auto"
-                          >
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: { xs: 0.75, sm: 1 },
+                              minWidth: 0,
+                              flex: "1 1 auto"
+                            }}>
                             {expanded ? (
                               <ExpandLess sx={{ fontSize: 18, opacity: 0.6 }} />
                             ) : (
@@ -1008,45 +1061,49 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                             )}
                             <Typography
                               variant="caption"
-                              fontWeight={700}
-                              sx={{ flexShrink: 0 }}
-                            >
+                              sx={{
+                                fontWeight: 700,
+                                flexShrink: 0
+                              }}>
                               Turn {turn.turnIndex}
                             </Typography>
                             <Typography
                               variant="caption"
-                              color="text.secondary"
-                              sx={{ display: { xs: "none", sm: "block" } }}
-                            >
+                              sx={{
+                                color: "text.secondary",
+                                display: { xs: "none", sm: "block" }
+                              }}>
                               ·
                             </Typography>
                             <Typography
                               variant="caption"
-                              color="text.secondary"
                               noWrap
                               sx={{
+                                color: "text.secondary",
                                 minWidth: 0,
                                 maxWidth: { xs: "100%", sm: 220 },
                                 textOverflow: "ellipsis",
-                                overflow: "hidden",
-                              }}
-                            >
+                                overflow: "hidden"
+                              }}>
                               {turn.turnType}
                             </Typography>
                           </Box>
 
                           {/* Score chip + reasoning button */}
                           <Box
-                            ml={{ xs: 0, sm: "auto" }}
-                            width={{ xs: "100%", sm: "auto" }}
-                            display="flex"
-                            alignItems="center"
-                            justifyContent={{
-                              xs: "space-between",
-                              sm: "flex-end",
-                            }}
-                            gap={0.75}
-                          >
+                            sx={{
+                              ml: { xs: 0, sm: "auto" },
+                              width: { xs: "100%", sm: "auto" },
+                              display: "flex",
+                              alignItems: "center",
+
+                              justifyContent: {
+                                xs: "space-between",
+                                sm: "flex-end",
+                              },
+
+                              gap: 0.75
+                            }}>
                             <Chip
                               label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
                               color={scoreColor(turn.score)}
@@ -1084,11 +1141,14 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                             </Button>
                           </Box>
                         </Box>
-
                         {expanded && (
                           <>
                             {/* Adversary prompt */}
-                            <Box px={2} py={1.5}>
+                            <Box
+                              sx={{
+                                px: 2,
+                                py: 1.5
+                              }}>
                               <Chip
                                 icon={<Bolt sx={{ fontSize: 16 }} />}
                                 label="Adversary"
@@ -1116,7 +1176,11 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                             <Divider />
 
                             {/* Agent response — rendered as markdown */}
-                            <Box px={2} py={1.5}>
+                            <Box
+                              sx={{
+                                px: 2,
+                                py: 1.5
+                              }}>
                               <Chip
                                 icon={<SmartToy sx={{ fontSize: 16 }} />}
                                 label="Agent"
@@ -1145,7 +1209,13 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
 
                 {/* Run another demo */}
                 {(isCompleted || isFailed || isCancelled) && (
-                  <Box mt={3} display="flex" gap={1.5} flexWrap="wrap">
+                  <Box
+                    sx={{
+                      mt: 3,
+                      display: "flex",
+                      gap: 1.5,
+                      flexWrap: "wrap"
+                    }}>
                     <Button
                       variant="contained"
                       size="small"

@@ -42,20 +42,24 @@ const StatPill = ({
 }) => (
   <Stack
     direction="row"
-    alignItems="center"
     spacing={0.75}
     sx={{
+      alignItems: "center",
       px: 1.5,
       py: 0.75,
       border: `1px solid ${alpha(primaryColor, 0.35)}`,
       borderRadius: "2px",
-      bgcolor: primaryColorOpaqueEight,
-    }}
-  >
+      bgcolor: primaryColorOpaqueEight
+    }}>
     <Box sx={{ color: primaryColor, display: "flex", fontSize: 16 }}>
       {icon}
     </Box>
-    <Typography variant="caption" fontWeight={600} color="text.secondary">
+    <Typography
+      variant="caption"
+      sx={{
+        fontWeight: 600,
+        color: "text.secondary"
+      }}>
       {label}
     </Typography>
   </Stack>
@@ -83,10 +87,14 @@ const HowItWorksStep = ({
     >
       {number}
     </Typography>
-    <Typography variant="subtitle1" fontWeight={700} gutterBottom>
+    <Typography variant="subtitle1" gutterBottom sx={{
+      fontWeight: 700
+    }}>
       {title}
     </Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2" sx={{
+      color: "text.secondary"
+    }}>
       {body}
     </Typography>
   </Box>
@@ -193,14 +201,13 @@ const DemoPage = () => {
 
           <Typography
             variant="body1"
-            color="text.secondary"
             sx={{
+              color: "text.secondary",
               maxWidth: 560,
               mb: 3.5,
               lineHeight: 1.7,
-              fontSize: "1.05rem",
-            }}
-          >
+              fontSize: "1.05rem"
+            }}>
             Paste your customer support agent instructions, pick a model, and
             watch an 8-turn adversarial run—refunds, policy pushes, and
             escalation pressure. An independent AI judge scores every turn in
@@ -208,7 +215,13 @@ const DemoPage = () => {
           </Typography>
 
           {/* Stat pills */}
-          <Stack direction="row" flexWrap="wrap" gap={1} mb={1}>
+          <Stack
+            direction="row"
+            sx={{
+              flexWrap: "wrap",
+              gap: 1,
+              mb: 1
+            }}>
             <StatPill
               icon={<GavelOutlined fontSize="inherit" />}
               label="AI-powered judge"
@@ -228,7 +241,6 @@ const DemoPage = () => {
           </Stack>
         </Container>
       </Box>
-
       {/* ================================================================== */}
       {/* PLAYGROUND                                                          */}
       {/* ================================================================== */}
@@ -241,7 +253,6 @@ const DemoPage = () => {
       >
         <AoditDemoPlayground sourceLabel="Demo Page" />
       </Box>
-
       {/* ================================================================== */}
       {/* HOW IT WORKS                                                        */}
       {/* ================================================================== */}
@@ -304,10 +315,14 @@ const DemoPage = () => {
             }}
           >
             <Box>
-              <Typography variant="h6" fontWeight={700} gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{
+                fontWeight: 700
+              }}>
                 Need more dimensions?
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Full aodit reports cover 6 dimensions, 20–100 scenarios per run,
                 and produce a PDF-ready compliance report.
               </Typography>
@@ -323,7 +338,6 @@ const DemoPage = () => {
           </Box>
         </Container>
       </Box>
-
       {/* ================================================================== */}
       {/* DIMENSION EXPLAINER                                                 */}
       {/* ================================================================== */}
@@ -356,9 +370,11 @@ const DemoPage = () => {
           </Typography>
           <Typography
             variant="body1"
-            color="text.secondary"
-            sx={{ maxWidth: 600, lineHeight: 1.75 }}
-          >
+            sx={{
+              color: "text.secondary",
+              maxWidth: 600,
+              lineHeight: 1.75
+            }}>
             Does your agent stick to accurate information when the conversation
             gets adversarial? This scenario probes whether the model will
             abandon correct positions under contradiction pressure or
@@ -403,14 +419,13 @@ const DemoPage = () => {
                 key={row.score}
                 direction="row"
                 spacing={1.5}
-                alignItems="flex-start"
                 sx={{
+                  alignItems: "flex-start",
                   p: 1.75,
                   border: `1px solid`,
                   borderColor: "divider",
-                  bgcolor: isDark ? alpha("#000", 0.2) : "#fff",
-                }}
-              >
+                  bgcolor: isDark ? alpha("#000", 0.2) : "#fff"
+                }}>
                 <Chip
                   label={row.score}
                   color={row.color}
@@ -420,12 +435,15 @@ const DemoPage = () => {
                 <Box>
                   <Typography
                     variant="caption"
-                    fontWeight={700}
-                    display="block"
-                  >
+                    sx={{
+                      fontWeight: 700,
+                      display: "block"
+                    }}>
                     {row.label}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     {row.desc}
                   </Typography>
                 </Box>

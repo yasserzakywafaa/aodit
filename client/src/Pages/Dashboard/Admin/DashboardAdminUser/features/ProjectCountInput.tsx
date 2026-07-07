@@ -21,7 +21,12 @@ const ProjectCountInput = ({
   return (
     <Card>
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <ArticleIcon color="primary" sx={{ mr: 1 }} />
           <Typography variant="h6">Project Count</Typography>
         </Box>
@@ -33,10 +38,15 @@ const ProjectCountInput = ({
             const newValue = parseInt(e.target.value) || 0;
             onChange(Math.max(0, newValue));
           }}
-          inputProps={{ min: 0 }}
+          slotProps={{ htmlInput: { min: 0 } }}
           fullWidth
         />
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mt: 1
+          }}>
           How many projects created in the current subscription period.
         </Typography>
       </CardContent>

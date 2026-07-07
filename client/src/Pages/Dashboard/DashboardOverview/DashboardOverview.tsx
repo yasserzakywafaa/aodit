@@ -72,7 +72,12 @@ const DashboardOverview = () => {
       }}
     >
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <DashboardIcon
             color={isAdminCard ? "warning" : "primary"}
             sx={{ mr: 1 }}
@@ -85,7 +90,9 @@ const DashboardOverview = () => {
         >
           {value !== null ? value : "--"}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           {description}
         </Typography>
       </CardContent>
@@ -103,8 +110,12 @@ const DashboardOverview = () => {
           Welcome back, {user?.name.givenName} {user?.name.familyName}!
         </Typography>
       </Box>
-
-      <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 2 }}>
+      <Typography
+        variant="subtitle1"
+        sx={{
+          color: "text.secondary",
+          mb: 2
+        }}>
         Your Overview
       </Typography>
       <Grid container spacing={3}>
@@ -125,14 +136,20 @@ const DashboardOverview = () => {
           })}
         </Grid>
       </Grid>
-
       {isAdmin && (
         <Box sx={{ mt: 4 }}>
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon color="warning" />}>
-              <Box display="flex" alignItems="center" gap={1}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1
+                }}>
                 <AdminPanelSettingsIcon color="warning" />
-                <Typography variant="h6" color="warning.main">
+                <Typography variant="h6" sx={{
+                  color: "warning.main"
+                }}>
                   Admin
                 </Typography>
               </Box>

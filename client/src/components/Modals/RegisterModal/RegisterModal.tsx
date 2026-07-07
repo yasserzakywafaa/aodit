@@ -56,10 +56,14 @@ export const RegisterModal = () => {
             <Typography component="h1" variant="h5">
               Access Restricted
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body1" sx={{
+              color: "text.secondary"
+            }}>
               Account creation is managed by your IT administrator.
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Please contact your system administrator to request access.
             </Typography>
           </Box>
@@ -107,24 +111,24 @@ export const RegisterModal = () => {
             </Typography>
           </Box>
           <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              width: "100%",
-            }}
             className="register-form-wrapper"
-          >
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%"
+            }}>
             <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="stretch"
-              justifyContent="center"
-              gap={2}
-              sx={{ mt: 4 }}
               className="social-login-wrapper"
-            >
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "stretch",
+                justifyContent: "center",
+                gap: 2,
+                mt: 4
+              }}>
               <SocialRegister authType="register" />
               <PhoneAuth authType="register" onAuthSuccess={handleCloseModal} />
               <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>

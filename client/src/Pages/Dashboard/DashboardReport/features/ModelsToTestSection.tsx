@@ -23,11 +23,17 @@ const ModelsToTestSection = () => {
 
   return (
     <>
-      <Typography variant="h6" color="primary" mb={1.5}>
+      <Typography variant="h6" color="primary" sx={{
+        mb: 1.5
+      }}>
         Models to Test
       </Typography>
-
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          mb: 1.5
+        }}>
         Select minimum <strong className="text-underline">1 model</strong> to
         test. Each model runs every scenario independently.
       </Typography>

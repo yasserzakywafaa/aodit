@@ -50,198 +50,199 @@ const PricingTable: React.FC<PricingTableProps> = () => {
     themeMode === "light" ? primaryColorOpaqueTen : primaryColorOpaqueThirty;
 
   return (
-      <Container
-        id="pricing-table"
+    <Container
+      id="pricing-table"
+      sx={{
+        pt: { xs: 2, sm: 4 },
+        pb: { xs: 2, sm: 4 },
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: { xs: 3, sm: 6 },
+      }}
+    >
+      <Box
         sx={{
-          pt: { xs: 2, sm: 4 },
-          pb: { xs: 2, sm: 4 },
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: { xs: 3, sm: 6 },
+          width: { sm: "100%", md: "60%" },
+          textAlign: { sm: "left", md: "center" },
         }}
       >
-        <Box
-          sx={{
-            width: { sm: "100%", md: "60%" },
-            textAlign: { sm: "left", md: "center" },
-          }}
-        >
-          <Typography component="h2" variant="h4" color="primary">
-            Pricing
-          </Typography>
-          <Typography variant="subtitle1" align="center" color="textSecondary">
-            We have a wide range of packages for you to choose from
-          </Typography>
-        </Box>
+        <Typography component="h2" variant="h4" color="primary">
+          Pricing
+        </Typography>
+        <Typography variant="subtitle1" align="center" color="textSecondary">
+          We have a wide range of packages for you to choose from
+        </Typography>
+      </Box>
+      <TableContainer
+        component={Paper}
+        sx={{
+          backgroundImage: "none",
+          backgroundColor: "transparent",
+        }}
+      >
+        <Table sx={{ minWidth: 900 }} aria-label="pricing table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell
+                sx={{
+                  width: "20%",
+                  verticalAlign: "top",
+                }}
+              >
+                <Typography component="h3" variant="subtitle1">
+                  Plans
+                </Typography>
 
-        <TableContainer
-          component={Paper}
-          sx={{
-            backgroundImage: "none",
-            backgroundColor: "transparent",
-          }}
-        >
-          <Table sx={{ minWidth: 900 }} aria-label="pricing table">
-            <TableHead>
-              <TableRow>
+                <Loyalty
+                  fontSize="large"
+                  color="primary"
+                  sx={{ mt: "1rem" }}
+                />
+              </StyledTableCell>
+
+              {plansForTable.map((plan) => (
                 <StyledTableCell
+                  key={plan.title}
                   sx={{
                     width: "20%",
+                    textAlign: "left",
                     verticalAlign: "top",
+                    backgroundColor:
+                      plan.title === SubscriptionPlanEnum.Basic
+                        ? tableBgColorOpaque
+                        : "transparent",
                   }}
                 >
-                  <Typography component="h3" variant="subtitle1">
-                    Plans
-                  </Typography>
-
-                  <Loyalty
-                    fontSize="large"
-                    color="primary"
-                    sx={{ mt: "1rem" }}
-                  />
-                </StyledTableCell>
-
-                {plansForTable.map((plan) => (
-                  <StyledTableCell
-                    key={plan.title}
+                  <Box sx={{
+                    display: "flex"
+                  }}>
+                    <Typography component="h3" variant="subtitle1">
+                      {plan.title}
+                    </Typography>
+                    {plan.subheader &&
+                      plan.title !== SubscriptionPlanEnum.Free && (
+                        <Chip
+                          size="small"
+                          variant="filled"
+                          label={plan.subheader}
+                          icon={<AutoAwesomeIcon />}
+                          sx={{
+                            ml: 1,
+                            backgroundColor: "primary.contrastText",
+                            "& .MuiChip-label": {
+                              color: "primary.dark",
+                            },
+                            "& .MuiChip-icon": {
+                              color: "primary.dark",
+                            },
+                          }}
+                        />
+                      )}
+                  </Box>
+                  <Box
                     sx={{
-                      width: "20%",
-                      textAlign: "left",
-                      verticalAlign: "top",
-                      backgroundColor:
-                        plan.title === SubscriptionPlanEnum.Basic
-                          ? tableBgColorOpaque
-                          : "transparent",
+                      display: "flex",
+                      alignItems: "baseline",
                     }}
                   >
-                    <Box display="flex">
-                      <Typography component="h3" variant="subtitle1">
-                        {plan.title}
-                      </Typography>
-                      {plan.subheader &&
-                        plan.title !== SubscriptionPlanEnum.Free && (
-                          <Chip
-                            size="small"
-                            variant="filled"
-                            label={plan.subheader}
-                            icon={<AutoAwesomeIcon />}
-                            sx={{
-                              ml: 1,
-                              backgroundColor: "primary.contrastText",
-                              "& .MuiChip-label": {
-                                color: "primary.dark",
-                              },
-                              "& .MuiChip-icon": {
-                                color: "primary.dark",
-                              },
-                            }}
-                          />
-                        )}
-                    </Box>
-                    <Box
+                    {plan.product ? (
+                      <>
+                        <Typography
+                          component="h4"
+                          variant="h5"
+                          sx={{
+                            textDecoration: "line-through",
+                            color: "gray",
+                          }}
+                        >
+                          {getCurrency(plan.title)}
+                          {plan.product.metadata.monthly_discounted_price}
+                        </Typography>
+                        &nbsp;
+                        <Typography component="h4" variant="h5">
+                          {getCurrency(plan.title)}
+                          {getPrice(plan.product).monthly}
+                        </Typography>
+                        <Typography component="h4" variant="subtitle1">
+                          /month
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        <Typography component="h4" variant="h5">
+                          {getCurrency(SubscriptionPlanEnum.Essential)}0
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                  {plan.buttonText ? (
+                    <Button
+                      variant={plan.buttonVariant}
+                      color="primary"
+                      size="small"
+                      sx={{ marginTop: "0.5rem", padding: "4px" }}
+                      disabled={!!plan.buttonDisabled}
+                      onClick={plan.buttonAction}
+                    >
+                      {plan.buttonText}
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </StyledTableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {tableFeatures.map((feature, index) => (
+              <TableRow key={feature}>
+                <StyledTableCell component="th" scope="row">
+                  {feature}
+                </StyledTableCell>
+                {plansForTable.map((plan) => {
+                  const featureValue = plan.features[feature];
+                  let cellContent;
+
+                  if (typeof featureValue === "boolean") {
+                    cellContent = featureValue ? (
+                      <CheckOutlined color="success" />
+                    ) : (
+                      <Close color="error" />
+                    );
+                  } else if (
+                    typeof featureValue === "number" ||
+                    typeof featureValue === "string"
+                  ) {
+                    cellContent = featureValue;
+                  } else {
+                    cellContent = "-";
+                  }
+
+                  return (
+                    <StyledTableCell
+                      key={plan.title}
+                      align="center"
                       sx={{
-                        display: "flex",
-                        alignItems: "baseline",
+                        textAlign: "center",
+                        backgroundColor:
+                          plan.title === SubscriptionPlanEnum.Basic
+                            ? tableBgColorOpaque
+                            : "transparent",
                       }}
                     >
-                      {plan.product ? (
-                        <>
-                          <Typography
-                            component="h4"
-                            variant="h5"
-                            sx={{
-                              textDecoration: "line-through",
-                              color: "gray",
-                            }}
-                          >
-                            {getCurrency(plan.title)}
-                            {plan.product.metadata.monthly_discounted_price}
-                          </Typography>
-                          &nbsp;
-                          <Typography component="h4" variant="h5">
-                            {getCurrency(plan.title)}
-                            {getPrice(plan.product).monthly}
-                          </Typography>
-                          <Typography component="h4" variant="subtitle1">
-                            /month
-                          </Typography>
-                        </>
-                      ) : (
-                        <>
-                          <Typography component="h4" variant="h5">
-                            {getCurrency(SubscriptionPlanEnum.Essential)}0
-                          </Typography>
-                        </>
-                      )}
-                    </Box>
-                    {plan.buttonText ? (
-                      <Button
-                        variant={plan.buttonVariant}
-                        color="primary"
-                        size="small"
-                        sx={{ marginTop: "0.5rem", padding: "4px" }}
-                        disabled={!!plan.buttonDisabled}
-                        onClick={plan.buttonAction}
-                      >
-                        {plan.buttonText}
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
-                  </StyledTableCell>
-                ))}
+                      {cellContent}
+                    </StyledTableCell>
+                  );
+                })}
               </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {tableFeatures.map((feature, index) => (
-                <TableRow key={feature}>
-                  <StyledTableCell component="th" scope="row">
-                    {feature}
-                  </StyledTableCell>
-                  {plansForTable.map((plan) => {
-                    const featureValue = plan.features[feature];
-                    let cellContent;
-
-                    if (typeof featureValue === "boolean") {
-                      cellContent = featureValue ? (
-                        <CheckOutlined color="success" />
-                      ) : (
-                        <Close color="error" />
-                      );
-                    } else if (
-                      typeof featureValue === "number" ||
-                      typeof featureValue === "string"
-                    ) {
-                      cellContent = featureValue;
-                    } else {
-                      cellContent = "-";
-                    }
-
-                    return (
-                      <StyledTableCell
-                        key={plan.title}
-                        align="center"
-                        sx={{
-                          textAlign: "center",
-                          backgroundColor:
-                            plan.title === SubscriptionPlanEnum.Basic
-                              ? tableBgColorOpaque
-                              : "transparent",
-                        }}
-                      >
-                        {cellContent}
-                      </StyledTableCell>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 };
 

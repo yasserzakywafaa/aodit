@@ -80,7 +80,13 @@ const LoginPage = () => {
           </Typography>
         </Box>
 
-        <Box display="flex" flexDirection="column" gap={2} alignItems="center">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            alignItems: "center"
+          }}>
           {!APP_CONSTANTS.IS_ON_PREM && (
             <>
               <SocialLogin authType="login" />

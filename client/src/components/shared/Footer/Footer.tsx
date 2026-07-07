@@ -214,7 +214,6 @@ const Footer = () => {
           </Box>
         </Grid>
       </Grid>
-
       {/* Disclaimer */}
       <Typography
         sx={{
@@ -228,7 +227,12 @@ const Footer = () => {
           maxWidth: 700,
         }}
       >
-        <Typography component="span" fontSize="inherit" color="primary.main">
+        <Typography
+          component="span"
+          sx={{
+            fontSize: "inherit",
+            color: "primary.main"
+          }}>
           aodit
         </Typography>{" "}
         is an independent AI evaluation framework. SwissLI AG is not affiliated

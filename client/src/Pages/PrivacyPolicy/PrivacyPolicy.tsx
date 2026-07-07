@@ -129,7 +129,6 @@ const PrivacyPolicyPage = () => {
           </Typography>
         </Container>
       </Box>
-
       {/* Content */}
       <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 3, md: 0 } }}>
         <Container maxWidth="md">
@@ -166,9 +165,10 @@ const PrivacyPolicyPage = () => {
             The{" "}
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             platform itself is designed to operate without requiring SwissLI AG
@@ -183,9 +183,10 @@ const PrivacyPolicyPage = () => {
           <Typography sx={{ fontSize: 15, lineHeight: 1.75 }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             is designed as an on-premise evaluation system. This means:
@@ -226,9 +227,10 @@ const PrivacyPolicyPage = () => {
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             is designed to operate without requiring direct access to live

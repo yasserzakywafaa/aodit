@@ -68,15 +68,30 @@ const ContactPage = () => {
         >
           Contact Us
         </Typography>
-        <Typography color="text.secondary" sx={{ mb: 1, lineHeight: 1.7 }}>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            mb: 1,
+            lineHeight: 1.7
+          }}>
           For evaluation inquiries, security documentation requests (NDA
           required), or general questions about{" "}
-          <Typography component="span" fontSize="inherit" color="primary.main">
+          <Typography
+            component="span"
+            sx={{
+              fontSize: "inherit",
+              color: "primary.main"
+            }}>
             aodit
           </Typography>{" "}
           .
         </Typography>
-        <Typography color="text.secondary" sx={{ mb: 4, fontSize: 14 }}>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            mb: 4,
+            fontSize: 14
+          }}>
           We typically respond within one business day.
         </Typography>
 

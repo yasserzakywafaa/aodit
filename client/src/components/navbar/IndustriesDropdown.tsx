@@ -77,7 +77,6 @@ const IndustriesDropdown = () => {
       >
         Industries
       </Button>
-
       <Menu
         anchorEl={anchorEl}
         open={isOpen}
@@ -94,7 +93,9 @@ const IndustriesDropdown = () => {
                 sx={{ py: 1 }}
               >
                 <ChevronLeftRounded fontSize="small" sx={{ mr: 1 }} />
-                <Typography variant="body2" fontWeight={600}>
+                <Typography variant="body2" sx={{
+                  fontWeight: 600
+                }}>
                   {activeGroup.category.label}
                 </Typography>
               </MenuItem>,
@@ -106,14 +107,18 @@ const IndustriesDropdown = () => {
                   sx={{ py: 1 }}
                 >
                   <Box>
-                    <Typography variant="body2" color="text.primary">
+                    <Typography variant="body2" sx={{
+                      color: "text.primary"
+                    }}>
                       {page.title}
                     </Typography>
                     <Typography
                       variant="caption"
-                      color="text.secondary"
-                      sx={{ display: "block", fontSize: 11 }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        display: "block",
+                        fontSize: 11
+                      }}>
                       {page.keyword}
                     </Typography>
                   </Box>
@@ -140,7 +145,9 @@ const IndustriesDropdown = () => {
                   py: 1,
                 }}
               >
-                <Typography variant="body2" color="text.primary">
+                <Typography variant="body2" sx={{
+                  color: "text.primary"
+                }}>
                   {category.label}
                 </Typography>
                 <ChevronRightRounded fontSize="small" sx={{ opacity: 0.6 }} />

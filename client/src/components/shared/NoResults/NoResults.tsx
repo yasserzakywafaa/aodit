@@ -7,28 +7,32 @@ const NoResultsFound: React.FC<{ text: string }> = ({
 }) => {
   return (
     <>
-      <Box component="div" className="no-results-container" width="100%">
+      <Box component="div" className="no-results-container" sx={{
+        width: "100%"
+      }}>
         <Box
-          sx={{ p: 3 }}
-          display="flex"
           component="div"
-          alignItems="center"
-          flexDirection="column"
-          justifyContent="center"
           className="no-results-wrapper "
-        >
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "center",
+            p: 3
+          }}>
           <Box component="div" className="no-results-image">
             <img src={BotExclamationMarks} width="100%" />
           </Box>
 
           <Box
-            display="flex"
             component="div"
-            alignItems="center"
-            flexDirection="column"
-            justifyContent="center"
             className="unauthorized-card-wrapper"
-          >
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              justifyContent: "center"
+            }}>
             <Typography variant="h5">{text}</Typography>
           </Box>
         </Box>

@@ -62,43 +62,60 @@ const SubscriptionDetailsCard = ({
   return (
     <Card>
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <CreditCardIcon color="primary" sx={{ mr: 1 }} />
           <Typography variant="h6">Subscription Details</Typography>
         </Box>
 
         <Grid container spacing={2}>
           {/* Subscription ID */}
-          <Grid container size={{ xs: 12 }} gap={2}>
+          <Grid container size={{ xs: 12 }} sx={{
+            gap: 2
+          }}>
             <Grid size={{ xs: 6, sm: 2 }}>
               <Typography variant="body2">Subscription ID:</Typography>
             </Grid>
             <Grid size="auto">
-              <Typography variant="body2" fontWeight="bold">
+              <Typography variant="body2" sx={{
+                fontWeight: "bold"
+              }}>
                 {subscription.id || "N/A"}
               </Typography>
             </Grid>
           </Grid>
 
           {/* Start Date */}
-          <Grid container size={{ xs: 12 }} gap={2}>
+          <Grid container size={{ xs: 12 }} sx={{
+            gap: 2
+          }}>
             <Grid size={{ xs: 6, sm: 2 }}>
               <Typography variant="body2">Start Date:</Typography>
             </Grid>
             <Grid size="auto">
-              <Typography variant="body2" fontWeight="bold">
+              <Typography variant="body2" sx={{
+                fontWeight: "bold"
+              }}>
                 {new Date(subscription.startDate).toLocaleString()}
               </Typography>
             </Grid>
           </Grid>
 
           {/* End Date */}
-          <Grid container size={{ xs: 12 }} gap={2}>
+          <Grid container size={{ xs: 12 }} sx={{
+            gap: 2
+          }}>
             <Grid size={{ xs: 6, sm: 2 }}>
               <Typography variant="body2">End Date:</Typography>
             </Grid>
             <Grid size="auto">
-              <Typography variant="body2" fontWeight="bold">
+              <Typography variant="body2" sx={{
+                fontWeight: "bold"
+              }}>
                 {new Date(subscription.endDate).toLocaleString()}
               </Typography>
             </Grid>
@@ -107,7 +124,13 @@ const SubscriptionDetailsCard = ({
           <Divider sx={{ my: 2, width: "50%" }} />
 
           {/* Subscription Type */}
-          <Grid container size={{ xs: 12 }} gap={2} alignItems="center">
+          <Grid
+            container
+            size={{ xs: 12 }}
+            sx={{
+              gap: 2,
+              alignItems: "center"
+            }}>
             <Grid size={{ xs: 12, sm: 4 }}>
               <FormControl fullWidth>
                 <InputLabel id="subscription-type-label">Type</InputLabel>
@@ -129,7 +152,13 @@ const SubscriptionDetailsCard = ({
           </Grid>
 
           {/* Max Projects Allowed */}
-          <Grid container size={{ xs: 12 }} gap={2} alignItems="center">
+          <Grid
+            container
+            size={{ xs: 12 }}
+            sx={{
+              gap: 2,
+              alignItems: "center"
+            }}>
             <Grid size={{ xs: 12, sm: 4 }}>
               <TextField
                 type="number"
@@ -139,14 +168,20 @@ const SubscriptionDetailsCard = ({
                   const value = parseInt(e.target.value) || 0;
                   handleMaxProjectsChange(value);
                 }}
-                inputProps={{ min: 0 }}
+                slotProps={{ htmlInput: { min: 0 } }}
                 fullWidth
               />
             </Grid>
           </Grid>
 
           {/* Payment Status */}
-          <Grid container size={{ xs: 12 }} gap={2} alignItems="center">
+          <Grid
+            container
+            size={{ xs: 12 }}
+            sx={{
+              gap: 2,
+              alignItems: "center"
+            }}>
             <Grid size={{ xs: 12, sm: 4 }}>
               <FormControl fullWidth>
                 <InputLabel id="payment-status-label">
@@ -172,12 +207,16 @@ const SubscriptionDetailsCard = ({
           <Divider sx={{ my: 2, width: "50%" }} />
 
           {/* Price */}
-          <Grid container size={{ xs: 12 }} gap={2}>
+          <Grid container size={{ xs: 12 }} sx={{
+            gap: 2
+          }}>
             <Grid size={{ xs: 6, sm: 2 }}>
               <Typography variant="body2">Price:</Typography>
             </Grid>
             <Grid size="auto">
-              <Typography variant="body2" fontWeight="bold">
+              <Typography variant="body2" sx={{
+                fontWeight: "bold"
+              }}>
                 {subscription.price
                   ? `${
                       (subscription.price as any)?.unit_amount
@@ -192,7 +231,9 @@ const SubscriptionDetailsCard = ({
           {/* API Access */}
           {subscription.api && (
             <>
-              <Grid container size={{ xs: 12 }} alignItems="center">
+              <Grid container size={{ xs: 12 }} sx={{
+                alignItems: "center"
+              }}>
                 <Grid size={{ xs: 6, sm: 2 }}>
                   <Typography variant="body2">API Access:</Typography>
                 </Grid>
@@ -212,7 +253,9 @@ const SubscriptionDetailsCard = ({
               </Grid>
 
               {subscription.api.apiKey && (
-                <Grid container size={{ xs: 12 }} overflow="auto">
+                <Grid container size={{ xs: 12 }} sx={{
+                  overflow: "auto"
+                }}>
                   <Grid size={{ xs: 6, sm: 2 }}>
                     <Typography variant="body2">API Key:</Typography>
                   </Grid>

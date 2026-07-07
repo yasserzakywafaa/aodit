@@ -77,12 +77,14 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
   return (
     <Box
       component="form"
-      display="flex"
-      flexDirection="column"
-      gap={2}
       onSubmit={handleSubmit}
-      sx={{ width: "100%", maxWidth: 360 }}
-    >
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        width: "100%",
+        maxWidth: 360
+      }}>
       {isRegister && (
         <>
           <TextField
@@ -104,7 +106,6 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
           />
         </>
       )}
-
       <TextField
         required
         fullWidth
@@ -115,7 +116,6 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
         autoComplete="email"
         size="small"
       />
-
       <TextField
         required
         fullWidth
@@ -124,16 +124,14 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         autoComplete={isRegister ? "new-password" : "current-password"}
-        inputProps={{ minLength: 8 }}
+        slotProps={{ htmlInput: { minLength: 8 } }}
         size="small"
       />
-
       {error && (
         <Alert severity="error" sx={{ py: 0 }}>
           {error}
         </Alert>
       )}
-
       <Button
         type="submit"
         fullWidth

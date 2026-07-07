@@ -40,14 +40,21 @@ const DashboardReports = () => {
           <Typography variant="h4" component="h1" color="primary" gutterBottom>
             Reports
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "text.secondary",
+              mb: 3
+            }}>
             {paging.totalCount
               ? `${paging.totalCount} total`
               : "Manage reports and view run results from here."}
           </Typography>
         </Stack>
 
-        <Box alignSelf="center">
+        <Box sx={{
+          alignSelf: "center"
+        }}>
           <Button
             variant="contained"
             color="primary"
@@ -58,7 +65,6 @@ const DashboardReports = () => {
           </Button>
         </Box>
       </Box>
-
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid
           showToolbar

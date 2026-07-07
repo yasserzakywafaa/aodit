@@ -31,7 +31,9 @@ const ComplianceEuAiActPage = () => {
           evidence collection, and compliance-readiness workstreams.
         </Typography>
 
-        <Box my={2}>
+        <Box sx={{
+          my: 2
+        }}>
           <Typography variant="h6" color="primary" gutterBottom>
             Focus Areas
           </Typography>

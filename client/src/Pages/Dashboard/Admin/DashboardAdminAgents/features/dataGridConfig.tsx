@@ -61,22 +61,28 @@ export const getDashboardAdminAgentsDataGridConfig = (
 
         return (
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-start"
-            gap={1.5}
-            sx={{ height: "100%" }}
-          >
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: 1.5,
+              height: "100%"
+            }}>
             <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              sx={{ height: "100%" }}
-            >
-              <Typography variant="body2" fontWeight="medium">
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                height: "100%"
+              }}>
+              <Typography variant="body2" sx={{
+                fontWeight: "medium"
+              }}>
                 {agent.name}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 ID {displayId}
               </Typography>
             </Box>
@@ -107,7 +113,9 @@ export const getDashboardAdminAgentsDataGridConfig = (
         const uid = params.row.userId;
         const displayUid = uid.length > 8 ? uid.slice(-6).toUpperCase() : uid;
         return (
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             {displayUid}
           </Typography>
         );

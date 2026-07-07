@@ -1,4 +1,4 @@
-import { Box, Button, MenuItem, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { LockOpenOutlined, VpnKeyOutlined } from "@mui/icons-material";
 import Logo, { LogoComponentEnum } from "../../Logo";
 
@@ -42,7 +42,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
-  const { isTablet } = useDeviceSize();
+  const { isDesktop } = useDeviceSize();
 
   const buttonHoverStyleSecondary = {
     "&:hover": {
@@ -59,7 +59,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
 
   return (
     <>
-      {!isTablet && (
+      {isDesktop && (
         <>
           <Box
             role="menu"
@@ -111,31 +111,28 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               <UserAccountMenuButton user={auth.user as User} />
             ) : (
               // Show Login in dev/local/on-prem (users need to log in)
-              (APP_CONSTANTS.IS_DEV ||
-                APP_CONSTANTS.IS_LOCAL ||
-                APP_CONSTANTS.IS_ON_PREM) && (
-                <>
-                  <MenuItem
-                    sx={{ ...buttonHoverStyleSecondary }}
-                    onClick={handleToggleLoginModal}
-                  >
-                    <VpnKeyOutlined
-                      fontSize="small"
-                      color="primary"
-                      sx={{ mr: 0.5 }}
-                    />
-                    <Typography variant="body2" color="text.primary">
-                      Login
-                    </Typography>
-                  </MenuItem>
-                </>
-              )
+              ((APP_CONSTANTS.IS_DEV ||
+                APP_CONSTANTS.IS_LOCAL || APP_CONSTANTS.IS_ON_PREM) && (<Button
+                sx={{ ...buttonHoverStyleSecondary }}
+                onClick={handleToggleLoginModal}
+              >
+                <VpnKeyOutlined
+                  fontSize="small"
+                  color="primary"
+                  sx={{ mr: 0.5 }}
+                />
+                <Typography variant="body2" sx={{
+                  color: "text.primary"
+                }}>
+                  Login
+                </Typography>
+              </Button>))
             )}
 
             {/* Show Register only in dev/local (NOT on-prem - admin creates users) */}
             {!auth.isAuthenticated &&
               (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
-                <MenuItem
+                <Button
                   sx={{ ...buttonHoverStyleSecondary }}
                   onClick={handleToggleRegisterModal}
                 >
@@ -144,13 +141,15 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                     color="primary"
                     sx={{ mr: 0.5 }}
                   />
-                  <Typography variant="body2" color="text.primary">
+                  <Typography variant="body2" sx={{
+                    color: "text.primary"
+                  }}>
                     Register
                   </Typography>
-                </MenuItem>
+                </Button>
               )}
 
-            <Box display="flex" flexWrap="wrap" gap={1}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
               <Button
                 component="a"
                 href={routes.contact}
@@ -173,11 +172,9 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               </Button>
             </Box>
 
-            <MenuItem sx={{ ...buttonHoverStyleSecondary }}>
-              <SettingsMenuButton
-                setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
-              />
-            </MenuItem>
+            <SettingsMenuButton
+              setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
+            />
           </Box>
         </>
       )}

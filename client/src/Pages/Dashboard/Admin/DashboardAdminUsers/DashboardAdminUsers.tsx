@@ -32,11 +32,12 @@ const DashboardUsers = () => {
   return (
     <Box>
       <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ mb: 1 }}
-      >
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 1
+        }}>
         <Typography variant="h4" component="h1" color="primary">
           Users
         </Typography>
@@ -49,18 +50,21 @@ const DashboardUsers = () => {
           Create User
         </Button>
       </Box>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
         {paging.totalCount
           ? `${paging.totalCount} total`
           : "Manage users, roles, and permissions from here."}
       </Typography>
-
       <CreateUserDialog
         open={isCreateDialogOpen}
         onClose={() => setIsCreateDialogOpen(false)}
         onSuccess={() => handleGetUsersByPage(1, paging.pageSize || 10)}
       />
-
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid
           showToolbar

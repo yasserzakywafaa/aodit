@@ -31,19 +31,31 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
     <Card>
       <CardContent>
         <Box
-          display="flex"
-          gap={3}
-          justifyContent="space-between"
-          flexWrap="wrap"
-        >
+          sx={{
+            display: "flex",
+            gap: 3,
+            justifyContent: "space-between",
+            flexWrap: "wrap"
+          }}>
           {/* User info */}
-          <Box display="flex" alignItems="center" gap={2}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2
+            }}>
             <ProfileAvatar user={user} avatarSize={{ width: 80, height: 80 }} />
             <Box>
               <Typography variant="h5" component="h2" gutterBottom>
                 {user.name.givenName} {user.name.familyName}
               </Typography>
-              <Box display="flex" gap={1} alignItems="center" mb={1}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 1,
+                  alignItems: "center",
+                  mb: 1
+                }}>
                 <Chip
                   label={
                     user.status.charAt(0).toUpperCase() + user.status.slice(1)
@@ -58,7 +70,9 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
                   size="small"
                 />
               </Box>
-              <Typography variant="body2" fontWeight="bold">
+              <Typography variant="body2" sx={{
+                fontWeight: "bold"
+              }}>
                 {user.email}
               </Typography>
             </Box>
@@ -66,45 +80,61 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
 
           {/* User details */}
           <Grid container spacing={1}>
-            <Grid container size={{ xs: 12 }} gap={2}>
+            <Grid container size={{ xs: 12 }} sx={{
+              gap: 2
+            }}>
               <Grid size={{ xs: 3, sm: 2 }}>
                 <Typography variant="body2">User ID:</Typography>
               </Grid>
               <Grid size="auto">
-                <Typography variant="body2" fontWeight="bold">
+                <Typography variant="body2" sx={{
+                  fontWeight: "bold"
+                }}>
                   {user.userId}
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12 }} gap={2}>
+            <Grid container size={{ xs: 12 }} sx={{
+              gap: 2
+            }}>
               <Grid size={{ xs: 3, sm: 2 }}>
                 <Typography variant="body2">Created:</Typography>
               </Grid>
               <Grid size="auto">
-                <Typography variant="body2" fontWeight="bold">
+                <Typography variant="body2" sx={{
+                  fontWeight: "bold"
+                }}>
                   {new Date(user.createdAt).toLocaleString()}
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12 }} gap={2}>
+            <Grid container size={{ xs: 12 }} sx={{
+              gap: 2
+            }}>
               <Grid size={{ xs: 3, sm: 2 }}>
                 <Typography variant="body2">Last Login:</Typography>
               </Grid>
               <Grid size="auto">
-                <Typography variant="body2" fontWeight="bold">
+                <Typography variant="body2" sx={{
+                  fontWeight: "bold"
+                }}>
                   {new Date(user.lastLogin).toLocaleString()}
                 </Typography>
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12 }} gap={2}>
+            <Grid container size={{ xs: 12 }} sx={{
+              gap: 2
+            }}>
               <Grid size={{ xs: 3, sm: 2 }}>
                 <Typography variant="body2">Subscription:</Typography>
               </Grid>
               <Grid size="auto">
-                <Typography variant="body2" fontWeight="bold">
+                <Typography variant="body2" sx={{
+                  fontWeight: "bold"
+                }}>
                   {user.subscription?.type || "N/A"}
                 </Typography>
               </Grid>

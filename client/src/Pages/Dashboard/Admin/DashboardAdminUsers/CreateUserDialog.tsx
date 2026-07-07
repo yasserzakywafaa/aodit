@@ -120,7 +120,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
-            inputProps={{ minLength: 8 }}
+            slotProps={{ htmlInput: { minLength: 8 } }}
             size="small"
             InputProps={{
               endAdornment: (

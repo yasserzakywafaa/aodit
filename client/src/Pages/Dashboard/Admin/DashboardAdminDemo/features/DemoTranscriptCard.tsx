@@ -122,17 +122,29 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
   return (
     <Card>
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <ForumIcon color="primary" sx={{ mr: 1 }} />
           <Typography variant="h6">Transcript</Typography>
         </Box>
 
         {!turns || turns.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             No turns recorded for this demo.
           </Typography>
         ) : (
-          <Box display="flex" flexDirection="column" gap={2}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2
+            }}>
             {turns.map((turn) => {
               const expanded = expandedTurns.has(turn.turnIndex);
               return (
@@ -147,27 +159,27 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                 >
                   {/* Turn header — click to toggle */}
                   <Box
-                    px={{ xs: 1.5, sm: 2 }}
-                    py={{ xs: 1.25, sm: 1 }}
-                    display="flex"
-                    alignItems="center"
-                    gap={{ xs: 0.75, sm: 1 }}
-                    flexWrap="wrap"
                     onClick={() => toggleTurn(turn.turnIndex)}
                     sx={{
+                      px: { xs: 1.5, sm: 2 },
+                      py: { xs: 1.25, sm: 1 },
+                      display: "flex",
+                      alignItems: "center",
+                      gap: { xs: 0.75, sm: 1 },
+                      flexWrap: "wrap",
                       bgcolor: "action.hover",
                       cursor: "pointer",
                       userSelect: "none",
-                      "&:hover": { bgcolor: "action.selected" },
-                    }}
-                  >
+                      "&:hover": { bgcolor: "action.selected" }
+                    }}>
                     <Box
-                      display="flex"
-                      alignItems="center"
-                      gap={{ xs: 0.75, sm: 1 }}
-                      minWidth={0}
-                      flex="1 1 auto"
-                    >
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: { xs: 0.75, sm: 1 },
+                        minWidth: 0,
+                        flex: "1 1 auto"
+                      }}>
                       {expanded ? (
                         <ExpandLess sx={{ fontSize: 18, opacity: 0.6 }} />
                       ) : (
@@ -175,45 +187,49 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                       )}
                       <Typography
                         variant="caption"
-                        fontWeight={700}
-                        sx={{ flexShrink: 0 }}
-                      >
+                        sx={{
+                          fontWeight: 700,
+                          flexShrink: 0
+                        }}>
                         Turn {turn.turnIndex}
                       </Typography>
                       <Typography
                         variant="caption"
-                        color="text.secondary"
-                        sx={{ display: { xs: "none", sm: "block" } }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          display: { xs: "none", sm: "block" }
+                        }}>
                         ·
                       </Typography>
                       <Typography
                         variant="caption"
-                        color="text.secondary"
                         noWrap
                         sx={{
+                          color: "text.secondary",
                           minWidth: 0,
                           maxWidth: { xs: "100%", sm: 220 },
                           textOverflow: "ellipsis",
-                          overflow: "hidden",
-                        }}
-                      >
+                          overflow: "hidden"
+                        }}>
                         {turn.turnType}
                       </Typography>
                     </Box>
 
                     {/* Score chip + reasoning button */}
                     <Box
-                      ml={{ xs: 0, sm: "auto" }}
-                      width={{ xs: "100%", sm: "auto" }}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent={{
-                        xs: "space-between",
-                        sm: "flex-end",
-                      }}
-                      gap={0.75}
-                    >
+                      sx={{
+                        ml: { xs: 0, sm: "auto" },
+                        width: { xs: "100%", sm: "auto" },
+                        display: "flex",
+                        alignItems: "center",
+
+                        justifyContent: {
+                          xs: "space-between",
+                          sm: "flex-end",
+                        },
+
+                        gap: 0.75
+                      }}>
                       <Chip
                         label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
                         color={scoreColor(turn.score)}
@@ -251,11 +267,14 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                       </Button>
                     </Box>
                   </Box>
-
                   {expanded && (
                     <>
                       {/* Adversary prompt */}
-                      <Box px={2} py={1.5}>
+                      <Box
+                        sx={{
+                          px: 2,
+                          py: 1.5
+                        }}>
                         <Chip
                           icon={<Bolt sx={{ fontSize: 16 }} />}
                           label="Adversary"
@@ -283,7 +302,11 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                       <Divider />
 
                       {/* Agent response — rendered as markdown */}
-                      <Box px={2} py={1.5}>
+                      <Box
+                        sx={{
+                          px: 2,
+                          py: 1.5
+                        }}>
                         <Chip
                           icon={<SmartToy sx={{ fontSize: 16 }} />}
                           label="Agent"
@@ -309,7 +332,6 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
           </Box>
         )}
       </CardContent>
-
       {/* Reasoning dialog */}
       <Dialog
         open={reasoningDialog.open}
@@ -341,16 +363,19 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
           >
             <Typography
               variant="subtitle1"
-              fontWeight={700}
-              sx={{ lineHeight: 1.25, width: "100%" }}
-            >
+              sx={{
+                fontWeight: 700,
+                lineHeight: 1.25,
+                width: "100%"
+              }}>
               Judge's Reasoning
             </Typography>
             <Typography
               variant="caption"
-              color="text.secondary"
-              sx={{ whiteSpace: "nowrap" }}
-            >
+              sx={{
+                color: "text.secondary",
+                whiteSpace: "nowrap"
+              }}>
               Turn {reasoningDialog.turnIndex}
             </Typography>
           </Box>
@@ -389,9 +414,10 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
         <DialogContent dividers>
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ lineHeight: 1.7 }}
-          >
+            sx={{
+              color: "text.secondary",
+              lineHeight: 1.7
+            }}>
             {reasoningDialog.reasoning}
           </Typography>
         </DialogContent>

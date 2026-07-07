@@ -71,16 +71,21 @@ export const getDashboardDemosDataGridConfig = (
       description: "Page/industry where the demo ran",
       renderCell: (params) => (
         <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          sx={{ height: "100%" }}
-        >
-          <Typography variant="body2" fontWeight="medium">
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            height: "100%"
+          }}>
+          <Typography variant="body2" sx={{
+            fontWeight: "medium"
+          }}>
             {params.row.source}
           </Typography>
           {params.row.sourcePath && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               {params.row.sourcePath}
             </Typography>
           )}

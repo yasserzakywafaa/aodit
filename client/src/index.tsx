@@ -36,9 +36,9 @@ const rootElement = document.getElementById("root");
 if (rootElement) {
   const app = (
     // 3. Wrap the App with CacheProvider
-    <CacheProvider value={cache}>
+    (<CacheProvider value={cache}>
       <App />
-    </CacheProvider>
+    </CacheProvider>)
   );
 
   createRoot(rootElement).render(app);

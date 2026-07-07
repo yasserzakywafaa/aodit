@@ -1,4 +1,12 @@
-import { Box, Button, Collapse, Drawer, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Collapse,
+  Drawer,
+  MenuItem,
+  MenuList,
+  Typography,
+} from "@mui/material";
 import {
   ExpandLessRounded,
   ExpandMoreRounded,
@@ -101,12 +109,13 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
     <>
       {(isTablet || isMobile) && !isDesktop && (
         <Box
-          display="flex"
-          component="div"
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
-          width="100%"
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
         >
           <Logo variant="small" component={LogoComponentEnum.ANCHOR} />
 
@@ -138,22 +147,22 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 backgroundColor: "background.default",
               }}
             >
-              <Box>
+              <MenuList disablePadding>
                 {NAV_LINKS.map((item) => {
                   if (item.id === "industries") {
                     return (
                       <Box key={item.id}>
                         <MenuItem
-                          onClick={() =>
-                            setIsIndustriesOpen((prev) => !prev)
-                          }
+                          onClick={() => setIsIndustriesOpen((prev) => !prev)}
                           sx={{
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "space-between",
                           }}
                         >
-                          <Typography variant="body2" color="text.primary">
+                          <Typography variant="body2" sx={{
+                            color: "text.primary"
+                          }}>
                             {item.label}
                           </Typography>
                           {isIndustriesOpen ? (
@@ -162,7 +171,11 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                             <ExpandMoreRounded fontSize="small" />
                           )}
                         </MenuItem>
-                        <Collapse in={isIndustriesOpen} timeout="auto" unmountOnExit>
+                        <Collapse
+                          in={isIndustriesOpen}
+                          timeout="auto"
+                          unmountOnExit
+                        >
                           <Box sx={{ pl: 1, pb: 0.5 }}>
                             {landingGroups.map((group) => {
                               const isExpanded =
@@ -182,9 +195,11 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                                   >
                                     <Typography
                                       variant="body2"
-                                      color="text.primary"
-                                      sx={{ fontSize: 13, fontWeight: 600 }}
-                                    >
+                                      sx={{
+                                        color: "text.primary",
+                                        fontSize: 13,
+                                        fontWeight: 600
+                                      }}>
                                       {group.category.label}
                                     </Typography>
                                     {isExpanded ? (
@@ -211,9 +226,10 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                                         >
                                           <Typography
                                             variant="body2"
-                                            color="text.primary"
-                                            sx={{ fontSize: 12.5 }}
-                                          >
+                                            sx={{
+                                              color: "text.primary",
+                                              fontSize: 12.5
+                                            }}>
                                             {page.title}
                                           </Typography>
                                         </MenuItem>
@@ -223,7 +239,14 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                                 </Box>
                               );
                             })}
-                            <Box sx={{ mt: 0.5, pt: 0.5, borderTop: "1px solid", borderColor: "divider" }}>
+                            <Box
+                              sx={{
+                                mt: 0.5,
+                                pt: 0.5,
+                                borderTop: "1px solid",
+                                borderColor: "divider",
+                              }}
+                            >
                               <MenuItem
                                 component="a"
                                 href={routes.industries}
@@ -232,9 +255,11 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                               >
                                 <Typography
                                   variant="body2"
-                                  color="text.primary"
-                                  sx={{ fontSize: 13, fontWeight: 600 }}
-                                >
+                                  sx={{
+                                    color: "text.primary",
+                                    fontSize: 13,
+                                    fontWeight: 600
+                                  }}>
                                   View All Industries
                                 </Typography>
                               </MenuItem>
@@ -252,7 +277,9 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                       href={item.route ?? undefined}
                       onClick={handleOnMenuItemClickEvent(item.id)}
                     >
-                      <Typography variant="body2" color="text.primary">
+                      <Typography variant="body2" sx={{
+                        color: "text.primary"
+                      }}>
                         {item.label}
                       </Typography>
                     </MenuItem>
@@ -280,40 +307,40 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     Demo
                   </Button>
                 </Box>
-              </Box>
+              </MenuList>
 
-              <Box marginBottom="1rem">
+              <MenuList disablePadding sx={{ mb: 1 }}>
                 {auth.isAuthenticated ? (
-                  <MenuItem>
+                  <Box sx={{ px: 2, py: 1 }}>
                     <UserAccountMenuButton user={auth.user as User} />
-                  </MenuItem>
+                  </Box>
                 ) : (
                   // Show Login in dev/local/on-prem (users need to log in)
-                  (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL || APP_CONSTANTS.IS_ON_PREM) && (
-                    <MenuItem onClick={handleToggleLoginModal}>
-                      <VpnKeyOutlined
-                        fontSize="small"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body1">Log in</Typography>
-                    </MenuItem>
-                  )
-                )}
-
-                {/* Show Register only in dev/local (NOT on-prem - admin creates users) */}
-                {!auth.isAuthenticated && (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
-                  <MenuItem onClick={handleToggleRegisterModal}>
-                    <LockOpenOutlined
+                  ((APP_CONSTANTS.IS_DEV ||
+                    APP_CONSTANTS.IS_LOCAL || APP_CONSTANTS.IS_ON_PREM) && (<MenuItem onClick={handleToggleLoginModal}>
+                    <VpnKeyOutlined
                       fontSize="small"
                       color="secondary"
                       sx={{ mr: 1 }}
                     />
-                    <Typography variant="body1">Register</Typography>
-                  </MenuItem>
+                    <Typography variant="body1">Log in</Typography>
+                  </MenuItem>))
                 )}
 
-                <MenuItem>
+                {/* Show Register only in dev/local (NOT on-prem - admin creates users) */}
+                {!auth.isAuthenticated &&
+                  (APP_CONSTANTS.IS_DEV || APP_CONSTANTS.IS_LOCAL) && (
+                    <MenuItem onClick={handleToggleRegisterModal}>
+                      <LockOpenOutlined
+                        fontSize="small"
+                        color="secondary"
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="body1">Register</Typography>
+                    </MenuItem>
+                  )}
+
+                <Box sx={{ px: 2, py: 1 }}>
                   <SettingsMenuButton
                     setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
                   >
@@ -321,8 +348,8 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                       Settings
                     </Typography>
                   </SettingsMenuButton>
-                </MenuItem>
-              </Box>
+                </Box>
+              </MenuList>
             </Box>
           </Drawer>
         </Box>

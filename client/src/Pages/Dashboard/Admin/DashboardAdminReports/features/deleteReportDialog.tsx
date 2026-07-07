@@ -24,7 +24,12 @@ const DeleteReportDialog = ({
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth={true}>
       <DialogTitle>
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1
+          }}>
           <DeleteOutlined color="error" fontSize="large" />
           <Typography variant="h5">Delete Report</Typography>
         </Box>
@@ -36,7 +41,6 @@ const DeleteReportDialog = ({
           <br /> This action cannot be undone.
         </Typography>
       </DialogContent>
-
       <DialogActions>
         <Button variant="outlined" color="primary" onClick={onClose}>
           Cancel

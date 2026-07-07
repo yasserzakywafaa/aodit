@@ -60,24 +60,24 @@ export const LoginModal = () => {
           </Box>
 
           <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              width: "100%",
-            }}
             className="login-form-wrapper"
-          >
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%"
+            }}>
             <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="stretch"
-              justifyContent="center"
-              gap={2}
-              sx={{ mt: 4 }}
               className="social-login-wrapper"
-            >
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "stretch",
+                justifyContent: "center",
+                gap: 2,
+                mt: 4
+              }}>
               {/* Hide social logins in on-prem mode (air-gapped) */}
               {!APP_CONSTANTS.IS_ON_PREM && (
                 <>

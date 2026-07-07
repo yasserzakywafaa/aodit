@@ -104,13 +104,16 @@ const MethodologySection = () => (
             }}
           >
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              mb={2}
-              flexWrap="wrap-reverse"
-            >
-              <Typography variant="h4" color="primary.main">
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 2,
+                flexWrap: "wrap-reverse"
+              }}>
+              <Typography variant="h4" sx={{
+                color: "primary.main"
+              }}>
                 {dimension}
               </Typography>
 
@@ -141,7 +144,9 @@ const MethodologySection = () => (
                     {category.id} · {category.name}
                   </Typography>
 
-                  <Typography color="text.secondary">
+                  <Typography sx={{
+                    color: "text.secondary"
+                  }}>
                     {category.methodologyExplanation}
                   </Typography>
                 </Box>
@@ -153,16 +158,23 @@ const MethodologySection = () => (
     </Box>
 
     {/*  8-Turn Adversarial Protocol Section */}
-    <Box mt={6} p={1}>
+    <Box
+      sx={{
+        mt: 6,
+        p: 1
+      }}>
       <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        gap={2}
-        mb={2}
-        flexWrap="wrap-reverse"
-      >
-        <Typography color="primary.main" variant="h4">
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 2,
+          mb: 2,
+          flexWrap: "wrap-reverse"
+        }}>
+        <Typography variant="h4" sx={{
+          color: "primary.main"
+        }}>
           8-Round Adversarial Protocol
         </Typography>
       </Box>
@@ -195,18 +207,21 @@ const MethodologySection = () => (
             }}
           >
             <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              gap={1}
-              mb={2}
-            >
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 1,
+                mb: 2
+              }}>
               <Typography variant="h5">{turn.name}</Typography>
 
               <Chip color="primary" variant="outlined" label={`${turn.id}`} />
             </Box>
 
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {turn.description}
             </Typography>
           </Box>

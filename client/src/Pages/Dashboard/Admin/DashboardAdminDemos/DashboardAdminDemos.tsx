@@ -29,21 +29,26 @@ const DashboardAdminDemos = () => {
   return (
     <Box>
       <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ mb: 1 }}
-      >
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 1
+        }}>
         <Typography variant="h4" component="h1" color="primary">
           Demos
         </Typography>
       </Box>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
         {paging.totalCount
           ? `${paging.totalCount} total`
           : "Free demos run by visitors across all pages."}
       </Typography>
-
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid
           showToolbar

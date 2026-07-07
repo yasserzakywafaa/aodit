@@ -25,11 +25,12 @@ const DashboardAdminDemo = () => {
   if (isFetching && !demo) {
     return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="400px"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "400px"
+        }}>
         <CircularProgress />
       </Box>
     );
@@ -41,7 +42,9 @@ const DashboardAdminDemo = () => {
         <Typography variant="h4" component="h1" color="primary" gutterBottom>
           Demo Not Found
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body1" sx={{
+          color: "text.secondary"
+        }}>
           The demo you're looking for doesn't exist or has been deleted.
         </Typography>
       </Box>
@@ -53,10 +56,14 @@ const DashboardAdminDemo = () => {
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
         Demo Details
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
         View the prompt, transcript, and source of this demo run.
       </Typography>
-
       <Grid container spacing={3}>
         <Grid size={{ xs: 12 }}>
           <DemoOverviewCard demo={demo} />

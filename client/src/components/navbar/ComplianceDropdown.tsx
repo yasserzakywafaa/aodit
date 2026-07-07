@@ -62,7 +62,6 @@ const ComplianceDropdown = () => {
           }}
         />
       </Button>
-
       <Menu
         id="compliance-menu"
         anchorEl={anchorEl}
@@ -78,19 +77,24 @@ const ComplianceDropdown = () => {
             divider={index < COMPLIANCE_ITEMS.length - 1}
             onClick={handleItemClick}
           >
-            <Stack direction="row" spacing={1.5} alignItems="center">
+            <Stack direction="row" spacing={1.5} sx={{
+              alignItems: "center"
+            }}>
               <img src={item.flag} alt={item.label} width={24} height={24} />
               <Box>
                 <Typography
                   className="compliance-item-label"
                   variant="body2"
-                  color="text.primary"
-                  fontWeight={600}
-                  sx={{ transition: "color 150ms ease" }}
-                >
+                  sx={{
+                    color: "text.primary",
+                    fontWeight: 600,
+                    transition: "color 150ms ease"
+                  }}>
                   {item.label}
                 </Typography>
-                <Typography variant="caption" color="text.primary">
+                <Typography variant="caption" sx={{
+                  color: "text.primary"
+                }}>
                   {item.description}
                 </Typography>
               </Box>

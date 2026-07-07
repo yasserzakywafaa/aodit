@@ -88,13 +88,16 @@ const PaymentStatusPage = () => {
         <>
           <Container className="payment-status-container" sx={{ paddingY: 4 }}>
             <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-            >
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}>
               <CircularProgress color="primary" size="10rem" />
-              <Typography variant="h4" marginTop={8}>
+              <Typography variant="h4" sx={{
+                marginTop: 8
+              }}>
                 Please wait while we securely process your payment...
               </Typography>
             </Box>
@@ -118,11 +121,12 @@ const PaymentStatusPage = () => {
             }}
           >
             <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-            >
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}>
               <img
                 src={""}
                 width="100%"
@@ -130,26 +134,35 @@ const PaymentStatusPage = () => {
               />
 
               <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                marginY={1}
-              >
-                <Typography variant="h4" component="h2" color="#2e7d32">
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginY: 1
+                }}>
+                <Typography variant="h4" component="h2" sx={{
+                  color: "#2e7d32"
+                }}>
                   Payment Successful
                 </Typography>
               </Box>
             </Box>
 
             <Box
-              marginY={1}
-              display="flex"
               component="div"
-              alignItems="center"
-              flexDirection="column"
-              justifyContent="center"
-            >
-              <Typography marginY={1} variant="h5" textAlign="center">
+              sx={{
+                marginY: 1,
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  marginY: 1,
+                  textAlign: "center"
+                }}>
                 Hooray, {auth.user.name.givenName}! 🎉 <br />
                 Your payment process of{" "}
                 {/* <span className="bold">{totalAmount}</span> has been completed */}
@@ -157,7 +170,12 @@ const PaymentStatusPage = () => {
                 completed successfully!
               </Typography>
 
-              <Typography marginY={1} variant="h6" textAlign="center">
+              <Typography
+                variant="h6"
+                sx={{
+                  marginY: 1,
+                  textAlign: "center"
+                }}>
                 Your subscription will end on{" "}
                 <b>
                   {new Date(
@@ -172,12 +190,13 @@ const PaymentStatusPage = () => {
               </Typography>
 
               <Box
-                marginY={1}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection={{ xs: "column", sm: "row" }}
-              >
+                sx={{
+                  marginY: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: { xs: "column", sm: "row" }
+                }}>
                 <Button
                   sx={{ margin: "0.5rem" }}
                   size="large"

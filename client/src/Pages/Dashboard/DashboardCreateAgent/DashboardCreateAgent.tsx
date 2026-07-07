@@ -89,24 +89,25 @@ const DashboardCreateAgent = () => {
           Create New Agent
         </Typography>
       </Box>
-
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid size={{ xs: 12, md: 6 }}>
           <Box
             component="form"
             onSubmit={handleSubmit}
-            display="flex"
-            flexDirection="column"
-            gap={2}
-          >
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2
+            }}>
             <Card variant="outlined" sx={{ borderWidth: 1 }}>
               <CardContent>
                 <Typography
                   variant="body1"
                   color="primary"
-                  fontWeight={600}
-                  sx={{ mb: 2 }}
-                >
+                  sx={{
+                    fontWeight: 600,
+                    mb: 2
+                  }}>
                   Agent details
                 </Typography>
                 <TextField
@@ -178,16 +179,18 @@ const DashboardCreateAgent = () => {
                   <Typography
                     variant="body1"
                     color="primary"
-                    fontWeight={600}
-                    sx={{ mb: 2 }}
-                  >
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2
+                    }}>
                     Evaluator (Judge) Endpoint
                   </Typography>
                   <Typography
                     variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 2 }}
-                  >
+                    sx={{
+                      color: "text.secondary",
+                      mb: 2
+                    }}>
                     Required in on-prem / air-gapped deployments. The judge
                     model must run on an OpenAI-compatible endpoint you
                     control — no requests leave your network. For methodology
@@ -298,9 +301,10 @@ const DashboardCreateAgent = () => {
               for its oversight. Creating an agent here registers it in the{" "}
               <Typography
                 component="span"
-                fontSize="inherit"
-                color="primary.main"
-              >
+                sx={{
+                  fontSize: "inherit",
+                  color: "primary.main"
+                }}>
                 aodit
               </Typography>{" "}
               platform and allows you to attach it to reports for evaluation.

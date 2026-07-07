@@ -35,27 +35,36 @@ const ProjectsCard = ({ projectsCount, userId }: ProjectsCardProps) => {
       <CardContent
         sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
       >
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <ArticleIcon color="primary" sx={{ mr: 1, fontSize: 32 }} />
           <Typography variant="h6">Projects</Typography>
         </Box>
         <Box
-          flexGrow={1}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          mb={2}
-        >
-          <Typography variant="h3" color="primary" fontWeight="bold">
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mb: 2
+          }}>
+          <Typography variant="h3" color="primary" sx={{
+            fontWeight: "bold"
+          }}>
             {projectsCount}
           </Typography>
         </Box>
         <Typography
           variant="body2"
-          color="text.secondary"
-          mb={2}
-          textAlign="center"
-        >
+          sx={{
+            color: "text.secondary",
+            mb: 2,
+            textAlign: "center"
+          }}>
           {projectsCount === 1 ? "Project Created" : "Projects Created"}
         </Typography>
         <Button

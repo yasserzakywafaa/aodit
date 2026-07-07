@@ -173,7 +173,9 @@ const DashboardAgent = () => {
           <Typography variant="h4" component="h1" color="primary" gutterBottom>
             {agent?.name || "Agent"}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Owner: {agent?.ownerName || "—"}
           </Typography>
         </Box>
@@ -189,14 +191,15 @@ const DashboardAgent = () => {
           </Button>
         )}
       </Box>
-
       {/* Agent details — auto-expand on-prem when evaluator fields are missing. */}
       <Accordion
         defaultExpanded={isOnPremEvaluatorMissing}
         sx={{ mt: 2, "&:before": { display: "none" } }}
       >
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography variant="subtitle1" color="primary" fontWeight={600}>
+          <Typography variant="subtitle1" color="primary" sx={{
+            fontWeight: 600
+          }}>
             Agent details
           </Typography>
         </AccordionSummary>
@@ -261,16 +264,19 @@ const DashboardAgent = () => {
                 <Typography
                   variant="subtitle1"
                   color="primary"
-                  fontWeight={600}
-                  sx={{ mt: 4, mb: 1 }}
-                >
+                  sx={{
+                    fontWeight: 600,
+                    mt: 4,
+                    mb: 1
+                  }}>
                   Evaluator (Judge) Endpoint
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 2 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    mb: 2
+                  }}>
                   Required in on-prem / air-gapped deployments. The judge model
                   must run on an OpenAI-compatible endpoint you control — no
                   requests leave your network. For methodology reasons, the
@@ -286,7 +292,9 @@ const DashboardAgent = () => {
                     mb: 1,
                   }}
                 >
-                  <Grid container spacing={2} alignItems="flex-start">
+                  <Grid container spacing={2} sx={{
+                    alignItems: "flex-start"
+                  }}>
                     <Grid size={{ xs: 12, md: 9 }}>
                       <TextField
                         required
@@ -427,7 +435,6 @@ const DashboardAgent = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-
       {/* Reports section */}
       <Paper variant="outlined" sx={{ p: 3, mt: 3 }}>
         <Typography
@@ -497,7 +504,9 @@ const DashboardAgent = () => {
             </TableBody>
           </Table>
         ) : (
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             No reports have been attached to this agent yet.
           </Typography>
         )}

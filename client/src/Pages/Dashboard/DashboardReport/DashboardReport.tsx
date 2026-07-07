@@ -265,10 +265,14 @@ const DashboardReport = () => {
           <Typography variant="h4" component="h1" color="primary" gutterBottom>
             {report?.name || "Report"}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             {totalScenarios} SCENARIOS · 8 TURNS · {framework.marketingLabel}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{
+            color: "text.secondary"
+          }}>
             {weightLabels}
           </Typography>
         </Box>
@@ -284,14 +288,15 @@ const DashboardReport = () => {
           </Button>
         )}
       </Box>
-
       {/* Report details — accordion, collapsed by default */}
       <Accordion
         defaultExpanded={false}
         sx={{ mt: 2, "&:before": { display: "none" } }}
       >
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography variant="subtitle1" color="primary" fontWeight={600}>
+          <Typography variant="subtitle1" color="primary" sx={{
+            fontWeight: 600
+          }}>
             Report details
           </Typography>
         </AccordionSummary>
@@ -318,7 +323,6 @@ const DashboardReport = () => {
           </Box>
         </AccordionDetails>
       </Accordion>
-
       {/* Evaluation Mode Tabs + Report Config */}
       {latestRun ? (
         <Accordion
@@ -326,7 +330,9 @@ const DashboardReport = () => {
           sx={{ mt: 2, "&:before": { display: "none" } }}
         >
           <AccordionSummary expandIcon={<ExpandMore />}>
-            <Typography variant="subtitle1" color="primary" fontWeight={600}>
+            <Typography variant="subtitle1" color="primary" sx={{
+              fontWeight: 600
+            }}>
               Report Config
             </Typography>
           </AccordionSummary>
@@ -377,9 +383,10 @@ const DashboardReport = () => {
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    mb: 3
+                  }}>
                   Select one of your registered agents and aodit will send
                   adversarial prompts directly to its endpoint using the AODIT-6
                   methodology. The agent must be reachable and respond to HTTP
@@ -390,16 +397,18 @@ const DashboardReport = () => {
                 <Typography
                   variant="subtitle2"
                   color="primary"
-                  fontWeight={600}
-                  sx={{ mb: 1 }}
-                >
+                  sx={{
+                    fontWeight: 600,
+                    mb: 1
+                  }}>
                   Agent Assignment
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 1.5 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    mb: 1.5
+                  }}>
                   Select the AI agent this report evaluates. A report cannot run
                   without an assigned agent (FINMA compliance).
                 </Typography>
@@ -582,9 +591,10 @@ const DashboardReport = () => {
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    mb: 3
+                  }}>
                   Select one or more frontier LLMs to benchmark against the
                   AODIT-6 framework. Each model runs every scenario
                   independently via OpenRouter.
@@ -604,7 +614,6 @@ const DashboardReport = () => {
           </Box>
         </Paper>
       )}
-
       {reportId && !latestRun && (
         <Box
           sx={{ mt: 3, display: "flex", justifyContent: "flex-start", gap: 2 }}
@@ -668,15 +677,15 @@ const DashboardReport = () => {
           )}
         </Box>
       )}
-
       {latestRun && (
         <Paper variant="outlined" sx={{ p: 3, mt: 3 }}>
           <Typography variant="h5" color="primary">
             <Typography
               component="span"
-              fontSize="inherit"
-              color="primary.main"
-            >
+              sx={{
+                fontSize: "inherit",
+                color: "primary.main"
+              }}>
               aodit
             </Typography>{" "}
             Framework™
@@ -763,9 +772,11 @@ const DashboardReport = () => {
 
                 <Typography
                   variant="caption"
-                  color="text.secondary"
-                  sx={{ display: "block", mb: 1 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    display: "block",
+                    mb: 1
+                  }}>
                   CALIBRATION GAP ANALYSIS
                 </Typography>
                 <Table size="small" sx={{ mb: 2 }}>
@@ -856,7 +867,12 @@ const DashboardReport = () => {
                 </Box>
               </>
             ) : (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mt: 2
+                }}>
                 Run a report to see dimension scores, composite score, rating,
                 calibration gap, and deployment verdict.
               </Typography>

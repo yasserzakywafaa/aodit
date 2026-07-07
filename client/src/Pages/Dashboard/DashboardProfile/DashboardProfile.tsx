@@ -160,7 +160,13 @@ const DashboardProfilePage = () => {
           <Typography variant="h4" component="h1" color="primary">
             Hi {user?.name.givenName} 👋🏻
           </Typography>
-          <Box display="flex" gap={1} alignItems="center" flexWrap="wrap">
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              alignItems: "center",
+              flexWrap: "wrap"
+            }}>
             <Chip
               label={user.status.charAt(0).toUpperCase() + user.status.slice(1)}
               color={getStatusColor(user.status) as any}
@@ -177,13 +183,14 @@ const DashboardProfilePage = () => {
             component="a"
             href={`mailto:${user.email}`}
             variant="body2"
-            color="text.secondary"
+            sx={{
+              color: "text.secondary"
+            }}
           >
             {user.email}
           </Typography>
         </Box>
       </Box>
-
       {/* Tabs Navigation */}
       <Box
         className="tabs-container"
@@ -214,7 +221,6 @@ const DashboardProfilePage = () => {
           /> */}
         </Tabs>
       </Box>
-
       {/* Tab Panels */}
       {/* Profile Tab */}
       <TabPanel value={activeTab} index={0}>
@@ -223,14 +229,21 @@ const DashboardProfilePage = () => {
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Card className="stat-card" elevation={3}>
               <CardContent>
-                <Box display="flex" alignItems="center" mb={2}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 2
+                  }}>
                   <ArticleOutlined color="primary" sx={{ mr: 1 }} />
                   <Typography variant="h6">Total Reports</Typography>
                 </Box>
                 <Typography variant="h4" color="primary">
                   {user.reportsCount}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Reports created
                 </Typography>
               </CardContent>
@@ -268,7 +281,9 @@ const DashboardProfilePage = () => {
                   <Typography variant="h6" className="text-underline">
                     Full Name
                   </Typography>
-                  <Typography component="span" color="text.secondary">
+                  <Typography component="span" sx={{
+                    color: "text.secondary"
+                  }}>
                     {`${user.name.givenName} ${user.name.familyName}`}
                   </Typography>
                 </Grid>
@@ -280,7 +295,9 @@ const DashboardProfilePage = () => {
                   <Typography
                     component="a"
                     href={`mailto:${user.email}`}
-                    color="text.secondary"
+                    sx={{
+                      color: "text.secondary"
+                    }}
                   >
                     {`${user.email}`}
                   </Typography>
@@ -290,7 +307,9 @@ const DashboardProfilePage = () => {
                   <Typography variant="h6" className="text-underline">
                     Date joined
                   </Typography>
-                  <Typography component="span" color="text.secondary">
+                  <Typography component="span" sx={{
+                    color: "text.secondary"
+                  }}>
                     {new Date(user.createdAt).toLocaleString("en-GB", {
                       year: "numeric",
                       month: "short",
@@ -304,19 +323,27 @@ const DashboardProfilePage = () => {
                     Appearance
                   </Typography>
                   <Box
-                    display="flex"
-                    alignItems="center"
-                    gap={1}
-                    sx={{ cursor: "pointer" }}
                     onClick={handleOnDarkModeSwitchChange}
-                  >
-                    <Box display="flex" alignItems="center" gap={1}>
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      cursor: "pointer"
+                    }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1
+                      }}>
                       <WbSunnyOutlined
                         fontSize="small"
                         color="secondary"
                         sx={{ mr: 1 }}
                       />
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         LIGHT
                       </Typography>
                     </Box>
@@ -330,8 +357,15 @@ const DashboardProfilePage = () => {
                       onChange={undefined}
                     />
 
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Typography variant="body2" color="text.secondary">
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1
+                      }}>
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         DARK
                       </Typography>
                       <ModeNightOutlined
@@ -347,7 +381,9 @@ const DashboardProfilePage = () => {
                   <Typography variant="h6" className="text-underline">
                     Account Age
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     {calculateAccountAge()} days since joined Aodit
                   </Typography>
                 </Grid>
@@ -360,7 +396,9 @@ const DashboardProfilePage = () => {
                   >
                     Last Login
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     {user.lastLogin
                       ? new Date(user.lastLogin).toLocaleDateString("en-GB", {
                           day: "numeric",
@@ -393,7 +431,12 @@ const DashboardProfilePage = () => {
                 <Typography variant="h5" color="error" sx={{ mb: 1 }}>
                   Danger Zone
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 2
+                  }}>
                   Permanently delete your account and all associated reports,
                   agents, API keys, and subscription data. Running audits will be
                   stopped immediately.
@@ -411,14 +454,12 @@ const DashboardProfilePage = () => {
           )}
         </Grid>
       </TabPanel>
-
       {/* Subscription Tab */}
       <TabPanel value={activeTab} index={1}>
         <Grid container spacing={3}>
           <SubscriptionSection />
         </Grid>
       </TabPanel>
-
       <DeleteAccountDialog
         isOpen={isDeleteAccountDialogOpen}
         isDeleting={isDeletingAccount}

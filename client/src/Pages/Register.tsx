@@ -59,26 +59,33 @@ const RegisterPage = () => {
 
         {APP_CONSTANTS.IS_ON_PREM ? (
           <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            gap={1}
-            sx={{ maxWidth: 360, textAlign: "center" }}
-          >
-            <Typography variant="body1" color="text.secondary">
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 1,
+              maxWidth: 360,
+              textAlign: "center"
+            }}>
+            <Typography variant="body1" sx={{
+              color: "text.secondary"
+            }}>
               Account creation is managed by your IT administrator.
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Please contact your system administrator to request access.
             </Typography>
           </Box>
         ) : (
           <Box
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            alignItems="center"
-          >
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              alignItems: "center"
+            }}>
             <SocialRegister authType="register" />
             <PhoneAuth authType="register" />
             <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>

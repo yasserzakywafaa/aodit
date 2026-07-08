@@ -1,5 +1,10 @@
+// Skip during vite-plugin-prerender — SW reload mid-capture nests a duplicate document in #root.
+const isPrerendering =
+  typeof window !== "undefined" &&
+  Boolean(window.__PRERENDER_INJECTED?.isPrerendering);
+
 // Register service worker
-if ("serviceWorker" in window.navigator) {
+if (!isPrerendering && "serviceWorker" in window.navigator) {
   navigator.serviceWorker
     .register("/serviceworker.js")
     .then((registration) => {
@@ -35,7 +40,7 @@ if ("serviceWorker" in window.navigator) {
 }
 
 // Handle controller change (when new SW activates)
-if ("serviceWorker" in navigator) {
+if (!isPrerendering && "serviceWorker" in navigator) {
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     const reloadOnce = localStorage.getItem("SW_RELOAD_ONCE");
 

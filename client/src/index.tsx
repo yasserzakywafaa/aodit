@@ -21,14 +21,18 @@ if (!nonce) {
   console.warn("CSP Nonce meta tag not found. MUI styles might be blocked.");
 }
 
-// 2. Create an Emotion cache instance with the nonce
-//    speedy: false forces Emotion to write CSS as text nodes instead of using
-//    insertRule(), so styles are visible in the DOM and captured by prerendering.
+// 2. Create an Emotion cache instance with the nonce.
+//    speedy: false only during prerender so styles are captured as <style> tags;
+//    at runtime use insertRule (speedy: true) to avoid CSS leaking as text.
+const isPrerendering =
+  typeof window !== "undefined" &&
+  Boolean(window.__PRERENDER_INJECTED?.isPrerendering);
+
 const cache = createCache({
   key: "css",
   prepend: true,
   nonce: nonce,
-  speedy: false,
+  speedy: !isPrerendering,
 });
 // --- End CSP Nonce Handling ---
 

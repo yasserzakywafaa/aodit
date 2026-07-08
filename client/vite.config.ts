@@ -2,10 +2,14 @@ import { defineConfig, loadEnv } from "vite";
 import { prerenderPaths, routes } from "./src/application/routes";
 
 import { LANDING_PAGES } from "./src/application/shared/landingPages";
+import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "path";
 import prerender from "vite-plugin-prerender";
 import react from "@vitejs/plugin-react";
+
+const require = createRequire(import.meta.url);
+const { sanitizePrerenderedHtml } = require("./scripts/sanitize-prerender-html.js");
 
 const SITEMAP_OUTPUT_PATH = path.join(__dirname, "public/sitemaps/sitemap.xml");
 const SITEMAP_DEFAULT_PRIORITY = "0.7";
@@ -184,6 +188,7 @@ export default defineConfig(async ({ mode }) => {
             /http:\/\/localhost:\d+\//g,
             "/",
           );
+          renderedRoute.html = sanitizePrerenderedHtml(renderedRoute.html);
           return renderedRoute;
         },
       }),

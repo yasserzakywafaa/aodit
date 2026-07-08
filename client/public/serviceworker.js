@@ -1,7 +1,7 @@
 const _this = this;
-const version = "20260707-115859"; // Increment this on every deploy
+const version = "20260708-110328"; // Increment this on every deploy
 const host = _this.location.origin;
-const CACHE_NAME = `blogz-v${version}`;
+const CACHE_NAME = `aodit-v${version}`;
 const urlsToCache = ["/", "/settings", "/index.html"];
 
 // Install service worker

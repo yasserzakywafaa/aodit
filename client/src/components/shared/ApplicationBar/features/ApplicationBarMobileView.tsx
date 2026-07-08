@@ -29,7 +29,6 @@ import {
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
   { id: "home", label: "Home", route: routes.features },
@@ -67,7 +66,6 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
   const [isIndustriesOpen, setIsIndustriesOpen] = useState(false);
   const [expandedCategoryId, setExpandedCategoryId] =
     useState<LandingPageCategoryId | null>(null);
@@ -106,17 +104,15 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
   };
 
   return (
-    <>
-      {(isTablet || isMobile) && !isDesktop && (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
           <Logo variant="small" component={LogoComponentEnum.ANCHOR} />
 
           <Button
@@ -352,9 +348,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
               </MenuList>
             </Box>
           </Drawer>
-        </Box>
-      )}
-    </>
+    </Box>
   );
 };
 

@@ -10,7 +10,6 @@ import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
 import { routes } from "src/application/routes";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
 
 const NAV_LINKS = [
   { id: "industries", label: "Industries", route: null },
@@ -42,7 +41,6 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
-  const { isDesktop } = useDeviceSize();
 
   const buttonHoverStyleSecondary = {
     "&:hover": {
@@ -59,17 +57,15 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
 
   return (
     <>
-      {isDesktop && (
-        <>
-          <Box
-            role="menu"
-            sx={{
-              display: { xs: "none", md: "flex" },
-              justifyContent: "space-between",
-              alignItems: "center",
-              flex: 1,
-            }}
-          >
+      <Box
+        role="menu"
+        sx={{
+          display: { xs: "none", md: "flex" },
+          justifyContent: "space-between",
+          alignItems: "center",
+          flex: 1,
+        }}
+      >
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
@@ -176,8 +172,6 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
             />
           </Box>
-        </>
-      )}
     </>
   );
 };

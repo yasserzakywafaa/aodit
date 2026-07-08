@@ -1,6 +1,10 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const {
+  sanitizePrerenderedHtml,
+  countRoots,
+} = require("../../scripts/sanitize-prerender-html.js");
 
 const OUTPUT_DIR_NAME = "dist";
 const INDEX_HTML_FILE_NAME = "index.html";
@@ -174,6 +178,14 @@ const processBuildFiles = () => {
   );
   for (const htmlPath of indexHtmlPaths) {
     let html = readFile(htmlPath);
+    const rootsBefore = countRoots(html);
+    html = sanitizePrerenderedHtml(html);
+    const rootsAfter = countRoots(html);
+    if (rootsBefore !== rootsAfter) {
+      console.log(
+        `[Nonce Script] Sanitized ${htmlPath} (#root: ${rootsBefore} → ${rootsAfter})`,
+      );
+    }
     html = injectNonceIntoIndexHtml(html, nonce);
     writeFile(htmlPath, html);
   }

@@ -7,6 +7,17 @@ import { routes } from "../routes";
 // All backend routes are on the same origin, so this is safe and required.
 axios.defaults.withCredentials = true;
 
+axios.interceptors.request.use((config) => {
+  if (window.location.hostname.includes(".vercel.app")) {
+    const previewSecret = import.meta.env.REACT_APP_PREVIEW_SECRET;
+    if (previewSecret) {
+      config.headers = config.headers ?? {};
+      config.headers["X-Preview-Secret"] = previewSecret;
+    }
+  }
+  return config;
+});
+
 let isRefreshing = false;
 let refreshQueue: Array<() => void> = [];
 let isLoggingOut = false;

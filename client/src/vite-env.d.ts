@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly REACT_APP_DEV_API_URL: string;
   readonly REACT_APP_PROD_API_URL: string;
   readonly REACT_APP_GOOGLE_ANALYTICS_ID: string;
+  readonly REACT_APP_PREVIEW_SECRET: string;
 }
 
 interface ImportMeta {

@@ -1,6 +1,15 @@
 import CONFIG from "./config";
-import { Express } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 import cors from "cors";
+
+const isVercelOrigin = (origin: string): boolean => {
+  try {
+    const { hostname } = new URL(origin);
+    return hostname.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+};
 
 const getAllowedOrigins = (): string[] => {
   const {
@@ -24,7 +33,11 @@ const corsOptions = {
   origin: (origin: string, callback: Function) => {
     const allowedOrigins = getAllowedOrigins();
 
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (
+      !origin ||
+      allowedOrigins.indexOf(origin) !== -1 ||
+      isVercelOrigin(origin)
+    ) {
       callback(null, true);
     } else {
       console.error(`❌ Not allowed by CORS: ${origin}`);
@@ -33,9 +46,39 @@ const corsOptions = {
   },
   // origin: "*",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Custom-Header"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Custom-Header",
+    "X-Preview-Secret",
+  ],
   credentials: true, // Allow credentials (cookies, authorization headers)
   optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+export const verifyPreviewSecret = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.method === "OPTIONS") {
+    return next();
+  }
+
+  const origin = req.headers.origin;
+  if (!origin || !isVercelOrigin(origin)) {
+    return next();
+  }
+
+  const previewSecret = req.headers["x-preview-secret"];
+  const expectedSecret = process.env.PREVIEW_SECRET;
+
+  if (!expectedSecret || previewSecret !== expectedSecret) {
+    console.error(`❌ Invalid preview secret for Vercel origin: ${origin}`);
+    return res.status(403).json({ error: "Forbidden: invalid preview secret" });
+  }
+
+  return next();
 };
 
 const handleCorsConfig = (expressApp: Express) => {
@@ -44,6 +87,8 @@ const handleCorsConfig = (expressApp: Express) => {
 
   // Explicitly handle OPTIONS requests
   expressApp.options("*", cors(corsOptions));
+
+  expressApp.use(verifyPreviewSecret);
 };
 
 export default handleCorsConfig;

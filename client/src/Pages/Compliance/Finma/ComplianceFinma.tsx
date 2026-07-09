@@ -13,7 +13,7 @@ import {
 } from "src/shared/constants/regulatoryAlignment";
 import {
   ArrowForward,
-  CheckCircleOutlinedd,
+  CheckCircleOutlined,
   FormatQuoteRounded,
   WarningAmberRounded,
 } from "@mui/icons-material";
@@ -148,8 +148,9 @@ const ComplianceFinmaPage = () => {
               component="span"
               sx={{
                 fontSize: "inherit",
-                color: "primary.main"
-              }}>
+                color: "primary.main",
+              }}
+            >
               aodit
             </Typography>{" "}
             maps to Swiss financial market supervision requirements for AI in
@@ -196,8 +197,9 @@ const ComplianceFinmaPage = () => {
               sx={{
                 alignItems: "flex-start",
                 gap: 1.5,
-                mb: 1.5
-              }}>
+                mb: 1.5,
+              }}
+            >
               <FormatQuoteRounded
                 sx={{ color: primaryColor, fontSize: 28, mt: 0.25 }}
               />
@@ -242,8 +244,9 @@ const ComplianceFinmaPage = () => {
               component="span"
               sx={{
                 fontSize: "inherit",
-                color: "primary.main"
-              }}>
+                color: "primary.main",
+              }}
+            >
               aodit
             </Typography>{" "}
             Fits in the Lifecycle
@@ -309,8 +312,9 @@ const ComplianceFinmaPage = () => {
                   sx={{
                     alignItems: "center",
                     gap: 1.5,
-                    mb: 1.5
-                  }}>
+                    mb: 1.5,
+                  }}
+                >
                   <PictureAsPdfRoundedIcon
                     sx={{ color: primaryColor, fontSize: 26 }}
                   />
@@ -331,8 +335,9 @@ const ComplianceFinmaPage = () => {
                   variant="body2"
                   sx={{
                     color: "text.secondary",
-                    mb: 2.5
-                  }}>
+                    mb: 2.5,
+                  }}
+                >
                   {FINMA_OFFICIAL_NOTICE.authority} · Published{" "}
                   {FINMA_OFFICIAL_NOTICE.publishedDate}
                 </Typography>
@@ -427,8 +432,9 @@ const ComplianceFinmaPage = () => {
                     sx={{
                       justifyContent: "space-between",
                       alignItems: "center",
-                      mb: 1.5
-                    }}>
+                      mb: 1.5,
+                    }}
+                  >
                     <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
                       {row.principle}
                     </Typography>
@@ -463,8 +469,9 @@ const ComplianceFinmaPage = () => {
                         component="span"
                         sx={{
                           fontSize: "inherit",
-                          color: "primary.main"
-                        }}>
+                          color: "primary.main",
+                        }}
+                      >
                         aodit
                       </Typography>{" "}
                       Level
@@ -554,8 +561,9 @@ const ComplianceFinmaPage = () => {
                     sx={{
                       justifyContent: "space-between",
                       alignItems: "center",
-                      mb: 1.5
-                    }}>
+                      mb: 1.5,
+                    }}
+                  >
                     <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
                       {row.standard}
                     </Typography>
@@ -653,8 +661,9 @@ const ComplianceFinmaPage = () => {
               component="span"
               sx={{
                 fontSize: "inherit",
-                color: "primary.main"
-              }}>
+                color: "primary.main",
+              }}
+            >
               aodit
             </Typography>{" "}
             Adds That No Standard Currently Requires
@@ -666,8 +675,9 @@ const ComplianceFinmaPage = () => {
                 direction="row"
                 sx={{
                   alignItems: "flex-start",
-                  gap: 1.5
-                }}>
+                  gap: 1.5,
+                }}
+              >
                 <CheckCircleOutlined
                   sx={{ color: primaryColor, fontSize: 20, mt: 0.25 }}
                 />
@@ -689,8 +699,9 @@ const ComplianceFinmaPage = () => {
             sx={{
               alignItems: "center",
               gap: 1.5,
-              mb: 3
-            }}>
+              mb: 3,
+            }}
+          >
             <WarningAmberRounded sx={{ color: "#D97706", fontSize: 26 }} />
             <Typography
               variant="h4"
@@ -781,8 +792,9 @@ const ComplianceFinmaPage = () => {
               component="span"
               sx={{
                 fontSize: "inherit",
-                color: "primary.main"
-              }}>
+                color: "primary.main",
+              }}
+            >
               aodit
             </Typography>{" "}
             maps to your institution's FINMA compliance requirements.
@@ -791,7 +803,7 @@ const ComplianceFinmaPage = () => {
             direction={{ xs: "column", sm: "row" }}
             spacing={1.5}
             sx={{
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             <Button

@@ -26,7 +26,9 @@ import AoditDemoPlayground from "src/components/shared/AoditDemoPlayground";
 import Page from "src/components/shared/Page/Page";
 import { alpha } from "@mui/material/styles";
 import { routes } from "src/application/routes";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // ---------------------------------------------------------------------------
@@ -113,6 +115,12 @@ const DemoPage = () => {
   } = useApplicationContext();
 
   const isDark = themeMode === "dark";
+
+  useEffect(() => {
+    trackEvent("demo_start", {
+      source: "demo_page_visit",
+    });
+  }, []);
 
   return (
     <Page

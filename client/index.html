@@ -178,9 +178,9 @@
       };
     </script>
 
-    <!-- Conditional Google Tag Manager -->
+    <!-- Google Analytics 4 (production only) -->
     <script nonce="%NONCE_PLACEHOLDER%">
-      if ("%REACT_APP_ENV%" === "production") {
+      if ("%REACT_APP_ENV%" === "production" && "%REACT_APP_GOOGLE_ANALYTICS_ID%") {
         const gaScript1 = document.createElement("script");
         gaScript1.async = true;
         gaScript1.nonce = "%NONCE_PLACEHOLDER%";
@@ -199,7 +199,7 @@
         console.log("📊 Google Analytics: Script loaded ✅");
       }
     </script>
-    <!-- End Conditional Google Tag Manager -->
+    <!-- End Google Analytics 4 -->
   </head>
 
   <body>

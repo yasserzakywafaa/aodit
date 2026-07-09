@@ -38,6 +38,7 @@ import { alpha } from "@mui/material/styles";
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import euHostedImg from "src/assets/images/eu_hosted.webp";
 import { routes } from "src/application/routes";
+import { trackEvent } from "src/shared/utils/ga4";
 import swissMadeImg from "src/assets/images/swiss_made.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useMemo } from "react";
@@ -134,6 +135,23 @@ const FeaturesPage = ({
 
   const showSwissBadges = region === "swiss" && !landingContent;
   const showFinmaRegulatory = region === "swiss" && !landingContent;
+  const ctaLocation = landingContent ? "industry_page" : "features_page";
+
+  const handleRequestEvaluationClick = () => {
+    trackEvent("cta_click", {
+      cta: "request_evaluation",
+      location: ctaLocation,
+    });
+    navigate(routes.contact);
+  };
+
+  const handleTryLiveDemoClick = () => {
+    trackEvent("cta_click", {
+      cta: "try_live_demo",
+      location: ctaLocation,
+    });
+    navigate(routes.demo);
+  };
 
   return (
     <Page
@@ -563,7 +581,7 @@ const FeaturesPage = ({
               variant="contained"
               size="large"
               endIcon={<ArrowForward />}
-              onClick={() => navigate(routes.contact)}
+              onClick={handleRequestEvaluationClick}
               sx={{ px: 5, py: 1.5 }}
             >
               Request Evaluation
@@ -572,7 +590,7 @@ const FeaturesPage = ({
               variant="outlined"
               size="large"
               endIcon={<ArrowForward />}
-              onClick={() => navigate(routes.demo)}
+              onClick={handleTryLiveDemoClick}
               sx={{ px: 5, py: 1.5 }}
             >
               Try Live Demo

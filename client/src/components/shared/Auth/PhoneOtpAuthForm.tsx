@@ -21,6 +21,7 @@ import axios from "axios";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { parsePhoneNumber } from "libphonenumber-js";
 import { routes } from "src/application/routes";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
 
@@ -192,6 +193,10 @@ const PhoneOtpAuthForm = ({
             ? "Phone verified and account created."
             : "Logged in successfully."),
         type: ToastTypes.Success,
+      });
+
+      trackEvent(isRegister ? "sign_up" : "login", {
+        method: "phone_otp",
       });
 
       onWaitingForOtp?.(false);

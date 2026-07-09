@@ -20,6 +20,7 @@ import ScrollToTopButton from "../ScrollToTopButton";
 import classNames from "classnames";
 import { routes } from "src/application/routes";
 import { scrollToTop } from "src/shared/utils/scrollTo";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
 
 export interface HreflangAlternate {
@@ -95,6 +96,10 @@ const Page = (params: PageProps) => {
       handleSetAuthInfo({
         isAuthenticated: true,
         user: fetchedUser,
+      });
+      trackEvent("login", {
+        method: provider ?? "oauth",
+        auth_type: "oauth",
       });
       navigate(routes.dashboard.base);
     } catch (error) {

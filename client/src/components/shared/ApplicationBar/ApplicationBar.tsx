@@ -9,6 +9,7 @@ import { PricingModal } from "src/components/Modals/PricingModal/PricingModal";
 import { RegisterModal } from "src/components/Modals/RegisterModal/RegisterModal";
 import { routes } from "src/application/routes";
 import { scrollToSection } from "src/shared/utils/scrollTo";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
 import useDetectScroll from "src/shared/hooks/useDetectScroll";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
@@ -70,6 +71,11 @@ const ApplicationBar = () => {
   };
 
   const handleOnMenuItemClick = (sectionId: string) => {
+    trackEvent("nav_click", {
+      section: sectionId,
+      page_path: location.pathname,
+    });
+
     switch (sectionId) {
       case "home":
         navigate(routes.features);

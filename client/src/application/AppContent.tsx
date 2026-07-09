@@ -8,6 +8,8 @@ import APP_CONSTANTS from "./shared/app_constants";
 import CookiePolicy from "src/components/shared/CookiePolicy/CookiePolicy";
 import { CssBaseline } from "@mui/material";
 import CustomCursor from "src/components/shared/CustomCursor/CustomCursor";
+import Ga4PageView from "src/components/analytics/Ga4PageView";
+import Ga4ScrollDepth from "src/components/analytics/Ga4ScrollDepth";
 import { LANDING_PAGES } from "./shared/landingPages";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
@@ -160,6 +162,8 @@ const AppContent = () => {
 
       {!state.isFetchingUserInfo && (
         <BrowserRouter>
+          <Ga4PageView />
+          <Ga4ScrollDepth />
           <Routes>
             {/* Auth Routes */}
             <Route path={routes.auth.login} element={<LoginPage />} />

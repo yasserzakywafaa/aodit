@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { alpha } from "@mui/material/styles";
 import axios from "axios";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useState } from "react";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,6 +56,9 @@ const SubscribeSection = ({
       const message =
         response.data?.message || "You're on the list. Check your inbox.";
       Notify({ content: message, type: ToastTypes.Success });
+      trackEvent("lead_magnet_submit", {
+        source: "subscribe_section",
+      });
       setEmail("");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data?.message) {

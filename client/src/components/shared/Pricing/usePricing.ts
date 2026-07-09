@@ -3,6 +3,7 @@ import { Product } from "src/shared/types/payment";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import { routes } from "src/application/routes";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
 import { usePaymentContext } from "../Payment/store/Provider";
@@ -138,6 +139,11 @@ export const usePricing = () => {
   const handleOnSubscribeClick = async (
     subscriptionPlan: SubscriptionPlanEnum,
   ) => {
+    trackEvent("subscribe_click", {
+      plan: subscriptionPlan,
+      is_authenticated: isAuthenticated,
+    });
+
     if (!isAuthenticated) {
       handleToggleRegisterModal();
       return;

@@ -48,6 +48,7 @@ import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
 
 interface TurnResult {
@@ -627,6 +628,10 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
 
   const handleStart = async () => {
     if (!systemPrompt.trim()) return;
+    trackEvent("demo_start", {
+      source: sourceLabel ?? "Home",
+      model_id: modelId,
+    });
     setIsStarting(true);
     setStartError(null);
     setDemoStatus(null);

@@ -21,6 +21,7 @@ import PDF from "@mui/icons-material/PictureAsPdf";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useState } from "react";
 import {
   FEATURED_REPORT_CONTENT,
@@ -115,6 +116,9 @@ const DownloadReportSection = ({
       Notify({
         content: "Thank you — opening the executive summary.",
         type: ToastTypes.Success,
+      });
+      trackEvent("lead_magnet_submit", {
+        source: "executive_summary_dialog",
       });
       setLeadOpen(false);
       resetLeadForm();

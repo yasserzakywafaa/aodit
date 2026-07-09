@@ -30,6 +30,7 @@ import {
 } from "src/application/shared/landingPages";
 import { routes } from "src/application/routes";
 import Page from "src/components/shared/Page/Page";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useNavigate } from "react-router-dom";
 
 const PAGE_TITLE =
@@ -123,7 +124,13 @@ const IndustriesHub = () => {
               variant="contained"
               size="large"
               endIcon={<ArrowForwardRounded />}
-              onClick={() => navigate(routes.demo)}
+              onClick={() => {
+                trackEvent("cta_click", {
+                  cta: "industries_get_demo",
+                  location: "industries_hub",
+                });
+                navigate(routes.demo);
+              }}
               sx={{ px: 4, py: 1.4 }}
             >
               Get a Demo
@@ -223,7 +230,14 @@ const IndustriesHub = () => {
                     <Button
                       variant="text"
                       endIcon={<ArrowForwardRounded fontSize="small" />}
-                      onClick={() => navigate(page.slug)}
+                      onClick={() => {
+                        trackEvent("cta_click", {
+                          cta: "industry_learn_more",
+                          location: "industries_hub_card",
+                          target: page.slug,
+                        });
+                        navigate(page.slug);
+                      }}
                       sx={{ px: 0.5 }}
                     >
                       Learn more

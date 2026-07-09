@@ -15,6 +15,7 @@ import {
 import { fontFamilyInter, primaryColor } from "src/application/shared/themes";
 
 import { routes } from "src/application/routes";
+import { trackEvent } from "src/shared/utils/ga4";
 import { useNavigate } from "react-router-dom";
 
 export interface HeroContent {
@@ -38,6 +39,21 @@ interface HeroProps {
 const Hero = ({ content }: HeroProps) => {
   const navigate = useNavigate();
   const resolved = content;
+  const handleRequestEvaluationClick = () => {
+    trackEvent("cta_click", {
+      cta: "request_evaluation",
+      location: "hero",
+    });
+    navigate(routes.contact);
+  };
+
+  const handleTryLiveDemoClick = () => {
+    trackEvent("cta_click", {
+      cta: "try_live_demo",
+      location: "hero",
+    });
+    navigate(routes.demo);
+  };
 
   return (
     <Box
@@ -122,7 +138,7 @@ const Hero = ({ content }: HeroProps) => {
             variant="contained"
             size="large"
             endIcon={<ArrowForward />}
-            onClick={() => navigate(routes.contact)}
+            onClick={handleRequestEvaluationClick}
             sx={{ px: 4, py: 1.2 }}
           >
             Request Evaluation
@@ -131,7 +147,7 @@ const Hero = ({ content }: HeroProps) => {
             variant="outlined"
             size="large"
             endIcon={<ArrowForward />}
-            onClick={() => navigate(routes.demo)}
+            onClick={handleTryLiveDemoClick}
             sx={{ px: 4, py: 1.2 }}
           >
             Try Live Demo

@@ -1,6 +1,6 @@
 import "./App.scss";
 
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { darkTheme, lightTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
@@ -14,30 +14,12 @@ import { LANDING_PAGES } from "./shared/landingPages";
 import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { LoaderVariantEnum } from "src/shared/types/types";
 import NotFoundPage from "../Pages/NotFound/NotFound";
+import ProtectedRoute from "./ProtectedRoute";
 import { ThemeProvider } from "@mui/material/styles";
-import { getApplicationInitialState } from "./store/state";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
-import { removeLocalStorageAuthItems } from "src/shared/utils/localstorage";
 import { routes } from "./routes";
 import { useApplicationContext } from "./store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
-
-const ResetAndRedirectHome = () => {
-  const navigate = useNavigate();
-  const {
-    manager: { handleSetAuthInfo },
-  } = useApplicationContext();
-
-  useEffect(() => {
-    removeLocalStorageAuthItems();
-    handleSetAuthInfo(getApplicationInitialState().auth);
-
-    // Optional: Redirect to Login page (if any)
-    navigate(routes.features, { replace: true });
-  }, [handleSetAuthInfo, navigate]);
-
-  return null;
-};
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const FeaturesHomeRoute = lazy(
@@ -219,98 +201,97 @@ const AppContent = () => {
               element={<DataProcessingAgreementPage />}
             />
 
-            {state.auth.isAuthenticated && !!state.auth.user ? (
-              <>
-                {/* User Dashboard Routes */}
-                <Route
-                  path={routes.dashboard.base}
-                  element={<DashboardLayout />}
-                >
-                  <Route index element={<DashboardPage />} />
+            <Route
+              path={routes.dashboard.base}
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DashboardPage />} />
 
-                  <Route
-                    path={routes.dashboard.reports.base}
-                    element={<DashboardReportsPage />}
-                  />
+              <Route
+                path={routes.dashboard.reports.base}
+                element={<DashboardReportsPage />}
+              />
 
-                  <Route
-                    path={routes.dashboard.reports.reportById(":reportId")}
-                    element={<DashboardReportPage />}
-                  />
+              <Route
+                path={routes.dashboard.reports.reportById(":reportId")}
+                element={<DashboardReportPage />}
+              />
 
-                  <Route
-                    path={routes.dashboard.reports.reportLiveFeed(":reportId")}
-                    element={<DashboardLiveFeedPage />}
-                  />
+              <Route
+                path={routes.dashboard.reports.reportLiveFeed(":reportId")}
+                element={<DashboardLiveFeedPage />}
+              />
 
-                  <Route
-                    path={routes.dashboard.reports.create}
-                    element={<DashboardCreateReportPage />}
-                  />
+              <Route
+                path={routes.dashboard.reports.create}
+                element={<DashboardCreateReportPage />}
+              />
 
-                  <Route
-                    path={routes.dashboard.agents.base}
-                    element={<DashboardAgentsPage />}
-                  />
+              <Route
+                path={routes.dashboard.agents.base}
+                element={<DashboardAgentsPage />}
+              />
 
-                  <Route
-                    path={routes.dashboard.agents.agentById(":agentId")}
-                    element={<DashboardAgentPage />}
-                  />
+              <Route
+                path={routes.dashboard.agents.agentById(":agentId")}
+                element={<DashboardAgentPage />}
+              />
 
-                  <Route
-                    path={routes.dashboard.agents.create}
-                    element={<DashboardCreateAgentPage />}
-                  />
+              <Route
+                path={routes.dashboard.agents.create}
+                element={<DashboardCreateAgentPage />}
+              />
 
-                  <Route
-                    path={routes.dashboard.user.profile}
-                    element={<MyProfilePage />}
-                  />
+              <Route
+                path={routes.dashboard.user.profile}
+                element={<MyProfilePage />}
+              />
 
-                  <Route
-                    path={routes.dashboard.billing.paymentStatus(":sessionId")}
-                    element={<PaymentStatusPage />}
-                  />
+              <Route
+                path={routes.dashboard.billing.paymentStatus(":sessionId")}
+                element={<PaymentStatusPage />}
+              />
 
-                  {hasAdminRights(state.auth.user) && (
-                    <>
-                      <Route
-                        path={routes.dashboard.admin.users.base}
-                        element={<DashboardAdminUsersPage />}
-                      />
+              {state.auth.isAuthenticated &&
+                !!state.auth.user &&
+                hasAdminRights(state.auth.user) && (
+                  <>
+                    <Route
+                      path={routes.dashboard.admin.users.base}
+                      element={<DashboardAdminUsersPage />}
+                    />
 
-                      <Route
-                        path={routes.dashboard.user.userById(":userId")}
-                        element={<DashboardAdminUserPage />}
-                      />
+                    <Route
+                      path={routes.dashboard.user.userById(":userId")}
+                      element={<DashboardAdminUserPage />}
+                    />
 
-                      <Route
-                        path={routes.dashboard.admin.agents.base}
-                        element={<DashboardAdminAgentsPage />}
-                      />
+                    <Route
+                      path={routes.dashboard.admin.agents.base}
+                      element={<DashboardAdminAgentsPage />}
+                    />
 
-                      <Route
-                        path={routes.dashboard.admin.reports.base}
-                        element={<DashboardAdminReportsPage />}
-                      />
+                    <Route
+                      path={routes.dashboard.admin.reports.base}
+                      element={<DashboardAdminReportsPage />}
+                    />
 
-                      <Route
-                        path={routes.dashboard.admin.demos.base}
-                        element={<DashboardAdminDemosPage />}
-                      />
+                    <Route
+                      path={routes.dashboard.admin.demos.base}
+                      element={<DashboardAdminDemosPage />}
+                    />
 
-                      <Route
-                        path={routes.dashboard.admin.demos.demoById(":demoId")}
-                        element={<DashboardAdminDemoPage />}
-                      />
-                    </>
-                  )}
-                </Route>
-              </>
-            ) : (
-              <Route path="*" element={<ResetAndRedirectHome />} />
-            )}
+                    <Route
+                      path={routes.dashboard.admin.demos.demoById(":demoId")}
+                      element={<DashboardAdminDemoPage />}
+                    />
+                  </>
+                )}
+            </Route>
 
             {/* Fallback route for 404 errors */}
             <Route path="*" element={<NotFoundPage />} />

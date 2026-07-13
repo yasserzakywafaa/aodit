@@ -13,7 +13,7 @@ import {
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
+import { useDetectBrowserType } from "@yasserzakywafaa/client-core/web";
 import { useTheme } from "@mui/material/styles";
 
 export interface SettingsMenuButtonProps {

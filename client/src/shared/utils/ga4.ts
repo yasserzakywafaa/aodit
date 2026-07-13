@@ -1,5 +1,5 @@
+import { createGa4Tracker, isPrerendering } from "@yasserzakywafaa/client-core/web";
 import APP_CONSTANTS from "src/application/shared/app_constants";
-import { isPrerendering } from "src/shared/utils/prerender";
 
 export interface Ga4PageViewParams {
   page_path: string;
@@ -24,39 +24,21 @@ export type AnalyticsEventParams = Record<
   string | number | boolean | undefined
 >;
 
-type GtagEventParams = Record<string, string | number | boolean | undefined>;
-
-type GtagCommand = "js" | "config" | "event";
-
-declare global {
-  interface Window {
-    gtag?: (
-      command: GtagCommand,
-      targetOrEventName: string | Date,
-      params?: GtagEventParams,
-    ) => void;
-  }
-}
+const ga4Tracker = createGa4Tracker({
+  isEnabled: () =>
+    APP_CONSTANTS.IS_PROD &&
+    Boolean(APP_CONSTANTS.GOOGLE_ANALYTICS_ID) &&
+    !isPrerendering(),
+});
 
 export const isGa4Enabled = (): boolean =>
   APP_CONSTANTS.IS_PROD &&
   Boolean(APP_CONSTANTS.GOOGLE_ANALYTICS_ID) &&
   !isPrerendering();
 
-export const trackGa4PageView = (params: Ga4PageViewParams): void => {
-  if (!isGa4Enabled() || typeof window.gtag !== "function") return;
+export const trackGa4PageView = ga4Tracker.trackGa4PageView;
 
-  window.gtag("event", "page_view", { ...params });
-};
-
-export const trackGa4Event = (
-  eventName: string,
-  params: GtagEventParams = {},
-): void => {
-  if (!isGa4Enabled() || typeof window.gtag !== "function") return;
-
-  window.gtag("event", eventName, params);
-};
+export const trackGa4Event = ga4Tracker.trackGa4Event;
 
 export const trackEvent = (
   event: AnalyticsEventName,

@@ -1,4 +1,4 @@
-import { Mode, PaymentStatus, SessionStatus } from "src/shared/types/payment";
+import { Mode, PaymentStatus, SessionStatus } from "@yasserzakywafaa/client-core";
 import {
   SubscriptionPlanEnum,
   User,

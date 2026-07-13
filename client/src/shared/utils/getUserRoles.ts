@@ -1,24 +1,31 @@
+import { createSubscriptionTierChecker, hasAdminRights as hasAdminRightsCore } from "@yasserzakywafaa/client-core";
 import { SubscriptionPlanEnum, User, UserRole } from "../types/user";
 
 import { UserType } from "src/application/store/state";
 
-export const hasSuperAdminRights = (user: User | null): boolean => {
-  if (!user) return false;
+const ADMIN_ROLES = [UserRole.super_admin, UserRole.admin] as const;
 
-  return user.role === UserRole.super_admin;
-};
+const getSubscriptionTier = createSubscriptionTierChecker({
+  freePlan: SubscriptionPlanEnum.Free,
+  plans: {
+    Lite: SubscriptionPlanEnum.Lite,
+    Basic: SubscriptionPlanEnum.Basic,
+    Essential: SubscriptionPlanEnum.Essential,
+    Premium: SubscriptionPlanEnum.Premium,
+  },
+});
 
-export const hasAdminRights = (user: User | null): boolean => {
-  if (!user) return false;
+export const hasAdminRights = (user: User | null): boolean =>
+  hasAdminRightsCore(user, ADMIN_ROLES);
 
-  return user.role === UserRole.super_admin || user.role === UserRole.admin;
-};
+export const hasSuperAdminRights = (user: { role: string } | null): boolean =>
+  user?.role === UserRole.super_admin;
 
 export const getUserType = (user: User): UserType => {
+  const subscriptionTier = getSubscriptionTier(user);
+
   return {
-    isFreeUser:
-      !user.isPaidUser && user.subscription?.type === SubscriptionPlanEnum.Free,
-    isPaidUser: user.subscription?.type !== SubscriptionPlanEnum.Free,
+    ...subscriptionTier,
     isLiteUser: user.subscription?.type === SubscriptionPlanEnum.Lite,
     isBasicUser: user.subscription?.type === SubscriptionPlanEnum.Basic,
     isEssentialUser: user.subscription?.type === SubscriptionPlanEnum.Essential,

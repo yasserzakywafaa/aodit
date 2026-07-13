@@ -1,4 +1,4 @@
-import { Price, Product } from "src/shared/types/payment";
+import { Price, Product } from "@yasserzakywafaa/client-core";
 
 export interface PaymentInitialState {
   publishableKey: string;

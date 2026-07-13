@@ -1,39 +1,60 @@
+import CONFIG from "../config";
+import { Request, Response } from "express";
 import {
-  CookieOptions,
+  createTokenService,
   RefreshTokenPayload,
   TokenPair,
   TokenPayload,
-} from "../types/token";
+  TokenService as CoreTokenService,
+} from "@yasserzakywafaa/server-core";
 
-import CONFIG from "../config";
-import { Response } from "express";
-import jwt from "jsonwebtoken";
+type AccessTokenInput = Omit<TokenPayload, "iat" | "exp">;
+type RefreshTokenInput = Omit<RefreshTokenPayload, "iat" | "exp">;
+
+let coreTokenService:
+  | CoreTokenService<TokenPayload, RefreshTokenPayload>
+  | undefined;
+
+const getCoreTokenService = (): CoreTokenService<
+  TokenPayload,
+  RefreshTokenPayload
+> => {
+  coreTokenService ??= createTokenService<TokenPayload, RefreshTokenPayload>({
+    jwtSecret: CONFIG.JWT_SECRET ?? "",
+    environment: CONFIG.NODE_ENV,
+    accessTokenExpiry: "15m",
+    refreshTokenExpiry: "7d",
+    cookies: {
+      accessTokenName: "accessToken",
+      refreshTokenName: "refreshToken",
+      options: {
+        httpOnly: true,
+        secure: CONFIG.IS_PROD,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: "/",
+      },
+      clearOptions: {
+        httpOnly: true,
+        secure: CONFIG.IS_PROD,
+        sameSite: "strict",
+        path: "/",
+      },
+    },
+  });
+
+  return coreTokenService;
+};
 
 export class TokenService {
-  private static readonly ACCESS_TOKEN_EXPIRY = "15m";
-  private static readonly REFRESH_TOKEN_EXPIRY = "7d";
-  private static readonly COOKIE_OPTIONS: CookieOptions = {
-    httpOnly: true,
-    secure: CONFIG.IS_PROD,
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    path: "/",
-  };
-
-  static generateAccessToken(
-    payload: Omit<TokenPayload, "iat" | "exp">,
-  ): string {
-    return jwt.sign(payload, CONFIG.JWT_SECRET!, {
-      expiresIn: this.ACCESS_TOKEN_EXPIRY,
-    });
+  static generateAccessToken(payload: AccessTokenInput): string {
+    return getCoreTokenService().generateAccessToken(payload as TokenPayload);
   }
 
-  static generateRefreshToken(
-    payload: Omit<RefreshTokenPayload, "iat" | "exp">,
-  ): string {
-    return jwt.sign(payload, CONFIG.JWT_SECRET!, {
-      expiresIn: this.REFRESH_TOKEN_EXPIRY,
-    });
+  static generateRefreshToken(payload: RefreshTokenInput): string {
+    return getCoreTokenService().generateRefreshToken(
+      payload as RefreshTokenPayload,
+    );
   }
 
   static generateTokenPair(
@@ -50,53 +71,32 @@ export class TokenService {
       tokenVersion,
     };
 
-    return {
-      accessToken: this.generateAccessToken(accessTokenPayload),
-      refreshToken: this.generateRefreshToken(refreshTokenPayload),
-    };
-  }
-
-  static verifyAccessToken(token: string): TokenPayload {
-    return jwt.verify(token, CONFIG.JWT_SECRET!) as TokenPayload;
-  }
-
-  static verifyRefreshToken(token: string): RefreshTokenPayload {
-    return jwt.verify(token, CONFIG.JWT_SECRET!) as RefreshTokenPayload;
-  }
-
-  static setTokenCookies(response: Response, tokenPair: TokenPair): void {
-    response.cookie("accessToken", tokenPair.accessToken, this.COOKIE_OPTIONS);
-
-    response.cookie(
-      "refreshToken",
-      tokenPair.refreshToken,
-      this.COOKIE_OPTIONS,
+    return getCoreTokenService().generateTokenPair(
+      accessTokenPayload,
+      refreshTokenPayload,
     );
   }
 
-  static clearTokenCookies(response: Response): void {
-    response.clearCookie("accessToken", {
-      httpOnly: true,
-      secure: CONFIG.IS_PROD,
-      sameSite: "strict",
-      path: "/",
-    });
-
-    response.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: CONFIG.IS_PROD,
-      sameSite: "strict",
-      path: "/",
-    });
+  static verifyAccessToken(token: string): TokenPayload {
+    return getCoreTokenService().verifyAccessToken(token);
   }
 
-  static extractTokenFromCookies(request: any): {
+  static verifyRefreshToken(token: string): RefreshTokenPayload {
+    return getCoreTokenService().verifyRefreshToken(token);
+  }
+
+  static setTokenCookies(response: Response, tokenPair: TokenPair): void {
+    getCoreTokenService().setTokenCookies(response, tokenPair);
+  }
+
+  static clearTokenCookies(response: Response): void {
+    getCoreTokenService().clearTokenCookies(response);
+  }
+
+  static extractTokenFromCookies(request: Request): {
     accessToken?: string;
     refreshToken?: string;
   } {
-    return {
-      accessToken: request.cookies?.accessToken,
-      refreshToken: request.cookies?.refreshToken,
-    };
+    return getCoreTokenService().extractTokenFromCookies(request);
   }
 }

@@ -1,5 +1,5 @@
 import { Testimonial } from "src/shared/types/types";
-import { createPersonSchema } from "./schemaGenerators";
+import { createPersonSchema } from "./schemaHelpers";
 
 export type ReviewData = Testimonial;
 

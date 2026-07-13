@@ -5,7 +5,7 @@ import {
 import {
   createDocument,
   updateDocument,
-} from "../../models/mongoDb/crudOperations";
+} from "../../models/mongoDb";
 
 import { DBCollectionsEnum, database } from "../../models/mongoDb";
 import { DemoSession } from "../../models/types/demoSession";

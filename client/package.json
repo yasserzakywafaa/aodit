@@ -26,7 +26,7 @@
     "@mui/icons-material": "9.2.0",
     "@mui/material": "9.2.0",
     "@mui/styles": "6.4.8",
-    "@mui/x-data-grid": "^9.8.0",
+    "@mui/x-data-grid": "^9.9.0",
     "@react-oauth/google": "^0.13.5",
     "@react-pdf/renderer": "^4.5.1",
     "@stripe/react-stripe-js": "^6.7.0",
@@ -38,7 +38,7 @@
     "buffer": "^6.0.3",
     "classnames": "2.5.1",
     "html-to-text": "^10.0.0",
-    "marked": "^18.0.5",
+    "marked": "^18.0.6",
     "mui-tel-input": "^11.0.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -59,8 +59,8 @@
     "puppeteer": "npm:puppeteer-core@^24.22.0",
     "sass": "1.101.0",
     "serve": "14.2.6",
-    "typescript": "6.0.3",
-    "vite": "^8.1.3",
+    "typescript": "7.0.2",
+    "vite": "^8.1.4",
     "vite-plugin-prerender": "^1.0.8"
   },
   "resolutions": {

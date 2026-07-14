@@ -5,25 +5,21 @@ import {
   DeleteResult,
   Document,
   Filter,
+  InferIdType,
+  InsertManyResult,
   MongoClient,
   ObjectId,
+  OptionalUnlessRequiredId,
   Sort,
   WithId,
 } from "mongodb";
 import {
-  createDocument,
-  readDocument,
-  readDocumentByField,
-  readDocumentByQuery,
-  updateDocument,
-} from "./crudOperations";
+  createMongoDatabase,
+  MongoClientLike,
+  MongoDatabase,
+} from "@yasserzakywafaa/server-core";
 
 import CONFIG from "../../config";
-
-let dbClient: MongoClient;
-let database: Db;
-const { IS_DEV, MONGODB_URI_DEV, IS_PROD, MONGODB_URI_PROD, MONGODB_URI } =
-  CONFIG;
 
 export enum DBNamesEnum {
   aodit_dev = "aodit_dev",
@@ -41,51 +37,32 @@ export enum DBCollectionsEnum {
   demo_sessions = "demo_sessions",
 }
 
-const getMongoDbUri = (): string => {
+const { IS_DEV, MONGODB_URI_DEV, IS_PROD, MONGODB_URI_PROD, MONGODB_URI } =
+  CONFIG;
+
+export const getMongoDbUri = (): string => {
   if (IS_DEV && MONGODB_URI_DEV) {
     return MONGODB_URI_DEV;
   }
-
   if (IS_PROD && MONGODB_URI_PROD) {
     return MONGODB_URI_PROD;
   }
-
   return MONGODB_URI ?? "";
 };
 
-const getDatabaseName = (): string => {
-  return IS_DEV ? DBNamesEnum.aodit_dev : DBNamesEnum.aodit_prod;
-};
+export const getDatabaseName = (): DBNamesEnum =>
+  IS_DEV ? DBNamesEnum.aodit_dev : DBNamesEnum.aodit_prod;
 
-const databaseInit = async () => {
-  const uri = getMongoDbUri();
-  dbClient = new MongoClient(uri);
+export let dbClient: MongoClient;
+export let database: Db;
 
-  try {
-    await dbClient.connect();
-    // // FOR DEVELOPMENT USE ONLY
-    // await copyDocumentsFromDatabaseToAnotherDatabase();
-    const dbName = getDatabaseName();
-    database = dbClient.db(dbName);
-
-    console.info("✅ Connected to MongoDB Atlas", { dbName });
-
-    await createCollections();
-    await createIndexes();
-  } catch (error) {
-    console.error("❌ Failed to connect to MongoDB Atlas", error);
-  }
-};
-
-const createCollections = async () => {
-  const collections = Object.keys(DBCollectionsEnum);
-
-  for (const collectionName of collections) {
-    const collection = await database
+const createCollections = async (db: Db): Promise<void> => {
+  for (const collectionName of Object.values(DBCollectionsEnum)) {
+    const collection = await db
       .listCollections({ name: collectionName })
       .toArray();
     if (collection.length === 0) {
-      await database.createCollection(collectionName);
+      await db.createCollection(collectionName);
       console.info(`✅ Collection '${collectionName}' created`);
     } else {
       console.info(`-- ℹ️  Collection '${collectionName}' already exists`);
@@ -93,7 +70,7 @@ const createCollections = async () => {
   }
 };
 
-const createIndexes = async () => {
+const createIndexes = async (db: Db): Promise<void> => {
   const collectionsToSearch = [
     DBCollectionsEnum.reports,
     DBCollectionsEnum.scenarios,
@@ -104,30 +81,23 @@ const createIndexes = async () => {
 
   try {
     for (const collectionName of collectionsToSearch) {
-      const collection = database.collection(collectionName);
+      const collection = db.collection(collectionName);
       await collection.createIndex({ _id: 1 });
       await collection.createIndex({ userId: 1 });
       await collection.createIndex({ createdAt: -1 });
     }
 
-    const reports = database.collection(DBCollectionsEnum.reports);
-    await reports.createIndex({ userId: 1 });
-    await reports.createIndex({ createdAt: -1 });
+    await db.collection(DBCollectionsEnum.reports).createIndex({ userId: 1 });
+    await db.collection(DBCollectionsEnum.reports).createIndex({ createdAt: -1 });
+    await db.collection(DBCollectionsEnum.scenarios).createIndex({ reportId: 1 });
+    await db.collection(DBCollectionsEnum.scenarios).createIndex({ createdAt: -1 });
+    await db.collection(DBCollectionsEnum.reportRuns).createIndex({ reportId: 1 });
+    await db.collection(DBCollectionsEnum.reportRuns).createIndex({ createdAt: -1 });
+    await db.collection(DBCollectionsEnum.scenarioResults).createIndex({ reportRunId: 1 });
+    await db.collection(DBCollectionsEnum.scenarioResults).createIndex({ reportId: 1 });
+    await db.collection(DBCollectionsEnum.scenarioResults).createIndex({ createdAt: -1 });
 
-    const scenarios = database.collection(DBCollectionsEnum.scenarios);
-    await scenarios.createIndex({ reportId: 1 });
-    await scenarios.createIndex({ createdAt: -1 });
-
-    const reportRuns = database.collection(DBCollectionsEnum.reportRuns);
-    await reportRuns.createIndex({ reportId: 1 });
-    await reportRuns.createIndex({ createdAt: -1 });
-
-    const scenarioResults = database.collection(DBCollectionsEnum.scenarioResults);
-    await scenarioResults.createIndex({ reportRunId: 1 });
-    await scenarioResults.createIndex({ reportId: 1 });
-    await scenarioResults.createIndex({ createdAt: -1 });
-
-    const users = database.collection(DBCollectionsEnum.users);
+    const users = db.collection(DBCollectionsEnum.users);
     await users.createIndex({ email: 1 });
     await users.createIndex({ createdAt: 1 });
     await users.createIndex({ picture: 1 });
@@ -138,78 +108,174 @@ const createIndexes = async () => {
     await users.createIndex({ isPaidUser: 1 });
     await users.createIndex({ phoneNumber: 1 }, { unique: true, sparse: true });
 
-    const agents = database.collection(DBCollectionsEnum.agents);
-    await agents.createIndex({ userId: 1 });
-    await agents.createIndex({ createdAt: -1 });
-
-    const leadSubscribers = database.collection(DBCollectionsEnum.lead_subscribers);
-    await leadSubscribers.createIndex({ email: 1 }, { unique: true });
-    await leadSubscribers.createIndex({ createdAt: -1 });
-
-    const demoSessions = database.collection(DBCollectionsEnum.demo_sessions);
-    await demoSessions.createIndex({ createdAt: -1 });
+    await db.collection(DBCollectionsEnum.agents).createIndex({ userId: 1 });
+    await db.collection(DBCollectionsEnum.agents).createIndex({ createdAt: -1 });
+    await db.collection(DBCollectionsEnum.lead_subscribers).createIndex({ email: 1 }, { unique: true });
+    await db.collection(DBCollectionsEnum.lead_subscribers).createIndex({ createdAt: -1 });
+    await db.collection(DBCollectionsEnum.demo_sessions).createIndex({ createdAt: -1 });
   } catch (error) {
     console.error("❌ Error creating index:", error);
   }
 };
 
-const closeDatabase = async () => {
-  if (dbClient) {
-    await dbClient.close();
+let mongoDatabase: MongoDatabase<DBCollectionsEnum> | undefined;
+
+const getMongoDatabase = (): MongoDatabase<DBCollectionsEnum> => {
+  mongoDatabase ??= createMongoDatabase<DBCollectionsEnum>({
+    uri: getMongoDbUri(),
+    dbName: getDatabaseName(),
+    onConnected: async ({ db }) => {
+      console.info("✅ Connected to MongoDB Atlas", {
+        dbName: getDatabaseName(),
+      });
+      await createCollections(db);
+      await createIndexes(db);
+    },
+  });
+  return mongoDatabase;
+};
+
+export const databaseInit = async (): Promise<void> => {
+  try {
+    const coreDatabase = getMongoDatabase();
+    database = await coreDatabase.connect();
+    dbClient = coreDatabase.getClient() as MongoClientLike as MongoClient;
+  } catch (error) {
+    console.error("❌ Failed to connect to MongoDB Atlas", error);
+  }
+};
+
+export const closeDatabase = async (): Promise<void> => {
+  if (mongoDatabase?.isConnected()) {
+    await mongoDatabase.close();
     console.info("✅ Database connection closed");
   }
 };
 
-// // Data Handling
-const getDocumentFromDb = async (
-  docId: any,
+export const createDocument = async <T extends Document = Document>(
+  data: OptionalUnlessRequiredId<T>,
   collectionName: DBCollectionsEnum,
-) => {
-  try {
-    const document = await readDocument(docId, collectionName);
+): Promise<InferIdType<T>> =>
+  getMongoDatabase().createDocument<T>(collectionName, data);
 
-    return document;
+export const readDocument = async <T extends Document = Document>(
+  docId: InferIdType<T>,
+  collectionName: DBCollectionsEnum,
+): Promise<WithId<T> | null> =>
+  getMongoDatabase().readDocument<T>(collectionName, docId);
+
+export const readDocumentByField = async <T extends Document = Document>(
+  field: string,
+  value: string,
+  collectionName: DBCollectionsEnum,
+): Promise<WithId<T> | null> => {
+  try {
+    return await getMongoDatabase().readDocumentByQuery<T>(
+      collectionName,
+      { [field]: value } as Filter<T>,
+    );
+  } catch (error) {
+    throw new Error("❌ Failed to get document by field!", { cause: error });
+  }
+};
+
+export const readDocumentByQuery = async <T extends Document = Document>(
+  query: Filter<T>,
+  collectionName: DBCollectionsEnum,
+): Promise<WithId<T> | null> => {
+  try {
+    return await getMongoDatabase().readDocumentByQuery<T>(collectionName, query, {
+      sort: { createdAt: -1 },
+    });
+  } catch (error) {
+    throw new Error("❌ Failed to get document by query!", { cause: error });
+  }
+};
+
+export const updateDocument = async <T extends Document = Document>(
+  docId: string,
+  fieldsToUpdate: Partial<T>,
+  collectionName: DBCollectionsEnum,
+): Promise<WithId<T> | null> => {
+  try {
+    const result = await getMongoDatabase().updateDocument<T>(
+      collectionName,
+      new ObjectId(docId) as InferIdType<T>,
+      fieldsToUpdate,
+    );
+    console.log(`✅ Document updated in collection: ${collectionName}.`);
+    return result;
+  } catch (error) {
+    console.error("❌ Error updating document:", error);
+    throw new Error("❌ Failed to update document!", { cause: error });
+  }
+};
+
+export const deleteDocument = async <T extends Document = Document>(
+  docId: string,
+  collectionName: DBCollectionsEnum,
+): Promise<boolean> => {
+  try {
+    const deleted = await getMongoDatabase().deleteDocument<T>(
+      collectionName,
+      new ObjectId(docId) as InferIdType<T>,
+    );
+    console.log("✅ Document deleted successfully.");
+    return deleted;
+  } catch (error) {
+    throw new Error("❌ Failed to delete document!", { cause: error });
+  }
+};
+
+export const createBulkDocuments = async <T extends Document = Document>(
+  documents: OptionalUnlessRequiredId<T>[],
+  collectionName: DBCollectionsEnum,
+): Promise<InsertManyResult<T>> => {
+  try {
+    return await getMongoDatabase().createBulkDocuments<T>(
+      collectionName,
+      documents,
+    );
+  } catch (error) {
+    throw new Error("❌ Error saving documents in bulk:", { cause: error });
+  }
+};
+
+export const getDocumentFromDb = async <T extends Document = Document>(
+  docId: InferIdType<T>,
+  collectionName: DBCollectionsEnum,
+): Promise<WithId<T> | null> => {
+  try {
+    return await readDocument<T>(docId, collectionName);
   } catch (error) {
     throw new Error("❌ Error saving user data to DB", { cause: error });
   }
 };
 
-const getDocumentByFieldFromDb = async (
+export const getDocumentByFieldFromDb = async <T extends Document = Document>(
   field: string,
   value: string,
   collectionName: DBCollectionsEnum,
-) => {
-  try {
-    const document = await readDocumentByField(field, value, collectionName);
+): Promise<WithId<T> | null> =>
+  readDocumentByField<T>(field, value, collectionName);
 
-    return document;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const getDocumentByQueryFromDb = async (
-  query: Record<string, any>,
+export const getDocumentByQueryFromDb = async <T extends Document = Document>(
+  query: Filter<T>,
   collectionName: DBCollectionsEnum,
-) => {
-  try {
-    const document = await readDocumentByQuery(query, collectionName);
+): Promise<WithId<T> | null> =>
+  readDocumentByQuery<T>(query, collectionName);
 
-    return document;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getDocumentsByQueryFromDb = async <T extends Document = Document>(
+export const getDocumentsByQueryFromDb = async <
+  T extends Document = Document,
+>(
   query: Filter<T>,
   collectionName: DBCollectionsEnum,
 ): Promise<WithId<T>[]> => {
   try {
-    const collection: Collection<T> = database.collection<T>(collectionName);
-    const documents = await collection.find(query).toArray();
-
-    return documents;
+    return await getMongoDatabase().getDocumentsByQuery<T>(
+      collectionName,
+      query,
+    );
   } catch (error) {
     console.error(
       `❌ Error fetching documents from ${collectionName} with query ${JSON.stringify(
@@ -217,7 +283,6 @@ export const getDocumentsByQueryFromDb = async <T extends Document = Document>(
       )}:`,
       error,
     );
-    // Re-throw the error so the calling function's catch block can handle it
     throw new Error(
       `❌ Failed to fetch documents by query from ${collectionName}`,
     );
@@ -232,21 +297,16 @@ export const deleteDocumentByQuery = async (
     throw new Error("❌ Deletion query cannot be empty.");
   }
 
-  // Optional: Add extra logging for debugging (consider sensitive data in queries)
   console.log(
     `Attempting deleteOne in collection "${collectionName}" with query:`,
     JSON.stringify(query),
   );
 
   try {
-    if (!database) {
-      throw new Error(
-        "❌ Database is not initialized. Call databaseInit() first.",
-      );
-    }
-    const collection: Collection = database.collection(collectionName);
-    const result: DeleteResult = await collection.deleteOne(query);
-
+    const result = await getMongoDatabase().deleteDocumentByQuery<Document>(
+      collectionName as DBCollectionsEnum,
+      query,
+    );
     if (result.deletedCount === 1) {
       console.log(
         `✅ Successfully deleted 1 document from "${collectionName}" matching query.`,
@@ -256,8 +316,7 @@ export const deleteDocumentByQuery = async (
         `ℹ️ No document found in "${collectionName}" matching query for deletion.`,
       );
     }
-
-    return result; // Contains { acknowledged: boolean, deletedCount: number }
+    return result;
   } catch (error) {
     console.error(
       `❌ Database error during deleteOne in "${collectionName}" with query ${JSON.stringify(
@@ -265,7 +324,6 @@ export const deleteDocumentByQuery = async (
       )}:`,
       error,
     );
-    // Re-throw the error to be handled by the calling controller
     throw new Error(
       `Failed to delete document from ${collectionName}: ${
         error instanceof Error ? error.message : String(error)
@@ -274,17 +332,22 @@ export const deleteDocumentByQuery = async (
   }
 };
 
-const saveUserDataToDb = async (user: User): Promise<ObjectId | undefined> => {
+export const saveUserDataToDb = async (
+  user: User,
+): Promise<ObjectId | undefined> => {
   try {
-    const newUserId = await createDocument(user, DBCollectionsEnum.users);
+    const newUserId = await createDocument(
+      user as OptionalUnlessRequiredId<Document>,
+      DBCollectionsEnum.users,
+    );
     console.log("✅ User saved to DB successfully");
-    return newUserId;
+    return newUserId as ObjectId;
   } catch (error) {
     throw new Error("❌ Error saving user data to DB", { cause: error });
   }
 };
 
-const updateUserInDb = async (
+export const updateUserInDb = async (
   userDocId: string,
   updatedUserData: Partial<User>,
 ): Promise<WithId<Document> | undefined> => {
@@ -294,9 +357,9 @@ const updateUserInDb = async (
       updatedUserData,
       DBCollectionsEnum.users,
     );
-
-    if (!updatedUser) throw new Error("User not found or update failed");
-
+    if (!updatedUser) {
+      throw new Error("User not found or update failed");
+    }
     console.log("✅ User updated in DB successfully!");
     return updatedUser;
   } catch (error) {
@@ -305,8 +368,9 @@ const updateUserInDb = async (
   }
 };
 
-// Pagination utility function using MongoDB aggregation pipeline
-const getPaginatedDocuments = async <T extends Document = Document>(
+export const getPaginatedDocuments = async <
+  T extends Document = Document,
+>(
   query: Filter<T>,
   collectionName: DBCollectionsEnum,
   paginationParams: BaseFilters,
@@ -316,48 +380,16 @@ const getPaginatedDocuments = async <T extends Document = Document>(
   },
 ): Promise<AggregationResult<T>> => {
   try {
-    const { pageNumber, pageSize } = paginationParams;
-    const collection: Collection<T> = database.collection<T>(collectionName);
-
-    // Create sort object - use custom sort if provided, otherwise default to createdAt: -1
-    const sort: Sort = options?.sort || { createdAt: -1 };
-    const pipeline: Record<string, any>[] = [];
-    pipeline.push({ $sort: sort });
-
-    // Add custom pipeline stages before match if provided
-    if (options?.customPipelineStages) {
-      pipeline.push(...options.customPipelineStages);
-    }
-
-    // Match stage
-    pipeline.push({ $match: query });
-
-    // Facet stage to get both data and count in one query
-    pipeline.push({
-      $facet: {
-        metadata: [
-          { $count: "totalCount" },
-          { $addFields: { pageNumber, pageSize } },
-        ],
-        results: [{ $skip: (pageNumber - 1) * pageSize }, { $limit: pageSize }],
+    const result = await getMongoDatabase().getPaginatedDocuments<T, T>(
+      collectionName,
+      query,
+      paginationParams,
+      {
+        customPipelineStages: options?.customPipelineStages,
+        sort: options?.sort ?? { createdAt: -1 },
       },
-    });
-
-    const aggregatedDocs = await collection.aggregate(pipeline).toArray();
-    const { metadata, results } = aggregatedDocs[0] as AggregationResult<T>;
-    const totalCount = metadata[0] ? metadata[0].totalCount : 0;
-    const totalPagesCount = pageSize ? Math.ceil(totalCount / pageSize) : 0;
-
-    return {
-      metadata,
-      results,
-      paging: {
-        pageNumber,
-        pageSize,
-        totalCount,
-        totalPagesCount,
-      },
-    };
+    );
+    return result;
   } catch (error) {
     console.error(
       `❌ Error fetching paginated documents from ${collectionName}:`,
@@ -367,17 +399,6 @@ const getPaginatedDocuments = async <T extends Document = Document>(
   }
 };
 
-export {
-  dbClient,
-  database,
-  databaseInit,
-  getMongoDbUri,
-  getDatabaseName,
-  closeDatabase,
-  getDocumentFromDb,
-  getDocumentByFieldFromDb,
-  getDocumentByQueryFromDb,
-  getPaginatedDocuments,
-  saveUserDataToDb,
-  updateUserInDb,
-};
+export const getCollection = <T extends Document = Document>(
+  collectionName: DBCollectionsEnum,
+): Collection<T> => getMongoDatabase().getCollection<T>(collectionName);

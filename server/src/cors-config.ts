@@ -1,15 +1,6 @@
 import CONFIG from "./config";
-import { Express, NextFunction, Request, Response } from "express";
-import cors from "cors";
-
-const isVercelOrigin = (origin: string): boolean => {
-  try {
-    const { hostname } = new URL(origin);
-    return hostname.endsWith(".vercel.app");
-  } catch {
-    return false;
-  }
-};
+import { Express } from "express";
+import { createCors } from "@yasserzakywafaa/server-core";
 
 const getAllowedOrigins = (): string[] => {
   const {
@@ -29,22 +20,16 @@ const getAllowedOrigins = (): string[] => {
   return ["https://aodit.ai", "https://www.aodit.ai", "https://api.aodit.ai"];
 };
 
-const corsOptions = {
-  origin: (origin: string, callback: Function) => {
-    const allowedOrigins = getAllowedOrigins();
-
-    if (
-      !origin ||
-      allowedOrigins.indexOf(origin) !== -1 ||
-      isVercelOrigin(origin)
-    ) {
-      callback(null, true);
-    } else {
-      console.error(`❌ Not allowed by CORS: ${origin}`);
-      callback(new Error("❌ Not allowed by CORS"));
-    }
+const corsConfig = createCors({
+  allowedOrigins: getAllowedOrigins(),
+  allowRequestsWithoutOrigin: true,
+  vercelPreview: {
+    enabled: true,
+    hostnameSuffix: ".vercel.app",
+    secret: process.env.PREVIEW_SECRET,
+    secretHeader: "x-preview-secret",
+    requireSecret: true,
   },
-  // origin: "*",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
@@ -52,43 +37,19 @@ const corsOptions = {
     "X-Custom-Header",
     "X-Preview-Secret",
   ],
-  credentials: true, // Allow credentials (cookies, authorization headers)
-  optionsSuccessStatus: 204, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+  credentials: true,
+  optionsSuccessStatus: 204,
+  onDeniedOrigin: (origin) => {
+    console.error(`❌ Not allowed by CORS: ${origin}`);
+  },
+});
 
-export const verifyPreviewSecret = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  if (req.method === "OPTIONS") {
-    return next();
-  }
+export const verifyPreviewSecret = corsConfig.verifyPreviewSecret;
 
-  const origin = req.headers.origin;
-  if (!origin || !isVercelOrigin(origin)) {
-    return next();
-  }
-
-  const previewSecret = req.headers["x-preview-secret"];
-  const expectedSecret = process.env.PREVIEW_SECRET;
-
-  if (!expectedSecret || previewSecret !== expectedSecret) {
-    console.error(`❌ Invalid preview secret for Vercel origin: ${origin}`);
-    return res.status(403).json({ error: "Forbidden: invalid preview secret" });
-  }
-
-  return next();
-};
-
-const handleCorsConfig = (expressApp: Express) => {
-  // Always use the full cors options to ensure credentials are allowed
-  expressApp.use(cors(corsOptions));
-
-  // Explicitly handle OPTIONS requests
-  expressApp.options("*", cors(corsOptions));
-
-  expressApp.use(verifyPreviewSecret);
+const handleCorsConfig = (expressApp: Express): void => {
+  expressApp.use(corsConfig.middleware);
+  expressApp.options("*", corsConfig.preflightMiddleware);
+  expressApp.use(corsConfig.verifyPreviewSecret);
 };
 
 export default handleCorsConfig;

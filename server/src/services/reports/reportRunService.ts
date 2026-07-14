@@ -11,7 +11,7 @@ import {
   createDocument,
   readDocument,
   updateDocument,
-} from "../../models/mongoDb/crudOperations";
+} from "../../models/mongoDb";
 import {
   getFrameworkDefinition,
   resolveFrameworkVersion,

@@ -21,7 +21,7 @@ import {
   deleteDocument,
   readDocument,
   updateDocument,
-} from "../models/mongoDb/crudOperations";
+} from "../models/mongoDb";
 
 import { Scenario } from "../models/types/scenario";
 

@@ -1,9 +1,9 @@
-import { getAbsoluteUrl, getImageUrl } from "./schemaGenerators";
+import { getAbsoluteUrl, getImageUrl } from "./schemaHelpers";
 
-import { Product } from "src/shared/types/payment";
+import { Product } from "@yasserzakywafaa/client-core";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { createAggregateRatingSchema } from "./reviewSchema";
-import { getCurrencyCode } from "src/shared/utils/getCurrencyCode";
+import { getCurrencyCode } from "@yasserzakywafaa/client-core";
 import { routes } from "src/application/routes";
 import { testimonials } from "src/shared/mockedData/Testimonials";
 

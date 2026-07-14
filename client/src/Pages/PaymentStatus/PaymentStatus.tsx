@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 // import PaymentImage from "src/assets/images/bot_with_money.webp";
 import Confetti from "src/assets/images/confetti.gif";
 import Page from "src/components/shared/Page/Page";
-import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
+import { getCurrencySymbol } from "@yasserzakywafaa/client-core";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";

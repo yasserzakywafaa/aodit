@@ -4,7 +4,7 @@ import {
   createAggregateRatingSchema,
   createReviewListSchema,
 } from "./reviewSchema";
-import { getAbsoluteUrl, getImageUrl } from "./schemaGenerators";
+import { getAbsoluteUrl, getImageUrl } from "./schemaHelpers";
 
 const ORGANIZATION_DESCRIPTIONS: Record<Region, string> = {
   swiss:

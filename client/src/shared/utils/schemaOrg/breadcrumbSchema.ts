@@ -1,4 +1,4 @@
-import { getAbsoluteUrl } from "./schemaGenerators";
+import { getAbsoluteUrl } from "./schemaHelpers";
 
 interface BreadcrumbItem {
   name: string;

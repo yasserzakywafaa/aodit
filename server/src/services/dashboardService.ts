@@ -14,7 +14,7 @@ import {
   UserStatus,
   getInitialUserData,
 } from "../models/types";
-import { deleteDocument, readDocument } from "../models/mongoDb/crudOperations";
+import { deleteDocument, readDocument } from "../models/mongoDb";
 
 import { DemoSession } from "../models/types/demoSession";
 import { randomUUID } from "crypto";

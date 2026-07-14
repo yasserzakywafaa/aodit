@@ -24,6 +24,7 @@
     "docker:deploy": "docker compose up --build -d"
   },
   "dependencies": {
+    "@yasserzakywafaa/server-core": "0.3.0",
     "@aws-sdk/client-s3": "3.1079.0",
     "@aws-sdk/credential-provider-node": "3.972.62",
     "@types/puppeteer": "^7.0.4",

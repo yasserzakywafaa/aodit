@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { isPrerendering } from "src/shared/utils/prerender";
+import { isPrerendering } from "@yasserzakywafaa/client-core/web";
 import { usePaymentContext } from "./store/Provider";
 
 let catalogInitStarted = false;

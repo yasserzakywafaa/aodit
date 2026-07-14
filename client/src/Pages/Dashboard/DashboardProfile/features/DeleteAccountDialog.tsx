@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { DeleteOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { DELETE_ACCOUNT_CONFIRMATION_PHRASE } from "src/shared/utils/deleteAccount";
+import { DELETE_ACCOUNT_CONFIRMATION_PHRASE } from "@yasserzakywafaa/client-core";
 
 interface DeleteAccountDialogProps {
   isOpen: boolean;

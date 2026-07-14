@@ -9,7 +9,7 @@ import {
   deleteDocument,
   readDocument,
   updateDocument,
-} from "../models/mongoDb/crudOperations";
+} from "../models/mongoDb";
 
 import { Agent } from "src/models/types/agent";
 import CONFIG from "../config";

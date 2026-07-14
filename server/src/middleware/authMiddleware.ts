@@ -1,49 +1,51 @@
 import { DBCollectionsEnum, getDocumentFromDb } from "../models/mongoDb";
-import { NextFunction, Request, Response } from "express";
+import { Request, RequestHandler } from "express";
 
 import { ObjectId } from "mongodb";
 import { TokenService } from "../services/tokenService";
 import { User } from "../models/types";
+import {
+  createCookieAuthMiddleware,
+  TokenPayload,
+} from "@yasserzakywafaa/server-core";
 
 export interface AuthenticatedRequest extends Request {
   user?: User;
 }
 
-export const authMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { accessToken } = TokenService.extractTokenFromCookies(req);
-
-    if (!accessToken) {
-      TokenService.clearTokenCookies(res);
-      return res.status(401).json({ message: "No access token provided" });
-    }
-
-    // Verify access token
-    const decoded = TokenService.verifyAccessToken(accessToken);
-
+const coreAuthMiddleware = createCookieAuthMiddleware<User, TokenPayload>({
+  tokenService: TokenService,
+  resolveUser: async (decoded) => {
     const user = (await getDocumentFromDb(
       new ObjectId(decoded.userId),
       DBCollectionsEnum.users,
     )) as User;
 
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
+    if (user) {
+      console.log("🔑 User Authenticated:", {
+        name: `${user.name?.givenName} ${user.name?.familyName}`,
+        email: user.email,
+      });
     }
 
-    console.log("🔑 User Authenticated:", {
-      name: `${user.name?.givenName} ${user.name?.familyName}`,
-      email: user.email,
-    });
+    return user;
+  },
+  messages: {
+    missingToken: "No access token provided",
+    invalidToken: "Invalid access token",
+    userNotFound: "User not found",
+  },
+  clearCookiesOnFailure: false,
+  resolverErrors: "unauthorized",
+});
 
-    // Attach user to request
-    req.user = user;
-    return next();
-  } catch (error) {
-    console.error("❌ OAuth2 auth middleware error:", error);
-    return res.status(401).json({ message: "Invalid access token" });
+export const authMiddleware: RequestHandler = (request, response, next) => {
+  const { accessToken } = TokenService.extractTokenFromCookies(request);
+  if (!accessToken) {
+    TokenService.clearTokenCookies(response);
+    response.status(401).json({ message: "No access token provided" });
+    return;
   }
+
+  coreAuthMiddleware(request, response, next);
 };

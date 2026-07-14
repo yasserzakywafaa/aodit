@@ -19,7 +19,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { routes } from "./routes";
 import { useApplicationContext } from "./store/Provider";
-import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useDeviceSize } from "@yasserzakywafaa/client-core/web";
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const FeaturesHomeRoute = lazy(

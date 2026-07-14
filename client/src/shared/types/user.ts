@@ -1,4 +1,4 @@
-import { Plan, Price } from "./payment";
+import { Plan, Price } from "@yasserzakywafaa/client-core";
 
 import { Integrations } from "./integrations";
 

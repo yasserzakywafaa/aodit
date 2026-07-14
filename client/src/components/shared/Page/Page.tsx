@@ -19,7 +19,7 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import ScrollToTopButton from "../ScrollToTopButton";
 import classNames from "classnames";
 import { routes } from "src/application/routes";
-import { scrollToTop } from "src/shared/utils/scrollTo";
+import { scrollToTop } from "@yasserzakywafaa/client-core/web";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
 

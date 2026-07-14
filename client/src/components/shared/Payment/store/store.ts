@@ -1,5 +1,5 @@
 import { PaymentInitialState, getPaymentInitialState } from "./state";
-import { Price, Product } from "src/shared/types/payment";
+import { Price, Product } from "@yasserzakywafaa/client-core";
 
 import { useState } from "react";
 

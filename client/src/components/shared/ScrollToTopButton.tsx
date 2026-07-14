@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { buttonStyle } from "src/application/shared/themes";
-import { scrollToTop } from "src/shared/utils/scrollTo";
-import useDetectScroll from "src/shared/hooks/useDetectScroll";
+import { scrollToTop, useDetectScroll } from "@yasserzakywafaa/client-core/web";
 
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);

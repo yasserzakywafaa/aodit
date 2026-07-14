@@ -22,7 +22,7 @@ import { PricingContextProvider } from "src/Pages/Pricing/store/Provider";
 import { PricingModalContextProvider } from "src/components/Modals/PricingModal/store/Provider";
 import React from "react";
 import { RegisterModalContextProvider } from "src/components/Modals/RegisterModal/store/Provider";
-import combineProviders from "./shared/combineProviders";
+import { combineProviders } from "@yasserzakywafaa/client-core";
 
 const contextProviders = [
   ApplicationContextProvider,

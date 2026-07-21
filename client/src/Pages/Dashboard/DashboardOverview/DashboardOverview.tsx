@@ -20,6 +20,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useDashboardOverviewContext } from "./store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface StatCardProps {
   title: string;
@@ -30,6 +31,7 @@ interface StatCardProps {
 }
 
 const DashboardOverview = () => {
+  const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
   const {
     store: {
@@ -76,8 +78,9 @@ const DashboardOverview = () => {
           sx={{
             display: "flex",
             alignItems: "center",
-            mb: 2
-          }}>
+            mb: 2,
+          }}
+        >
           <DashboardIcon
             color={isAdminCard ? "warning" : "primary"}
             sx={{ mr: 1 }}
@@ -90,9 +93,12 @@ const DashboardOverview = () => {
         >
           {value !== null ? value : "--"}
         </Typography>
-        <Typography variant="body2" sx={{
-          color: "text.secondary"
-        }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+          }}
+        >
           {description}
         </Typography>
       </CardContent>
@@ -103,35 +109,40 @@ const DashboardOverview = () => {
     setUp();
   }, []);
 
+  const userName = user
+    ? `${user.name.givenName} ${user.name.familyName}`
+    : "";
+
   return (
     <Box>
       <Box>
         <Typography variant="h4" component="h1" color="primary" gutterBottom>
-          Welcome back, {user?.name.givenName} {user?.name.familyName}!
+          {t("overview.welcomeBack", { name: userName })}
         </Typography>
       </Box>
       <Typography
         variant="subtitle1"
         sx={{
           color: "text.secondary",
-          mb: 2
-        }}>
-        Your Overview
+          mb: 2,
+        }}
+      >
+        {t("overview.subtitle")}
       </Typography>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, sm: 6 }}>
           {renderStatCard({
-            title: "My Reports",
+            title: t("overview.myReports"),
             value: userReportsCount,
-            description: "Reports created by you",
+            description: t("overview.myReportsDescription"),
             path: routes.dashboard.reports.base,
           })}
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
           {renderStatCard({
-            title: "My Agents",
+            title: t("overview.myAgents"),
             value: userAgentsCount,
-            description: "Agents created by you",
+            description: t("overview.myAgentsDescription"),
             path: routes.dashboard.agents.base,
           })}
         </Grid>
@@ -144,13 +155,17 @@ const DashboardOverview = () => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 1
-                }}>
+                  gap: 1,
+                }}
+              >
                 <AdminPanelSettingsIcon color="warning" />
-                <Typography variant="h6" sx={{
-                  color: "warning.main"
-                }}>
-                  Admin
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: "warning.main",
+                  }}
+                >
+                  {t("overview.admin")}
                 </Typography>
               </Box>
             </AccordionSummary>
@@ -158,27 +173,27 @@ const DashboardOverview = () => {
               <Grid container spacing={3}>
                 <Grid size={{ xs: 12, sm: 6 }}>
                   {renderStatCard({
-                    title: "All Reports",
+                    title: t("overview.allReports"),
                     value: allReportsCount,
-                    description: "Reports created by all users",
+                    description: t("overview.allReportsDescription"),
                     path: routes.dashboard.admin.reports.base,
                     isAdminCard: true,
                   })}
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
                   {renderStatCard({
-                    title: "All Agents",
+                    title: t("overview.allAgents"),
                     value: allAgentsCount,
-                    description: "Agents created by all users",
+                    description: t("overview.allAgentsDescription"),
                     path: routes.dashboard.admin.agents.base,
                     isAdminCard: true,
                   })}
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
                   {renderStatCard({
-                    title: "All Demos",
+                    title: t("overview.allDemos"),
                     value: allDemosCount,
-                    description: "Free demos run across all pages",
+                    description: t("overview.allDemosDescription"),
                     path: routes.dashboard.admin.demos.base,
                     isAdminCard: true,
                   })}

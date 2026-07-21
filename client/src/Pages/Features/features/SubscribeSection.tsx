@@ -14,6 +14,7 @@ import { alpha } from "@mui/material/styles";
 import axios from "axios";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -26,6 +27,7 @@ const SubscribeSection = ({
   variant = "default",
   id = "subscribe",
 }: SubscribeSectionProps) => {
+  const { t } = useTranslation("page");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -34,14 +36,14 @@ const SubscribeSection = ({
     const trimmed = email.trim().toLowerCase();
     if (!trimmed) {
       Notify({
-        content: "Please enter your email address",
+        content: t("subscribe.errors.empty"),
         type: ToastTypes.Error,
       });
       return;
     }
     if (!emailRegex.test(trimmed)) {
       Notify({
-        content: "Please enter a valid email address",
+        content: t("subscribe.errors.invalid"),
         type: ToastTypes.Error,
       });
       return;
@@ -54,7 +56,7 @@ const SubscribeSection = ({
         { headers: { "Content-Type": "application/json" } },
       );
       const message =
-        response.data?.message || "You're on the list. Check your inbox.";
+        response.data?.message || t("subscribe.success");
       Notify({ content: message, type: ToastTypes.Success });
       trackEvent("lead_magnet_submit", {
         source: "subscribe_section",
@@ -68,7 +70,7 @@ const SubscribeSection = ({
         });
       } else {
         Notify({
-          content: "Something went wrong. Please try again later.",
+          content: t("subscribe.errors.generic"),
           type: ToastTypes.Error,
         });
       }
@@ -91,7 +93,6 @@ const SubscribeSection = ({
       minHeight: inputHeight,
       height: inputHeight,
       border: "1px solid",
-      // borderColor: primaryColor,
       borderRight: "none",
       color: "text.primary",
       "& fieldset": { border: "none" },
@@ -108,70 +109,67 @@ const SubscribeSection = ({
     },
   };
 
-  const renderCompact = () => {
-    return (
+  const renderCompact = () => (
+    <Box
+      component="section"
+      sx={{
+        py: { xs: 4, md: 5 },
+        px: { xs: 3, md: 6 },
+        borderTop: "1px solid",
+        borderBottom: "1px solid",
+        borderColor: "divider",
+        bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+      }}
+    >
       <Box
-        component="section"
         sx={{
-          py: { xs: 4, md: 5 },
-          px: { xs: 3, md: 6 },
-          borderTop: "1px solid",
-          borderBottom: "1px solid",
-          borderColor: "divider",
-          bgcolor: (t) => alpha(t.palette.primary.main, 0.1),
+          mx: "auto",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
         }}
       >
-        <Box
+        <Typography
           sx={{
-            // maxWidth: 720,
-            mx: "auto",
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2,
+            textTransform: "uppercase",
+            color: "primary.main",
           }}
         >
-          <Typography
-            sx={{
-              textTransform: "uppercase",
-              color: "primary.main",
-            }}
+          {t("subscribe.stayInformed")}
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ ...formSx, mx: 0 }}
+        >
+          <TextField
+            fullWidth
+            name="email"
+            placeholder={t("subscribe.emailPlaceholder")}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            size="small"
+            disabled={loading}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={loading}
+            startIcon={
+              loading ? (
+                <CircularProgress size={12} color="inherit" />
+              ) : undefined
+            }
           >
-            Stay informed
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ ...formSx, mx: 0 }}
-          >
-            <TextField
-              fullWidth
-              name="email"
-              placeholder="your@email.com"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              size="small"
-              disabled={loading}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={loading}
-              startIcon={
-                loading ? (
-                  <CircularProgress size={12} color="inherit" />
-                ) : undefined
-              }
-            >
-              {loading ? "Requesting" : "Subscribe"}
-            </Button>
-          </Box>
+            {loading ? t("subscribe.requesting") : t("subscribe.subscribe")}
+          </Button>
         </Box>
       </Box>
-    );
-  };
+    </Box>
+  );
 
   if (variant === "compact") {
     return renderCompact();
@@ -196,7 +194,6 @@ const SubscribeSection = ({
           textAlign: "center",
           px: { xs: 3, md: 5 },
           py: { xs: 4, md: 6 },
-          // border: `1px solid ${primaryColor}`,
           border: `1px solid`,
           borderLeft: "4px solid",
           borderLeftColor: "primary.main",
@@ -217,7 +214,7 @@ const SubscribeSection = ({
             component="span"
             sx={{ width: 24, height: 1, bgcolor: "primary.main" }}
           />
-          Stay Informed
+          {t("subscribe.stayInformedTitle")}
         </Typography>
 
         <Typography
@@ -239,24 +236,22 @@ const SubscribeSection = ({
             component="em"
             sx={{ fontStyle: "italic", color: "primary.main" }}
           >
-            ratings
+            {t("subscribe.titleEmphasis")}
           </Box>{" "}
-          when they publish
+          {t("subscribe.titleSuffix")}
         </Typography>
 
         <Typography
           sx={{ color: "text.secondary", fontSize: 15, mb: 5, lineHeight: 1.6 }}
         >
-          New reports issued quarterly. No marketing. No noise.
-          <br />
-          Risk, compliance, and governance professionals only.
+          {t("subscribe.subtitle")}
         </Typography>
 
         <Box component="form" onSubmit={handleSubmit} sx={formSx}>
           <TextField
             fullWidth
             name="email"
-            placeholder="your@email.com"
+            placeholder={t("subscribe.emailPlaceholder")}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -274,17 +269,12 @@ const SubscribeSection = ({
               ) : undefined
             }
           >
-            {loading ? "Requesting" : "Subscribe"}
+            {loading ? t("subscribe.requesting") : t("subscribe.subscribe")}
           </Button>
         </Box>
 
-        <Typography
-          sx={{
-            mt: 3,
-            color: "text.secondary",
-          }}
-        >
-          For institutional inquiries: info@aodit.ai
+        <Typography sx={{ mt: 3, color: "text.secondary" }}>
+          {t("subscribe.institutional")}
         </Typography>
       </Box>
     </Box>

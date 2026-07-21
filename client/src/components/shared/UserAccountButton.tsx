@@ -17,12 +17,14 @@ import axios from "axios";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface UserAccountMenuButtonProps {
   user: User;
 }
 
 const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const {
     manager: { handleSetAuthInfo },
@@ -73,7 +75,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
     });
     Notify({
       type: "info",
-      content: "Logged out",
+      content: t("loggedOut"),
     });
 
     navigate(routes.features);
@@ -148,7 +150,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
           <Typography variant="body1" sx={{
             color: "text.primary"
           }}>
-            Profile
+            {t("settings.profile")}
           </Typography>
         </MenuItem>
 
@@ -167,7 +169,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
                   sx={{ mr: 1 }}
                 />
               </ListItemIcon>
-              <Typography variant="body1">Dashboard</Typography>
+              <Typography variant="body1">{t("settings.dashboard")}</Typography>
             </MenuItem>
           </>
         )}
@@ -189,7 +191,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
               </ListItemIcon>
 
               <Typography variant="body1" color="error">
-                Logout
+                {t("settings.logout")}
               </Typography>
             </MenuItem>
           </>

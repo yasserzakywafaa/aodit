@@ -1,0 +1,92 @@
+{
+  "close": "Close",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "or": "or",
+  "emailSentSuccess": "Email sent successfully",
+  "noResults": "No Results Found",
+  "loggedOut": "Logged out",
+  "nav": {
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "pricing": "Pricing",
+    "contact": "Contact Us",
+    "register": "Register",
+    "login": "Log in",
+    "createProject": "Create Project",
+    "home": "Home",
+    "industries": "Industries",
+    "methodology": "Methodology",
+    "compliance": "Compliance",
+    "security": "Security",
+    "about": "About",
+    "requestEvaluation": "Request Evaluation",
+    "demo": "Demo",
+    "viewAllIndustries": "View All Industries"
+  },
+  "settings": {
+    "menu": "Settings",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "theme": "Theme",
+    "themeToggle": "Theme toggle button",
+    "install": "Install",
+    "refreshApp": "Refresh App"
+  },
+  "badges": {
+    "basic": "Basic",
+    "essential": "Essential",
+    "premium": "Premium"
+  },
+  "compliance": {
+    "finmaLabel": "FINMA AI Guidelines",
+    "finmaDescription": "Swiss financial market supervision",
+    "finmaGuidance": "FINMA Guidance"
+  },
+  "footer": {
+    "product": "Product",
+    "compliance": "Compliance",
+    "company": "Company",
+    "legal": "Legal",
+    "region": "Region",
+    "industries": "Industries",
+    "methodology": "Methodology",
+    "security": "Security",
+    "tryLiveDemo": "Try Live Demo",
+    "finmaGuidance": "FINMA Guidance",
+    "about": "About",
+    "contact": "Contact",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms & Conditions",
+    "dataProcessingAgreement": "Data Processing Agreement",
+    "regionGlobal": "Global (English)",
+    "regionSwitzerland": "Switzerland",
+    "disclaimer": "<brand>aodit</brand> is an independent AI evaluation framework. SwissLI AG is not affiliated with FINMA or any regulatory authority. Evaluation results are advisory and do not constitute regulatory approval or legal advice. © 2026 Swiss Lab of Intelligence (SwissLI AG)"
+  },
+  "cookiePolicy": {
+    "message": "By continuing to use this website, you agree to our use of cookies to improve your experience and analyze site traffic. See our <privacyLink>Privacy Policy</privacyLink> for more information.",
+    "ok": "OK"
+  },
+  "save": "Save",
+  "viewEdit": "View/Edit",
+  "view": "View",
+  "block": "Block",
+  "unblock": "Unblock",
+  "creating": "Creating…",
+  "updating": "Updating...",
+  "stopping": "Stopping…",
+  "stop": "Stop",
+  "notAvailable": "N/A",
+  "at": "at",
+  "totalCount_one": "{{count}} total",
+  "totalCount_other": "{{count}} total",
+  "cannotUndo": "This action cannot be undone.",
+  "cta": {
+    "requestEvaluation": "Request Evaluation",
+    "tryLiveDemo": "Try Live Demo",
+    "getDemo": "Get a Demo",
+    "contactUs": "Contact Us",
+    "cancel": "Cancel"
+  }
+}

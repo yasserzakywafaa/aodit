@@ -23,10 +23,9 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useState } from "react";
-import {
-  FEATURED_REPORT_CONTENT,
-  type Region,
-} from "src/application/shared/regionContent";
+import { useTranslation } from "react-i18next";
+import { type Region } from "src/application/shared/regionContent";
+import { useFeaturedReportContent } from "src/i18n/useRegionHomeContent";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -37,7 +36,8 @@ interface DownloadReportSectionProps {
 const DownloadReportSection = ({
   region = "global",
 }: DownloadReportSectionProps) => {
-  const featuredReport = FEATURED_REPORT_CONTENT[region];
+  const { t } = useTranslation(["page", "common"]);
+  const featuredReport = useFeaturedReportContent(region);
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const executiveSummaryUrl = APP_CONSTANTS.FEATURED_REPORT_PDF_URL;
@@ -74,19 +74,19 @@ const DownloadReportSection = ({
   const validateLeadForm = (): boolean => {
     let ok = true;
     if (!name.trim()) {
-      setNameErr("Full name is required");
+      setNameErr(t("downloadReport.validation.nameRequired"));
       ok = false;
     } else setNameErr("");
     if (!company.trim()) {
-      setCompanyErr("Company is required");
+      setCompanyErr(t("downloadReport.validation.companyRequired"));
       ok = false;
     } else setCompanyErr("");
     const em = email.trim();
     if (!em) {
-      setEmailErr("Work email is required");
+      setEmailErr(t("downloadReport.validation.emailRequired"));
       ok = false;
     } else if (!EMAIL_REGEX.test(em)) {
-      setEmailErr("Enter a valid email address");
+      setEmailErr(t("downloadReport.validation.emailInvalid"));
       ok = false;
     } else setEmailErr("");
     return ok;
@@ -114,7 +114,7 @@ const DownloadReportSection = ({
         },
       );
       Notify({
-        content: "Thank you — opening the executive summary.",
+        content: t("downloadReport.success"),
         type: ToastTypes.Success,
       });
       trackEvent("lead_magnet_submit", {
@@ -131,7 +131,7 @@ const DownloadReportSection = ({
         });
       } else {
         Notify({
-          content: "Could not submit. Please try again.",
+          content: t("downloadReport.submitError"),
           type: ToastTypes.Error,
         });
       }
@@ -142,7 +142,6 @@ const DownloadReportSection = ({
 
   return (
     <>
-      {/* Featured report card */}
       <Box
         id="ratings"
         component="section"
@@ -150,11 +149,11 @@ const DownloadReportSection = ({
           position: "relative",
           overflow: "hidden",
           border: "1px solid",
-          borderColor: (t) => alpha(t.palette.primary.main, 0.35),
-          bgcolor: (t) =>
+          borderColor: (theme) => alpha(theme.palette.primary.main, 0.35),
+          bgcolor: (theme) =>
             isDark
-              ? alpha(t.palette.primary.main, 0.04)
-              : alpha(t.palette.primary.main, 0.02),
+              ? alpha(theme.palette.primary.main, 0.04)
+              : alpha(theme.palette.primary.main, 0.02),
           "&::before": {
             content: '""',
             position: "absolute",
@@ -223,7 +222,7 @@ const DownloadReportSection = ({
               onClick={openExecutiveSummaryLeadDialog}
               startIcon={<PDF />}
             >
-              {hasPdf ? featuredReport.ctaLabel : "PDF coming soon"}
+              {hasPdf ? featuredReport.ctaLabel : t("downloadReport.pdfComingSoon")}
             </Button>
           </Box>
         </Box>
@@ -238,7 +237,7 @@ const DownloadReportSection = ({
       >
         <form onSubmit={handleLeadSubmit}>
           <DialogTitle sx={{ fontFamily: fontFamilyInter, fontWeight: 600 }}>
-            Enter your details to get the executive summary
+            {t("downloadReport.dialogTitle")}
           </DialogTitle>
           <DialogContent
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
@@ -246,7 +245,7 @@ const DownloadReportSection = ({
             <TextField
               required
               fullWidth
-              label="Full name"
+              label={t("downloadReport.fullName")}
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
@@ -259,7 +258,7 @@ const DownloadReportSection = ({
             <TextField
               required
               fullWidth
-              label="Company"
+              label={t("downloadReport.company")}
               value={company}
               onChange={(e) => {
                 setCompany(e.target.value);
@@ -273,7 +272,7 @@ const DownloadReportSection = ({
               required
               fullWidth
               type="email"
-              label="Work email"
+              label={t("downloadReport.workEmail")}
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -286,7 +285,7 @@ const DownloadReportSection = ({
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 2 }}>
             <Button onClick={closeLeadDialog} disabled={submitting}>
-              Cancel
+              {t("common:cancel")}
             </Button>
             <Button
               type="submit"
@@ -298,7 +297,9 @@ const DownloadReportSection = ({
                 ) : null
               }
             >
-              {submitting ? "Submitting…" : "Get executive summary"}
+              {submitting
+                ? t("downloadReport.submitting")
+                : t("downloadReport.getSummary")}
             </Button>
           </DialogActions>
         </form>

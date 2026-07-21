@@ -47,6 +47,7 @@ import { hasSuperAdminRights } from "src/shared/utils/getUserRoles";
 import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
+import { Trans, useTranslation } from "react-i18next";
 import { useDashboardReportContext } from "./store/Provider";
 
 const getLatestCompletedRun = (runs: ReportRun[]): ReportRun | undefined => {
@@ -60,6 +61,7 @@ const getLatestCompletedRun = (runs: ReportRun[]): ReportRun | undefined => {
 };
 
 const DashboardReport = () => {
+  const { t } = useTranslation(["report", "common"]);
   const { reportId } = useParams<{ reportId: string }>();
   const navigate = useNavigate();
   const {
@@ -263,12 +265,12 @@ const DashboardReport = () => {
       >
         <Box>
           <Typography variant="h4" component="h1" color="primary" gutterBottom>
-            {report?.name || "Report"}
+            {report?.name || t("report:fallbackTitle")}
           </Typography>
           <Typography variant="body2" sx={{
             color: "text.secondary"
           }}>
-            {totalScenarios} SCENARIOS · 8 TURNS · {framework.marketingLabel}
+            {t("report:scenariosMeta", { scenarios: totalScenarios, framework: framework.marketingLabel })}
           </Typography>
           <Typography variant="caption" sx={{
             color: "text.secondary"
@@ -284,7 +286,7 @@ const DashboardReport = () => {
             onClick={handleSave}
             disabled={!reportId || !report}
           >
-            Save
+            {t("report:save")}
           </Button>
         )}
       </Box>
@@ -297,13 +299,13 @@ const DashboardReport = () => {
           <Typography variant="subtitle1" color="primary" sx={{
             fontWeight: 600
           }}>
-            Report details
+            {t("report:details")}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Box component="form" onSubmit={handleSave}>
             <TextField
-              label="Report Name"
+              label={t("report:name")}
               name="name"
               value={report?.name ?? ""}
               onChange={handleChange}
@@ -312,7 +314,7 @@ const DashboardReport = () => {
               sx={{ mb: 2 }}
             />
             <TextField
-              label="Description"
+              label={t("report:description")}
               name="description"
               multiline
               rows={4}
@@ -333,7 +335,7 @@ const DashboardReport = () => {
             <Typography variant="subtitle1" color="primary" sx={{
               fontWeight: 600
             }}>
-              Report Config
+              {t("report:config")}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -364,11 +366,11 @@ const DashboardReport = () => {
               }}
             >
               <Tab
-                label="Evaluate Your Agent"
+                label={t("report:tabEvaluateAgent")}
                 sx={{ textTransform: "none", fontWeight: 600 }}
               />
               <Tab
-                label="Benchmark Frontier Models"
+                label={t("report:tabBenchmark")}
                 sx={{ textTransform: "none", fontWeight: 600 }}
               />
             </Tabs>
@@ -379,7 +381,7 @@ const DashboardReport = () => {
             {activeTab === 0 && (
               <>
                 <Typography variant="h5" color="primary" sx={{ mb: 1 }}>
-                  Evaluate Your Agent
+                  {t("report:evaluateAgentTitle")}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -387,10 +389,7 @@ const DashboardReport = () => {
                     color: "text.secondary",
                     mb: 3
                   }}>
-                  Select one of your registered agents and aodit will send
-                  adversarial prompts directly to its endpoint using the AODIT-6
-                  methodology. The agent must be reachable and respond to HTTP
-                  POST requests.
+                  {t("report:evaluateAgentDescription")}
                 </Typography>
 
                 {/* Agent selector */}
@@ -401,7 +400,7 @@ const DashboardReport = () => {
                     fontWeight: 600,
                     mb: 1
                   }}>
-                  Agent Assignment
+                  {t("report:agentAssignment")}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -409,8 +408,7 @@ const DashboardReport = () => {
                     color: "text.secondary",
                     mb: 1.5
                   }}>
-                  Select the AI agent this report evaluates. A report cannot run
-                  without an assigned agent (FINMA compliance).
+                  {t("report:agentAssignmentHelp")}
                 </Typography>
                 <Autocomplete
                   options={agents}
@@ -432,8 +430,8 @@ const DashboardReport = () => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Select Agent"
-                      placeholder="Search agents..."
+                      label={t("report:selectAgent")}
+                      placeholder={t("report:searchAgents")}
                       fullWidth
                     />
                   )}
@@ -453,8 +451,8 @@ const DashboardReport = () => {
                   sx={{ mb: 2 }}
                 >
                   {isAgentConnectionTesting
-                    ? "Testing connection..."
-                    : "Test Connection"}
+                    ? t("report:testingConnection")
+                    : t("report:testConnection")}
                 </Button>
 
                 {/* Agent URL status */}
@@ -462,7 +460,7 @@ const DashboardReport = () => {
                   <Box sx={{ mb: 3 }}>
                     {selectedAgent.agentUrl ? (
                       <Typography variant="body2">
-                        <strong>Agent URL:</strong>{" "}
+{t("report:agentUrl")}{" "}
                         <Box
                           component="span"
                           sx={{
@@ -480,9 +478,7 @@ const DashboardReport = () => {
                         sx={{ maxWidth: 600, gap: 2 }}
                       >
                         <Typography variant="body2">
-                          <strong>{selectedAgent.name}</strong> does not have an{" "}
-                          <strong>Agent URL</strong> configured. Add a URL in
-                          the agent settings to run in Agent evaluation mode.
+                          <Trans i18nKey="report:noAgentUrlWarning" ns="report" values={{ name: selectedAgent.name }} components={{ strong: <strong /> }} />
                         </Typography>
 
                         <Button
@@ -498,7 +494,7 @@ const DashboardReport = () => {
                             )
                           }
                         >
-                          Edit Agent
+                          {t("report:editAgent")}
                         </Button>
                       </Alert>
                     )}
@@ -512,8 +508,7 @@ const DashboardReport = () => {
                     sx={{ maxWidth: 600, mb: 3 }}
                   >
                     <Typography variant="body2">
-                      Select an agent above to evaluate it. The agent must have
-                      an <strong>Agent URL</strong> configured.
+                      <Trans i18nKey="report:selectAgentInfo" ns="report" components={{ strong: <strong /> }} />
                     </Typography>
                   </Alert>
                 )}
@@ -528,7 +523,7 @@ const DashboardReport = () => {
                       sx={{ maxWidth: 600, mb: 3 }}
                     >
                       <Typography variant="body2">
-                        {agentConnectionMessage || "Connection successful."}
+                        {agentConnectionMessage || t("report:connectionSuccess")}
                       </Typography>
                     </Alert>
                   )}
@@ -544,7 +539,7 @@ const DashboardReport = () => {
                     >
                       <Typography variant="body2">
                         {agentConnectionMessage ||
-                          "Connection test failed. Verify your agent endpoint and try again."}
+                          t("report:connectionFailed")}
                       </Typography>
                     </Alert>
                   )}
@@ -559,11 +554,7 @@ const DashboardReport = () => {
                       sx={{ maxWidth: 600, mb: 3 }}
                     >
                       <Typography variant="body2">
-                        Click <strong>Test Connection</strong> to verify this
-                        agent endpoint.
-                        <br />
-                        <strong>Run Report</strong> will stay disabled until the
-                        test succeeds.
+                        <Trans i18nKey="report:testConnectionInfo" ns="report" components={{ strong: <strong />, br: <br /> }} />
                       </Typography>
                     </Alert>
                   )}
@@ -587,7 +578,7 @@ const DashboardReport = () => {
             {isSuperAdmin && activeTab === 1 && (
               <>
                 <Typography variant="h5" color="primary" sx={{ mb: 1 }}>
-                  Benchmark Frontier Models
+                  {t("report:benchmarkTitle")}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -595,9 +586,7 @@ const DashboardReport = () => {
                     color: "text.secondary",
                     mb: 3
                   }}>
-                  Select one or more frontier LLMs to benchmark against the
-                  AODIT-6 framework. Each model runs every scenario
-                  independently via OpenRouter.
+                  {t("report:benchmarkDescription")}
                 </Typography>
 
                 <ReportConfig
@@ -624,7 +613,7 @@ const DashboardReport = () => {
               evaluationMode === "agent" &&
               !!selectedAgent &&
               !selectedAgent.evaluatorUrl?.trim()
-                ? "Set an Evaluator URL on the Agent page to run this report on-prem."
+                ? t("report:onPremEvaluatorTooltip")
                 : ""
             }
             disableHoverListener={
@@ -658,7 +647,7 @@ const DashboardReport = () => {
                     !selectedAgent?.evaluatorUrl?.trim())
                 }
               >
-                RUN REPORT
+                {t("report:runReport")}
               </Button>
             </span>
           </Tooltip>
@@ -672,7 +661,7 @@ const DashboardReport = () => {
                 navigate(routes.dashboard.reports.reportLiveFeed(reportId))
               }
             >
-              View Report Status
+              {t("report:viewReportStatus")}
             </Button>
           )}
         </Box>
@@ -688,7 +677,7 @@ const DashboardReport = () => {
               }}>
               aodit
             </Typography>{" "}
-            Framework™
+{t("report:frameworkTitle")}
           </Typography>
           <Box sx={{ borderTop: 1, borderColor: "divider", pt: 2, mt: 1 }}>
             {latestRun ? (
@@ -721,7 +710,7 @@ const DashboardReport = () => {
                     )}
                     <TableRow sx={{ borderTop: 1, borderColor: "divider" }}>
                       <TableCell>
-                        <strong>Composite</strong>
+                        <strong>{t("report:composite")}</strong>
                       </TableCell>
                       <TableCell align="right">
                         {latestRun.compositeScore?.toFixed(2) ?? "—"}
@@ -730,7 +719,7 @@ const DashboardReport = () => {
                     </TableRow>
                     <TableRow>
                       <TableCell>
-                        <strong>Rating</strong>
+                        <strong>{t("report:rating")}</strong>
                       </TableCell>
                       <TableCell align="right">
                         <Typography
@@ -777,16 +766,16 @@ const DashboardReport = () => {
                     display: "block",
                     mb: 1
                   }}>
-                  CALIBRATION GAP ANALYSIS
+                  {t("report:calibrationGapAnalysis")}
                 </Typography>
                 <Table size="small" sx={{ mb: 2 }}>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Model</TableCell>
-                      <TableCell>Independent score</TableCell>
-                      <TableCell>Self score</TableCell>
-                      <TableCell>Gap</TableCell>
-                      <TableCell>Assessment</TableCell>
+                      <TableCell>{t("report:model")}</TableCell>
+                      <TableCell>{t("report:independentScore")}</TableCell>
+                      <TableCell>{t("report:selfScore")}</TableCell>
+                      <TableCell>{t("report:gap")}</TableCell>
+                      <TableCell>{t("report:assessment")}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -813,14 +802,14 @@ const DashboardReport = () => {
                         {latestRun.calibrationGap != null
                           ? (() => {
                               const mag = latestRun.calibrationGap;
-                              if (mag <= 0.15) return "EXCELLENT";
-                              if (mag <= 0.35) return "MILD DRIFT";
-                              if (mag <= 0.6) return "MATERIAL CONCERN";
+                              if (mag <= 0.15) return t("report:calibrationExcellent");
+                              if (mag <= 0.35) return t("report:calibrationMildDrift");
+                              if (mag <= 0.6) return t("report:calibrationMaterialConcern");
                               if (latestRun.calibrationDelta == null)
-                                return "SEVERE MISCALIBRATION";
+                                return t("report:calibrationSevereMiscalibration");
                               return latestRun.calibrationDelta > 0
-                                ? "SEVERE OVERCONFIDENCE"
-                                : "SEVERE UNDERCONFIDENCE";
+                                ? t("report:calibrationSevereOverconfidence")
+                                : t("report:calibrationSevereUnderconfidence");
                             })()
                           : "—"}
                       </TableCell>
@@ -843,8 +832,8 @@ const DashboardReport = () => {
                     }
                   >
                     {pdfModeLoading === "report"
-                      ? "Generating report…"
-                      : "Download Report PDF"}
+                      ? t("report:generatingReport")
+                      : t("report:downloadReportPdf")}
                   </Button>
 
                   {/* <Button
@@ -873,8 +862,7 @@ const DashboardReport = () => {
                   color: "text.secondary",
                   mt: 2
                 }}>
-                Run a report to see dimension scores, composite score, rating,
-                calibration gap, and deployment verdict.
+                {t("report:runToSeeResults")}
               </Typography>
             )}
           </Box>

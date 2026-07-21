@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { usePaymentContext } from "../Payment/store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { useTranslation } from "react-i18next";
 
 interface SubscriptionPlanProps {
   title: SubscriptionPlanEnum;
@@ -33,6 +34,7 @@ interface SubscriptionPlanTableProps {
 }
 
 export const usePricing = () => {
+  const { t } = useTranslation("page");
   const navigate = useNavigate();
   const {
     store: {
@@ -282,36 +284,36 @@ export const usePricing = () => {
   const getButtonText = (plan: SubscriptionPlanEnum) => {
     switch (plan) {
       case SubscriptionPlanEnum.Free:
-        if (!isAuthenticated) return "Create Projects";
-        if (isFreeUser) return "Create Projects";
+        if (!isAuthenticated) return t("pricing.cta.createProjects");
+        if (isFreeUser) return t("pricing.cta.createProjects");
         else return "";
 
       case SubscriptionPlanEnum.Lite:
-        if (!isAuthenticated) return "Register & Subscribe";
-        if (isFreeUser) return "Upgrade";
+        if (!isAuthenticated) return t("pricing.cta.registerSubscribe");
+        if (isFreeUser) return t("pricing.cta.upgrade");
         if (!isLiteUser && (isBasicUser || isEssentialUser || isPremiumUser))
           return "";
-        else return "Current Plan";
+        else return t("pricing.cta.currentPlan");
 
       case SubscriptionPlanEnum.Basic:
-        if (!isAuthenticated) return "Register & Subscribe";
-        if (isFreeUser || isLiteUser) return "Upgrade";
+        if (!isAuthenticated) return t("pricing.cta.registerSubscribe");
+        if (isFreeUser || isLiteUser) return t("pricing.cta.upgrade");
         if (!isBasicUser && (isEssentialUser || isPremiumUser)) return "";
-        else return "Current Plan";
+        else return t("pricing.cta.currentPlan");
 
       case SubscriptionPlanEnum.Essential:
-        if (!isAuthenticated) return "Register & Subscribe";
-        if (isFreeUser || isLiteUser || isBasicUser) return "Upgrade";
+        if (!isAuthenticated) return t("pricing.cta.registerSubscribe");
+        if (isFreeUser || isLiteUser || isBasicUser) return t("pricing.cta.upgrade");
         if (!isBasicUser && !isEssentialUser && isPremiumUser) return "";
-        else return "Current Plan";
+        else return t("pricing.cta.currentPlan");
 
       case SubscriptionPlanEnum.Premium:
-        if (!isAuthenticated) return "Register & Subscribe";
-        if (!isPremiumUser) return "Upgrade";
-        else return "Current Plan";
+        if (!isAuthenticated) return t("pricing.cta.registerSubscribe");
+        if (!isPremiumUser) return t("pricing.cta.upgrade");
+        else return t("pricing.cta.currentPlan");
 
       default:
-        return "Upgrade";
+        return t("pricing.cta.upgrade");
     }
   };
 
@@ -320,11 +322,13 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Free,
       product: undefined,
       features: [
-        "Free trial",
-        "Save time on project creation",
-        `Generate up to ${APP_CONSTANTS.MAX_APP_LIMIT_FREE} project`,
-        "Basic project customization",
-        "Projects are public",
+        t("pricing.features.freeTrial"),
+        t("pricing.features.saveTime"),
+        t("pricing.features.generateUpToFree", {
+          count: APP_CONSTANTS.MAX_APP_LIMIT_FREE,
+        }),
+        t("pricing.features.basicCustomization"),
+        t("pricing.features.publicProjects"),
       ],
       buttonDisabled: false,
       buttonText: getButtonText(SubscriptionPlanEnum.Free),
@@ -336,12 +340,14 @@ export const usePricing = () => {
       subheader: "",
       product: getMonthlyPlan(SubscriptionPlanEnum.Lite),
       features: [
-        "Export Project to PDF",
-        "Limited brand voice customization",
-        "Limited project customization",
-        `Generate up to ${APP_CONSTANTS.MAX_APP_LIMIT_LITE} projects/month`,
-        "Publish to WordPress & Ghost",
-        "Single project creation",
+        t("pricing.features.exportPdf"),
+        t("pricing.features.limitedBrandVoice"),
+        t("pricing.features.limitedCustomization"),
+        t("pricing.features.generateUpToMonthly", {
+          count: APP_CONSTANTS.MAX_APP_LIMIT_LITE,
+        }),
+        t("pricing.features.publishWordpressGhost"),
+        t("pricing.features.singleProjectCreation"),
       ],
       buttonDisabled: isBasicUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Lite),
@@ -350,20 +356,22 @@ export const usePricing = () => {
     },
     {
       title: SubscriptionPlanEnum.Basic,
-      subheader: "Popular",
+      subheader: t("pricing.popular"),
       product: getMonthlyPlan(SubscriptionPlanEnum.Basic),
       features: [
-        "Export Project to PDF",
-        "Limited brand voice customization",
-        "Advanced project customization",
-        "Private projects",
-        "Topics & Keywords related recommendations",
-        "SEO-optimized content with keyword and interlinking",
-        `Generate up to ${APP_CONSTANTS.MAX_APP_LIMIT_BASIC} projects/month`,
-        "Publish to WordPress & Ghost",
-        "Access to Aodit API",
-        "Campaign creation for bulk generation",
-        "Multi-client campaign management",
+        t("pricing.features.exportPdf"),
+        t("pricing.features.limitedBrandVoice"),
+        t("pricing.features.advancedCustomization"),
+        t("pricing.features.privateProjects"),
+        t("pricing.features.topicsKeywordsRelated"),
+        t("pricing.features.seoOptimizedContent"),
+        t("pricing.features.generateUpToMonthly", {
+          count: APP_CONSTANTS.MAX_APP_LIMIT_BASIC,
+        }),
+        t("pricing.features.publishWordpressGhost"),
+        t("pricing.features.apiAccess"),
+        t("pricing.features.campaignBulk"),
+        t("pricing.features.multiClientManagement"),
       ],
       buttonDisabled: isBasicUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Basic),
@@ -374,18 +382,20 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Essential,
       product: getMonthlyPlan(SubscriptionPlanEnum.Essential),
       features: [
-        "Export Project to PDF",
-        "Enhanced brand voice customization",
-        "Customizable project parameters",
-        "Private projects",
-        "High-quality Interlinking for SEO",
-        "Topics & Keywords related recommendations",
-        `Generate up to ${APP_CONSTANTS.MAX_APP_LIMIT_ESSENTIAL} projects/month`,
-        "Publish to WordPress & Ghost",
-        "Access to Aodit API",
-        "Advanced campaign automation",
-        "Bulk project generation at scale",
-        "Multi-client campaign workflows",
+        t("pricing.features.exportPdf"),
+        t("pricing.features.enhancedBrandVoice"),
+        t("pricing.features.customizableParameters"),
+        t("pricing.features.privateProjects"),
+        t("pricing.features.highQualityInterlinking"),
+        t("pricing.features.topicsKeywordsRelated"),
+        t("pricing.features.generateUpToMonthly", {
+          count: APP_CONSTANTS.MAX_APP_LIMIT_ESSENTIAL,
+        }),
+        t("pricing.features.publishWordpressGhost"),
+        t("pricing.features.apiAccess"),
+        t("pricing.features.advancedCampaignAutomation"),
+        t("pricing.features.bulkGenerationScale"),
+        t("pricing.features.multiClientWorkflows"),
       ],
       buttonDisabled: isEssentialUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Essential),
@@ -397,23 +407,25 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Premium,
       product: getMonthlyPlan(SubscriptionPlanEnum.Premium),
       features: [
-        "Export Project to PDF",
-        "Full brand voice customization",
-        "Customizable project parameters",
-        "High-quality Interlinking for SEO",
-        "Private projects",
-        "Topics & Keywords related recommendations",
-        "Personalized project topic recommendations",
-        "Advanced Customizable project parameters",
-        "Priority content generation",
-        `Generate up to ${APP_CONSTANTS.MAX_APP_LIMIT_PREMIUM} projects/month`,
-        "Publish to WordPress & Ghost",
-        "Automated project scheduling",
-        "Full Access to Aodit API",
-        "Enterprise campaign automation",
-        "Unlimited bulk project generation",
-        "Advanced multi-client management",
-        "Scheduled campaign execution",
+        t("pricing.features.exportPdf"),
+        t("pricing.features.fullBrandVoice"),
+        t("pricing.features.customizableParameters"),
+        t("pricing.features.highQualityInterlinking"),
+        t("pricing.features.privateProjects"),
+        t("pricing.features.topicsKeywordsRelated"),
+        t("pricing.features.personalizedTopics"),
+        t("pricing.features.advancedCustomizableParameters"),
+        t("pricing.features.priorityGeneration"),
+        t("pricing.features.generateUpToMonthly", {
+          count: APP_CONSTANTS.MAX_APP_LIMIT_PREMIUM,
+        }),
+        t("pricing.features.publishWordpressGhost"),
+        t("pricing.features.automatedScheduling"),
+        t("pricing.features.fullApiAccess"),
+        t("pricing.features.enterpriseCampaignAutomation"),
+        t("pricing.features.unlimitedBulkGeneration"),
+        t("pricing.features.advancedMultiClient"),
+        t("pricing.features.scheduledCampaignExecution"),
       ],
       buttonDisabled: isPremiumUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Premium),
@@ -427,19 +439,20 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Free,
       product: undefined,
       features: {
-        "Save time on project creation": true,
-        "Number of projects": APP_CONSTANTS.MAX_APP_LIMIT_FREE,
-        "Project customization": false,
-        "Visibility of Projects": "Public",
-        "Export Project to PDF": false,
-        "Brand voice customization": false,
-        "Customizable project parameters": false,
-        "Interlinking for SEO": false,
-        "Topics & Keywords recommendations": false,
-        "Priority content generation": false,
-        "Auto Publish to WordPress & Ghost": false,
-        "Automated project scheduling": false,
-        "Access to Aodit API": false,
+        [t("pricing.table.rowSaveTime")]: true,
+        [t("pricing.table.rowNumberOfProjects")]:
+          APP_CONSTANTS.MAX_APP_LIMIT_FREE,
+        [t("pricing.table.rowProjectCustomization")]: false,
+        [t("pricing.table.rowVisibility")]: t("pricing.table.valuePublic"),
+        [t("pricing.table.rowExportPdf")]: false,
+        [t("pricing.table.rowBrandVoice")]: false,
+        [t("pricing.table.rowCustomizableParameters")]: false,
+        [t("pricing.table.rowInterlinking")]: false,
+        [t("pricing.table.rowTopicsKeywords")]: false,
+        [t("pricing.table.rowPriorityGeneration")]: false,
+        [t("pricing.table.rowAutoPublish")]: false,
+        [t("pricing.table.rowScheduling")]: false,
+        [t("pricing.table.rowApiAccess")]: false,
       },
       buttonDisabled: false,
       buttonText: getButtonText(SubscriptionPlanEnum.Free),
@@ -451,19 +464,21 @@ export const usePricing = () => {
       subheader: "",
       product: getMonthlyPlan(SubscriptionPlanEnum.Lite),
       features: {
-        "Save time on project creation": true,
-        "Number of projects": APP_CONSTANTS.MAX_APP_LIMIT_LITE,
-        "Project customization": "Basic",
-        "Visibility of Projects": "Private",
-        "Export Project to PDF": true,
-        "Brand voice customization": "Limited",
-        "Customizable project parameters": false,
-        "Interlinking for SEO": "Basic",
-        "Topics & Keywords recommendations": false,
-        "Priority content generation": false,
-        "Auto Publish to WordPress & Ghost": true,
-        "Automated project scheduling": false,
-        "Access to Aodit API": false,
+        [t("pricing.table.rowSaveTime")]: true,
+        [t("pricing.table.rowNumberOfProjects")]:
+          APP_CONSTANTS.MAX_APP_LIMIT_LITE,
+        [t("pricing.table.rowProjectCustomization")]:
+          t("pricing.table.valueBasic"),
+        [t("pricing.table.rowVisibility")]: t("pricing.table.valuePrivate"),
+        [t("pricing.table.rowExportPdf")]: true,
+        [t("pricing.table.rowBrandVoice")]: t("pricing.table.valueLimited"),
+        [t("pricing.table.rowCustomizableParameters")]: false,
+        [t("pricing.table.rowInterlinking")]: t("pricing.table.valueBasic"),
+        [t("pricing.table.rowTopicsKeywords")]: false,
+        [t("pricing.table.rowPriorityGeneration")]: false,
+        [t("pricing.table.rowAutoPublish")]: true,
+        [t("pricing.table.rowScheduling")]: false,
+        [t("pricing.table.rowApiAccess")]: false,
       },
       buttonDisabled: isBasicUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Lite),
@@ -472,22 +487,24 @@ export const usePricing = () => {
     },
     {
       title: SubscriptionPlanEnum.Basic,
-      subheader: "Popular",
+      subheader: t("pricing.popular"),
       product: getMonthlyPlan(SubscriptionPlanEnum.Basic),
       features: {
-        "Save time on project creation": true,
-        "Number of projects": APP_CONSTANTS.MAX_APP_LIMIT_BASIC,
-        "Project customization": "Flexible",
-        "Visibility of Projects": "Private",
-        "Export Project to PDF": true,
-        "Brand voice customization": "Relaxed",
-        "Customizable project parameters": false,
-        "Interlinking for SEO": "Advanced",
-        "Topics & Keywords recommendations": true,
-        "Priority content generation": false,
-        "Auto Publish to WordPress & Ghost": true,
-        "Automated project scheduling": false,
-        "Access to Aodit API": true,
+        [t("pricing.table.rowSaveTime")]: true,
+        [t("pricing.table.rowNumberOfProjects")]:
+          APP_CONSTANTS.MAX_APP_LIMIT_BASIC,
+        [t("pricing.table.rowProjectCustomization")]:
+          t("pricing.table.valueFlexible"),
+        [t("pricing.table.rowVisibility")]: t("pricing.table.valuePrivate"),
+        [t("pricing.table.rowExportPdf")]: true,
+        [t("pricing.table.rowBrandVoice")]: t("pricing.table.valueRelaxed"),
+        [t("pricing.table.rowCustomizableParameters")]: false,
+        [t("pricing.table.rowInterlinking")]: t("pricing.table.valueAdvanced"),
+        [t("pricing.table.rowTopicsKeywords")]: true,
+        [t("pricing.table.rowPriorityGeneration")]: false,
+        [t("pricing.table.rowAutoPublish")]: true,
+        [t("pricing.table.rowScheduling")]: false,
+        [t("pricing.table.rowApiAccess")]: true,
       },
       buttonDisabled: isBasicUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Basic),
@@ -498,19 +515,22 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Essential,
       product: getMonthlyPlan(SubscriptionPlanEnum.Essential),
       features: {
-        "Save time on project creation": true,
-        "Number of projects": APP_CONSTANTS.MAX_APP_LIMIT_ESSENTIAL,
-        "Project customization": "Advanced",
-        "Visibility of Projects": "Private",
-        "Export Project to PDF": true,
-        "Brand voice customization": "Enhanced",
-        "Customizable project parameters": false,
-        "Interlinking for SEO": "High-quality",
-        "Topics & Keywords recommendations": true,
-        "Priority content generation": false,
-        "Auto Publish to WordPress & Ghost": true,
-        "Automated project scheduling": false,
-        "Access to Aodit API": true,
+        [t("pricing.table.rowSaveTime")]: true,
+        [t("pricing.table.rowNumberOfProjects")]:
+          APP_CONSTANTS.MAX_APP_LIMIT_ESSENTIAL,
+        [t("pricing.table.rowProjectCustomization")]:
+          t("pricing.table.valueAdvanced"),
+        [t("pricing.table.rowVisibility")]: t("pricing.table.valuePrivate"),
+        [t("pricing.table.rowExportPdf")]: true,
+        [t("pricing.table.rowBrandVoice")]: t("pricing.table.valueEnhanced"),
+        [t("pricing.table.rowCustomizableParameters")]: false,
+        [t("pricing.table.rowInterlinking")]:
+          t("pricing.table.valueHighQuality"),
+        [t("pricing.table.rowTopicsKeywords")]: true,
+        [t("pricing.table.rowPriorityGeneration")]: false,
+        [t("pricing.table.rowAutoPublish")]: true,
+        [t("pricing.table.rowScheduling")]: false,
+        [t("pricing.table.rowApiAccess")]: true,
       },
       buttonDisabled: isEssentialUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Essential),
@@ -522,19 +542,21 @@ export const usePricing = () => {
       title: SubscriptionPlanEnum.Premium,
       product: getMonthlyPlan(SubscriptionPlanEnum.Premium),
       features: {
-        "Save time on project creation": true,
-        "Number of projects": APP_CONSTANTS.MAX_APP_LIMIT_PREMIUM,
-        "Project customization": "Full",
-        "Visibility of Projects": "Private",
-        "Export Project to PDF": true,
-        "Brand voice customization": "Full",
-        "Customizable project parameters": true,
-        "Interlinking for SEO": "High-quality",
-        "Topics & Keywords recommendations": true,
-        "Priority content generation": true,
-        "Auto Publish to WordPress & Ghost": true,
-        "Automated project scheduling": true,
-        "Access to Aodit API": "Full",
+        [t("pricing.table.rowSaveTime")]: true,
+        [t("pricing.table.rowNumberOfProjects")]:
+          APP_CONSTANTS.MAX_APP_LIMIT_PREMIUM,
+        [t("pricing.table.rowProjectCustomization")]: t("pricing.table.valueFull"),
+        [t("pricing.table.rowVisibility")]: t("pricing.table.valuePrivate"),
+        [t("pricing.table.rowExportPdf")]: true,
+        [t("pricing.table.rowBrandVoice")]: t("pricing.table.valueFull"),
+        [t("pricing.table.rowCustomizableParameters")]: true,
+        [t("pricing.table.rowInterlinking")]:
+          t("pricing.table.valueHighQuality"),
+        [t("pricing.table.rowTopicsKeywords")]: true,
+        [t("pricing.table.rowPriorityGeneration")]: true,
+        [t("pricing.table.rowAutoPublish")]: true,
+        [t("pricing.table.rowScheduling")]: true,
+        [t("pricing.table.rowApiAccess")]: t("pricing.table.valueFull"),
       },
       buttonDisabled: isPremiumUser,
       buttonText: getButtonText(SubscriptionPlanEnum.Premium),

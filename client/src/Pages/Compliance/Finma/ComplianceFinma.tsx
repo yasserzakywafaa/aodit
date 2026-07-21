@@ -43,6 +43,7 @@ import finmaLogo from "src/assets/images/finma_logo.png";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const levelChipSx = (level: string) => {
@@ -76,6 +77,7 @@ const tableHeaderSx = {
 };
 
 const ComplianceFinmaPage = () => {
+  const { t } = useTranslation(["compliance", "common"]);
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -83,17 +85,17 @@ const ComplianceFinmaPage = () => {
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "FINMA AI Guidance 08/2024 Explained (Switzerland)",
-      "Independent behavioral control-layer evidence for FINMA-aligned AI testing, monitoring, and risk decisions in Swiss financial services.",
+      t("finma.schemaTitle"),
+      t("finma.schemaDescription"),
       routes.compliance.finma,
     );
-  }, []);
+  }, [t]);
 
   useSchemaOrg(webPageSchema, "compliance-finma-webpage-schema");
 
   return (
     <Page
-      title="FINMA AI Guidance 08/2024 Explained (Switzerland) | aodit"
+      title={t("finma.pageTitle")}
       className="compliance-finma-page"
       isLoading={false}
     >
@@ -120,7 +122,7 @@ const ComplianceFinmaPage = () => {
               mb: 2,
             }}
           >
-            Regulatory Alignment
+            {t("finma.eyebrow")}
           </Typography>
           <Typography
             variant="h1"
@@ -132,7 +134,7 @@ const ComplianceFinmaPage = () => {
               letterSpacing: "-0.01em",
             }}
           >
-            FINMA AI Guidance 08/2024
+            {t("finma.title")}
           </Typography>
           <Typography
             sx={{
@@ -143,7 +145,7 @@ const ComplianceFinmaPage = () => {
               lineHeight: 1.7,
             }}
           >
-            How{" "}
+            {t("finma.introPrefix")}{" "}
             <Typography
               component="span"
               sx={{
@@ -153,8 +155,7 @@ const ComplianceFinmaPage = () => {
             >
               aodit
             </Typography>{" "}
-            maps to Swiss financial market supervision requirements for AI in
-            regulated institutions.
+            {t("finma.introSuffix")}
           </Typography>
 
           <Paper
@@ -169,8 +170,7 @@ const ComplianceFinmaPage = () => {
             <Typography
               sx={{ fontSize: 14, color: "text.secondary", lineHeight: 1.65 }}
             >
-              For CROs, compliance officers, and model risk teams evaluating
-              independent AI testing evidence against FINMA requirements.
+              {t("finma.audience")}
             </Typography>
           </Paper>
         </Container>
@@ -209,7 +209,7 @@ const ComplianceFinmaPage = () => {
                   color: "text.primary",
                 }}
               >
-                Key Principle
+                {t("finma.keyPrinciple")}
               </Typography>
             </Stack>
             <Typography sx={{ fontSize: 15, lineHeight: 1.75, mb: 1.5 }}>
@@ -239,7 +239,7 @@ const ComplianceFinmaPage = () => {
               color: "text.primary",
             }}
           >
-            Where{" "}
+            {t("finma.lifecycleTitlePrefix")}{" "}
             <Typography
               component="span"
               sx={{
@@ -249,7 +249,7 @@ const ComplianceFinmaPage = () => {
             >
               aodit
             </Typography>{" "}
-            Fits in the Lifecycle
+            {t("finma.lifecycleTitleSuffix")}
           </Typography>
           <Grid container spacing={2}>
             {FINMA_LIFECYCLE_STAGES.map((item, index) => (
@@ -276,7 +276,7 @@ const ComplianceFinmaPage = () => {
                       mb: 0.75,
                     }}
                   >
-                    Phase {index + 1}
+                    {t("finma.phase", { n: index + 1 })}
                   </Typography>
                   <Typography sx={{ fontWeight: 700, fontSize: 15, mb: 1 }}>
                     {item.stage}
@@ -325,7 +325,7 @@ const ComplianceFinmaPage = () => {
                       color: "text.primary",
                     }}
                   >
-                    Official FINMA Source Document
+                    {t("finma.officialDoc")}
                   </Typography>
                 </Stack>
                 <Typography sx={{ fontWeight: 600, mb: 0.5, fontSize: 15 }}>
@@ -338,15 +338,14 @@ const ComplianceFinmaPage = () => {
                     mb: 2.5,
                   }}
                 >
-                  {FINMA_OFFICIAL_NOTICE.authority} · Published{" "}
+                  {FINMA_OFFICIAL_NOTICE.authority} · {t("finma.published")}{" "}
                   {FINMA_OFFICIAL_NOTICE.publishedDate}
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{ mb: 3, color: "text.secondary", lineHeight: 1.6 }}
                 >
-                  For transparency and audit-readiness, use the official FINMA
-                  notice as the primary regulatory source.
+                  {t("finma.officialNote")}
                 </Typography>
                 <Button
                   variant="contained"
@@ -364,8 +363,8 @@ const ComplianceFinmaPage = () => {
                   sx={{ px: 3, py: 1 }}
                 >
                   {hasOfficialPdfLink
-                    ? "Download Official FINMA PDF"
-                    : "Download link coming soon"}
+                    ? t("finma.downloadPdf")
+                    : t("finma.downloadSoon")}
                 </Button>
               </Grid>
               <Grid
@@ -813,7 +812,7 @@ const ComplianceFinmaPage = () => {
               onClick={() => navigate(routes.contact)}
               sx={{ px: 4, py: 1.2 }}
             >
-              Request Evaluation
+              {t("common:nav.requestEvaluation")}
             </Button>
             <Button
               variant="outlined"
@@ -822,7 +821,7 @@ const ComplianceFinmaPage = () => {
               onClick={() => navigate(routes.demo)}
               sx={{ px: 4, py: 1.2 }}
             >
-              Try Live Demo
+              {t("common:footer.tryLiveDemo")}
             </Button>
           </Stack>
         </Container>

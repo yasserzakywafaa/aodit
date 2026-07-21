@@ -4,8 +4,10 @@ import { AODIT_DIMENSIONS } from "src/shared/constants/aoditFramework";
 import type { AoditDimensionId } from "src/shared/constants/aoditFramework";
 import { useDashboardReportContext } from "../store/Provider";
 import { weightSum } from "./weightSum";
+import { Trans, useTranslation } from "react-i18next";
 
 const DimensionWeightsSection = () => {
+  const { t } = useTranslation("report");
   const {
     store: {
       state: { report },
@@ -18,21 +20,23 @@ const DimensionWeightsSection = () => {
 
   return (
     <>
-      <Typography variant="h6" color="primary" sx={{
-        mb: 1
-      }}>
-        Dimension weights - <i>must total 100%</i>
+      <Typography
+        variant="h6"
+        color="primary"
+        sx={{
+          mb: 1,
+        }}
+      >
+        <Trans i18nKey="configSections.dimensionWeights" ns="report" />
       </Typography>
       <Typography
         variant="body2"
         sx={{
           color: "text.secondary",
-          mb: 1.5
-        }}>
-        These weights determine how each dimension contributes to the final
-        composite rating (AAA–D). They do not change how many scenarios run
-        per dimension — every dimension is tested at the selected scenario
-        count.
+          mb: 1.5,
+        }}
+      >
+        {t("configSections.dimensionWeightsHelp")}
       </Typography>
       <Box sx={{ px: 1, mb: 3 }}>
         {AODIT_DIMENSIONS.map((dim) => (
@@ -49,8 +53,9 @@ const DimensionWeightsSection = () => {
               variant="body2"
               sx={{
                 fontWeight: 500,
-                minWidth: 120
-              }}>
+                minWidth: 120,
+              }}
+            >
               {dim.toUpperCase()}
             </Typography>
             <Slider
@@ -104,20 +109,20 @@ const DimensionWeightsSection = () => {
           variant="caption"
           sx={{
             fontWeight: 600,
-            color: "inherit"
-          }}>
-          {weightsOk
-            ? ` TOTAL: ${Math.round(total * 100)}%`
-            : ` TOTAL: ${Math.round(total * 100)}%`}
+            color: "inherit",
+          }}
+        >
+          {t("configSections.total", { percent: Math.round(total * 100) })}
         </Typography>
         {!weightsOk && (
           <Typography
             variant="caption"
             sx={{
               fontWeight: 600,
-              color: "inherit"
-            }}>
-            must equal 100%
+              color: "inherit",
+            }}
+          >
+            {t("configSections.totalMustEqual")}
           </Typography>
         )}
       </Box>

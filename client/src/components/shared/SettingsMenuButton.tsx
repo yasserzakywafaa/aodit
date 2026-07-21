@@ -10,11 +10,14 @@ import {
   WbSunnyOutlined,
 } from "@mui/icons-material";
 
+import { LanguageSwitcher } from "@yasserzakywafaa/client-core/web/i18n";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { SupportedLang } from "@yasserzakywafaa/client-core";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
 import { useTheme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 export interface SettingsMenuButtonProps {
   children?: JSX.Element;
@@ -22,11 +25,12 @@ export interface SettingsMenuButtonProps {
 }
 
 const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
+  const { t } = useTranslation("common");
   const {
     store: {
-      state: { themeMode },
+      state: { themeMode, auth },
     },
-    manager: { handleToggleThemeMode },
+    manager: { handleToggleThemeMode, handleUpdateUserInfoInApplication },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
   const muiTheme = useTheme();
@@ -46,6 +50,15 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
 
   const handleOnRefreshClick = () => {
     window.location.reload();
+  };
+
+  const handleOnLanguageChange = async (lang: SupportedLang) => {
+    const user = auth.user;
+    if (user) {
+      await handleUpdateUserInfoInApplication({
+        preferences: { ...user.preferences, languagePreference: lang },
+      });
+    }
   };
 
   const accentColor = muiTheme.palette.primary.main;
@@ -87,6 +100,11 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
         variant="menu"
         onClose={handleCloseMenu}
       >
+        <LanguageSwitcher
+          styles={{ ...buttonHoverStylePrimary }}
+          onLanguageChange={handleOnLanguageChange}
+        />
+
         <MenuItem
           sx={{ ...buttonHoverStylePrimary }}
           onClick={handleToggleThemeMode}
@@ -107,7 +125,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
             )}
           </ListItemIcon>
 
-          <Typography variant="body1">Theme</Typography>
+          <Typography variant="body1">{t("settings.theme")}</Typography>
         </MenuItem>
 
         {!isInStandaloneMode && (
@@ -123,7 +141,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
               />
             </ListItemIcon>
 
-            <Typography variant="body1">Install </Typography>
+            <Typography variant="body1">{t("settings.install")}</Typography>
           </MenuItem>
         )}
 
@@ -132,7 +150,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
           onClick={handleOnRefreshClick}
         >
           <RefreshOutlined fontSize="medium" color="primary" sx={{ mr: 1 }} />
-          <Typography variant="body1">Refresh App</Typography>
+          <Typography variant="body1">{t("settings.refreshApp")}</Typography>
         </MenuItem>
       </Menu>
     </>

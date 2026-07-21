@@ -3,6 +3,7 @@ import { DemoSession, DemoStatus } from "src/shared/types/demoSession";
 
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
+import type { TFunction } from "i18next";
 
 export interface DashboardDemosGridFields {
   id: string;
@@ -39,6 +40,7 @@ export const getDemoStatusColor = (status: DemoStatus) => {
 
 export const getDashboardDemosDataGridConfig = (
   demos: DemoSession[],
+  t: TFunction<"dashboard">,
 ): DashboardDemosGridResult => {
   if (!demos || demos.length === 0) return { rows: [], columns: [] };
 
@@ -63,12 +65,12 @@ export const getDashboardDemosDataGridConfig = (
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "source",
-      headerName: "SOURCE",
+      headerName: t("admin.demos.columnSource"),
       editable: false,
       sortable: true,
       minWidth: 200,
       flex: 1,
-      description: "Page/industry where the demo ran",
+      description: t("admin.demos.columnSourceDescription"),
       renderCell: (params) => (
         <Box
           sx={{
@@ -94,7 +96,7 @@ export const getDashboardDemosDataGridConfig = (
     },
     {
       field: "model",
-      headerName: "MODEL",
+      headerName: t("admin.demos.columnModel"),
       editable: false,
       sortable: true,
       minWidth: 180,
@@ -107,13 +109,13 @@ export const getDashboardDemosDataGridConfig = (
     },
     {
       field: "status",
-      headerName: "STATUS",
+      headerName: t("admin.demos.columnStatus"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Demo run status",
+      description: t("admin.demos.columnStatusDescription"),
       renderCell: (params) => (
         <Chip
           label={
@@ -127,7 +129,7 @@ export const getDashboardDemosDataGridConfig = (
     },
     {
       field: "score",
-      headerName: "SCORE",
+      headerName: t("admin.demos.columnScore"),
       editable: false,
       sortable: true,
       minWidth: 90,
@@ -142,17 +144,17 @@ export const getDashboardDemosDataGridConfig = (
     },
     {
       field: "turns",
-      headerName: "TURNS",
+      headerName: t("admin.demos.columnTurns"),
       editable: false,
       sortable: true,
       minWidth: 80,
       flex: 1,
       display: "flex",
-      description: "Number of turns completed",
+      description: t("admin.demos.columnTurnsDescription"),
     },
     {
       field: "date",
-      headerName: "DATE",
+      headerName: t("admin.demos.columnDate"),
       editable: false,
       sortable: true,
       minWidth: 110,
@@ -164,7 +166,7 @@ export const getDashboardDemosDataGridConfig = (
       field: "action",
       align: "right",
       type: "actions",
-      headerName: "ACTIONS",
+      headerName: t("admin.demos.columnActions"),
       headerAlign: "right",
       flex: 1,
       minWidth: 100,

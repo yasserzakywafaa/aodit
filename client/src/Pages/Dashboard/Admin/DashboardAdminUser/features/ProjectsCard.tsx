@@ -6,6 +6,7 @@ import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface ProjectsCardProps {
   projectsCount: number;
@@ -13,6 +14,7 @@ interface ProjectsCardProps {
 }
 
 const ProjectsCard = ({ projectsCount, userId }: ProjectsCardProps) => {
+  const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
 
   const handleViewProjects = () => {
@@ -42,7 +44,7 @@ const ProjectsCard = ({ projectsCount, userId }: ProjectsCardProps) => {
             mb: 2
           }}>
           <ArticleIcon color="primary" sx={{ mr: 1, fontSize: 32 }} />
-          <Typography variant="h6">Projects</Typography>
+<Typography variant="h6">{t("admin.user.projects")}</Typography>
         </Box>
         <Box
           sx={{
@@ -65,7 +67,7 @@ const ProjectsCard = ({ projectsCount, userId }: ProjectsCardProps) => {
             mb: 2,
             textAlign: "center"
           }}>
-          {projectsCount === 1 ? "Project Created" : "Projects Created"}
+{t("admin.user.projectsCreated", { count: projectsCount })}
         </Typography>
         <Button
           variant="contained"
@@ -74,7 +76,7 @@ const ProjectsCard = ({ projectsCount, userId }: ProjectsCardProps) => {
           onClick={handleViewProjects}
           disabled={projectsCount === 0}
         >
-          View Projects
+{t("admin.user.viewProjects")}
         </Button>
       </CardContent>
     </Card>

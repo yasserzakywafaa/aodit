@@ -1,0 +1,92 @@
+{
+  "close": "Fermer",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "or": "ou",
+  "emailSentSuccess": "E-mail envoyé avec succès",
+  "noResults": "Aucun résultat trouvé",
+  "loggedOut": "Déconnecté",
+  "nav": {
+    "features": "Fonctionnalités",
+    "howItWorks": "Comment ça marche",
+    "pricing": "Tarifs",
+    "contact": "Contact",
+    "register": "S'inscrire",
+    "login": "Se connecter",
+    "createProject": "Créer un projet",
+    "home": "Accueil",
+    "industries": "Secteurs",
+    "methodology": "Méthodologie",
+    "compliance": "Conformité",
+    "security": "Sécurité",
+    "about": "À propos",
+    "requestEvaluation": "Demander une évaluation",
+    "demo": "Démo",
+    "viewAllIndustries": "Voir tous les secteurs"
+  },
+  "settings": {
+    "menu": "Paramètres",
+    "profile": "Profil",
+    "dashboard": "Tableau de bord",
+    "logout": "Déconnexion",
+    "theme": "Thème",
+    "themeToggle": "Bouton de changement de thème",
+    "install": "Installer",
+    "refreshApp": "Actualiser l'application"
+  },
+  "badges": {
+    "basic": "Basic",
+    "essential": "Essential",
+    "premium": "Premium"
+  },
+  "compliance": {
+    "finmaLabel": "Directives FINMA sur l'IA",
+    "finmaDescription": "Surveillance suisse des marchés financiers",
+    "finmaGuidance": "Directives FINMA"
+  },
+  "footer": {
+    "product": "Produit",
+    "compliance": "Conformité",
+    "company": "Entreprise",
+    "legal": "Mentions légales",
+    "region": "Région",
+    "industries": "Secteurs",
+    "methodology": "Méthodologie",
+    "security": "Sécurité",
+    "tryLiveDemo": "Essayer la démo en direct",
+    "finmaGuidance": "Directives FINMA",
+    "about": "À propos",
+    "contact": "Contact",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsAndConditions": "Conditions générales",
+    "dataProcessingAgreement": "Accord de traitement des données",
+    "regionGlobal": "Global (anglais)",
+    "regionSwitzerland": "Suisse",
+    "disclaimer": "<brand>aodit</brand> est un cadre d'évaluation IA indépendant. SwissLI AG n'est affiliée ni à la FINMA ni à une autorité de régulation. Les résultats d'évaluation sont consultatifs et ne constituent pas une approbation réglementaire ni un conseil juridique. © 2026 Swiss Lab of Intelligence (SwissLI AG)"
+  },
+  "cookiePolicy": {
+    "message": "En continuant à utiliser ce site, vous acceptez notre utilisation de cookies pour améliorer votre expérience et analyser le trafic. Consultez notre <privacyLink>politique de confidentialité</privacyLink> pour plus d'informations.",
+    "ok": "OK"
+  },
+  "save": "Enregistrer",
+  "viewEdit": "Voir/Modifier",
+  "view": "Voir",
+  "block": "Bloquer",
+  "unblock": "Débloquer",
+  "creating": "Création…",
+  "updating": "Mise à jour...",
+  "stopping": "Arrêt…",
+  "stop": "Arrêter",
+  "notAvailable": "N/D",
+  "at": "à",
+  "totalCount_one": "{{count}} au total",
+  "totalCount_other": "{{count}} au total",
+  "cannotUndo": "Cette action est irréversible.",
+  "cta": {
+    "requestEvaluation": "Demander une évaluation",
+    "tryLiveDemo": "Essayer la démo en direct",
+    "getDemo": "Obtenir une démo",
+    "contactUs": "Nous contacter",
+    "cancel": "Annuler"
+  }
+}

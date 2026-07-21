@@ -12,6 +12,7 @@ import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const BulletList = ({ items }: { items: string[] }) => (
@@ -55,6 +56,7 @@ const SectionHeading = ({
 );
 
 const TermsAndConditions = () => {
+  const { t } = useTranslation("page");
   const navigate = useNavigate();
 
   const handleLinkClick =
@@ -66,18 +68,18 @@ const TermsAndConditions = () => {
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "Terms and Conditions",
-      "Terms and Conditions governing the provision of services by Swiss Lab of Intelligence (SwissLI AG) in connection with the aodit platform.",
+      t("legal.termsSchemaTitle"),
+      t("legal.termsSchemaDescription"),
       routes.termsAndConditions,
       new Date("03/01/2026"),
     );
-  }, []);
+  }, [t]);
 
   useSchemaOrg(webPageSchema, "terms-and-conditions-webpage-schema");
 
   return (
     <Page
-      title="Terms & Conditions | aodit"
+      title={t("legal.termsPageTitle")}
       className="terms-and-conditions-page"
       isLoading={false}
       noIndex
@@ -104,7 +106,7 @@ const TermsAndConditions = () => {
               mb: 2,
             }}
           >
-            Legal
+            {t("legal.label")}
           </Typography>
           <Typography
             variant="h1"
@@ -115,15 +117,15 @@ const TermsAndConditions = () => {
               color: "text.primary",
             }}
           >
-            Terms &amp; Conditions
+            {t("legal.termsTitle")}
           </Typography>
           <Typography sx={{ fontSize: 15, color: "text.secondary", mb: 1 }}>
-            Last updated: March 2026
+            {t("legal.lastUpdated")}
           </Typography>
           <Typography sx={{ fontSize: 15, color: "text.secondary" }}>
-            Swiss Lab of Intelligence (SwissLI AG)
+            {t("legal.companyAddress")}
             <br />
-            Murbacherstrasse 19, 6003 Luzern, Switzerland
+            {t("legal.address")}
           </Typography>
         </Container>
       </Box>
@@ -131,7 +133,7 @@ const TermsAndConditions = () => {
       <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 3, md: 0 } }}>
         <Container maxWidth="md">
           {/* 1. Scope */}
-          <SectionHeading number="1" title="Scope" />
+          <SectionHeading number="1" title={t("legal.termsHeadings.1")} />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             These Terms &amp; Conditions (&ldquo;Terms&rdquo;) govern the
             provision of services by Swiss Lab of Intelligence (&ldquo;SwissLI

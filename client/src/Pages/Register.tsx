@@ -1,4 +1,5 @@
 import { Box, Container, Divider, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import EmailPasswordForm from "src/components/shared/Auth/EmailPasswordForm";
@@ -12,6 +13,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const { t } = useTranslation(["auth", "common"]);
   const navigate = useNavigate();
   const {
     store: {
@@ -30,7 +32,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <Page title="Register | aodit" noIndex>
+    <Page title={t("auth:registerPageTitle")} noIndex>
       <Container
         sx={{
           display: "flex",
@@ -52,8 +54,8 @@ const RegisterPage = () => {
 
           <Typography component="h1" variant="h5">
             {APP_CONSTANTS.IS_ON_PREM
-              ? "Access Restricted"
-              : "Create a new account"}
+              ? t("auth:accessRestricted")
+              : t("auth:registerHeading")}
           </Typography>
         </Box>
 
@@ -65,17 +67,24 @@ const RegisterPage = () => {
               alignItems: "center",
               gap: 1,
               maxWidth: 360,
-              textAlign: "center"
-            }}>
-            <Typography variant="body1" sx={{
-              color: "text.secondary"
-            }}>
-              Account creation is managed by your IT administrator.
+              textAlign: "center",
+            }}
+          >
+            <Typography
+              variant="body1"
+              sx={{
+                color: "text.secondary",
+              }}
+            >
+              {t("auth:accessRestrictedBody")}
             </Typography>
-            <Typography variant="body2" sx={{
-              color: "text.secondary"
-            }}>
-              Please contact your system administrator to request access.
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+              }}
+            >
+              {t("auth:contactAdmin")}
             </Typography>
           </Box>
         ) : (
@@ -84,11 +93,14 @@ const RegisterPage = () => {
               display: "flex",
               flexDirection: "column",
               gap: 2,
-              alignItems: "center"
-            }}>
+              alignItems: "center",
+            }}
+          >
             <SocialRegister authType="register" />
             <PhoneAuth authType="register" />
-            <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+            <Divider sx={{ width: "100%", maxWidth: 360 }}>
+              {t("common:or")}
+            </Divider>
             <EmailPasswordForm mode="register" />
           </Box>
         )}

@@ -31,12 +31,8 @@ import {
 import { routes } from "src/application/routes";
 import Page from "src/components/shared/Page/Page";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-
-const PAGE_TITLE =
-  "Industries | aodit – AI Agent Risk Evaluation & Stress Testing";
-const PAGE_META_DESCRIPTION =
-  "Explore how aodit stress-tests AI agents across industries, from finance and healthcare to legal, IT, and customer operations.";
 
 const CATEGORY_ICON_MAP: Record<LandingPageCategoryId, typeof BusinessRounded> =
   {
@@ -67,6 +63,7 @@ const toShortDescription = (description: string): string => {
 };
 
 const IndustriesHub = () => {
+  const { t } = useTranslation("page");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,11 +77,11 @@ const IndustriesHub = () => {
       document.head.appendChild(descriptionMeta);
     }
 
-    descriptionMeta.setAttribute("content", PAGE_META_DESCRIPTION);
-  }, []);
+    descriptionMeta.setAttribute("content", t("industries.metaDescription"));
+  }, [t]);
 
   return (
-    <Page title={PAGE_TITLE} className="industries-hub-page">
+    <Page title={t("industries.pageTitle")} className="industries-hub-page">
       <Box
         component="section"
         sx={{
@@ -96,9 +93,7 @@ const IndustriesHub = () => {
         }}
       >
         <Container maxWidth="lg">
-          <Stack spacing={2.5} sx={{
-            alignItems: "flex-start"
-          }}>
+          <Stack spacing={2.5} sx={{ alignItems: "flex-start" }}>
             <Typography
               component="h1"
               sx={{
@@ -108,7 +103,7 @@ const IndustriesHub = () => {
                 maxWidth: 900,
               }}
             >
-              AI Agent Risk Testing Across Industries
+              {t("industries.title")}
             </Typography>
             <Typography
               sx={{
@@ -117,8 +112,7 @@ const IndustriesHub = () => {
                 fontSize: { xs: "1rem", md: "1.15rem" },
                 lineHeight: 1.7
               }}>
-              Evaluate mission-critical AI agents with independent stress tests
-              designed for regulated and high-impact business environments.
+              {t("industries.subtitle")}
             </Typography>
             <Button
               variant="contained"
@@ -133,7 +127,7 @@ const IndustriesHub = () => {
               }}
               sx={{ px: 4, py: 1.4 }}
             >
-              Get a Demo
+              {t("cta.getDemo")}
             </Button>
           </Stack>
         </Container>
@@ -240,7 +234,7 @@ const IndustriesHub = () => {
                       }}
                       sx={{ px: 0.5 }}
                     >
-                      Learn more
+                      {t("cta.learnMore")}
                     </Button>
                   </CardActions>
                 </Card>

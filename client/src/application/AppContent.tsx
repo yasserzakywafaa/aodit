@@ -1,7 +1,7 @@
 import "./App.scss";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { darkTheme, lightTheme } from "./shared/themes";
+import { darkTheme, getThemedTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import APP_CONSTANTS from "./shared/app_constants";
@@ -20,6 +20,7 @@ import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { routes } from "./routes";
 import { useApplicationContext } from "./store/Provider";
 import useDeviceSize from "src/shared/hooks/useDeviceSize";
+import { useAppDirection } from "@yasserzakywafaa/client-core/web/i18n";
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const FeaturesHomeRoute = lazy(
@@ -128,13 +129,14 @@ const AppContent = () => {
     manager: { handleInitialAuthentication },
   } = useApplicationContext();
   const { isDesktop } = useDeviceSize();
+  const direction = useAppDirection();
 
   useEffect(() => {
     handleInitialAuthentication();
   }, []);
 
   return (
-    <ThemeProvider theme={state.themeMode === "light" ? lightTheme : darkTheme}>
+    <ThemeProvider theme={getThemedTheme(state.themeMode, direction)}>
       <CssBaseline />
       {isDesktop && <CustomCursor />}
 

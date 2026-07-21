@@ -1,12 +1,24 @@
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDashboardReportContext } from "src/Pages/Dashboard/DashboardReport/store/Provider";
 import { useDashboardUserContext } from "src/Pages/Dashboard/Admin/DashboardAdminUser/store/Provider";
 
+const SEGMENT_LABEL_KEYS: Record<string, string> = {
+  dashboard: "breadcrumbs.dashboard",
+  reports: "breadcrumbs.reports",
+  agents: "breadcrumbs.agents",
+  demos: "breadcrumbs.demos",
+  users: "breadcrumbs.users",
+  profile: "breadcrumbs.profile",
+  create: "breadcrumbs.create",
+};
+
 const DashboardBreadcrumbs = () => {
+  const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
   const location = useLocation();
   const {
@@ -17,14 +29,12 @@ const DashboardBreadcrumbs = () => {
     },
   } = useApplicationContext();
 
-  // Try to get user context (will be undefined if not in user page)
   let userContext;
   const isAdmin = hasAdminRights(user);
 
   try {
     userContext = useDashboardUserContext();
   } catch {
-    // Not in user context, that's fine
     userContext = null;
   }
 
@@ -42,33 +52,28 @@ const DashboardBreadcrumbs = () => {
     navigate(path);
   };
 
-  // Check if a segment looks like a MongoDB ObjectId (24 hex characters)
   const isObjectId = (segment: string) => {
     return /^[0-9a-fA-F]{24}$/.test(segment);
   };
 
-  // Get the label for a breadcrumb segment
   const getBreadcrumbLabel = (
     segment: string,
     index: number,
     segments: string[],
   ): string => {
-    // Check if this segment is a user ID and we have user context
     if (
       isObjectId(segment) &&
       userContext?.store.state.user &&
       segments[index - 1] === "users"
     ) {
-      // Replace user ID with user name
-      const user = userContext.store.state.user;
-      return `${user.name.givenName} ${user.name.familyName}`;
+      const breadcrumbUser = userContext.store.state.user;
+      return `${breadcrumbUser.name.givenName} ${breadcrumbUser.name.familyName}`;
     }
 
     if (!isAdmin && segment === "users") {
       return "";
     }
 
-    // Check if this segment is a report ID and we have report context
     if (
       isObjectId(segment) &&
       reportContext?.store.state.report?.name &&
@@ -81,14 +86,17 @@ const DashboardBreadcrumbs = () => {
       return "";
     }
 
-    // Format label: capitalize first letter and replace hyphens with spaces
+    const labelKey = SEGMENT_LABEL_KEYS[segment];
+    if (labelKey) {
+      return t(labelKey);
+    }
+
     return segment
       .split("-")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
 
-  // Build breadcrumbs progressively from URL segments
   const buildBreadcrumbs = () => {
     let currentPath = "";
 
@@ -115,15 +123,19 @@ const DashboardBreadcrumbs = () => {
   }
 
   return (
-    <Breadcrumbs aria-label="breadcrumb">
+    <Breadcrumbs aria-label={t("aria.breadcrumb")}>
       {breadcrumbs.map((crumb, index) => {
         if (!crumb) return;
 
         if (crumb.isLast) {
           return (
-            <Typography key={index} variant="body1" sx={{
-              color: "text.primary"
-            }}>
+            <Typography
+              key={index}
+              variant="body1"
+              sx={{
+                color: "text.primary",
+              }}
+            >
               {crumb.label}
             </Typography>
           );
@@ -137,7 +149,7 @@ const DashboardBreadcrumbs = () => {
             underline="hover"
             color="inherit"
             onClick={(e) => handleClick(e, crumb.path)}
-              sx={{
+            sx={{
               cursor: "pointer",
               "&:hover": {
                 color: "primary.main",

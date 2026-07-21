@@ -2,8 +2,10 @@ import { Box, Typography } from "@mui/material";
 
 import { SCENARIOS_PER_DIMENSION_OPTIONS } from "src/shared/constants/aoditFramework";
 import { useDashboardReportContext } from "../store/Provider";
+import { useTranslation } from "react-i18next";
 
 const ScenariosPerDimensionSection = () => {
+  const { t } = useTranslation("report");
   const {
     store: {
       state: { report },
@@ -13,10 +15,14 @@ const ScenariosPerDimensionSection = () => {
 
   return (
     <>
-      <Typography variant="h6" color="primary" sx={{
-        mb: 1.5
-      }}>
-        Scenarios per dimension
+      <Typography
+        variant="h6"
+        color="primary"
+        sx={{
+          mb: 1.5,
+        }}
+      >
+        {t("configSections.scenariosPerDimension")}
       </Typography>
       <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3 }}>
         {SCENARIOS_PER_DIMENSION_OPTIONS.map((opt) => {
@@ -53,15 +59,22 @@ const ScenariosPerDimensionSection = () => {
                 },
               }}
             >
-              <Typography variant="h5" component="div" sx={{
-                fontWeight: "bold"
-              }}>
+              <Typography
+                variant="h5"
+                component="div"
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
                 {opt.label}
               </Typography>
-              <Typography variant="body2" sx={{
-                color: "text.secondary"
-              }}>
-                {opt.total} total
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
+                {t("configSections.totalLabel", { total: opt.total })}
               </Typography>
             </Box>
           );

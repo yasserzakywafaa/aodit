@@ -15,8 +15,10 @@ import { routes } from "src/application/routes";
 import { useDashboardReportsContext } from "../store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
+  const { t } = useTranslation(["dashboard", "common"]);
   const navigate = useNavigate();
   const {
     manager: { handleDeleteReport },
@@ -73,8 +75,9 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
         display: "flex",
         justifyContent: "flex-end",
         alignItems: "center",
-        gap: 1
-      }}>
+        gap: 1,
+      }}
+    >
       <IconButton
         size="small"
         color="primary"
@@ -107,7 +110,7 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
         <MenuItem onClick={handleOnClickViewEdit(params)}>
           <Edit fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            View/Edit
+            {t("dashboard:grid.viewEdit")}
           </Typography>
         </MenuItem>
 
@@ -119,7 +122,7 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
         >
           <Delete fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            Delete
+            {t("common:delete")}
           </Typography>
         </MenuItem>
       </Menu>

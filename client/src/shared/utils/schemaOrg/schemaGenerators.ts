@@ -10,10 +10,10 @@ export const getBaseUrl = (): string => {
 /**
  * Get absolute URL from a relative path
  */
-export const getAbsoluteUrl = (path: string): string => {
+export const getAbsoluteUrl = (path?: string): string => {
   const baseUrl = getBaseUrl();
-  // Remove leading slash if present to avoid double slashes
-  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  const safePath = path || "/";
+  const cleanPath = safePath.startsWith("/") ? safePath : `/${safePath}`;
   return `${baseUrl}${cleanPath}`;
 };
 

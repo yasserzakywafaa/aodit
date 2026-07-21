@@ -1,11 +1,10 @@
-import {
-  fontFamilyPlayfairDisplay,
-} from "src/application/shared/themes";
+import { fontFamilyPlayfairDisplay } from "src/application/shared/themes";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { alpha } from "@mui/material/styles";
 import { scrollToSection } from "src/shared/utils/scrollTo";
+import { useTranslation } from "react-i18next";
 
 const SECTION_EYEBROW_STYLE = {
   fontSize: 9,
@@ -31,81 +30,61 @@ const SECTION_DESC_STYLE = {
   mb: 7,
 };
 
-const reportCards = [
-  {
-    number: "REPORT 01 — LIVE",
-    icon: "🌐",
-    title: "2026 Banking AI Risk Assessment",
-    desc: "How leading frontier models behave under contradiction, pressure, and adversarial manipulation.",
-    weights: [
-      { name: "RELIABILITY", pct: "25%", fill: 42 },
-      { name: "INTEGRITY", pct: "20%", fill: 33 },
-      { name: "JUDGMENT", pct: "20%", fill: 33 },
-      { name: "RESISTANCE", pct: "20%", fill: 33 },
-      { name: "RESILIENCE", pct: "15%", fill: 25 },
-    ],
-    cta: "GET NOTIFIED",
-  },
-  {
-    number: "REPORT 02 — COMING SOON",
-    icon: "🎭",
-    title: "Trust & Deception Benchmark",
-    desc: "Which AI models fake confidence? The definitive test for hallucination, bluffing, and false certainty.",
-    weights: [
-      { name: "RELIABILITY", pct: "15%", fill: 25 },
-      { name: "INTEGRITY", pct: "35%", fill: 58 },
-      { name: "JUDGMENT", pct: "20%", fill: 33 },
-      { name: "RESISTANCE", pct: "15%", fill: 25 },
-      { name: "RESILIENCE", pct: "15%", fill: 25 },
-    ],
-    cta: "GET NOTIFIED",
-  },
-  {
-    number: "REPORT 03 — COMING SOON",
-    icon: "🔓",
-    title: "Jailbreak Resistance Benchmark",
-    desc: "We ran 1,000 adversarial prompts. Who breaks first? The definitive security stress test.",
-    weights: [
-      { name: "RELIABILITY", pct: "15%", fill: 25 },
-      { name: "INTEGRITY", pct: "10%", fill: 17 },
-      { name: "JUDGMENT", pct: "15%", fill: 25 },
-      { name: "RESISTANCE", pct: "45%", fill: 75 },
-      { name: "RESILIENCE", pct: "15%", fill: 25 },
-    ],
-    cta: "GET NOTIFIED",
-  },
-  {
-    number: "REPORT 04 — COMING SOON",
-    icon: "🏦",
-    title: "Banking Agent Risk Ratings",
-    desc: "Tested against Swiss banking standards. Payment instructions, fraud escalation, AML ambiguity.",
-    weights: [
-      { name: "RELIABILITY", pct: "25%", fill: 42 },
-      { name: "INTEGRITY", pct: "20%", fill: 33 },
-      { name: "JUDGMENT", pct: "25%", fill: 42 },
-      { name: "RESISTANCE", pct: "15%", fill: 25 },
-      { name: "RESILIENCE", pct: "15%", fill: 25 },
-    ],
-    cta: "GET NOTIFIED",
-  },
-  {
-    number: "REPORT 05 — COMING SOON",
-    icon: "👥",
-    title: "AI Employee Stress Test",
-    desc: "Conflicting manager instructions, accountability pressure, ambiguity at scale. Would you trust this employee?",
-    weights: [
-      { name: "RELIABILITY", pct: "20%", fill: 33 },
-      { name: "INTEGRITY", pct: "15%", fill: 25 },
-      { name: "JUDGMENT", pct: "25%", fill: 42 },
-      { name: "RESISTANCE", pct: "15%", fill: 25 },
-      { name: "RESILIENCE", pct: "25%", fill: 42 },
-    ],
-    cta: "GET NOTIFIED",
-  },
+const WEIGHT_TEMPLATES = [
+  [
+    { name: "RELIABILITY", pct: "25%", fill: 42 },
+    { name: "INTEGRITY", pct: "20%", fill: 33 },
+    { name: "JUDGMENT", pct: "20%", fill: 33 },
+    { name: "RESISTANCE", pct: "20%", fill: 33 },
+    { name: "RESILIENCE", pct: "15%", fill: 25 },
+  ],
+  [
+    { name: "RELIABILITY", pct: "15%", fill: 25 },
+    { name: "INTEGRITY", pct: "35%", fill: 58 },
+    { name: "JUDGMENT", pct: "20%", fill: 33 },
+    { name: "RESISTANCE", pct: "15%", fill: 25 },
+    { name: "RESILIENCE", pct: "15%", fill: 25 },
+  ],
+  [
+    { name: "RELIABILITY", pct: "15%", fill: 25 },
+    { name: "INTEGRITY", pct: "10%", fill: 17 },
+    { name: "JUDGMENT", pct: "15%", fill: 25 },
+    { name: "RESISTANCE", pct: "45%", fill: 75 },
+    { name: "RESILIENCE", pct: "15%", fill: 25 },
+  ],
+  [
+    { name: "RELIABILITY", pct: "25%", fill: 42 },
+    { name: "INTEGRITY", pct: "20%", fill: 33 },
+    { name: "JUDGMENT", pct: "25%", fill: 42 },
+    { name: "RESISTANCE", pct: "15%", fill: 25 },
+    { name: "RESILIENCE", pct: "15%", fill: 25 },
+  ],
+  [
+    { name: "RELIABILITY", pct: "20%", fill: 33 },
+    { name: "INTEGRITY", pct: "15%", fill: 25 },
+    { name: "JUDGMENT", pct: "25%", fill: 42 },
+    { name: "RESISTANCE", pct: "15%", fill: 25 },
+    { name: "RESILIENCE", pct: "25%", fill: 42 },
+  ],
 ];
 
+const ICONS = ["🌐", "🎭", "🔓", "🏦", "👥"];
+
 const ReportsSection = () => {
+  const { t } = useTranslation("page");
   const scrollToContact = () => scrollToSection("contact");
+  const cards = (
+    t("reportsSection.cards", { returnObjects: true }) as {
+      number: string;
+      title: string;
+      desc: string;
+    }[]
+  ).map((card, i) => ({
+    ...card,
+    icon: ICONS[i],
+    weights: WEIGHT_TEMPLATES[i],
+    cta: t("reportsSection.getNotified"),
+  }));
 
   return (
     <Box
@@ -119,15 +98,14 @@ const ReportsSection = () => {
         bgcolor: "background.default",
       }}
     >
-      <Typography sx={SECTION_EYEBROW_STYLE}>// PUBLISHED REPORTS</Typography>
+      <Typography sx={SECTION_EYEBROW_STYLE}>
+        {t("reportsSection.eyebrow")}
+      </Typography>
       <Typography component="h2" sx={SECTION_TITLE_STYLE}>
-        Five Independent
-        <br />
-        Benchmarks
+        {t("reportsSection.title")}
       </Typography>
       <Typography sx={SECTION_DESC_STYLE}>
-        Each report auto-generates adversarial scenarios, runs 8-turn
-        conversations, and scores behavior under the AODIT-6 framework.
+        {t("reportsSection.subtitle")}
       </Typography>
 
       <Box
@@ -135,12 +113,12 @@ const ReportsSection = () => {
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
           gap: "1px",
-          bgcolor: (t) => alpha(t.palette.primary.main, 0.2),
+          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
           border: "1px solid",
-          borderColor: (t) => alpha(t.palette.primary.main, 0.2),
+          borderColor: (theme) => alpha(theme.palette.primary.main, 0.2),
         }}
       >
-        {reportCards.map((card) => (
+        {cards.map((card) => (
           <Box
             key={card.number}
             className="report-card"
@@ -165,7 +143,7 @@ const ReportsSection = () => {
                 transition: "transform 0.4s ease",
               },
               "&:hover": {
-                bgcolor: (t) => alpha(t.palette.primary.main, 0.06),
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.06),
                 "&::after": { transform: "scaleX(1)" },
                 "& .card-cta-arrow": { transform: "translateX(4px)" },
               },
@@ -291,7 +269,7 @@ const ReportsSection = () => {
             alignItems: "center",
             justifyContent: "center",
             border: "1px dashed",
-            borderColor: (t) => alpha(t.palette.primary.main, 0.2),
+            borderColor: (theme) => alpha(theme.palette.primary.main, 0.2),
             minHeight: 300,
             bgcolor: "background.default",
             opacity: 0.5,
@@ -308,7 +286,7 @@ const ReportsSection = () => {
               color: "text.secondary",
             }}
           >
-            CUSTOM REPORT
+            {t("reportsSection.customReport")}
           </Typography>
           <Typography
             sx={{
@@ -320,7 +298,7 @@ const ReportsSection = () => {
               lineHeight: 1.6,
             }}
           >
-            Your sector. Your scenarios. Enterprise pricing.
+            {t("reportsSection.customDesc")}
           </Typography>
         </Box>
       </Box>

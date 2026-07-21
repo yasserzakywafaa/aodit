@@ -8,9 +8,9 @@ import {
   Container,
   Typography,
 } from "@mui/material";
+import { Trans, useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-// import PaymentImage from "src/assets/images/bot_with_money.webp";
 import Confetti from "src/assets/images/confetti.gif";
 import Page from "src/components/shared/Page/Page";
 import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { usePaymentStatusContext } from "./store/Provider";
 
 const PaymentStatusPage = () => {
+  const { t } = useTranslation("page");
   const navigate = useNavigate();
   const { sessionId } = useParams();
   const {
@@ -74,35 +75,40 @@ const PaymentStatusPage = () => {
     return () => clearInterval(intervalId);
   }, [sessionId, showPaymentSuccess]);
 
-  console.log("PaymentStatus.tsx", sessionData);
+  const subscriptionEndDate = new Date(
+    auth.user.subscription.endDate || "",
+  ).toLocaleString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+  const planName =
+    sessionData?.invoice.subscription_details.metadata.subscriptionPlan ?? "";
 
   return (
     <Page
-      title="Payment Success | Aodit"
+      title={t("paymentStatus.pageTitle")}
       className={`payment-status-page ${
         showPaymentSuccess ? "payment-success" : ""
       }`}
       isLoading={isFetching}
     >
       {!showPaymentSuccess ? (
-        <>
-          <Container className="payment-status-container" sx={{ paddingY: 4 }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
-              }}>
-              <CircularProgress color="primary" size="10rem" />
-              <Typography variant="h4" sx={{
-                marginTop: 8
-              }}>
-                Please wait while we securely process your payment...
-              </Typography>
-            </Box>
-          </Container>
-        </>
+        <Container className="payment-status-container" sx={{ paddingY: 4 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+            <CircularProgress color="primary" size="10rem" />
+            <Typography variant="h4" sx={{ marginTop: 8 }}>
+              {t("paymentStatus.processing")}
+            </Typography>
+          </Box>
+        </Container>
       ) : (
         <>
           <img
@@ -115,10 +121,7 @@ const PaymentStatusPage = () => {
 
           <Container
             className="payment-success-container"
-            sx={{
-              pt: 4,
-              pb: 4,
-            }}
+            sx={{ pt: 4, pb: 4 }}
           >
             <Box
               sx={{
@@ -131,6 +134,7 @@ const PaymentStatusPage = () => {
                 src={""}
                 width="100%"
                 className="payment-success-character-image"
+                alt=""
               />
 
               <Box
@@ -140,10 +144,8 @@ const PaymentStatusPage = () => {
                   alignItems: "center",
                   marginY: 1
                 }}>
-                <Typography variant="h4" component="h2" sx={{
-                  color: "#2e7d32"
-                }}>
-                  Payment Successful
+                <Typography variant="h4" component="h2" sx={{ color: "#2e7d32" }}>
+                  {t("paymentStatus.successTitle")}
                 </Typography>
               </Box>
             </Box>
@@ -157,36 +159,25 @@ const PaymentStatusPage = () => {
                 flexDirection: "column",
                 justifyContent: "center"
               }}>
-              <Typography
-                variant="h5"
-                sx={{
-                  marginY: 1,
-                  textAlign: "center"
-                }}>
-                Hooray, {auth.user.name.givenName}! 🎉 <br />
-                Your payment process of{" "}
-                {/* <span className="bold">{totalAmount}</span> has been completed */}
-                <span className="bold">{getTotalAmount()}</span> has been
-                completed successfully!
+              <Typography variant="h5" sx={{ marginY: 1, textAlign: "center" }}>
+                <Trans
+                  i18nKey="paymentStatus.successMessage"
+                  ns="page"
+                  values={{
+                    name: auth.user.name.givenName,
+                    amount: getTotalAmount(),
+                  }}
+                  components={{ bold: <span className="bold" />, br: <br /> }}
+                />
               </Typography>
 
-              <Typography
-                variant="h6"
-                sx={{
-                  marginY: 1,
-                  textAlign: "center"
-                }}>
-                Your subscription will end on{" "}
-                <b>
-                  {new Date(
-                    auth.user.subscription.endDate || "",
-                  ).toLocaleString("en-GB", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </b>
-                .
+              <Typography variant="h6" sx={{ marginY: 1, textAlign: "center" }}>
+                <Trans
+                  i18nKey="paymentStatus.subscriptionEnd"
+                  ns="page"
+                  values={{ date: subscriptionEndDate }}
+                  components={{ b: <b /> }}
+                />
               </Typography>
 
               <Box
@@ -206,7 +197,7 @@ const PaymentStatusPage = () => {
                   endIcon={<PersonOutlined />}
                   onClick={handleOnMyProfileClick}
                 >
-                  Go to Profile
+                  {t("paymentStatus.goToProfile")}
                 </Button>
 
                 <Button
@@ -217,12 +208,7 @@ const PaymentStatusPage = () => {
                   endIcon={<AutoFixHighOutlined />}
                   onClick={handleOnCreateClick}
                 >
-                  Create{" "}
-                  {
-                    sessionData.invoice.subscription_details.metadata
-                      .subscriptionPlan
-                  }{" "}
-                  Projects
+                  {t("paymentStatus.createPlanProjects", { plan: planName })}
                 </Button>
               </Box>
             </Box>

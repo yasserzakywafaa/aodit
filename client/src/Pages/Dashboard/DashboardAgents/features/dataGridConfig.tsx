@@ -3,6 +3,7 @@ import { Agent, AgentStatus } from "src/shared/types/agent";
 
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
+import type { TFunction } from "i18next";
 
 export interface DashboardAgentsGridFields {
   id: string;
@@ -19,6 +20,7 @@ export interface DashboardAgentsGridResult {
 
 export const getDashboardAgentsDataGridConfig = (
   agents: Agent[],
+  t: TFunction<"dashboard">,
 ): DashboardAgentsGridResult => {
   if (!agents || agents.length === 0) return { rows: [], columns: [] };
 
@@ -42,12 +44,12 @@ export const getDashboardAgentsDataGridConfig = (
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "id",
-      headerName: "AGENT",
+      headerName: t("agents.columnAgent"),
       editable: false,
       sortable: true,
       minWidth: 250,
       flex: 1,
-      description: "Agent information",
+      description: t("agents.columnAgentDescription"),
       valueGetter: (value, row) => row.name,
       renderCell: (params) => {
         const agent = params.row;
@@ -64,24 +66,32 @@ export const getDashboardAgentsDataGridConfig = (
               alignItems: "center",
               justifyContent: "flex-start",
               gap: 1.5,
-              height: "100%"
-            }}>
+              height: "100%",
+            }}
+          >
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                height: "100%"
-              }}>
-              <Typography variant="body2" sx={{
-                fontWeight: "medium"
-              }}>
+                height: "100%",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: "medium",
+                }}
+              >
                 {agent.name}
               </Typography>
-              <Typography variant="caption" sx={{
-                color: "text.secondary"
-              }}>
-                ID {displayId}
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
+                {t("grid.idLabel")} {displayId}
               </Typography>
             </Box>
           </Box>
@@ -90,23 +100,23 @@ export const getDashboardAgentsDataGridConfig = (
     },
     {
       field: "ownerName",
-      headerName: "OWNER",
+      headerName: t("agents.columnOwner"),
       editable: false,
       sortable: true,
       minWidth: 150,
       flex: 1,
       display: "flex",
-      description: "Human responsible for this agent",
+      description: t("agents.columnOwnerDescription"),
     },
     {
       field: "status",
-      headerName: "STATUS",
+      headerName: t("agents.columnStatus"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
       display: "flex",
-      description: "Agent status",
+      description: t("agents.columnStatusDescription"),
       renderCell: (params) => {
         const status = params.row.status;
         const chipColor: Record<string, "default" | "success"> = {
@@ -115,7 +125,7 @@ export const getDashboardAgentsDataGridConfig = (
         };
         return (
           <Chip
-            label={status.toUpperCase()}
+            label={t(`status.${status}`, { defaultValue: status.toUpperCase() })}
             color={chipColor[status] ?? "default"}
             size="small"
             variant="outlined"
@@ -125,19 +135,19 @@ export const getDashboardAgentsDataGridConfig = (
     },
     {
       field: "createdAt",
-      headerName: "CREATED DATE",
+      headerName: t("agents.columnCreatedDate"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Date agent was created",
+      description: t("agents.columnCreatedDateDescription"),
     },
     {
       field: "action",
       align: "right",
       type: "actions",
-      headerName: "ACTIONS",
+      headerName: t("agents.columnActions"),
       headerAlign: "right",
       flex: 1,
       minWidth: 100,

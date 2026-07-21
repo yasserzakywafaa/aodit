@@ -19,8 +19,10 @@ import { routes } from "src/application/routes";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const IndustriesDropdown = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const groups = getLandingPagesGrouped();
 
@@ -75,7 +77,7 @@ const IndustriesDropdown = () => {
           />
         }
       >
-        Industries
+        {t("nav.industries")}
       </Button>
       <Menu
         anchorEl={anchorEl}
@@ -130,7 +132,7 @@ const IndustriesDropdown = () => {
                 onClick={handleViewAllIndustries}
                 sx={{ py: 1, fontWeight: 600 }}
               >
-                View All Industries
+                {t("nav.viewAllIndustries")}
               </MenuItem>,
             ]
           : groups.map(({ category }) => (
@@ -159,7 +161,7 @@ const IndustriesDropdown = () => {
                 onClick={handleViewAllIndustries}
                 sx={{ py: 1, fontWeight: 600 }}
               >
-                View All Industries
+                {t("nav.viewAllIndustries")}
               </MenuItem>,
             ])}
       </Menu>

@@ -16,8 +16,10 @@ import { routes } from "src/application/routes";
 import { useDashboardUsersContext } from "../store/Provider";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
+  const { t } = useTranslation(["dashboard", "common"]);
   const navigate = useNavigate();
   const {
     manager: { handleBlockUser, handleUnblockUser, handleDeleteUser },
@@ -124,7 +126,7 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
         <MenuItem onClick={handleOnClickViewEdit(params)}>
           <Edit fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            View/Edit
+            {t("dashboard:grid.viewEdit")}
           </Typography>
         </MenuItem>
 
@@ -134,14 +136,14 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
           <MenuItem onClick={handleOnClickUnblock(params)}>
             <LockOpen fontSize="small" sx={{ mr: 1 }} />
             <Typography variant="body2" sx={{ fontSize: "14px" }}>
-              Unblock
+              {t("dashboard:admin.users.unblock")}
             </Typography>
           </MenuItem>
         ) : (
           <MenuItem onClick={handleOnClickBlock(params)}>
             <Block fontSize="small" sx={{ mr: 1 }} />
             <Typography variant="body2" sx={{ fontSize: "14px" }}>
-              Block
+              {t("dashboard:admin.users.block")}
             </Typography>
           </MenuItem>
         )}
@@ -152,7 +154,7 @@ const DataGridRowActionsMenu = (params: GridRenderCellParams) => {
         >
           <Delete fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="body2" sx={{ fontSize: "14px" }}>
-            Delete
+            {t("common:delete")}
           </Typography>
         </MenuItem>
       </Menu>

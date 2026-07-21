@@ -1,8 +1,11 @@
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import { LockOutlined } from "@mui/icons-material";
 
 const LoginForm = () => {
+  const { t } = useTranslation("auth");
+
   return (
     <Box
       sx={{
@@ -16,7 +19,7 @@ const LoginForm = () => {
       </Avatar>
 
       <Typography component="h1" variant="h5">
-        Log in to you account
+        {t("loginFormHeading")}
       </Typography>
 
       <Box component="div" sx={{ mt: 1 }}>
@@ -25,7 +28,7 @@ const LoginForm = () => {
           required
           fullWidth
           id="email"
-          label="Email Address"
+          label={t("email")}
           name="email"
           autoComplete="email"
           autoFocus
@@ -35,7 +38,7 @@ const LoginForm = () => {
           required
           fullWidth
           name="password"
-          label="Password"
+          label={t("password")}
           type="password"
           id="password"
           autoComplete="current-password"
@@ -46,16 +49,8 @@ const LoginForm = () => {
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
         >
-          Log in
+          {t("login")}
         </Button>
-        {/* <Grid container>
-          <Grid size={{ xs: 12 }}>
-            <Link to="#">Forgot password?</Link>
-          </Grid>
-          <Grid size={{ xs: 12 }}>
-            <Link to="#">{"Don't have an account? Register"}</Link>
-          </Grid>
-        </Grid> */}
       </Box>
     </Box>
   );

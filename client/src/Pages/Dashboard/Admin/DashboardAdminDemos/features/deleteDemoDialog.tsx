@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 import { DeleteOutlined } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 const DeleteDemoDialog = ({
   isOpen,
@@ -21,6 +22,8 @@ const DeleteDemoDialog = ({
   onConfirm: () => void;
   demoLabel: string;
 }) => {
+  const { t } = useTranslation(["dashboard", "common"]);
+
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth={true}>
       <DialogTitle>
@@ -28,22 +31,22 @@ const DeleteDemoDialog = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1
-          }}>
+            gap: 1,
+          }}
+        >
           <DeleteOutlined color="error" fontSize="large" />
-          <Typography variant="h5">Delete Demo</Typography>
+          <Typography variant="h5">{t("dashboard:admin.demos.deleteDemoTitle")}</Typography>
         </Box>
       </DialogTitle>
       <DialogContent>
-        <Typography variant="body2">
-          Are you sure you want to delete the demo{" "}
-          <strong className="text-underline-secondary">"{demoLabel}"</strong>?
-          <br /> This action cannot be undone.
+        <Typography variant="body2">{t("dashboard:admin.demos.deleteDemoConfirm")}</Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          <strong className="text-underline-secondary">"{demoLabel}"</strong>
         </Typography>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" color="primary" onClick={onClose}>
-          Cancel
+          {t("common:cancel")}
         </Button>
         <Button
           variant="contained"
@@ -51,7 +54,7 @@ const DeleteDemoDialog = ({
           onClick={onConfirm}
           startIcon={<DeleteOutlined />}
         >
-          Delete
+          {t("common:delete")}
         </Button>
       </DialogActions>
     </Dialog>

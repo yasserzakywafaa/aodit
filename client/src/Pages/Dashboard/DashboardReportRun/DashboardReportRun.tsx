@@ -23,6 +23,7 @@ import type { Report } from "src/shared/types/report";
 import { StopCircleOutlined } from "@mui/icons-material";
 import axios from "axios";
 import { routes } from "src/application/routes";
+import { Trans, useTranslation } from "react-i18next";
 
 const POLL_INTERVAL_MS = 3000;
 
@@ -35,8 +36,7 @@ const scoreColor = (score: string): string => {
   return "error.main";
 };
 
-const agrLabel = (type: FeedItem["type"]) =>
-  type === "pass" ? "STRONG" : type === "warn" ? "MODERATE" : "LOW";
+
 
 const agrColor = (type: FeedItem["type"]) =>
   type === "pass"
@@ -46,6 +46,14 @@ const agrColor = (type: FeedItem["type"]) =>
       : "error.main";
 
 const DashboardReportRun = () => {
+  const { t } = useTranslation(["report", "common"]);
+
+  const agrLabel = (type: FeedItem["type"]) =>
+    type === "pass"
+      ? t("report:run.agreementStrong")
+      : type === "warn"
+        ? t("report:run.agreementModerate")
+        : t("report:run.agreementLow");
   const { reportId } = useParams<{ reportId: string }>();
   const navigate = useNavigate();
   const [report, setReport] = useState<Report | null>(null);
@@ -227,7 +235,7 @@ const DashboardReportRun = () => {
               color: "text.secondary",
               mb: 2
             }}>
-            No active run found for this report.
+{t("report:run.noActiveRun")}
           </Typography>
           {reportId && (
             <Button
@@ -237,7 +245,7 @@ const DashboardReportRun = () => {
                 navigate(routes.dashboard.reports.reportById(reportId))
               }
             >
-              Back to Report
+              {t("report:run.backToReport")}
             </Button>
           )}
         </Box>
@@ -276,7 +284,7 @@ const DashboardReportRun = () => {
           }}
         >
           <Typography variant="h6" color="primary" className="ellipsis">
-            {report?.name ?? "Loading…"}
+{report?.name ?? t("report:run.loading")}
           </Typography>
           {report?.evaluationMode === "agent" && (
             <Typography
@@ -293,7 +301,7 @@ const DashboardReportRun = () => {
                 fontSize: 9,
               }}
             >
-              AGENT EVALUATION
+{t("report:run.agentEvaluation")}
             </Typography>
           )}
         </Box>
@@ -321,7 +329,7 @@ const DashboardReportRun = () => {
             <Typography variant="caption" sx={{
               color: "text.secondary"
             }}>
-              {completedScenarios} / {displayTotal} completed
+{t("report:run.completed", { completed: completedScenarios, total: displayTotal })}
             </Typography>
             <Typography variant="caption" color="primary">
               {progress}%
@@ -452,13 +460,13 @@ const DashboardReportRun = () => {
         >
           <Box>
             <Typography variant="h6" color="primary">
-              LIVE SCENARIO FEED
+{t("report:run.liveScenarioFeed")}
             </Typography>
             {report?.evaluationMode === "agent" && agent && (
               <Typography variant="caption" sx={{
                 color: "text.secondary"
               }}>
-                Evaluating:{" "}
+{t("report:run.evaluating")}{" "}
                 <Box component="span" sx={{ color: "primary.main" }}>
                   {agent.name}
                 </Box>
@@ -513,7 +521,7 @@ const DashboardReportRun = () => {
                 <Typography
                   sx={{ fontSize: 10, letterSpacing: 1, color: "primary.main" }}
                 >
-                  PROCESSING
+{t("report:run.processing")}
                 </Typography>
               </Box>
               <Button
@@ -523,17 +531,17 @@ const DashboardReportRun = () => {
                 startIcon={<StopCircleOutlined />}
                 onClick={() => setStopDialogOpen(true)}
               >
-                Stop
+                {t("report:run.stop")}
               </Button>
             </Box>
           )}
 
           <Box sx={{ display: "flex", gap: 2.5 }}>
             {[
-              { val: runStatus === "running" ? 1 : 0, key: "RUNNING" },
-              { val: completedScenarios, key: "COMPLETE" },
-              { val: avgScore, key: "AVG SCORE" },
-              { val: datapoints.toLocaleString(), key: "DATAPOINTS" },
+              { val: runStatus === "running" ? 1 : 0, key: t("report:run.running") },
+              { val: completedScenarios, key: t("report:run.complete") },
+              { val: avgScore, key: t("report:run.avgScore") },
+              { val: datapoints.toLocaleString(), key: t("report:run.datapoints") },
             ].map(({ val, key }) => (
               <Box key={key} sx={{ textAlign: "center" }}>
                 <Typography
@@ -568,7 +576,7 @@ const DashboardReportRun = () => {
             flexShrink: 0,
           }}
         >
-          {(["ID", "SCENARIO", "MODEL", "SCORE", "AGREEMENT"] as const).map(
+          {([t("report:run.colId"), t("report:run.colScenario"), t("report:run.colModel"), t("report:run.colScore"), t("report:run.colAgreement")] as const).map(
             (col) => (
               <Typography
                 key={col}
@@ -600,7 +608,7 @@ const DashboardReportRun = () => {
               <Typography variant="body2" sx={{
                 color: "text.secondary"
               }}>
-                Starting up…
+{t("report:run.startingUp")}
               </Typography>
             </Box>
           )}
@@ -610,7 +618,7 @@ const DashboardReportRun = () => {
               <Typography variant="body2" sx={{
                 color: "text.secondary"
               }}>
-                No feed items recorded.
+{t("report:run.noFeedItems")}
               </Typography>
             </Box>
           )}
@@ -728,7 +736,7 @@ const DashboardReportRun = () => {
           <Typography variant="caption" sx={{
             color: "text.primary"
           }}>
-            TURN:{" "}
+{t("report:run.turn")}{" "}
             <Box component="span" sx={{ color: "primary.main" }}>
               {currentTurnName}
             </Box>
@@ -777,16 +785,12 @@ const DashboardReportRun = () => {
               gap: 1
             }}>
             <StopCircleOutlined color="error" fontSize="large" />
-            <Typography variant="h5">Stop Report</Typography>
+<Typography variant="h5">{t("report:run.stopReportTitle")}</Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
           <Typography variant="body2">
-            Are you sure you want to stop{" "}
-            <strong>"{report?.name ?? "this report"}"</strong>?
-            <br />
-            The current run will be terminated immediately. You can re-launch
-            the report at any time.
+<Trans i18nKey="report:run.stopReportConfirm" ns="report" values={{ name: report?.name ?? t("report:fallbackTitle") }} components={{ strong: <strong /> }} />
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -796,7 +800,7 @@ const DashboardReportRun = () => {
             onClick={() => setStopDialogOpen(false)}
             disabled={isStopping}
           >
-            Cancel
+            {t("common:cancel")}
           </Button>
           <Button
             variant="contained"
@@ -805,7 +809,7 @@ const DashboardReportRun = () => {
             onClick={handleStopConfirm}
             disabled={isStopping}
           >
-            {isStopping ? "Stopping…" : "Stop Report"}
+{isStopping ? t("report:run.stopping") : t("report:run.stopReport")}
           </Button>
         </DialogActions>
       </Dialog>

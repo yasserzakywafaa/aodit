@@ -14,50 +14,42 @@ import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
 import { useContactContext } from "./store/Provider";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 const ContactPage = () => {
+  const { t } = useTranslation("page");
   const {
     store: {
       state: { isFetching },
     },
   } = useContactContext();
 
-  // Generate ContactPage schema for SEO
   const contactPageSchema = useMemo(() => createContactPageSchema(), []);
 
-  // Generate Organization schema with contact information
   const organizationSchema = useMemo(
     () => createOrganizationSchemaForSite(),
     [],
   );
 
-  // Generate Breadcrumb schema
   const breadcrumbSchema = useMemo(() => {
     const breadcrumbs = [
-      { name: "Home", url: routes.features },
-      { name: "Contact", url: routes.contact },
+      { name: t("breadcrumb.home"), url: routes.features },
+      { name: t("breadcrumb.contact"), url: routes.contact },
     ];
     return createBreadcrumbSchema(breadcrumbs);
-  }, []);
+  }, [t]);
 
-  // Inject Schema.org structured data
   useSchemaOrg(contactPageSchema, "contact-page-schema");
   useSchemaOrg(organizationSchema, "contact-organization-schema");
   useSchemaOrg(breadcrumbSchema, "contact-breadcrumb-schema");
 
   return (
     <Page
-      title="Contact Us | Aodit"
+      title={t("contact.pageTitle")}
       className="contact-page"
       isLoading={isFetching}
     >
-      <Container
-        className="contact-container"
-        sx={{
-          pt: 6,
-          pb: 6,
-        }}
-      >
+      <Container className="contact-container" sx={{ pt: 6, pb: 6 }}>
         <Typography
           variant="h3"
           component="h1"
@@ -66,33 +58,20 @@ const ContactPage = () => {
             mb: 1,
           }}
         >
-          Contact Us
+          {t("contact.title")}
         </Typography>
-        <Typography
-          sx={{
-            color: "text.secondary",
-            mb: 1,
-            lineHeight: 1.7
-          }}>
-          For evaluation inquiries, security documentation requests (NDA
-          required), or general questions about{" "}
+        <Typography sx={{ color: "text.secondary", mb: 1, lineHeight: 1.7 }}>
+          {t("contact.intro")}{" "}
           <Typography
             component="span"
-            sx={{
-              fontSize: "inherit",
-              color: "primary.main"
-            }}>
+            sx={{ fontSize: "inherit", color: "primary.main" }}
+          >
             aodit
-          </Typography>{" "}
+          </Typography>
           .
         </Typography>
-        <Typography
-          sx={{
-            color: "text.secondary",
-            mb: 4,
-            fontSize: 14
-          }}>
-          We typically respond within one business day.
+        <Typography sx={{ color: "text.secondary", mb: 4, fontSize: 14 }}>
+          {t("contact.responseTime")}
         </Typography>
 
         <Grid container spacing={5}>

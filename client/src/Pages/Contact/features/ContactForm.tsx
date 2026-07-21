@@ -2,6 +2,7 @@ import { Box, Button, Grid, TextField } from "@mui/material";
 
 import { primaryColorOpaqueTen } from "src/application/shared/themes";
 import { useContactContext } from "../store/Provider";
+import { useTranslation } from "react-i18next";
 
 const inputSx = {
   "& .MuiOutlinedInput-root": {
@@ -18,6 +19,7 @@ const inputSx = {
 };
 
 const ContactForm = () => {
+  const { t } = useTranslation("page");
   const {
     store: { state },
     manager: { handleUpdateContactForm, handleSubmitContactForm },
@@ -47,7 +49,7 @@ const ContactForm = () => {
             required
             fullWidth
             name="name"
-            placeholder="Your name"
+            placeholder={t("contact.form.name")}
             value={state.contactForm.name}
             onChange={handleChange("name")}
             sx={inputSx}
@@ -58,7 +60,7 @@ const ContactForm = () => {
             required
             fullWidth
             name="company"
-            placeholder="Company"
+            placeholder={t("contact.form.company")}
             value={state.contactForm.company}
             onChange={handleChange("company")}
             sx={inputSx}
@@ -70,7 +72,7 @@ const ContactForm = () => {
             fullWidth
             type="email"
             name="email"
-            placeholder="Work email"
+            placeholder={t("contact.form.email")}
             value={state.contactForm.email}
             onChange={handleChange("email")}
             sx={inputSx}
@@ -83,7 +85,7 @@ const ContactForm = () => {
             multiline
             rows={3}
             name="message"
-            placeholder="Describe your AI agent or use case"
+            placeholder={t("contact.form.message")}
             value={state.contactForm.message}
             onChange={handleChange("message")}
             sx={inputSx}
@@ -107,7 +109,7 @@ const ContactForm = () => {
               "&:hover": { bgcolor: "secondary.main" },
             }}
           >
-            SUBMIT REQUEST →
+            {t("contact.form.submit")}
           </Button>
           <Box
             component="p"
@@ -119,7 +121,7 @@ const ContactForm = () => {
               mt: 1.5,
             }}
           >
-            No spam. Your details are used only to process your rating request.
+            {t("contact.form.privacy")}
           </Box>
         </Grid>
       </Grid>

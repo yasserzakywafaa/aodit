@@ -7,8 +7,10 @@ import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { Pricing } from "src/components/shared/Pricing/Pricing";
 import { usePaymentContext } from "src/components/shared/Payment/store/Provider";
 import { usePricingModalContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
 
 export const PricingModal = () => {
+  const { t } = useTranslation("common");
   const {
     store: { state, handleTogglePricingModal },
   } = usePricingModalContext();
@@ -58,7 +60,7 @@ export const PricingModal = () => {
             startIcon={<Close />}
             onClick={handleCloseModal}
           >
-            Close
+            {t("close")}
           </Button>
         </DialogActions>
       </Dialog>

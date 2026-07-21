@@ -186,3 +186,11 @@ export const darkTheme = createTheme({
     divider: "rgba(255, 255, 255, 0.12)",
   },
 });
+
+export function getThemedTheme(
+  mode: "light" | "dark",
+  direction: "ltr" | "rtl" = "ltr",
+) {
+  const base = mode === "light" ? lightTheme : darkTheme;
+  return createTheme({ ...base, direction });
+}

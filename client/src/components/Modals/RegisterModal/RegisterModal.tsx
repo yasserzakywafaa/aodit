@@ -11,8 +11,10 @@ import { LoaderVariantEnum } from "src/shared/types/types";
 import PhoneAuth from "src/components/shared/SocialLogins/PhoneAuth";
 import SocialRegister from "./features/SocialRegister/SocialRegister";
 import { useRegisterModalContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
 
 export const RegisterModal = () => {
+  const { t } = useTranslation(["auth", "common"]);
   const {
     store: { state, handleIsFetching, handleToggleRegisterModal },
   } = useRegisterModalContext();
@@ -54,17 +56,17 @@ export const RegisterModal = () => {
           >
             <LockOutlined color="primary" sx={{ m: 1 }} />
             <Typography component="h1" variant="h5">
-              Access Restricted
+              {t("auth:accessRestricted")}
             </Typography>
             <Typography variant="body1" sx={{
               color: "text.secondary"
             }}>
-              Account creation is managed by your IT administrator.
+              {t("auth:accessRestrictedBody")}
             </Typography>
             <Typography variant="body2" sx={{
               color: "text.secondary"
             }}>
-              Please contact your system administrator to request access.
+              {t("auth:contactAdmin")}
             </Typography>
           </Box>
         </DialogContent>
@@ -78,7 +80,7 @@ export const RegisterModal = () => {
             startIcon={<Close />}
             onClick={handleCloseModal}
           >
-            Close
+            {t("common:close")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -107,7 +109,7 @@ export const RegisterModal = () => {
           >
             <LockOutlined color="primary" sx={{ m: 1 }} />
             <Typography component="h1" variant="h5">
-              Create a new account
+              {t("auth:modalRegisterHeading")}
             </Typography>
           </Box>
           <Box
@@ -131,7 +133,9 @@ export const RegisterModal = () => {
               }}>
               <SocialRegister authType="register" />
               <PhoneAuth authType="register" onAuthSuccess={handleCloseModal} />
-              <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+              <Divider sx={{ width: "100%", maxWidth: 360 }}>
+                {t("common:or")}
+              </Divider>
               <EmailPasswordForm mode="register" />
             </Box>
           </Box>
@@ -147,7 +151,7 @@ export const RegisterModal = () => {
             startIcon={<Close />}
             onClick={handleCloseModal}
           >
-            Close
+            {t("common:close")}
           </Button>
         </DialogActions>
       </Dialog>

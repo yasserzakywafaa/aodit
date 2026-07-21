@@ -50,6 +50,7 @@ import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useTranslation } from "react-i18next";
 
 interface TurnResult {
   turnIndex: number;
@@ -94,7 +95,7 @@ const MODEL_OPTIONS: { label: string; id: string }[] = [
   { label: "Qwen 3.6 Plus", id: "qwen/qwen3.6-plus" },
 ];
 
-const TURN_NAMES = [
+const TURN_NAMES_FALLBACK = [
   "Opening",
   "Reworded",
   "Complicated",
@@ -125,7 +126,12 @@ const scoreColor = (
   return "error";
 };
 
-const scoreLabel = (score: number): string => {
+const scoreLabel = (score: number, t?: (key: string) => string): string => {
+  if (t) {
+    const key = `playground.scoreLabels.${score}`;
+    const translated = t(key);
+    if (translated !== key) return translated;
+  }
   const labels: Record<number, string> = {
     1: "Critical",
     2: "Weak",
@@ -279,7 +285,9 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
   score,
   turnIndex,
   onClose,
-}) => (
+}) => {
+  const { t } = useTranslation(["demo", "common"]);
+  return (
   <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
     <DialogTitle
       sx={{
@@ -310,7 +318,7 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
             lineHeight: 1.25,
             width: "100%"
           }}>
-          Judge's Reasoning
+          {t("playground.judgeReasoning")}
         </Typography>
         <Typography
           variant="caption"
@@ -318,7 +326,7 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
             color: "text.secondary",
             whiteSpace: "nowrap"
           }}>
-          Turn {turnIndex}
+          {t("playground.turn", { n: turnIndex })}
         </Typography>
       </Box>
       <Box
@@ -332,7 +340,7 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
         }}
       >
         <Chip
-          label={`${score}/5 · ${scoreLabel(score)}`}
+          label={`${score}/5 · ${scoreLabel(score, t)}`}
           color={scoreColor(score)}
           size="small"
           sx={{
@@ -344,7 +352,7 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
           size="small"
           onClick={onClose}
           edge="end"
-          aria-label="Close"
+          aria-label={t("common:close")}
           sx={{ flexShrink: 0 }}
         >
           <Close fontSize="small" />
@@ -362,13 +370,16 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
       </Typography>
     </DialogContent>
   </Dialog>
-);
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Completion upsell
 // ---------------------------------------------------------------------------
 
-const DemoCompletionUpsell: React.FC = () => (
+const DemoCompletionUpsell: React.FC = () => {
+  const { t } = useTranslation("demo");
+  return (
   <Card
     component="section"
     variant="outlined"
@@ -405,7 +416,7 @@ const DemoCompletionUpsell: React.FC = () => (
             fontWeight: 700,
             lineHeight: 1.35
           }}>
-          You got a taste — not the full meal.
+          {t("playground.upsellTitle")}
         </Typography>
       }
     />
@@ -418,18 +429,7 @@ const DemoCompletionUpsell: React.FC = () => (
           lineHeight: 1.7,
           mb: 1.25
         }}>
-        Eight turns,{" "}
-        <Box
-          component="span"
-          sx={{
-            fontWeight: 700,
-            color: "text.primary"
-          }}>
-          one
-        </Box>{" "}
-        adversarial storyline: enough to feel how we probe your agent, not
-        enough to call the job done. That is the point of the sandbox — quick
-        signal, low commitment.
+        {t("playground.upsellP1")}
       </Typography>
       <Typography
         variant="body2"
@@ -438,35 +438,7 @@ const DemoCompletionUpsell: React.FC = () => (
           color: "text.secondary",
           lineHeight: 1.7
         }}>
-        A production{" "}
-        <Box
-          component="span"
-          sx={{
-            fontWeight: 700,
-            color: "primary.main"
-          }}>
-          aodit
-        </Box>{" "}
-        deep report stacks more scenarios, tougher corners, and evidence that
-        holds up under scrutiny. Ballpark{" "}
-        <Box
-          component="span"
-          sx={{
-            fontWeight: 700,
-            color: "text.primary"
-          }}>
-          ~1%
-        </Box>{" "}
-        of that depth is what you just saw here. Hungry for the rest?{" "}
-        <Box
-          component="span"
-          sx={{
-            fontWeight: 600,
-            color: "text.primary"
-          }}>
-          Talk to us
-        </Box>{" "}
-        — we will show you what a full engagement actually looks like.
+        {t("playground.upsellP2")}
       </Typography>
     </CardContent>
     <CardActions
@@ -481,11 +453,12 @@ const DemoCompletionUpsell: React.FC = () => (
         to={routes.contact}
         sx={{ width: { xs: "100%", sm: "auto" } }}
       >
-        Request full report
+        {t("playground.requestFullReport")}
       </Button>
     </CardActions>
   </Card>
-);
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Component
@@ -516,6 +489,10 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
   storageKey,
   sourceLabel,
 }) => {
+  const { t } = useTranslation(["demo", "common"]);
+  const turnNames = t("playground.turnNames", {
+    returnObjects: true,
+  }) as string[];
   const initialPrompt = defaultSystemPrompt ?? SAMPLE_SYSTEM_PROMPT;
   const activeStorageKey = storageKey ?? DEFAULT_LOCAL_STORAGE_KEY;
   const [systemPrompt, setSystemPrompt] = useState(initialPrompt);
@@ -651,7 +628,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
       setSessionId(res.data.sessionId);
     } catch (err: any) {
       const msg =
-        err?.response?.data?.error ?? "Failed to start demo. Please try again.";
+        err?.response?.data?.error ?? t("playground.startError");
       setStartError(msg);
     } finally {
       setIsStarting(false);
@@ -787,7 +764,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
               textTransform: "uppercase",
               fontSize: "0.65rem"
             }}>
-            aodit · Demo Sandbox
+            {t("playground.sandbox")}
           </Typography>
         </Box>
 
@@ -800,7 +777,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
             <Typography variant="h6" gutterBottom sx={{
               fontWeight: 700
             }}>
-              aodit Demo
+              {t("playground.title")}
             </Typography>
             <Typography
               variant="body2"
@@ -808,8 +785,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                 color: "text.secondary",
                 mb: 3
               }}>
-              Run an 8-turn adversarial test against your AI agent. No account
-              required.
+              {t("playground.subtitle")}
             </Typography>
 
             {/* ------------------------------------------------------------------ */}
@@ -823,25 +799,29 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                   gap: 2
                 }}>
                 <TextField
-                  label="Agent Instructions"
+                  label={t("playground.agentInstructions")}
                   multiline
                   minRows={4}
                   maxRows={10}
                   fullWidth
                   value={systemPrompt}
                   onChange={(e) => setSystemPrompt(e.target.value)}
-                  placeholder="e.g. You are a customer support agent for Acme Software. You help users with billing, subscriptions, and product issues. Verify identity before account changes and escalate complex cases to a human agent..."
+                  placeholder={t("playground.agentPlaceholder")}
                   slotProps={{ htmlInput: { maxLength: 2000 } }}
-                  helperText={`${systemPrompt.length} / 2000 — paste the instructions your agent follows`}
+                  helperText={t("playground.charCount", {
+                    count: systemPrompt.length,
+                  })}
                   disabled={isStarting}
                 />
 
                 <FormControl fullWidth>
-                  <InputLabel id="model-select-label">Model</InputLabel>
+                  <InputLabel id="model-select-label">
+                    {t("playground.model")}
+                  </InputLabel>
                   <Select
                     labelId="model-select-label"
                     value={modelId}
-                    label="Model"
+                    label={t("playground.model")}
                     onChange={(e) => setModelId(e.target.value)}
                     disabled={isStarting}
                   >
@@ -870,7 +850,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                   }
                   sx={{ alignSelf: "flex-start" }}
                 >
-                  {isStarting ? "Launching audit…" : "Audit My Agent — Free"}
+                  {isStarting ? t("playground.launching") : t("playground.auditFree")}
                 </Button>
               </Box>
             )}
@@ -898,7 +878,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                     return (
                       <Tooltip
                         key={turnNum}
-                        title={TURN_NAMES[i]}
+                        title={turnNames[i] ?? TURN_NAMES_FALLBACK[i]}
                         placement="top"
                       >
                         <Box
@@ -951,7 +931,10 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                         <Typography variant="caption" sx={{
                           color: "text.secondary"
                         }}>
-                          Turn {activeTurnIndex}/{TOTAL_TURNS}
+                          {t("playground.turnProgress", {
+                            current: activeTurnIndex,
+                            total: TOTAL_TURNS,
+                          })}
                         </Typography>
                         <Button
                           size="small"
@@ -962,7 +945,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                           startIcon={<StopCircle sx={{ fontSize: 16 }} />}
                           sx={{ ml: 0.5, py: 0.25, fontSize: 11 }}
                         >
-                          {isStopping ? "Stopping…" : "Stop"}
+                          {isStopping ? t("common:stopping") : t("common:stop")}
                         </Button>
                       </>
                     )}
@@ -975,10 +958,10 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                       />
                     )}
                     {isFailed && (
-                      <Chip label="Failed" color="error" size="small" />
+                      <Chip label={t("playground.failed")} color="error" size="small" />
                     )}
                     {isCancelled && (
-                      <Chip label="Stopped" color="default" size="small" />
+                      <Chip label={t("playground.stopped")} color="default" size="small" />
                     )}
                   </Box>
                 </Box>
@@ -1070,7 +1053,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                                 fontWeight: 700,
                                 flexShrink: 0
                               }}>
-                              Turn {turn.turnIndex}
+                              {t("playground.turn", { n: turn.turnIndex })}
                             </Typography>
                             <Typography
                               variant="caption"
@@ -1156,7 +1139,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                               }}>
                               <Chip
                                 icon={<Bolt sx={{ fontSize: 16 }} />}
-                                label="Adversary"
+                                label={t("playground.adversary")}
                                 size="small"
                                 color="error"
                                 variant="outlined"
@@ -1188,7 +1171,7 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
                               }}>
                               <Chip
                                 icon={<SmartToy sx={{ fontSize: 16 }} />}
-                                label="Agent"
+                                label={t("playground.agent")}
                                 size="small"
                                 color="primary"
                                 variant="outlined"

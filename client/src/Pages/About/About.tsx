@@ -19,45 +19,30 @@ import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const DIFFERENTIATORS = [
-  {
-    icon: <BalanceOutlined sx={{ fontSize: 28, color: primaryColor }} />,
-    title: "Independent",
-    description:
-      "aodit is not a vendor tool. It evaluates AI agents independently, without access to model weights, training data, or production systems.",
-  },
-  {
-    icon: <LocationOnOutlined sx={{ fontSize: 28, color: primaryColor }} />,
-    title: "Swiss",
-    description:
-      "Headquartered in Luzern, governed by Swiss law. Designed for Swiss banking secrecy and FINMA-regulated deployment expectations.",
-  },
-  {
-    icon: <SecurityOutlined sx={{ fontSize: 28, color: primaryColor }} />,
-    title: "Specialized",
-    description:
-      "Built exclusively for regulated financial services — banking, fintech, and insurance. Not a general-purpose AI testing tool.",
-  },
-];
-
 const AboutPage = () => {
+  const { t } = useTranslation(["page", "common"]);
   const navigate = useNavigate();
+  const differentiators = t("about.differentiators", {
+    returnObjects: true,
+  }) as { title: string; description: string }[];
+  const areas = t("about.areas", { returnObjects: true }) as string[];
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "About SwissLI AG",
-      "Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI lab focused on safe AI system evaluation for regulated environments.",
+      t("about.schemaTitle"),
+      t("about.schemaDescription"),
       routes.about,
     );
-  }, []);
+  }, [t]);
 
   useSchemaOrg(webPageSchema, "about-webpage-schema");
 
   return (
     <Page
-      title="About SwissLI AG | Independent AI Evaluation"
+      title={t("about.pageTitle")}
       className="about-page"
       isLoading={false}
       noIndex
@@ -80,7 +65,7 @@ const AboutPage = () => {
               color: "text.primary",
             }}
           >
-            About SwissLI AG
+            {t("about.title")}
           </Typography>
           <Typography
             sx={{
@@ -90,10 +75,7 @@ const AboutPage = () => {
               fontSize: 17,
               mb: 2
             }}>
-            Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI
-            lab founded in 2021 and headquartered in Luzern. The lab focuses on
-            building and evaluating AI systems with a strong focus on real-world
-            behavior, safety, and system performance.
+            {t("about.p1")}
           </Typography>
           <Typography
             sx={{
@@ -110,9 +92,7 @@ const AboutPage = () => {
               }}>
               aodit
             </Typography>{" "}
-            is SwissLI&apos;s platform for independent evaluation of AI agents
-            in regulated environments, including banking, fintech, and
-            insurance.
+            {t("about.p2")}
           </Typography>
         </Container>
       </Box>
@@ -131,7 +111,7 @@ const AboutPage = () => {
               variant="h5"
               sx={{ fontWeight: 600, mb: 1.5, color: "text.primary" }}
             >
-              Our mission
+              {t("about.missionTitle")}
             </Typography>
             <Typography
               sx={{
@@ -140,11 +120,7 @@ const AboutPage = () => {
                 lineHeight: 1.7,
               }}
             >
-              Providing independent behavioral evidence for AI systems deployed
-              in regulated financial environments. We believe institutions
-              should not have to rely on self-reported model performance when
-              making risk, compliance, and governance decisions about their AI
-              systems.
+              {t("about.missionBody")}
             </Typography>
           </Paper>
         </Container>
@@ -160,10 +136,23 @@ const AboutPage = () => {
               color: "text.primary",
             }}
           >
-            What makes us different
+            {t("about.differentTitle")}
           </Typography>
           <Grid container spacing={3}>
-            {DIFFERENTIATORS.map(({ icon, title, description }) => (
+            {[
+              {
+                icon: <BalanceOutlined sx={{ fontSize: 28, color: primaryColor }} />,
+                ...differentiators[0],
+              },
+              {
+                icon: <LocationOnOutlined sx={{ fontSize: 28, color: primaryColor }} />,
+                ...differentiators[1],
+              },
+              {
+                icon: <SecurityOutlined sx={{ fontSize: 28, color: primaryColor }} />,
+                ...differentiators[2],
+              },
+            ].map(({ icon, title, description }) => (
               <Grid key={title} size={{ xs: 12, md: 4 }}>
                 <Paper
                   variant="outlined"
@@ -208,7 +197,7 @@ const AboutPage = () => {
                   color: "text.primary",
                 }}
               >
-                Built with security expertise
+                {t("about.expertiseTitle")}
               </Typography>
               <Typography
                 sx={{
@@ -216,18 +205,14 @@ const AboutPage = () => {
                   lineHeight: 1.7,
                   mb: 2
                 }}>
-                SwissLI AG works with experienced security specialists in
-                cybersecurity, infrastructure protection, and adversarial
-                testing to support robust evaluation methodologies.
+                {t("about.expertiseP1")}
               </Typography>
               <Typography
                 sx={{
                   color: "text.secondary",
                   lineHeight: 1.7
                 }}>
-                Our evaluation framework is informed by real-world failure
-                patterns observed in production AI deployments across financial
-                services.
+                {t("about.expertiseP2")}
               </Typography>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
@@ -238,15 +223,9 @@ const AboutPage = () => {
                 <Typography
                   sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}
                 >
-                  Areas of expertise
+                  {t("about.areasTitle")}
                 </Typography>
-                {[
-                  "Adversarial testing and red-teaming",
-                  "Behavioral evaluation under stress",
-                  "On-premise deployment and airgapped operation",
-                  "Regulatory alignment (FINMA, EU AI Act)",
-                  "Multi-turn conversation analysis",
-                ].map((item) => (
+                {areas.map((item) => (
                   <Typography
                     key={item}
                     sx={{
@@ -279,7 +258,7 @@ const AboutPage = () => {
               color: "text.primary",
             }}
           >
-            Start a conversation
+            {t("about.ctaTitle")}
           </Typography>
           <Typography
             sx={{
@@ -287,8 +266,7 @@ const AboutPage = () => {
               mb: 3,
               lineHeight: 1.7
             }}>
-            We work with banks, fintechs, and insurers operating in
-            FINMA-regulated environments. Let us know how we can help.
+            {t("about.ctaBody")}
           </Typography>
           <Stack
             direction={{ xs: "column", sm: "row" }}
@@ -302,14 +280,14 @@ const AboutPage = () => {
               endIcon={<ArrowForward />}
               onClick={() => navigate(routes.contact)}
             >
-              Contact Us
+              {t("common:nav.contact")}
             </Button>
             <Button
               variant="outlined"
               endIcon={<ArrowForward />}
               onClick={() => navigate(routes.demo)}
             >
-              Try Live Demo
+              {t("common:footer.tryLiveDemo")}
             </Button>
           </Stack>
         </Container>

@@ -1,0 +1,92 @@
+{
+  "close": "Schließen",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "or": "oder",
+  "emailSentSuccess": "E-Mail erfolgreich gesendet",
+  "noResults": "Keine Ergebnisse gefunden",
+  "loggedOut": "Abgemeldet",
+  "nav": {
+    "features": "Funktionen",
+    "howItWorks": "So funktioniert es",
+    "pricing": "Preise",
+    "contact": "Kontakt",
+    "register": "Registrieren",
+    "login": "Anmelden",
+    "createProject": "Projekt erstellen",
+    "home": "Startseite",
+    "industries": "Branchen",
+    "methodology": "Methodik",
+    "compliance": "Compliance",
+    "security": "Sicherheit",
+    "about": "Über uns",
+    "requestEvaluation": "Bewertung anfragen",
+    "demo": "Demo",
+    "viewAllIndustries": "Alle Branchen anzeigen"
+  },
+  "settings": {
+    "menu": "Einstellungen",
+    "profile": "Profil",
+    "dashboard": "Dashboard",
+    "logout": "Abmelden",
+    "theme": "Design",
+    "themeToggle": "Design umschalten",
+    "install": "Installieren",
+    "refreshApp": "App aktualisieren"
+  },
+  "badges": {
+    "basic": "Basic",
+    "essential": "Essential",
+    "premium": "Premium"
+  },
+  "compliance": {
+    "finmaLabel": "FINMA KI-Leitlinien",
+    "finmaDescription": "Schweizer Finanzmarktaufsicht",
+    "finmaGuidance": "FINMA-Leitlinien"
+  },
+  "footer": {
+    "product": "Produkt",
+    "compliance": "Compliance",
+    "company": "Unternehmen",
+    "legal": "Rechtliches",
+    "region": "Region",
+    "industries": "Branchen",
+    "methodology": "Methodik",
+    "security": "Sicherheit",
+    "tryLiveDemo": "Live-Demo testen",
+    "finmaGuidance": "FINMA-Leitlinien",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "privacyPolicy": "Datenschutzerklärung",
+    "termsAndConditions": "AGB",
+    "dataProcessingAgreement": "Auftragsverarbeitungsvertrag",
+    "regionGlobal": "Global (Englisch)",
+    "regionSwitzerland": "Schweiz",
+    "disclaimer": "<brand>aodit</brand> ist ein unabhängiges KI-Bewertungsframework. SwissLI AG ist nicht mit FINMA oder einer Aufsichtsbehörde verbunden. Bewertungsergebnisse sind beratend und stellen keine behördliche Genehmigung oder Rechtsberatung dar. © 2026 Swiss Lab of Intelligence (SwissLI AG)"
+  },
+  "cookiePolicy": {
+    "message": "Durch die weitere Nutzung dieser Website stimmen Sie der Verwendung von Cookies zur Verbesserung Ihrer Erfahrung und zur Analyse des Datenverkehrs zu. Weitere Informationen finden Sie in unserer <privacyLink>Datenschutzerklärung</privacyLink>.",
+    "ok": "OK"
+  },
+  "save": "Speichern",
+  "viewEdit": "Anzeigen/Bearbeiten",
+  "view": "Anzeigen",
+  "block": "Sperren",
+  "unblock": "Entsperren",
+  "creating": "Wird erstellt…",
+  "updating": "Wird aktualisiert...",
+  "stopping": "Wird gestoppt…",
+  "stop": "Stoppen",
+  "notAvailable": "k. A.",
+  "at": "um",
+  "totalCount_one": "{{count}} gesamt",
+  "totalCount_other": "{{count}} gesamt",
+  "cannotUndo": "Diese Aktion kann nicht rückgängig gemacht werden.",
+  "cta": {
+    "requestEvaluation": "Bewertung anfragen",
+    "tryLiveDemo": "Live-Demo testen",
+    "getDemo": "Demo anfordern",
+    "contactUs": "Kontakt",
+    "cancel": "Abbrechen"
+  }
+}

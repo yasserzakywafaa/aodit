@@ -7,8 +7,10 @@ import { dataGridStyle } from "src/application/shared/themes";
 import { getDashboardUsersDataGridConfig } from "./features/dataGridConfig";
 import { useDashboardUsersContext } from "./store/Provider";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const DashboardUsers = () => {
+  const { t } = useTranslation("dashboard");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const {
     store: {
@@ -17,7 +19,7 @@ const DashboardUsers = () => {
     manager: { setUp, handleGetUsersByPage },
   } = useDashboardUsersContext();
 
-  const config = getDashboardUsersDataGridConfig(users);
+  const config = getDashboardUsersDataGridConfig(users, t);
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     const pageNumber = model.page + 1;
@@ -39,7 +41,7 @@ const DashboardUsers = () => {
           mb: 1
         }}>
         <Typography variant="h4" component="h1" color="primary">
-          Users
+          {t("admin.users.title")}
         </Typography>
         <Button
           variant="contained"
@@ -47,7 +49,7 @@ const DashboardUsers = () => {
           size="small"
           onClick={() => setIsCreateDialogOpen(true)}
         >
-          Create User
+          {t("admin.users.createUser")}
         </Button>
       </Box>
       <Typography
@@ -57,8 +59,8 @@ const DashboardUsers = () => {
           mb: 3
         }}>
         {paging.totalCount
-          ? `${paging.totalCount} total`
-          : "Manage users, roles, and permissions from here."}
+          ? t("totalCount", { count: paging.totalCount })
+          : t("admin.users.subtitle")}
       </Typography>
       <CreateUserDialog
         open={isCreateDialogOpen}

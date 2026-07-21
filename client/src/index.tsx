@@ -1,9 +1,11 @@
 import "./application/shared/axiosConfig"; // Initialize Axios interceptors
+import "./i18n/init";
 
 import App from "./application/App";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { Buffer } from "buffer";
+import { isPrerendering } from "@yasserzakywafaa/client-core/web";
 import { createRoot } from "react-dom/client";
 
 // react-pdf expects Node's Buffer to exist in browser contexts.
@@ -24,15 +26,11 @@ if (!nonce) {
 // 2. Create an Emotion cache instance with the nonce.
 //    speedy: false only during prerender so styles are captured as <style> tags;
 //    at runtime use insertRule (speedy: true) to avoid CSS leaking as text.
-const isPrerendering =
-  typeof window !== "undefined" &&
-  Boolean(window.__PRERENDER_INJECTED?.isPrerendering);
-
 const cache = createCache({
   key: "css",
   prepend: true,
   nonce: nonce,
-  speedy: !isPrerendering,
+  speedy: !isPrerendering(),
 });
 // --- End CSP Nonce Handling ---
 

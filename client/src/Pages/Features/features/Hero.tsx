@@ -16,6 +16,7 @@ import { fontFamilyInter, primaryColor } from "src/application/shared/themes";
 
 import { routes } from "src/application/routes";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export interface HeroContent {
@@ -37,6 +38,7 @@ interface HeroProps {
 }
 
 const Hero = ({ content }: HeroProps) => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const resolved = content;
   const handleRequestEvaluationClick = () => {
@@ -141,7 +143,7 @@ const Hero = ({ content }: HeroProps) => {
             onClick={handleRequestEvaluationClick}
             sx={{ px: 4, py: 1.2 }}
           >
-            Request Evaluation
+            {t("nav.requestEvaluation")}
           </Button>
           <Button
             variant="outlined"
@@ -150,7 +152,7 @@ const Hero = ({ content }: HeroProps) => {
             onClick={handleTryLiveDemoClick}
             sx={{ px: 4, py: 1.2 }}
           >
-            Try Live Demo
+            {t("footer.tryLiveDemo")}
           </Button>
         </Stack>
       </Container>

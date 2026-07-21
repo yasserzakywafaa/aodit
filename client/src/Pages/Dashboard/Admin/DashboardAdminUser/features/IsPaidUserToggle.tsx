@@ -9,6 +9,7 @@ import {
 
 import { Payment as PaymentIcon } from "@mui/icons-material";
 import { User } from "src/shared/types/user";
+import { useTranslation } from "react-i18next";
 
 interface IsPaidUserToggleProps {
   user: User | null;
@@ -17,6 +18,7 @@ interface IsPaidUserToggleProps {
 }
 
 const IsPaidUserToggle = ({ user, value, onChange }: IsPaidUserToggleProps) => {
+  const { t } = useTranslation("dashboard");
   if (!user) {
     return null;
   }
@@ -35,13 +37,13 @@ const IsPaidUserToggle = ({ user, value, onChange }: IsPaidUserToggleProps) => {
             mb: 2
           }}>
           <PaymentIcon color="primary" sx={{ mr: 1 }} />
-          <Typography variant="h6">Paid User Status</Typography>
+<Typography variant="h6">{t("admin.user.paidUserStatus")}</Typography>
         </Box>
         <FormControlLabel
           control={
             <Switch checked={value} onChange={handleToggle} color="primary" />
           }
-          label={value ? "Paid User" : "Free User"}
+          label={value ? t("admin.user.paidUser") : t("admin.user.freeUser")}
         />
         <Typography
           variant="body2"
@@ -49,8 +51,7 @@ const IsPaidUserToggle = ({ user, value, onChange }: IsPaidUserToggleProps) => {
             color: "text.secondary",
             mt: 1
           }}>
-          Whether this user is a paid user or not <br />
-          (should be used with Subscription Type)
+<span dangerouslySetInnerHTML={{ __html: t("admin.user.paidUserHelp") }} />
         </Typography>
       </CardContent>
     </Card>

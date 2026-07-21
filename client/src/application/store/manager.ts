@@ -11,7 +11,7 @@ import { syncI18nWithUser } from "@yasserzakywafaa/client-core";
 import { ApplicationStore } from "./store";
 import END_POINTS from "../shared/endpoints";
 import { User } from "src/shared/types/user";
-import { getClientIdFromGoogleAnalyticsCookie } from "src/shared/utils/cookies";
+import { getClientIdFromGoogleAnalyticsCookie } from "@yasserzakywafaa/client-core/web";
 import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
 
 export interface ApplicationManager {

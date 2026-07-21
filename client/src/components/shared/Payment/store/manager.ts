@@ -1,4 +1,4 @@
-import { Price, Product } from "src/shared/types/payment";
+import { Price, Product } from "@yasserzakywafaa/client-core";
 import { SubscriptionPlanEnum, User } from "src/shared/types/user";
 import axios, { AxiosResponse } from "axios";
 
@@ -6,7 +6,7 @@ import END_POINTS from "src/application/shared/endpoints";
 import { PaymentStore } from "./store";
 import { getAxiosError } from "src/shared/utils/getAxiosError";
 import { loadStripe } from "@stripe/stripe-js";
-import { isPrerendering } from "src/shared/utils/prerender";
+import { isPrerendering } from "@yasserzakywafaa/client-core/web";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
 

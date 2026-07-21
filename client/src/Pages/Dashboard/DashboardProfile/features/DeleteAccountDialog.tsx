@@ -13,7 +13,7 @@ import {
 import { DeleteOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DELETE_ACCOUNT_CONFIRMATION_PHRASE } from "src/shared/utils/deleteAccount";
+import { DELETE_ACCOUNT_CONFIRMATION_PHRASE } from "@yasserzakywafaa/client-core";
 
 interface DeleteAccountDialogProps {
   isOpen: boolean;
@@ -71,12 +71,12 @@ const DeleteAccountDialog = ({
             gap: 1
           }}>
           <DeleteOutlined color="error" fontSize="large" />
-<Typography variant="h5">{t("dashboard:profile.deleteAccount")}</Typography>
+          <Typography variant="h5">{t("dashboard:profile.deleteAccount")}</Typography>
         </Box>
       </DialogTitle>
       <DialogContent>
         <Typography variant="body2" sx={{ mb: 2 }}>
-{t("dashboard:profile.deleteAccountIntro")}
+          {t("dashboard:profile.deleteAccountIntro")}
         </Typography>
 
         <Box component="ul" sx={{ pl: 2, mb: 2 }}>
@@ -106,23 +106,23 @@ const DeleteAccountDialog = ({
               disabled={isDeleting}
             />
           }
-label={t("dashboard:profile.deleteAcknowledge")}
+          label={t("dashboard:profile.deleteAcknowledge")}
         />
 
         <TextField
           fullWidth
           margin="normal"
-label={t("dashboard:profile.typeConfirmationPhrase")}
+          label={t("dashboard:profile.typeConfirmationPhrase")}
           value={confirmationPhrase}
           onChange={(event) => setConfirmationPhrase(event.target.value)}
           disabled={isDeleting}
           placeholder={DELETE_ACCOUNT_CONFIRMATION_PHRASE}
-helperText={t("dashboard:profile.typeToConfirm", { phrase: DELETE_ACCOUNT_CONFIRMATION_PHRASE })}
+          helperText={t("dashboard:profile.typeToConfirm", { phrase: DELETE_ACCOUNT_CONFIRMATION_PHRASE })}
         />
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleClose} disabled={isDeleting}>
-{t("common:cancel")}
+          {t("common:cancel")}
         </Button>
         <Button
           variant="contained"
@@ -131,7 +131,7 @@ helperText={t("dashboard:profile.typeToConfirm", { phrase: DELETE_ACCOUNT_CONFIR
           disabled={!canDelete}
           startIcon={<DeleteOutlined />}
         >
-{isDeleting ? t("dashboard:profile.deleting") : t("dashboard:profile.deleteAccount")}
+          {isDeleting ? t("dashboard:profile.deleting") : t("dashboard:profile.deleteAccount")}
         </Button>
       </DialogActions>
     </Dialog>

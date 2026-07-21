@@ -5,7 +5,7 @@ import {
 import {
   createDocument,
   readDocumentByField,
-} from "../../models/mongoDb/crudOperations";
+} from "../../models/mongoDb";
 import {
   generateLeadMagnetAdminPlainText,
   generateLeadMagnetSubscriberPlainText,

@@ -1,7 +1,6 @@
 import APP_CONSTANTS from "src/application/shared/app_constants";
-import { Product } from "src/shared/types/payment";
+import { Product, getCurrencySymbol } from "@yasserzakywafaa/client-core";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
-import { getCurrencySymbol } from "src/shared/utils/getCurrencySymbol";
 import { routes } from "src/application/routes";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";

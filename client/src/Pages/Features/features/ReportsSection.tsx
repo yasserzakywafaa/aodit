@@ -3,7 +3,7 @@ import { fontFamilyPlayfairDisplay } from "src/application/shared/themes";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { alpha } from "@mui/material/styles";
-import { scrollToSection } from "src/shared/utils/scrollTo";
+import { scrollToSection } from "@yasserzakywafaa/client-core/web";
 import { useTranslation } from "react-i18next";
 
 const SECTION_EYEBROW_STYLE = {

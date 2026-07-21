@@ -1,4 +1,4 @@
-import { getAbsoluteUrl } from "./schemaGenerators";
+import { getAbsoluteUrl } from "./schemaHelpers";
 
 /**
  * Create WebPage schema for general pages

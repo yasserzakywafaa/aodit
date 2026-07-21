@@ -1,5 +1,5 @@
 // Core utilities
-export { useSchemaOrg } from "./useSchemaOrg";
+export { useSchemaOrg } from "@yasserzakywafaa/client-core/web";
 export {
   getBaseUrl,
   getAbsoluteUrl,
@@ -7,7 +7,7 @@ export {
   getImageUrl,
   createPersonSchema,
   createOrganizationSchema,
-} from "./schemaGenerators";
+} from "./schemaHelpers";
 
 // Schema generators
 export {

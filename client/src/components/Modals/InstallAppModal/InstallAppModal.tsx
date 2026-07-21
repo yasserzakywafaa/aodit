@@ -5,7 +5,7 @@ import { Box, Dialog, DialogContent } from "@mui/material";
 import InstallWebAppOnAndroid from "./features/InstallWebAppOnAndroid";
 import InstallWebAppOnIos from "./features/InstallWebAppOnIos";
 import InstallWebAppOnMacOs from "./features/InstallWebAppOnMacOs";
-import { useDetectBrowserType } from "src/shared/hooks/useDetectBrowserType";
+import { useDetectBrowserType } from "@yasserzakywafaa/client-core/web";
 import InstallWebAppOnWindows from "./features/InstallWebAppOnWindows";
 
 interface InstallAppModalProps {

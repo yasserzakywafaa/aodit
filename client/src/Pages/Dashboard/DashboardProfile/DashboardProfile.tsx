@@ -33,6 +33,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useDashboardProfileContext } from "./store/Provider";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -54,6 +55,7 @@ const TabPanel = ({ children, value, index }: TabPanelProps) => {
 };
 
 const DashboardProfilePage = () => {
+  const { t } = useTranslation(["dashboard", "common"]);
   const navigate = useNavigate();
   const { store } = useApplicationContext();
   const [activeTab, setActiveTab] = useState(0);
@@ -158,7 +160,7 @@ const DashboardProfilePage = () => {
           }}
         >
           <Typography variant="h4" component="h1" color="primary">
-            Hi {user?.name.givenName} 👋🏻
+{t("dashboard:profile.greeting", { name: user?.name.givenName })}
           </Typography>
           <Box
             sx={{
@@ -205,12 +207,12 @@ const DashboardProfilePage = () => {
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
-          aria-label="profile tabs"
+          aria-label={t("dashboard:profile.tabsAriaLabel")}
           variant="scrollable"
           scrollButtons="auto"
         >
           <Tab
-            label="Profile"
+            label={t("dashboard:profile.tabProfile")}
             id="profile-tab-0"
             aria-controls="profile-tabpanel-0"
           />
@@ -236,7 +238,7 @@ const DashboardProfilePage = () => {
                     mb: 2
                   }}>
                   <ArticleOutlined color="primary" sx={{ mr: 1 }} />
-                  <Typography variant="h6">Total Reports</Typography>
+<Typography variant="h6">{t("dashboard:profile.totalReports")}</Typography>
                 </Box>
                 <Typography variant="h4" color="primary">
                   {user.reportsCount}
@@ -244,7 +246,7 @@ const DashboardProfilePage = () => {
                 <Typography variant="body2" sx={{
                   color: "text.secondary"
                 }}>
-                  Reports created
+{t("dashboard:profile.reportsCreated")}
                 </Typography>
               </CardContent>
               <CardActions>
@@ -254,7 +256,7 @@ const DashboardProfilePage = () => {
                   startIcon={<VisibilityOutlined />}
                   onClick={() => navigate(routes.dashboard.reports.base)}
                 >
-                  View My Reports
+                  {t("dashboard:profile.viewMyReports")}
                 </Button>
               </CardActions>
             </Card>
@@ -273,13 +275,13 @@ const DashboardProfilePage = () => {
               }}
             >
               <Typography variant="h5" sx={{ mb: 2 }}>
-                Profile Information
+{t("dashboard:profile.profileInformation")}
               </Typography>
 
               <Grid container spacing={2} sx={{ marginTop: 2 }}>
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="h6" className="text-underline">
-                    Full Name
+{t("dashboard:profile.fullName")}
                   </Typography>
                   <Typography component="span" sx={{
                     color: "text.secondary"
@@ -290,7 +292,7 @@ const DashboardProfilePage = () => {
 
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="h6" className="text-underline">
-                    Email
+{t("dashboard:profile.email")}
                   </Typography>
                   <Typography
                     component="a"
@@ -305,7 +307,7 @@ const DashboardProfilePage = () => {
 
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="h6" className="text-underline">
-                    Date joined
+{t("dashboard:profile.dateJoined")}
                   </Typography>
                   <Typography component="span" sx={{
                     color: "text.secondary"
@@ -320,7 +322,7 @@ const DashboardProfilePage = () => {
 
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="h6" className="text-underline">
-                    Appearance
+{t("dashboard:profile.appearance")}
                   </Typography>
                   <Box
                     onClick={handleOnDarkModeSwitchChange}
@@ -344,7 +346,7 @@ const DashboardProfilePage = () => {
                       <Typography variant="body2" sx={{
                         color: "text.secondary"
                       }}>
-                        LIGHT
+{t("dashboard:profile.themeLight")}
                       </Typography>
                     </Box>
 
@@ -366,7 +368,7 @@ const DashboardProfilePage = () => {
                       <Typography variant="body2" sx={{
                         color: "text.secondary"
                       }}>
-                        DARK
+{t("dashboard:profile.themeDark")}
                       </Typography>
                       <ModeNightOutlined
                         fontSize="small"
@@ -379,12 +381,12 @@ const DashboardProfilePage = () => {
 
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="h6" className="text-underline">
-                    Account Age
+{t("dashboard:profile.accountAge")}
                   </Typography>
                   <Typography variant="body2" sx={{
                     color: "text.secondary"
                   }}>
-                    {calculateAccountAge()} days since joined Aodit
+{t("dashboard:profile.daysSinceJoined", { count: calculateAccountAge() })}
                   </Typography>
                 </Grid>
 
@@ -394,7 +396,7 @@ const DashboardProfilePage = () => {
                     component="p"
                     className="text-underline"
                   >
-                    Last Login
+{t("dashboard:profile.lastLogin")}
                   </Typography>
                   <Typography variant="body2" sx={{
                     color: "text.secondary"
@@ -404,14 +406,14 @@ const DashboardProfilePage = () => {
                           day: "numeric",
                           month: "short",
                         })
-                      : "Never"}{" "}
-                    {""}at{" "}
+: t("dashboard:profile.never")}{" "}
+{t("common:at")}{" "}
                     {user.lastLogin
                       ? new Date(user.lastLogin).toLocaleTimeString("en-GB", {
                           hour: "2-digit",
                           minute: "2-digit",
                         })
-                      : "Never"}
+: t("dashboard:profile.never")}
                   </Typography>
                 </Grid>
               </Grid>
@@ -429,7 +431,7 @@ const DashboardProfilePage = () => {
                 }}
               >
                 <Typography variant="h5" color="error" sx={{ mb: 1 }}>
-                  Danger Zone
+{t("dashboard:profile.dangerZone")}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -437,9 +439,7 @@ const DashboardProfilePage = () => {
                     color: "text.secondary",
                     mb: 2
                   }}>
-                  Permanently delete your account and all associated reports,
-                  agents, API keys, and subscription data. Running audits will be
-                  stopped immediately.
+{t("dashboard:profile.dangerZoneDescription")}
                 </Typography>
                 <Button
                   variant="outlined"
@@ -447,7 +447,7 @@ const DashboardProfilePage = () => {
                   startIcon={<DeleteOutlined />}
                   onClick={() => setIsDeleteAccountDialogOpen(true)}
                 >
-                  Delete Account
+                  {t("dashboard:profile.deleteAccount")}
                 </Button>
               </Card>
             </Grid>
@@ -464,11 +464,11 @@ const DashboardProfilePage = () => {
         isOpen={isDeleteAccountDialogOpen}
         isDeleting={isDeletingAccount}
         impactItems={[
-          `${user.reportsCount} report${user.reportsCount === 1 ? "" : "s"}`,
-          "Compliance agents and API keys",
-          "Subscription and billing data",
+t("dashboard:profile.impactReports", { count: user.reportsCount }),
+t("dashboard:profile.impactAgents"),
+t("dashboard:profile.impactSubscription"),
         ]}
-        warningMessage="Running audits will be stopped immediately."
+warningMessage={t("dashboard:profile.deleteWarning")}
         onClose={() => setIsDeleteAccountDialogOpen(false)}
         onConfirm={async (confirmationPhrase) => {
           const deleted = await handleDeleteAccount(confirmationPhrase);

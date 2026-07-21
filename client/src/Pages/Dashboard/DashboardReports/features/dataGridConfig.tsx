@@ -3,6 +3,7 @@ import { Report, ReportStatus } from "src/shared/types/report";
 
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
+import type { TFunction } from "i18next";
 
 export interface DashboardReportsGridFields {
   id: string;
@@ -19,6 +20,7 @@ export interface DashboardReportsGridResult {
 
 export const getDashboardReportsDataGridConfig = (
   reports: Report[],
+  t: TFunction<"dashboard">,
 ): DashboardReportsGridResult => {
   if (!reports || reports.length === 0) return { rows: [], columns: [] };
 
@@ -42,12 +44,12 @@ export const getDashboardReportsDataGridConfig = (
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "id",
-      headerName: "REPORT",
+      headerName: t("reports.columnReport"),
       editable: false,
       sortable: true,
       minWidth: 250,
       flex: 1,
-      description: "Report information",
+      description: t("reports.columnReportDescription"),
       valueGetter: (value, row) => row.name,
       renderCell: (params) => {
         const report = params.row;
@@ -64,24 +66,32 @@ export const getDashboardReportsDataGridConfig = (
               alignItems: "center",
               justifyContent: "flex-start",
               gap: 1.5,
-              height: "100%"
-            }}>
+              height: "100%",
+            }}
+          >
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                height: "100%"
-              }}>
-              <Typography variant="body2" sx={{
-                fontWeight: "medium"
-              }}>
+                height: "100%",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: "medium",
+                }}
+              >
                 {report.name}
               </Typography>
-              <Typography variant="caption" sx={{
-                color: "text.secondary"
-              }}>
-                ID {displayId}
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "text.secondary",
+                }}
+              >
+                {t("grid.idLabel")} {displayId}
               </Typography>
             </Box>
           </Box>
@@ -90,16 +100,19 @@ export const getDashboardReportsDataGridConfig = (
     },
     {
       field: "status",
-      headerName: "STATUS",
+      headerName: t("reports.columnStatus"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
       display: "flex",
-      description: "Report status",
+      description: t("reports.columnStatusDescription"),
       renderCell: (params) => {
         const status = params.row.status;
-        const chipColor: Record<string, "default" | "primary" | "success" | "error" | "info"> = {
+        const chipColor: Record<
+          string,
+          "default" | "primary" | "success" | "error" | "info"
+        > = {
           [ReportStatus.draft]: "default",
           [ReportStatus.running]: "primary",
           [ReportStatus.completed]: "success",
@@ -110,7 +123,7 @@ export const getDashboardReportsDataGridConfig = (
         };
         return (
           <Chip
-            label={status.toUpperCase()}
+            label={t(`status.${status}`, { defaultValue: status.toUpperCase() })}
             color={chipColor[status] ?? "default"}
             size="small"
             variant="outlined"
@@ -120,18 +133,22 @@ export const getDashboardReportsDataGridConfig = (
     },
     {
       field: "evaluationMode",
-      headerName: "TYPE",
+      headerName: t("reports.columnType"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Report evaluation type",
+      description: t("reports.columnTypeDescription"),
       renderCell: (params) => {
         const mode = params.row.evaluationMode;
         return (
           <Chip
-            label={mode === "agent" ? "Agent Evaluation" : "Benchmark"}
+            label={
+              mode === "agent"
+                ? t("reports.typeAgentEvaluation")
+                : t("reports.typeBenchmark")
+            }
             color={mode === "agent" ? "primary" : "info"}
             size="small"
             variant="outlined"
@@ -141,20 +158,19 @@ export const getDashboardReportsDataGridConfig = (
     },
     {
       field: "createdAt",
-      headerName: "CREATED DATE",
+      headerName: t("reports.columnCreatedDate"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Date report was created",
+      description: t("reports.columnCreatedDateDescription"),
     },
-
     {
       field: "action",
       align: "right",
       type: "actions",
-      headerName: "ACTIONS",
+      headerName: t("reports.columnActions"),
       headerAlign: "right",
       flex: 1,
       minWidth: 100,

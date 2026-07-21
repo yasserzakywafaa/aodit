@@ -29,6 +29,8 @@ import { Fragment, useState } from "react";
 import { alpha, useTheme } from "@mui/material/styles";
 import Logo, { LogoComponentEnum } from "src/components/shared/Logo";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useIsRtl } from "@yasserzakywafaa/client-core/web/i18n";
 
 import DashboardBreadcrumbs from "./features/DashboardBreadcrumbs/DashboardBreadcrumbs";
 import { InstallAppModal } from "src/components/Modals/InstallAppModal/InstallAppModal";
@@ -54,13 +56,14 @@ interface DashboardMenuItem {
 }
 
 const DashboardLayout = () => {
+  const { t } = useTranslation("dashboard");
+  const isRtl = useIsRtl();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isInstallAppDialogOpen, setIsInstallAppDialogOpen] = useState(false);
   const [openMenuItem, setOpenMenuItem] = useState<string | null>(() => {
-    // Check if current pathname matches any admin subitem paths
     const adminSubPaths = [
       routes.dashboard.admin.users.base,
       routes.dashboard.admin.reports.base,
@@ -84,43 +87,43 @@ const DashboardLayout = () => {
 
   const menuItems: DashboardMenuItem[] = [
     {
-      label: "Overview",
+      label: t("nav.overview"),
       path: routes.dashboard.base,
       icon: <DashboardIcon />,
     },
     {
-      label: "Reports",
+      label: t("nav.reports"),
       path: routes.dashboard.reports.base,
       icon: <ArticleIcon />,
     },
     {
-      label: "Agents",
+      label: t("nav.agents"),
       path: routes.dashboard.agents.base,
       icon: <SmartToyIcon />,
     },
     {
-      label: "Admin",
+      label: t("nav.admin"),
       path: routes.dashboard.admin.base,
       icon: <AdminPanelSettings />,
       requiresRole: UserRole.admin,
       subItems: [
         {
-          label: "Users",
+          label: t("nav.users"),
           path: routes.dashboard.admin.users.base,
           icon: <PeopleIcon />,
         },
         {
-          label: "Reports",
+          label: t("nav.reports"),
           path: routes.dashboard.admin.reports.base,
           icon: <ArticleIcon />,
         },
         {
-          label: "Agents",
+          label: t("nav.agents"),
           path: routes.dashboard.admin.agents.base,
           icon: <SmartToyIcon />,
         },
         {
-          label: "Demos",
+          label: t("nav.demos"),
           path: routes.dashboard.admin.demos.base,
           icon: <PlayCircleOutlineIcon />,
         },
@@ -135,12 +138,10 @@ const DashboardLayout = () => {
 
   const handleMenuItemClick = (item: DashboardMenuItem) => {
     if (item.subItems) {
-      // If the item has sub-items, toggle its open state
       setOpenMenuItem((prevOpenMenuItem) =>
         prevOpenMenuItem === item.path ? null : item.path,
       );
     } else {
-      // If the item does not have sub-items, navigate to its path
       setMobileOpen(false);
       navigate(item.path);
     }
@@ -289,13 +290,19 @@ const DashboardLayout = () => {
         }}
       />
 
-      <Box sx={{ display: "flex", minHeight: "100vh", position: "relative" }}>
-        {/* AppBar for mobile */}
+      <Box
+        sx={{
+          display: "flex",
+          minHeight: "100vh",
+          position: "relative",
+          direction: isRtl ? "rtl" : "ltr",
+        }}
+      >
         <AppBar
           position="fixed"
           sx={{
             width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
-            ml: { md: `${DRAWER_WIDTH}px` },
+            marginInlineStart: { md: `${DRAWER_WIDTH}px` },
             backgroundColor: "background.default",
             color: "text.primary",
           }}
@@ -307,7 +314,7 @@ const DashboardLayout = () => {
 
             <IconButton
               color="inherit"
-              aria-label="open drawer"
+              aria-label={t("aria.openDrawer")}
               edge="start"
               onClick={handleDrawerToggle}
               sx={{ mr: 2, display: { md: "none" } }}
@@ -317,14 +324,12 @@ const DashboardLayout = () => {
           </Toolbar>
         </AppBar>
 
-        {/* Sidebar Drawer */}
         <Box
           component="nav"
           sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
         >
-          {/* Mobile drawer */}
           <Drawer
-            anchor="right"
+            anchor={isRtl ? "right" : "left"}
             open={mobileOpen}
             onClose={handleDrawerToggle}
             sx={{
@@ -337,9 +342,9 @@ const DashboardLayout = () => {
             {drawer}
           </Drawer>
 
-          {/* Desktop drawer */}
           <Drawer
             variant="permanent"
+            anchor={isRtl ? "right" : "left"}
             sx={{
               display: { xs: "none", md: "block" },
               "& .MuiDrawer-paper": {
@@ -353,7 +358,6 @@ const DashboardLayout = () => {
           </Drawer>
         </Box>
 
-        {/* Main content */}
         <Box
           className="dashboard-main"
           component="main"

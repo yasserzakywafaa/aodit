@@ -3,6 +3,7 @@ import { Report, ReportStatus } from "src/shared/types/report";
 
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
+import type { TFunction } from "i18next";
 
 export interface DashboardAdminReportsGridFields {
   id: string;
@@ -20,6 +21,7 @@ export interface DashboardAdminReportsGridResult {
 
 export const getDashboardAdminReportsDataGridConfig = (
   reports: Report[],
+  t: TFunction<"dashboard">,
 ): DashboardAdminReportsGridResult => {
   if (!reports || reports.length === 0) return { rows: [], columns: [] };
 
@@ -44,12 +46,12 @@ export const getDashboardAdminReportsDataGridConfig = (
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "id",
-      headerName: "REPORT",
+      headerName: t("reports.columnReport"),
       editable: false,
       sortable: true,
       minWidth: 220,
       flex: 1,
-      description: "Report information",
+      description: t("reports.columnReportDescription"),
       valueGetter: (value, row) => row.name,
       renderCell: (params) => {
         const report = params.row;
@@ -83,7 +85,7 @@ export const getDashboardAdminReportsDataGridConfig = (
               <Typography variant="caption" sx={{
                 color: "text.secondary"
               }}>
-                ID {displayId}
+                {t("grid.idLabel")} {displayId}
               </Typography>
             </Box>
           </Box>
@@ -92,13 +94,13 @@ export const getDashboardAdminReportsDataGridConfig = (
     },
     {
       field: "userId",
-      headerName: "CREATOR",
+      headerName: t("reports.columnOwner"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "User who created this report",
+      description: t("reports.columnOwnerDescription"),
       renderCell: (params) => {
         const uid = params.row.userId;
         const displayUid = uid.length > 8 ? uid.slice(-6).toUpperCase() : uid;
@@ -113,18 +115,18 @@ export const getDashboardAdminReportsDataGridConfig = (
     },
     {
       field: "evaluationMode",
-      headerName: "TYPE",
+      headerName: t("reports.columnType"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Report evaluation type",
+      description: t("reports.columnTypeDescription"),
       renderCell: (params) => {
         const mode = params.row.evaluationMode;
         return (
           <Chip
-            label={mode === "agent" ? "Agent Evaluation" : "Benchmark"}
+            label={mode === "agent" ? t("reports.typeAgentEvaluation") : t("reports.typeBenchmark")}
             color={mode === "agent" ? "primary" : "info"}
             size="small"
             variant="outlined"
@@ -134,13 +136,13 @@ export const getDashboardAdminReportsDataGridConfig = (
     },
     {
       field: "status",
-      headerName: "STATUS",
+      headerName: t("reports.columnStatus"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
       display: "flex",
-      description: "Report status",
+      description: t("reports.columnStatusDescription"),
       renderCell: (params) => {
         const status = params.row.status;
         const chipColor: Record<
@@ -157,7 +159,7 @@ export const getDashboardAdminReportsDataGridConfig = (
         };
         return (
           <Chip
-            label={status.toUpperCase()}
+            label={t(`status.${status}`, { defaultValue: status.toUpperCase() })}
             color={chipColor[status] ?? "default"}
             size="small"
             variant="outlined"
@@ -167,19 +169,19 @@ export const getDashboardAdminReportsDataGridConfig = (
     },
     {
       field: "createdAt",
-      headerName: "CREATED DATE",
+      headerName: t("reports.columnCreatedDate"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Date report was created",
+      description: t("reports.columnCreatedDateDescription"),
     },
     {
       field: "action",
       align: "right",
       type: "actions",
-      headerName: "ACTIONS",
+      headerName: t("reports.columnActions"),
       headerAlign: "right",
       flex: 1,
       minWidth: 100,

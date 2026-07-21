@@ -7,8 +7,10 @@ import { routes } from "src/application/routes";
 import { useDashboardReportsContext } from "./store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const DashboardReports = () => {
+  const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
   const {
     store: {
@@ -17,7 +19,7 @@ const DashboardReports = () => {
     manager: { setUp, handleGetReportsByPage },
   } = useDashboardReportsContext();
 
-  const config = getDashboardReportsDataGridConfig(reports);
+  const config = getDashboardReportsDataGridConfig(reports, t);
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     const pageNumber = model.page + 1;
@@ -38,7 +40,7 @@ const DashboardReports = () => {
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Stack spacing={2}>
           <Typography variant="h4" component="h1" color="primary" gutterBottom>
-            Reports
+            {t("reports.title")}
           </Typography>
           <Typography
             variant="body1"
@@ -47,8 +49,8 @@ const DashboardReports = () => {
               mb: 3
             }}>
             {paging.totalCount
-              ? `${paging.totalCount} total`
-              : "Manage reports and view run results from here."}
+              ? t("reports.totalCount", { count: paging.totalCount })
+              : t("reports.subtitle")}
           </Typography>
         </Stack>
 
@@ -61,7 +63,7 @@ const DashboardReports = () => {
             size="large"
             onClick={handleCreateReportClick}
           >
-            Create Report
+            {t("reports.createReport")}
           </Button>
         </Box>
       </Box>

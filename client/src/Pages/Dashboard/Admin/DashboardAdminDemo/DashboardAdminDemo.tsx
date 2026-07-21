@@ -6,8 +6,10 @@ import DemoTranscriptCard from "./features/DemoTranscriptCard";
 import { useDashboardDemoContext } from "./store/Provider";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const DashboardAdminDemo = () => {
+  const { t } = useTranslation("dashboard");
   const { demoId } = useParams<{ demoId: string }>();
   const {
     store: {
@@ -40,12 +42,12 @@ const DashboardAdminDemo = () => {
     return (
       <Box>
         <Typography variant="h4" component="h1" color="primary" gutterBottom>
-          Demo Not Found
+          {t("admin.demos.notFoundTitle")}
         </Typography>
         <Typography variant="body1" sx={{
           color: "text.secondary"
         }}>
-          The demo you're looking for doesn't exist or has been deleted.
+{t("admin.demos.notFoundDescription")}
         </Typography>
       </Box>
     );
@@ -54,7 +56,7 @@ const DashboardAdminDemo = () => {
   return (
     <Box sx={{ marginY: 3 }}>
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        Demo Details
+{t("admin.demos.detailsTitle")}
       </Typography>
       <Typography
         variant="body1"
@@ -62,7 +64,7 @@ const DashboardAdminDemo = () => {
           color: "text.secondary",
           mb: 3
         }}>
-        View the prompt, transcript, and source of this demo run.
+{t("admin.demos.detailsSubtitle")}
       </Typography>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12 }}>

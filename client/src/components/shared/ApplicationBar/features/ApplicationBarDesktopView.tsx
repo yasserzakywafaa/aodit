@@ -10,18 +10,19 @@ import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
 import { routes } from "src/application/routes";
+import { useTranslation } from "react-i18next";
 
 const NAV_LINKS = [
-  { id: "industries", label: "Industries", route: null },
-  { id: "methodology", label: "Methodology", route: routes.methodology },
+  { id: "industries", labelKey: "nav.industries", route: null },
+  { id: "methodology", labelKey: "nav.methodology", route: routes.methodology },
   {
     id: "compliance-finma",
-    label: "Compliance",
+    labelKey: "nav.compliance",
     route: routes.compliance.finma,
   },
-  { id: "security", label: "Security", route: routes.security },
-  { id: "about", label: "About", route: routes.about },
-  { id: "contact", label: "Contact", route: routes.contact },
+  { id: "security", labelKey: "nav.security", route: routes.security },
+  { id: "about", labelKey: "nav.about", route: routes.about },
+  { id: "contact", labelKey: "nav.contact", route: routes.contact },
 ] as const;
 
 interface ApplicationBarDesktopViewParams {
@@ -41,6 +42,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
+  const { t } = useTranslation("common");
 
   const buttonHoverStyleSecondary = {
     "&:hover": {
@@ -89,7 +91,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                     variant="text"
                     onClick={handleOnMenuItemClickEvent(item.id)}
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </Button>
                 );
               })}
@@ -120,7 +122,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 <Typography variant="body2" sx={{
                   color: "text.primary"
                 }}>
-                  Login
+                  {t("nav.login")}
                 </Typography>
               </Button>))
             )}
@@ -140,7 +142,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                   <Typography variant="body2" sx={{
                     color: "text.primary"
                   }}>
-                    Register
+                    {t("nav.register")}
                   </Typography>
                 </Button>
               )}
@@ -154,7 +156,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 onClick={handleOnMenuItemClickEvent("request-evaluation")}
                 sx={{ ml: 1 }}
               >
-                Request Evaluation
+                {t("nav.requestEvaluation")}
               </Button>
               <Button
                 component="a"
@@ -164,7 +166,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                 onClick={handleOnMenuItemClickEvent("demo")}
                 sx={{ ml: 1 }}
               >
-                Demo
+                {t("nav.demo")}
               </Button>
             </Box>
 

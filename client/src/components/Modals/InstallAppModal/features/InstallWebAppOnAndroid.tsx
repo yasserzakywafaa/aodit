@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 type UserChoice = Promise<{
   outcome: "accepted" | "dismissed";
@@ -7,22 +8,19 @@ type UserChoice = Promise<{
 }>;
 
 const InstallWebAppOnAndroid: React.FC = () => {
+  const { t } = useTranslation("page");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
     const beforeInstallPromptHandler = (e: Event) => {
-      // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
-      // Save the event so it can be triggered later
       setDeferredPrompt(e);
-      // Show the install banner
       setShowInstallPrompt(true);
     };
 
     window.addEventListener("beforeinstallprompt", beforeInstallPromptHandler);
 
-    // Listen for the appinstalled event
     window.addEventListener("appinstalled", () => {
       console.log("INSTALL: Success");
     });
@@ -30,7 +28,7 @@ const InstallWebAppOnAndroid: React.FC = () => {
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
-        beforeInstallPromptHandler
+        beforeInstallPromptHandler,
       );
       window.removeEventListener("appinstalled", () => {});
     };
@@ -38,7 +36,7 @@ const InstallWebAppOnAndroid: React.FC = () => {
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt(); // Show the install prompt
+      deferredPrompt.prompt();
 
       const userChoice = (await deferredPrompt.userChoice) as UserChoice;
       const outcome = (await userChoice).outcome;
@@ -48,8 +46,8 @@ const InstallWebAppOnAndroid: React.FC = () => {
       } else {
         console.log("User dismissed the install prompt");
       }
-      setDeferredPrompt(null); // Clear the saved prompt
-      setShowInstallPrompt(false); // Hide the install banner
+      setDeferredPrompt(null);
+      setShowInstallPrompt(false);
     }
   };
 
@@ -64,19 +62,20 @@ const InstallWebAppOnAndroid: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center"
-      }}>
+        alignItems: "center",
+      }}
+    >
       <Typography
         variant="body1"
         sx={{
           textAlign: "center",
-          mb: 2
-        }}>
-        Install this app on your device and enjoy the native application
-        functionality
+          mb: 2,
+        }}
+      >
+        {t("installApp.androidDescription")}
       </Typography>
       <Button variant="contained" color="primary" onClick={handleInstallClick}>
-        Install App
+        {t("installApp.androidButton")}
       </Button>
     </Box>
   );

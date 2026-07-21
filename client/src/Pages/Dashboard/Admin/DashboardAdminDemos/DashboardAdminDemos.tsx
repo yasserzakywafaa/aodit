@@ -5,8 +5,10 @@ import { dataGridStyle } from "src/application/shared/themes";
 import { getDashboardDemosDataGridConfig } from "./features/dataGridConfig";
 import { useDashboardDemosContext } from "./store/Provider";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const DashboardAdminDemos = () => {
+  const { t } = useTranslation("dashboard");
   const {
     store: {
       state: { isFetching, demos, paging },
@@ -14,7 +16,7 @@ const DashboardAdminDemos = () => {
     manager: { setUp, handleGetDemosByPage },
   } = useDashboardDemosContext();
 
-  const config = getDashboardDemosDataGridConfig(demos);
+  const config = getDashboardDemosDataGridConfig(demos, t);
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     const pageNumber = model.page + 1;
@@ -36,7 +38,7 @@ const DashboardAdminDemos = () => {
           mb: 1
         }}>
         <Typography variant="h4" component="h1" color="primary">
-          Demos
+          {t("admin.demos.title")}
         </Typography>
       </Box>
       <Typography
@@ -46,8 +48,8 @@ const DashboardAdminDemos = () => {
           mb: 3
         }}>
         {paging.totalCount
-          ? `${paging.totalCount} total`
-          : "Free demos run by visitors across all pages."}
+          ? t("totalCount", { count: paging.totalCount })
+          : t("admin.demos.subtitle")}
       </Typography>
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid

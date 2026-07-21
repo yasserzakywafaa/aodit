@@ -28,8 +28,10 @@ import LoaderSpinner from "src/components/shared/Loader/LoaderSpinner";
 import { ReportStatus } from "src/shared/types/report";
 import { routes } from "src/application/routes";
 import { useDashboardAgentContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
 
 const DashboardAgent = () => {
+  const { t } = useTranslation("agent");
   const { agentId } = useParams<{ agentId: string }>();
   const navigate = useNavigate();
   const {
@@ -87,14 +89,14 @@ const DashboardAgent = () => {
   }, [agent?.evaluatorUrl, agent?.evaluatorModel]);
 
   const evaluatorDiscoveryStatusText = useMemo(() => {
-    if (evaluatorModelsStatus === "loading") return "Loading models...";
+    if (evaluatorModelsStatus === "loading") return t("loadingModels");
     if (evaluatorModelsStatus === "loaded") {
-      return `Loaded ${evaluatorModels.length} model${evaluatorModels.length === 1 ? "" : "s"} from endpoint.`;
+      return t("loadedModels", { count: evaluatorModels.length });
     }
     if (evaluatorModelsStatus === "error") {
-      return `${evaluatorModelsError || "Could not fetch models."} Manual entry is still allowed.`;
+      return `${evaluatorModelsError || t("modelsFetchError")} ${t("modelsFetchErrorSuffix")}`;
     }
-    return "Manual model entry is allowed. Use Refresh models to discover IDs from /v1/models.";
+    return t("manualEntryHint");
   }, [evaluatorModelsStatus, evaluatorModels.length, evaluatorModelsError]);
 
   const isTypedModelOutsideDiscoveredList = useMemo(() => {
@@ -171,12 +173,12 @@ const DashboardAgent = () => {
       >
         <Box>
           <Typography variant="h4" component="h1" color="primary" gutterBottom>
-            {agent?.name || "Agent"}
+{agent?.name || t("fallbackTitle")}
           </Typography>
           <Typography variant="body2" sx={{
             color: "text.secondary"
           }}>
-            Owner: {agent?.ownerName || "—"}
+{t("owner", { name: agent?.ownerName || "—" })}
           </Typography>
         </Box>
         {agentId && (
@@ -187,7 +189,7 @@ const DashboardAgent = () => {
             onClick={handleSave}
             disabled={!agentId || !agent || isOnPremEvaluatorMissing}
           >
-            Save
+{t("save")}
           </Button>
         )}
       </Box>
@@ -200,13 +202,13 @@ const DashboardAgent = () => {
           <Typography variant="subtitle1" color="primary" sx={{
             fontWeight: 600
           }}>
-            Agent details
+{t("details")}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Box component="form" onSubmit={handleSave}>
             <TextField
-              label="Agent Name"
+              label={t("name")}
               name="name"
               value={agent?.name ?? ""}
               onChange={handleChange}
@@ -215,7 +217,7 @@ const DashboardAgent = () => {
               sx={{ mb: 2 }}
             />
             <TextField
-              label="Description"
+              label={t("description")}
               name="description"
               multiline
               rows={3}
@@ -225,7 +227,7 @@ const DashboardAgent = () => {
               sx={{ mb: 2 }}
             />
             <TextField
-              label="Intent"
+              label={t("intent")}
               name="intent"
               multiline
               rows={2}
@@ -235,7 +237,7 @@ const DashboardAgent = () => {
               sx={{ mb: 2 }}
             />
             <TextField
-              label="Owner (Human Responsible)"
+              label={t("ownerLabel")}
               name="ownerName"
               value={agent?.ownerName ?? ""}
               onChange={handleChange}
@@ -244,18 +246,18 @@ const DashboardAgent = () => {
             />
             <TextField
               required
-              label="Agent URL"
+              label={t("agentUrl")}
               name="agentUrl"
               value={agent?.agentUrl ?? ""}
               onChange={handleChange}
-              placeholder="https://your-agent.example.com/chat"
+              placeholder={t("agentUrlPlaceholder")}
               fullWidth
               type="url"
               error={!isValidUrl(agent?.agentUrl)}
               helperText={
                 !isValidUrl(agent?.agentUrl)
-                  ? "Enter a valid https:// URL"
-                  : "Required for Agent-to-Agent evaluation mode. This will be used to probe the agent during evaluation."
+                  ? t("invalidHttpsUrl")
+                  : t("agentUrlHelp")
               }
             />
 
@@ -269,7 +271,7 @@ const DashboardAgent = () => {
                     mt: 4,
                     mb: 1
                   }}>
-                  Evaluator (Judge) Endpoint
+{t("evaluatorEndpoint")}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -277,11 +279,7 @@ const DashboardAgent = () => {
                     color: "text.secondary",
                     mb: 2
                   }}>
-                  Required in on-prem / air-gapped deployments. The judge model
-                  must run on an OpenAI-compatible endpoint you control — no
-                  requests leave your network. For methodology reasons, the
-                  judge should be a different model (and ideally a different
-                  endpoint) than the agent under test.
+{t("evaluatorEndpointHelp")}
                 </Typography>
                 <Box
                   sx={{
@@ -298,11 +296,11 @@ const DashboardAgent = () => {
                     <Grid size={{ xs: 12, md: 9 }}>
                       <TextField
                         required
-                        label="Evaluator URL"
+                        label={t("evaluatorUrl")}
                         name="evaluatorUrl"
                         value={agent?.evaluatorUrl ?? ""}
                         onChange={handleChange}
-                        placeholder="http://10.0.0.5:1234/v1"
+                        placeholder={t("evaluatorUrlPlaceholder")}
                         fullWidth
                         type="url"
                         error={
@@ -311,10 +309,10 @@ const DashboardAgent = () => {
                         }
                         helperText={
                           !agent?.evaluatorUrl?.trim()
-                            ? "Required on-prem — set your internal OpenAI-compatible /v1 base URL."
+                            ? t("evaluatorUrlRequired")
                             : !isValidUrl(agent?.evaluatorUrl)
-                              ? "Enter a valid http(s):// URL"
-                              : "OpenAI-compatible /v1 base URL (e.g. LM Studio, Ollama, vLLM)."
+                              ? t("invalidHttpUrl")
+                              : t("evaluatorUrlHelp")
                         }
                       />
                     </Grid>
@@ -340,17 +338,17 @@ const DashboardAgent = () => {
                         onClick={handleRefreshModels}
                         sx={{ height: 56 }}
                       >
-                        Fetch models
+{t("fetchModels")}
                       </Button>
                     </Grid>
 
                     <Grid size={{ xs: 12 }}>
                       <TextField
-                        label="Evaluator API Key (optional)"
+                        label={t("evaluatorApiKey")}
                         name="evaluatorApiKey"
                         value={agent?.evaluatorApiKey ?? ""}
                         onChange={handleChange}
-                        placeholder="leave blank for keyless local servers"
+                        placeholder={t("evaluatorApiKeyPlaceholder")}
                         fullWidth
                         type="password"
                       />
@@ -369,8 +367,8 @@ const DashboardAgent = () => {
                           <TextField
                             {...params}
                             required
-                            label="Default evaluator model"
-                            placeholder="e.g. google/gemma-3-4b"
+                            label={t("defaultEvaluatorModel")}
+                            placeholder={t("evaluatorModelPlaceholder")}
                             fullWidth
                             error={
                               !agent?.evaluatorModel?.trim() ||
@@ -378,10 +376,10 @@ const DashboardAgent = () => {
                             }
                             helperText={
                               !agent?.evaluatorModel?.trim()
-                                ? "Required on-prem — enter the model id loaded on your evaluator endpoint."
+                                ? t("evaluatorModelRequired")
                                 : isTypedModelOutsideDiscoveredList
-                                  ? "Model is not in discovered options. Manual entry is allowed; Test Evaluator Connection will validate it."
-                                  : "Used when a report does not specify its own judge model."
+                                  ? t("evaluatorModelNotInList")
+                                  : t("evaluatorModelHelp")
                             }
                           />
                         )}
@@ -424,7 +422,7 @@ const DashboardAgent = () => {
                             agentId && handleTestEvaluatorConnection(agentId)
                           }
                         >
-                          Test Evaluator Connection
+{t("testEvaluatorConnection")}
                         </Button>
                       </Box>
                     </Grid>
@@ -442,17 +440,17 @@ const DashboardAgent = () => {
           color="primary"
           sx={{ mb: 2, borderBottom: 1, borderColor: "divider", pb: 2 }}
         >
-          Reports
+{t("reportsSection")}
         </Typography>
 
         {agentReports.length > 0 ? (
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Report Name</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell align="right">Action</TableCell>
+<TableCell>{t("columnReportName")}</TableCell>
+                <TableCell>{t("columnStatus")}</TableCell>
+                <TableCell>{t("columnCreated")}</TableCell>
+                <TableCell align="right">{t("columnAction")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -495,7 +493,7 @@ const DashboardAgent = () => {
                           )
                         }
                       >
-                        View
+{t("view")}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -507,7 +505,7 @@ const DashboardAgent = () => {
           <Typography variant="body2" sx={{
             color: "text.secondary"
           }}>
-            No reports have been attached to this agent yet.
+{t("noReports")}
           </Typography>
         )}
       </Paper>

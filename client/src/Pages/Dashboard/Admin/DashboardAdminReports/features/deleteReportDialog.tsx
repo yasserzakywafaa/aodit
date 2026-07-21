@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 import { DeleteOutlined } from "@mui/icons-material";
+import { Trans, useTranslation } from "react-i18next";
 
 const DeleteReportDialog = ({
   isOpen,
@@ -21,6 +22,8 @@ const DeleteReportDialog = ({
   onConfirm: () => void;
   reportName: string;
 }) => {
+  const { t } = useTranslation(["dashboard", "common"]);
+
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth={true}>
       <DialogTitle>
@@ -28,22 +31,26 @@ const DeleteReportDialog = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1
-          }}>
+            gap: 1,
+          }}
+        >
           <DeleteOutlined color="error" fontSize="large" />
-          <Typography variant="h5">Delete Report</Typography>
+          <Typography variant="h5">{t("dashboard:reports.deleteReportTitle")}</Typography>
         </Box>
       </DialogTitle>
       <DialogContent>
         <Typography variant="body2">
-          Are you sure you want to delete the report{" "}
-          <strong className="text-underline-secondary">"{reportName}"</strong>?
-          <br /> This action cannot be undone.
+          <Trans
+            i18nKey="reports.deleteReportConfirm"
+            ns="dashboard"
+            values={{ name: reportName }}
+            components={{ strong: <strong className="text-underline-secondary" /> }}
+          />
         </Typography>
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" color="primary" onClick={onClose}>
-          Cancel
+          {t("common:cancel")}
         </Button>
         <Button
           variant="contained"
@@ -51,7 +58,7 @@ const DeleteReportDialog = ({
           onClick={onConfirm}
           startIcon={<DeleteOutlined />}
         >
-          Delete
+          {t("common:delete")}
         </Button>
       </DialogActions>
     </Dialog>

@@ -8,8 +8,11 @@ import {
 import { ExpandMore } from "@mui/icons-material";
 
 import { SCENARIO_TURNS_DISPLAY } from "src/shared/constants/scenarioTurns";
+import { useTranslation } from "react-i18next";
 
 const ScenarioTurnsSection = () => {
+  const { t } = useTranslation("report");
+
   return (
     <Accordion
       defaultExpanded={false}
@@ -20,18 +23,23 @@ const ScenarioTurnsSection = () => {
       }}
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
-        <Typography variant="subtitle2" color="primary" sx={{
-          fontWeight: 600
-        }}>
-          Scenario Turns
+        <Typography
+          variant="subtitle2"
+          color="primary"
+          sx={{
+            fontWeight: 600,
+          }}
+        >
+          {t("configSections.scenarioTurns")}
         </Typography>
         <Typography
           variant="body2"
           sx={{
             color: "text.secondary",
-            ml: 1
-          }}>
-          8 turns per scenario
+            ml: 1,
+          }}
+        >
+          {t("configSections.turnsPerScenario")}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -52,17 +60,18 @@ const ScenarioTurnsSection = () => {
                   variant="subtitle2"
                   color="primary"
                   sx={{
-                    fontWeight: 600
+                    fontWeight: 600,
                   }}
                 >
-                  Turn {turn} — {name}
+                  {t("configSections.turnLabel", { turn, name })}
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{
                     color: "text.secondary",
-                    mt: 0.5
-                  }}>
+                    mt: 0.5,
+                  }}
+                >
                   {question}
                 </Typography>
                 <Typography
@@ -70,8 +79,9 @@ const ScenarioTurnsSection = () => {
                   sx={{
                     color: "text.secondary",
                     display: "block",
-                    mt: 0.25
-                  }}>
+                    mt: 0.25,
+                  }}
+                >
                   {instruction}
                 </Typography>
               </Box>

@@ -5,8 +5,10 @@ import { dataGridStyle } from "src/application/shared/themes";
 import { getDashboardAdminAgentsDataGridConfig } from "./features/dataGridConfig";
 import { useDashboardAdminAgentsContext } from "./store/Provider";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const DashboardAdminAgents = () => {
+  const { t } = useTranslation("dashboard");
   const {
     store: {
       state: { isFetching, agents, paging },
@@ -14,7 +16,7 @@ const DashboardAdminAgents = () => {
     manager: { setUp, handleGetAgentsByPage },
   } = useDashboardAdminAgentsContext();
 
-  const config = getDashboardAdminAgentsDataGridConfig(agents);
+  const config = getDashboardAdminAgentsDataGridConfig(agents, t);
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     const pageNumber = model.page + 1;
@@ -29,7 +31,7 @@ const DashboardAdminAgents = () => {
   return (
     <Box>
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        Agents
+        {t("agents.title")}
       </Typography>
       <Typography
         variant="body1"
@@ -38,8 +40,8 @@ const DashboardAdminAgents = () => {
           mb: 3
         }}>
         {paging.totalCount
-          ? `${paging.totalCount} total`
-          : "Manage all agents across users from here."}
+          ? t("totalCount", { count: paging.totalCount })
+          : t("agents.adminSubtitle")}
       </Typography>
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid

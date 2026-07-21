@@ -2,8 +2,10 @@ import { Box, Button, Typography } from "@mui/material";
 
 import { MODELS_TO_TEST_OPTIONS } from "src/shared/constants/aoditFramework";
 import { useDashboardReportContext } from "../store/Provider";
+import { Trans, useTranslation } from "react-i18next";
 
 const ModelsToTestSection = () => {
+  const { t } = useTranslation("report");
   const {
     store: {
       state: { report },
@@ -23,19 +25,27 @@ const ModelsToTestSection = () => {
 
   return (
     <>
-      <Typography variant="h6" color="primary" sx={{
-        mb: 1.5
-      }}>
-        Models to Test
+      <Typography
+        variant="h6"
+        color="primary"
+        sx={{
+          mb: 1.5,
+        }}
+      >
+        {t("configSections.modelsToTest")}
       </Typography>
       <Typography
         variant="body2"
         sx={{
           color: "text.secondary",
-          mb: 1.5
-        }}>
-        Select minimum <strong className="text-underline">1 model</strong> to
-        test. Each model runs every scenario independently.
+          mb: 1.5,
+        }}
+      >
+        <Trans
+          i18nKey="configSections.modelsToTestHelp"
+          ns="report"
+          components={{ strong: <strong className="text-underline" /> }}
+        />
       </Typography>
       <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", mb: 3 }}>
         {MODELS_TO_TEST_OPTIONS.map((model) => {

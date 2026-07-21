@@ -14,49 +14,46 @@ import Link from "@mui/material/Link";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
+import { Trans, useTranslation } from "react-i18next";
 import { routes } from "src/application/routes";
 import { useState } from "react";
 
 const FOOTER_SECTIONS_GLOBAL = [
   {
-    title: "Product",
+    titleKey: "footer.product",
     links: [
-      { label: "Industries", href: routes.industries },
-      { label: "Methodology", href: routes.methodology },
-      { label: "Security", href: routes.security },
-      { label: "Try Live Demo", href: routes.demo },
+      { labelKey: "footer.industries", href: routes.industries },
+      { labelKey: "footer.methodology", href: routes.methodology },
+      { labelKey: "footer.security", href: routes.security },
+      { labelKey: "footer.tryLiveDemo", href: routes.demo },
     ],
   },
   {
-    title: "Compliance",
-    links: [{ label: "FINMA Guidance", href: routes.compliance.finma }],
+    titleKey: "footer.compliance",
+    links: [{ labelKey: "footer.finmaGuidance", href: routes.compliance.finma }],
   },
   {
-    title: "Company",
+    titleKey: "footer.company",
     links: [
-      { label: "About", href: routes.about },
-      { label: "Contact", href: routes.contact },
+      { labelKey: "footer.about", href: routes.about },
+      { labelKey: "footer.contact", href: routes.contact },
     ],
   },
   {
-    title: "Legal",
+    titleKey: "footer.legal",
     links: [
-      { label: "Privacy Policy", href: routes.privacyPolicy },
-      { label: "Terms & Conditions", href: routes.termsAndConditions },
+      { labelKey: "footer.privacyPolicy", href: routes.privacyPolicy },
+      { labelKey: "footer.termsAndConditions", href: routes.termsAndConditions },
       {
-        label: "Data Processing Agreement",
+        labelKey: "footer.dataProcessingAgreement",
         href: routes.dataProcessingAgreement,
       },
     ],
   },
 ] as const;
 
-const REGION_LABELS = {
-  global: "Global (English)",
-  swiss: "Switzerland",
-} as const;
-
 const Footer = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const location = useLocation();
   const region = getEffectiveRegion(location.pathname, location.search);
@@ -98,7 +95,6 @@ const Footer = () => {
       }}
     >
       <Grid container spacing={4}>
-        {/* Logo + Address */}
         <Grid size={{ xs: 12, md: 3 }}>
           <Box sx={{ mb: 2 }}>
             <Logo variant="full" component={LogoComponentEnum.ANCHOR} />
@@ -120,7 +116,6 @@ const Footer = () => {
           </Typography>
         </Grid>
 
-        {/* Link columns + Region (flex row so Swiss extra Compliance column does not push Region off-screen) */}
         <Grid size={{ xs: 12, md: 9 }}>
           <Box
             sx={{
@@ -130,9 +125,9 @@ const Footer = () => {
               rowGap: 4,
             }}
           >
-            {FOOTER_SECTIONS_GLOBAL.map(({ title, links }) => (
+            {FOOTER_SECTIONS_GLOBAL.map(({ titleKey, links }) => (
               <Box
-                key={title}
+                key={titleKey}
                 sx={{
                   flex: "1 1 140px",
                   minWidth: { xs: "45%", sm: 120, md: 130 },
@@ -149,16 +144,16 @@ const Footer = () => {
                     mb: 2,
                   }}
                 >
-                  {title}
+                  {t(titleKey)}
                 </Typography>
-                {links.map(({ label, href }) => (
+                {links.map(({ labelKey, href }) => (
                   <Link
-                    key={label}
+                    key={labelKey}
                     href={href}
                     onClick={handleSectionClick(href)}
                     sx={linkStyle}
                   >
-                    {label}
+                    {t(labelKey)}
                   </Link>
                 ))}
               </Box>
@@ -181,7 +176,7 @@ const Footer = () => {
                   mb: 2,
                 }}
               >
-                Region
+                {t("footer.region")}
               </Typography>
               <Link
                 component="button"
@@ -196,7 +191,10 @@ const Footer = () => {
                   p: 0,
                 }}
               >
-                {REGION_LABELS[region]} ▾
+                {region === "swiss"
+                  ? t("footer.regionSwitzerland")
+                  : t("footer.regionGlobal")}{" "}
+                ▾
               </Link>
               <Menu
                 anchorEl={regionAnchor}
@@ -204,17 +202,16 @@ const Footer = () => {
                 onClose={() => setRegionAnchor(null)}
               >
                 <MenuItem onClick={() => handleRegionSelect("global")}>
-                  Global (English)
+                  {t("footer.regionGlobal")}
                 </MenuItem>
                 <MenuItem onClick={() => handleRegionSelect("ch")}>
-                  Switzerland
+                  {t("footer.regionSwitzerland")}
                 </MenuItem>
               </Menu>
             </Box>
           </Box>
         </Grid>
       </Grid>
-      {/* Disclaimer */}
       <Typography
         sx={{
           fontSize: 11,
@@ -227,18 +224,21 @@ const Footer = () => {
           maxWidth: 700,
         }}
       >
-        <Typography
-          component="span"
-          sx={{
-            fontSize: "inherit",
-            color: "primary.main"
-          }}>
-          aodit
-        </Typography>{" "}
-        is an independent AI evaluation framework. SwissLI AG is not affiliated
-        with FINMA or any regulatory authority. Evaluation results are advisory
-        and do not constitute regulatory approval or legal advice. &copy; 2026
-        Swiss Lab of Intelligence (SwissLI AG)
+        <Trans
+          t={t}
+          i18nKey="footer.disclaimer"
+          components={{
+            brand: (
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: "inherit",
+                  color: "primary.main",
+                }}
+              />
+            ),
+          }}
+        />
       </Typography>
     </Container>
   );

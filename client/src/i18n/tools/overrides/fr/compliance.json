@@ -1,0 +1,63 @@
+{
+  "euAiAct": {
+    "pageTitle": "Règlement européen sur l'IA | aodit",
+    "schemaTitle": "Règlement européen sur l'IA",
+    "schemaDescription": "Aperçu des thèmes de conformité du Règlement européen sur l'IA, notamment la classification des risques, la documentation technique, les obligations de transparence et la surveillance post-commercialisation.",
+    "title": "Règlement européen sur l'IA",
+    "subtitle": "Cadre réglementaire européen sur l'IA",
+    "intro": "Cette page présente les éléments clés du Règlement européen sur l'IA pour aider les équipes à concevoir les contrôles, collecter les preuves et préparer les parcours de conformité.",
+    "focusAreas": "Domaines prioritaires",
+    "items": [
+      {
+        "primary": "Classification fondée sur les risques",
+        "secondary": "Identifiez les cas d'usage interdits, à haut risque et à risque limité, et appliquez les obligations correspondantes."
+      },
+      {
+        "primary": "Documentation technique",
+        "secondary": "Préparez une documentation robuste, des journaux et des artefacts de traçabilité pour l'examen réglementaire."
+      },
+      {
+        "primary": "Exigences de transparence",
+        "secondary": "Fournissez des informations claires aux utilisateurs lors de l'interaction avec des systèmes d'IA."
+      },
+      {
+        "primary": "Surveillance post-commercialisation",
+        "secondary": "Suivez les incidents, maintenez la préparation au reporting et évaluez en continu le comportement des modèles."
+      }
+    ]
+  },
+  "finma": {
+    "pageTitle": "Guide FINMA sur l'IA 08/2024 expliqué (Suisse) | aodit",
+    "schemaTitle": "Guide FINMA sur l'IA 08/2024 expliqué (Suisse)",
+    "schemaDescription": "Preuves indépendantes de la couche de contrôle comportemental pour les tests, la surveillance et les décisions de risque IA alignés sur FINMA dans les services financiers suisses.",
+    "eyebrow": "Alignement réglementaire",
+    "title": "Guide FINMA sur l'IA 08/2024",
+    "intro": "s'aligne sur les exigences de surveillance des marchés financiers suisses pour l'IA dans les institutions réglementées.",
+    "introPrefix": "Comment",
+    "introSuffix": "s'aligne sur les exigences de surveillance des marchés financiers suisses pour l'IA dans les institutions réglementées.",
+    "lifecycleTitlePrefix": "Où",
+    "lifecycleTitleSuffix": "s'intègre au cycle de vie",
+    "audience": "Pour les CRO, responsables conformité et équipes risque modèle évaluant des preuves de test IA indépendantes par rapport aux exigences FINMA.",
+    "keyPrinciple": "Principe clé",
+    "lifecycleTitle": "S'intègre au cycle de vie",
+    "phase": "Phase {{n}}",
+    "officialDoc": "Document source officiel FINMA",
+    "published": "Publié",
+    "officialNote": "Pour la transparence et la préparation aux audits, utilisez l'avis officiel FINMA comme source réglementaire principale.",
+    "downloadPdf": "Télécharger le PDF officiel FINMA",
+    "downloadSoon": "Lien de téléchargement bientôt disponible",
+    "scorecardTitle": "Guide FINMA 08/2024 — Scorecard des preuves de contrôle",
+    "scorecardIntro": "<strong>Fort</strong> indique une couverture directe par des preuves comportementales. <strong>Partiel</strong> indique des preuves de soutien uniquement. <strong>Non couvert</strong> indique une limite intentionnelle.",
+    "otherStandards": "Autres normes",
+    "addedValue": "Valeur ajoutée",
+    "riskIfNotUsed": "Risque en cas de non-utilisation",
+    "disclaimer": "Avertissement",
+    "ctaTitle": "Preuves indépendantes pour une gouvernance IA alignée sur FINMA",
+    "ctaBody": "fournit des preuves de test de résistance comportemental qui complètent votre gouvernance interne — sans accéder aux systèmes de production par défaut."
+  },
+  "levels": {
+    "strong": "Fort",
+    "partial": "Partiel",
+    "notCovered": "Non couvert"
+  }
+}

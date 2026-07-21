@@ -1,4 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import finmaLogo from "src/assets/images/finma_logo.png";
 
@@ -14,14 +15,11 @@ const COMPLIANCE_LOGOS: ComplianceLogoItem[] = [
     src: finmaLogo,
     label: "FINMA",
   },
-  // {
-  //   id: "eu",
-  //   label: "European Union",
-  //   src: euFlag,
-  // },
 ];
 
 const ComplianceLogosSection = () => {
+  const { t } = useTranslation("page");
+
   return (
     <Box
       component="section"
@@ -40,17 +38,9 @@ const ComplianceLogosSection = () => {
         }}
       >
         <Box>
-          <Typography variant="h4">
-            Regulatory standards and compliance references we align with
-          </Typography>
-          <Typography
-            sx={{
-              mt: 1.5,
-              color: "text.secondary",
-            }}
-          >
-            Starting with FINMA standards, with more institutions and standards
-            added over time.
+          <Typography variant="h4">{t("complianceLogos.title")}</Typography>
+          <Typography sx={{ mt: 1.5, color: "text.secondary" }}>
+            {t("complianceLogos.subtitle")}
           </Typography>
         </Box>
 
@@ -62,14 +52,9 @@ const ComplianceLogosSection = () => {
               src={item.src}
               alt={item.label}
               sx={{
-                width: 100,
-                height: 100,
                 width: "100%",
                 maxWidth: "40%",
                 height: "100%",
-
-                // border: "1px solid",
-                // borderColor: "primary.main",
                 objectFit: "cover"
               }} />
           ))}

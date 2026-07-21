@@ -9,11 +9,14 @@ interface ProjectCountInputProps {
   onChange: (projectsCount: number) => void;
 }
 
+import { useTranslation } from "react-i18next";
+
 const ProjectCountInput = ({
   user,
   value,
   onChange,
 }: ProjectCountInputProps) => {
+  const { t } = useTranslation("dashboard");
   if (!user) {
     return null;
   }
@@ -28,11 +31,11 @@ const ProjectCountInput = ({
             mb: 2
           }}>
           <ArticleIcon color="primary" sx={{ mr: 1 }} />
-          <Typography variant="h6">Project Count</Typography>
+<Typography variant="h6">{t("admin.user.projectCount")}</Typography>
         </Box>
         <TextField
           type="number"
-          label="Project Count"
+          label={t("admin.user.projectCount")}
           value={value}
           onChange={(e) => {
             const newValue = parseInt(e.target.value) || 0;
@@ -47,7 +50,7 @@ const ProjectCountInput = ({
             color: "text.secondary",
             mt: 1
           }}>
-          How many projects created in the current subscription period.
+{t("admin.user.projectCountHelp")}
         </Typography>
       </CardContent>
     </Card>

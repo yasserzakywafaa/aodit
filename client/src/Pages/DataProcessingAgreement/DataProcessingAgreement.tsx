@@ -12,6 +12,7 @@ import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const BulletList = ({ items }: { items: string[] }) => (
@@ -55,6 +56,7 @@ const SectionHeading = ({
 );
 
 const DataProcessingAgreementPage = () => {
+  const { t } = useTranslation("page");
   const navigate = useNavigate();
 
   const handleLinkClick =
@@ -66,18 +68,18 @@ const DataProcessingAgreementPage = () => {
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "Data Processing Agreement (DPA)",
-      "Data Processing Agreement governing the processing of personal data by Swiss Lab of Intelligence (SwissLI AG) on behalf of AODIT clients.",
+      t("legal.dpaSchemaTitle"),
+      t("legal.dpaSchemaDescription"),
       routes.dataProcessingAgreement,
       new Date("03/01/2026"),
     );
-  }, []);
+  }, [t]);
 
   useSchemaOrg(webPageSchema, "dpa-webpage-schema");
 
   return (
     <Page
-      title="Data Processing Agreement | aodit"
+      title={t("legal.dpaPageTitle")}
       className="dpa-page"
       isLoading={false}
     >
@@ -103,7 +105,7 @@ const DataProcessingAgreementPage = () => {
               mb: 2,
             }}
           >
-            Legal
+            {t("legal.label")}
           </Typography>
           <Typography
             variant="h1"
@@ -114,15 +116,15 @@ const DataProcessingAgreementPage = () => {
               color: "text.primary",
             }}
           >
-            Data Processing Agreement (DPA)
+            {t("legal.dpaTitle")}
           </Typography>
           <Typography sx={{ fontSize: 15, color: "text.secondary", mb: 1 }}>
-            Last updated: March 2026
+            {t("legal.lastUpdated")}
           </Typography>
           <Typography sx={{ fontSize: 15, color: "text.secondary" }}>
-            Swiss Lab of Intelligence (SwissLI AG)
+            {t("legal.companyAddress")}
             <br />
-            Murbacherstrasse 19, 6003 Luzern, Switzerland
+            {t("legal.address")}
           </Typography>
         </Container>
       </Box>
@@ -130,7 +132,7 @@ const DataProcessingAgreementPage = () => {
       <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 3, md: 0 } }}>
         <Container maxWidth="md">
           {/* 1. Purpose and Applicability */}
-          <SectionHeading number="1" title="Purpose and Applicability" />
+          <SectionHeading number="1" title={t("legal.dpaHeadings.1")} />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             This Data Processing Agreement (&ldquo;DPA&rdquo;) governs the
             processing of personal data by Swiss Lab of Intelligence

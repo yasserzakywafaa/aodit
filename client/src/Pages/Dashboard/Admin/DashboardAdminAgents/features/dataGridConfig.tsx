@@ -3,6 +3,7 @@ import { Agent, AgentStatus } from "src/shared/types/agent";
 
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
+import type { TFunction } from "i18next";
 
 export interface DashboardAdminAgentsGridFields {
   id: string;
@@ -20,6 +21,7 @@ export interface DashboardAdminAgentsGridResult {
 
 export const getDashboardAdminAgentsDataGridConfig = (
   agents: Agent[],
+  t: TFunction<"dashboard">,
 ): DashboardAdminAgentsGridResult => {
   if (!agents || agents.length === 0) return { rows: [], columns: [] };
 
@@ -44,12 +46,12 @@ export const getDashboardAdminAgentsDataGridConfig = (
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "id",
-      headerName: "AGENT",
+      headerName: t("agents.columnAgent"),
       editable: false,
       sortable: true,
       minWidth: 220,
       flex: 1,
-      description: "Agent information",
+      description: t("agents.columnAgentDescription"),
       valueGetter: (value, row) => row.name,
       renderCell: (params) => {
         const agent = params.row;
@@ -83,7 +85,7 @@ export const getDashboardAdminAgentsDataGridConfig = (
               <Typography variant="caption" sx={{
                 color: "text.secondary"
               }}>
-                ID {displayId}
+                {t("grid.idLabel")} {displayId}
               </Typography>
             </Box>
           </Box>
@@ -92,23 +94,23 @@ export const getDashboardAdminAgentsDataGridConfig = (
     },
     {
       field: "ownerName",
-      headerName: "OWNER",
+      headerName: t("agents.columnOwner"),
       editable: false,
       sortable: true,
       minWidth: 150,
       flex: 1,
       display: "flex",
-      description: "Human responsible for this agent",
+      description: t("agents.columnOwnerDescription"),
     },
     {
       field: "userId",
-      headerName: "CREATOR",
+      headerName: t("agents.columnOwner"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "User who created this agent",
+      description: t("agents.columnOwnerDescription"),
       renderCell: (params) => {
         const uid = params.row.userId;
         const displayUid = uid.length > 8 ? uid.slice(-6).toUpperCase() : uid;
@@ -123,13 +125,13 @@ export const getDashboardAdminAgentsDataGridConfig = (
     },
     {
       field: "status",
-      headerName: "STATUS",
+      headerName: t("agents.columnStatus"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
       display: "flex",
-      description: "Agent status",
+      description: t("agents.columnStatusDescription"),
       renderCell: (params) => {
         const status = params.row.status;
         const chipColor: Record<string, "default" | "success"> = {
@@ -138,7 +140,7 @@ export const getDashboardAdminAgentsDataGridConfig = (
         };
         return (
           <Chip
-            label={status.toUpperCase()}
+            label={t(`status.${status}`, { defaultValue: status.toUpperCase() })}
             color={chipColor[status] ?? "default"}
             size="small"
             variant="outlined"
@@ -148,19 +150,19 @@ export const getDashboardAdminAgentsDataGridConfig = (
     },
     {
       field: "createdAt",
-      headerName: "CREATED DATE",
+      headerName: t("agents.columnCreatedDate"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "Date agent was created",
+      description: t("agents.columnCreatedDateDescription"),
     },
     {
       field: "action",
       align: "right",
       type: "actions",
-      headerName: "ACTIONS",
+      headerName: t("agents.columnActions"),
       headerAlign: "right",
       flex: 1,
       minWidth: 100,

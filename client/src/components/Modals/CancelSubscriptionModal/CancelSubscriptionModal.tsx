@@ -12,8 +12,10 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useCancelSubscriptionModalContext } from "./store/Provider";
 import { useDashboardProfileContext } from "src/Pages/Dashboard/DashboardProfile/store/Provider";
 import { usePricing } from "src/components/shared/Pricing/usePricing";
+import { useTranslation } from "react-i18next";
 
 export const CancelSubscriptionModal = () => {
+  const { t } = useTranslation("dashboard");
   const {
     store: { state, handleToggleCancelSubscriptionModal },
   } = useCancelSubscriptionModalContext();
@@ -59,13 +61,13 @@ export const CancelSubscriptionModal = () => {
       >
         <DialogContent>
           <Typography variant="h5" component="h5">
-            Are you sure you want to cancel your subscription?
+            {t("subscription.cancelConfirmTitle")}
           </Typography>
 
           <Typography variant="h6" component="h6" sx={{
             marginTop: 2
           }}>
-            You will lose access to all the Premium benefits
+            {t("subscription.cancelConfirmSubtitle")}
           </Typography>
 
           {currentPlan.features.map((feature) => (
@@ -96,7 +98,7 @@ export const CancelSubscriptionModal = () => {
             startIcon={<SentimentVerySatisfiedOutlined />}
             onClick={handleToggleCancelSubscriptionModal}
           >
-            Keep Plan
+            {t("subscription.keepPlan")}
           </Button>
           <Button
             size="small"
@@ -107,7 +109,7 @@ export const CancelSubscriptionModal = () => {
             startIcon={<SentimentVeryDissatisfiedOutlined />}
             onClick={handleOnCancelSubscriptionClick}
           >
-            Cancel Subscription
+            {t("subscription.cancelSubscription")}
           </Button>
         </DialogActions>
       </Dialog>

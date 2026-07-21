@@ -20,6 +20,7 @@ import React, { useState } from "react";
 import END_POINTS from "src/application/shared/endpoints";
 import { UserRole } from "src/shared/types/user";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 interface CreateUserDialogProps {
   open: boolean;
@@ -32,6 +33,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const { t } = useTranslation(["dashboard", "common", "auth"]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -71,7 +73,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
       onSuccess();
       onClose();
     } catch (err: any) {
-      const message = err.response?.data?.message || "Failed to create user.";
+      const message = err.response?.data?.message || t("dashboard:admin.users.createFailed");
       setError(message);
     } finally {
       setIsSubmitting(false);
@@ -80,7 +82,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-      <DialogTitle>Create New User</DialogTitle>
+<DialogTitle>{t("dashboard:admin.users.createUserTitle")}</DialogTitle>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 1 }}
@@ -88,7 +90,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
           <TextField
             required
             fullWidth
-            label="First Name"
+            label={t("auth:firstName")}
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             autoComplete="off"
@@ -96,7 +98,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
           />
           <TextField
             fullWidth
-            label="Last Name"
+            label={t("auth:lastName")}
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             autoComplete="off"
@@ -106,7 +108,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
             required
             fullWidth
             type="email"
-            label="Email Address"
+            label={t("auth:email")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="off"
@@ -116,7 +118,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
             required
             fullWidth
             type={showPassword ? "text" : "password"}
-            label="Password"
+            label={t("auth:password")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
@@ -126,7 +128,7 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    aria-label="toggle password visibility"
+                    aria-label={t("dashboard:admin.users.togglePasswordVisibility")}
                     onClick={() => setShowPassword((prev) => !prev)}
                     edge="end"
                     size="small"
@@ -138,16 +140,16 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
             }}
           />
           <FormControl fullWidth size="small">
-            <InputLabel id="role-label">Role</InputLabel>
+<InputLabel id="role-label">{t("dashboard:admin.users.role")}</InputLabel>
             <Select
               labelId="role-label"
               value={role}
-              label="Role"
+              label={t("dashboard:admin.users.role")}
               onChange={(e) => setRole(e.target.value as UserRole)}
             >
-              <MenuItem value={UserRole.user}>User</MenuItem>
-              <MenuItem value={UserRole.admin}>Admin</MenuItem>
-              <MenuItem value={UserRole.super_admin}>Super Admin</MenuItem>
+<MenuItem value={UserRole.user}>{t("dashboard:admin.users.roleUser")}</MenuItem>
+<MenuItem value={UserRole.admin}>{t("dashboard:admin.users.roleAdmin")}</MenuItem>
+<MenuItem value={UserRole.super_admin}>{t("dashboard:admin.users.roleSuperAdmin")}</MenuItem>
             </Select>
           </FormControl>
 
@@ -160,14 +162,14 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={handleClose} disabled={isSubmitting}>
-            Cancel
+            {t("common:cancel")}
           </Button>
           <Button
             type="submit"
             variant="contained"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Creating…" : "Create User"}
+{isSubmitting ? t("dashboard:admin.users.creating") : t("dashboard:admin.users.createUser")}
           </Button>
         </DialogActions>
       </Box>

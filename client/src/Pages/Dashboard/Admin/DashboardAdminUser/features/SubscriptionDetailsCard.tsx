@@ -30,6 +30,8 @@ interface SubscriptionDetailsCardProps {
   onApiAccessAllowedChange: (apiAccessAllowed: boolean) => void;
 }
 
+import { useTranslation } from "react-i18next";
+
 const SubscriptionDetailsCard = ({
   user,
   subscriptionType,
@@ -41,6 +43,7 @@ const SubscriptionDetailsCard = ({
   onPaymentStatusChange,
   onApiAccessAllowedChange,
 }: SubscriptionDetailsCardProps) => {
+  const { t } = useTranslation("dashboard");
   if (!user || !user.subscription) {
     return null;
   }
@@ -69,7 +72,7 @@ const SubscriptionDetailsCard = ({
             mb: 2
           }}>
           <CreditCardIcon color="primary" sx={{ mr: 1 }} />
-          <Typography variant="h6">Subscription Details</Typography>
+<Typography variant="h6">{t("admin.user.subscriptionDetails")}</Typography>
         </Box>
 
         <Grid container spacing={2}>
@@ -78,13 +81,13 @@ const SubscriptionDetailsCard = ({
             gap: 2
           }}>
             <Grid size={{ xs: 6, sm: 2 }}>
-              <Typography variant="body2">Subscription ID:</Typography>
+<Typography variant="body2">{t("admin.user.subscriptionId")}</Typography>
             </Grid>
             <Grid size="auto">
               <Typography variant="body2" sx={{
                 fontWeight: "bold"
               }}>
-                {subscription.id || "N/A"}
+{subscription.id || t("admin.user.notAvailable")}
               </Typography>
             </Grid>
           </Grid>
@@ -94,7 +97,7 @@ const SubscriptionDetailsCard = ({
             gap: 2
           }}>
             <Grid size={{ xs: 6, sm: 2 }}>
-              <Typography variant="body2">Start Date:</Typography>
+<Typography variant="body2">{t("admin.user.startDate")}</Typography>
             </Grid>
             <Grid size="auto">
               <Typography variant="body2" sx={{
@@ -110,7 +113,7 @@ const SubscriptionDetailsCard = ({
             gap: 2
           }}>
             <Grid size={{ xs: 6, sm: 2 }}>
-              <Typography variant="body2">End Date:</Typography>
+<Typography variant="body2">{t("admin.user.endDate")}</Typography>
             </Grid>
             <Grid size="auto">
               <Typography variant="body2" sx={{
@@ -133,12 +136,12 @@ const SubscriptionDetailsCard = ({
             }}>
             <Grid size={{ xs: 12, sm: 4 }}>
               <FormControl fullWidth>
-                <InputLabel id="subscription-type-label">Type</InputLabel>
+<InputLabel id="subscription-type-label">{t("admin.user.type")}</InputLabel>
                 <Select
                   labelId="subscription-type-label"
                   id="subscription-type-select"
                   value={subscriptionType}
-                  label="Type"
+                  label={t("admin.user.type")}
                   onChange={handleTypeChange}
                 >
                   {Object.values(SubscriptionPlanEnum).map((type) => (
@@ -162,7 +165,7 @@ const SubscriptionDetailsCard = ({
             <Grid size={{ xs: 12, sm: 4 }}>
               <TextField
                 type="number"
-                label="Max Projects Allowed"
+                label={t("admin.user.maxProjectsAllowed")}
                 value={maxProjectsAllowed}
                 onChange={(e) => {
                   const value = parseInt(e.target.value) || 0;
@@ -185,19 +188,19 @@ const SubscriptionDetailsCard = ({
             <Grid size={{ xs: 12, sm: 4 }}>
               <FormControl fullWidth>
                 <InputLabel id="payment-status-label">
-                  Payment Status
+{t("admin.user.paymentStatus")}
                 </InputLabel>
                 <Select
                   labelId="payment-status-label"
                   id="payment-status-select"
                   value={paymentStatus}
-                  label="Payment Status"
+                  label={t("admin.user.paymentStatus")}
                   onChange={handlePaymentStatusChange}
                 >
-                  <MenuItem value="paid">Paid</MenuItem>
-                  <MenuItem value="unpaid">Unpaid</MenuItem>
+<MenuItem value="paid">{t("admin.user.paymentPaid")}</MenuItem>
+<MenuItem value="unpaid">{t("admin.user.paymentUnpaid")}</MenuItem>
                   <MenuItem value="no_payment_required">
-                    No Payment Required
+{t("admin.user.paymentNotRequired")}
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -211,7 +214,7 @@ const SubscriptionDetailsCard = ({
             gap: 2
           }}>
             <Grid size={{ xs: 6, sm: 2 }}>
-              <Typography variant="body2">Price:</Typography>
+<Typography variant="body2">{t("admin.user.price")}</Typography>
             </Grid>
             <Grid size="auto">
               <Typography variant="body2" sx={{
@@ -235,7 +238,7 @@ const SubscriptionDetailsCard = ({
                 alignItems: "center"
               }}>
                 <Grid size={{ xs: 6, sm: 2 }}>
-                  <Typography variant="body2">API Access:</Typography>
+<Typography variant="body2">{t("admin.user.apiAccess")}</Typography>
                 </Grid>
                 <Grid size="auto">
                   <FormControlLabel
@@ -247,7 +250,7 @@ const SubscriptionDetailsCard = ({
                         }
                       />
                     }
-                    label="Allowed"
+                    label={t("admin.user.allowed")}
                   />
                 </Grid>
               </Grid>
@@ -257,7 +260,7 @@ const SubscriptionDetailsCard = ({
                   overflow: "auto"
                 }}>
                   <Grid size={{ xs: 6, sm: 2 }}>
-                    <Typography variant="body2">API Key:</Typography>
+<Typography variant="body2">{t("admin.user.apiKey")}</Typography>
                   </Grid>
                   <Grid size="auto">
                     <Typography component="code">

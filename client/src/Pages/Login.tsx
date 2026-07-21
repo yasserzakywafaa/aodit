@@ -1,4 +1,5 @@
 import { Box, Container, Divider, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import EmailPasswordForm from "src/components/shared/Auth/EmailPasswordForm";
@@ -12,6 +13,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const { t } = useTranslation(["auth", "common"]);
   const navigate = useNavigate();
   const {
     store: {
@@ -20,7 +22,6 @@ const LoginPage = () => {
   } = useApplicationContext();
 
   useEffect(() => {
-    // Check BOTH localStorage AND context to be safe
     const isAuthenticated = localStorage.getItem(
       APP_CONSTANTS.LOCAL_STORAGE.AUTHENTICATED,
     );
@@ -28,7 +29,6 @@ const LoginPage = () => {
       APP_CONSTANTS.LOCAL_STORAGE.USER,
     );
 
-    // Only redirect if BOTH localStorage says authenticated AND user exists in context
     if (
       isAuthenticated === "true" &&
       hasUserInStorage !== "null" &&
@@ -38,7 +38,6 @@ const LoginPage = () => {
     }
   }, [auth, navigate]);
 
-  // Check localStorage before rendering to prevent flash
   const isAuthenticated = localStorage.getItem(
     APP_CONSTANTS.LOCAL_STORAGE.AUTHENTICATED,
   );
@@ -55,7 +54,7 @@ const LoginPage = () => {
   }
 
   return (
-    <Page title="Login | aodit" noIndex>
+    <Page title={t("auth:loginPageTitle")} noIndex>
       <Container
         sx={{
           display: "flex",
@@ -76,7 +75,7 @@ const LoginPage = () => {
           <LockOpenOutlined color="primary" sx={{ m: 1 }} />
 
           <Typography component="h1" variant="h5">
-            Login to your account
+            {t("auth:loginHeading")}
           </Typography>
         </Box>
 
@@ -85,13 +84,16 @@ const LoginPage = () => {
             display: "flex",
             flexDirection: "column",
             gap: 2,
-            alignItems: "center"
-          }}>
+            alignItems: "center",
+          }}
+        >
           {!APP_CONSTANTS.IS_ON_PREM && (
             <>
               <SocialLogin authType="login" />
               <PhoneAuth authType="login" />
-              <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+              <Divider sx={{ width: "100%", maxWidth: 360 }}>
+                {t("common:or")}
+              </Divider>
             </>
           )}
           <EmailPasswordForm mode="login" />

@@ -12,11 +12,13 @@ import { getCurrencyCode } from "@yasserzakywafaa/client-core";
 import { routes } from "src/application/routes";
 import { useDeviceSize } from "@yasserzakywafaa/client-core/web";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { usePaymentContext } from "src/components/shared/Payment/store/Provider";
 import { usePricing } from "src/components/shared/Pricing/usePricing";
 import { usePricingContext } from "./store/Provider";
 
 const PricingPage = () => {
+  const { t } = useTranslation("page");
   const {
     store: {
       state: { isFetching },
@@ -66,11 +68,11 @@ const PricingPage = () => {
   // Generate Breadcrumb schema
   const breadcrumbSchema = useMemo(() => {
     const breadcrumbs = [
-      { name: "Home", url: routes.features },
-      { name: "Pricing", url: routes.pricing },
+      { name: t("breadcrumb.home"), url: routes.features },
+      { name: t("breadcrumb.pricing"), url: routes.pricing },
     ];
     return createBreadcrumbSchema(breadcrumbs);
-  }, []);
+  }, [t]);
 
   // Inject Schema.org structured data
   useSchemaOrg(productListSchema, "product-list-schema");
@@ -78,7 +80,7 @@ const PricingPage = () => {
 
   return (
     <Page
-      title="Pricing for Agencies | Aodit"
+      title={t("pricing.pageTitle")}
       className="pricing-page"
       isLoading={isFetching}
     >

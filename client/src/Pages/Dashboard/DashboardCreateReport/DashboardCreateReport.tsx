@@ -15,8 +15,10 @@ import { routes } from "src/application/routes";
 import { useDashboardCreateReportContext } from "./store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 
 const DashboardCreateReport = () => {
+  const { t } = useTranslation("report");
   const navigate = useNavigate();
   const {
     store: {
@@ -64,7 +66,7 @@ const DashboardCreateReport = () => {
     <Container sx={{ margin: "0" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography variant="h4" component="h1" color="primary" gutterBottom>
-          Create New Report
+          {t("create.title")}
         </Typography>
       </Box>
       <Grid container spacing={3} sx={{ mt: 1 }}>
@@ -79,26 +81,26 @@ const DashboardCreateReport = () => {
                     fontWeight: 600,
                     mb: 2
                   }}>
-                  Report details
+                  {t("create.details")}
                 </Typography>
                 <TextField
-                  label="Report Name"
+                  label={t("name")}
                   name="name"
                   value={report.name ?? ""}
                   onChange={handleChange}
-                  placeholder="e.g. Healthcare Agent Risk 2026"
+                  placeholder={t("create.namePlaceholder")}
                   required
                   fullWidth
                   sx={{ mb: 2 }}
                 />
                 <TextField
-                  label="Description"
+                  label={t("description")}
                   name="description"
                   multiline
                   rows={4}
                   value={report.description ?? ""}
                   onChange={handleChange}
-                  placeholder="Describe the AI agent use case, sector, and risk context (e.g. Banking chatbot handling loan applications)"
+                  placeholder={t("create.descriptionPlaceholder")}
                   required
                   fullWidth
                 />
@@ -111,7 +113,7 @@ const DashboardCreateReport = () => {
               disabled={!report.name?.trim() || !report.description?.trim()}
               sx={{ mt: 3 }}
             >
-              Go to Report Config
+              {t("create.goToConfig")}
             </Button>
           </Box>
         </Grid>
@@ -135,7 +137,7 @@ const DashboardCreateReport = () => {
                 letterSpacing: "0.02em",
               }}
             >
-              Next step: Report Config
+              {t("create.nextStepTitle")}
             </Typography>
             <Typography
               variant="body1"
@@ -145,18 +147,18 @@ const DashboardCreateReport = () => {
                 mb: 2,
               }}
             >
-              After creating your report, you’ll configure scenarios per
-              dimension, dimension weights, and choose which AI models to test
-              and evaluate. You can then run the report and view results in the
-              <Typography
-                component="span"
-                sx={{
-                  fontSize: "inherit",
-                  color: "primary.main"
-                }}>
-                aodit
-              </Typography>{" "}
-              framework.
+              <Trans
+                i18nKey="create.nextStepBody"
+                ns="report"
+                components={{
+                  brand: (
+                    <Typography
+                      component="span"
+                      sx={{ fontSize: "inherit", color: "primary.main" }}
+                    />
+                  ),
+                }}
+              />
             </Typography>
             <Box
               sx={{
@@ -169,10 +171,7 @@ const DashboardCreateReport = () => {
               }}
             >
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Scenarios and weights define how many test cases run per
-                dimension and how each dimension contributes to the composite
-                score. Models to test are the agents you want to evaluate; the
-                evaluator model judges the results.
+                {t("create.tip")}
               </Typography>
             </Box>
           </Box>

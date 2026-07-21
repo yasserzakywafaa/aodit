@@ -8,6 +8,7 @@ import { Box, Chip, Typography } from "@mui/material";
 
 import DataGridRowActionsMenu from "./dataGridRowActionsMenu";
 import { GridColDef } from "@mui/x-data-grid";
+import type { TFunction } from "i18next";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
 
 export interface DashboardUsersGridFields {
@@ -38,14 +39,14 @@ export const getUserTypeColor = (role: UserRole) => {
   }
 };
 
-export const getUserTypeLabel = (role: UserRole) => {
+export const getUserTypeLabel = (role: UserRole, t: TFunction<"dashboard">) => {
   switch (role) {
     case UserRole.super_admin:
-      return "Super Admin";
+      return t("admin.users.roleSuperAdmin");
     case UserRole.admin:
-      return "Admin";
+      return t("admin.users.roleAdmin");
     case UserRole.user:
-      return "Regular";
+      return t("admin.users.roleRegular");
     default:
       return role;
   }
@@ -66,16 +67,16 @@ export const getUserStatusColor = (status: UserStatus) => {
   }
 };
 
-export const getAuthSourceLabel = (provider?: AuthProviderEnum): string => {
+export const getAuthSourceLabel = (provider: AuthProviderEnum | undefined, t: TFunction<"dashboard">): string => {
   switch (provider) {
     case AuthProviderEnum.google:
-      return "Google";
+      return t("admin.users.sourceGoogle");
     case AuthProviderEnum.linkedin:
-      return "LinkedIn";
+      return t("admin.users.sourceLinkedIn");
     case AuthProviderEnum.phone:
-      return "Phone";
+      return t("admin.users.sourcePhone");
     case AuthProviderEnum.email:
-      return "Email";
+      return t("admin.users.sourceEmail");
     default:
       return "—";
   }
@@ -83,6 +84,7 @@ export const getAuthSourceLabel = (provider?: AuthProviderEnum): string => {
 
 export const getDashboardUsersDataGridConfig = (
   users: User[],
+  t: TFunction<"dashboard">,
 ): DashboardUsersGridResult => {
   if (!users || users.length === 0) return { rows: [], columns: [] };
 
@@ -109,12 +111,12 @@ export const getDashboardUsersDataGridConfig = (
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: "user",
-      headerName: "USER",
+      headerName: t("admin.users.columnUser"),
       editable: false,
       sortable: true,
       minWidth: 200,
       flex: 1,
-      description: "User information",
+      description: t("admin.users.columnUserDescription"),
       valueGetter: (value, row) => {
         const { givenName = "", familyName = "" } = row.user.name;
         return `${givenName} ${familyName}`.trim();
@@ -163,7 +165,7 @@ export const getDashboardUsersDataGridConfig = (
               <Typography variant="caption" sx={{
                 color: "text.secondary"
               }}>
-                ID {displayId}
+                {t("grid.idLabel")} {displayId}
               </Typography>
             </Box>
           </Box>
@@ -172,29 +174,29 @@ export const getDashboardUsersDataGridConfig = (
     },
     {
       field: "email",
-      headerName: "EMAIL",
+      headerName: t("admin.users.columnEmail"),
       editable: false,
       sortable: true,
       minWidth: 220,
       flex: 1,
       display: "flex",
-      description: "User email address",
+      description: t("admin.users.columnEmailDescription"),
       renderCell: (params) => (
         <Typography variant="body2">{params.row.email}</Typography>
       ),
     },
     {
       field: "type",
-      headerName: "TYPE",
+      headerName: t("admin.users.columnType"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
       display: "flex",
-      description: "User account type",
+      description: t("admin.users.columnTypeDescription"),
       renderCell: (params) => (
         <Chip
-          label={getUserTypeLabel(params.row.type)}
+          label={getUserTypeLabel(params.row.type, t)}
           color={getUserTypeColor(params.row.type) as any}
           size="small"
         />
@@ -202,16 +204,16 @@ export const getDashboardUsersDataGridConfig = (
     },
     {
       field: "source",
-      headerName: "SOURCE",
+      headerName: t("admin.users.columnSource"),
       editable: false,
       sortable: true,
       minWidth: 110,
       flex: 1,
       display: "flex",
-      description: "Authentication source",
+      description: t("admin.users.columnSourceDescription"),
       renderCell: (params) => (
         <Chip
-          label={getAuthSourceLabel(params.row.source)}
+          label={getAuthSourceLabel(params.row.source, t)}
           color={params.row.source ? "primary" : "default"}
           size="small"
           variant={params.row.source ? "filled" : "outlined"}
@@ -220,38 +222,37 @@ export const getDashboardUsersDataGridConfig = (
     },
     {
       field: "projects",
-      headerName: "PROJECTS",
+      headerName: t("admin.users.columnProjects"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
       display: "flex",
-      description: "Number of projects",
+      description: t("admin.users.columnProjectsDescription"),
     },
     {
       field: "joinDate",
-      headerName: "JOIN DATE",
+      headerName: t("admin.users.columnJoinDate"),
       editable: false,
       sortable: true,
       minWidth: 100,
       flex: 1,
       display: "flex",
-      description: "Date user joined",
+      description: t("admin.users.columnJoinDateDescription"),
     },
     {
       field: "status",
-      headerName: "STATUS",
+      headerName: t("admin.users.columnStatus"),
       editable: false,
       sortable: true,
       minWidth: 120,
       flex: 1,
       display: "flex",
-      description: "User account status",
+      description: t("admin.users.columnStatusDescription"),
       renderCell: (params) => (
         <Chip
           label={
-            params.row.status.charAt(0).toUpperCase() +
-            params.row.status.slice(1)
+            t(`admin.users.statusValues.${params.row.status}`, { defaultValue: params.row.status })
           }
           color={getUserStatusColor(params.row.status) as any}
           size="small"
@@ -262,7 +263,7 @@ export const getDashboardUsersDataGridConfig = (
       field: "action",
       align: "right",
       type: "actions",
-      headerName: "ACTIONS",
+      headerName: t("admin.users.columnActions"),
       headerAlign: "right",
       flex: 1,
       minWidth: 100,

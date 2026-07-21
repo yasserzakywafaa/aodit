@@ -4,6 +4,7 @@ import { Google as GoogleIcon } from "@mui/icons-material";
 import React from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { useTranslation } from "react-i18next";
 
 interface OAuth2GoogleAuthProps {
   authType?: "login" | "register";
@@ -15,6 +16,7 @@ const GoogleAuth: React.FC<OAuth2GoogleAuthProps> = ({
   disabled = false,
 }) => {
   const isRegister = authType === "register";
+  const { t } = useTranslation("auth");
   const { store: loginStore } = useLoginModalContext();
   const { store: registerStore } = useRegisterModalContext();
 
@@ -41,7 +43,7 @@ const GoogleAuth: React.FC<OAuth2GoogleAuthProps> = ({
       }}
     >
       <GoogleIcon />
-      {isRegister ? "Register with Google" : "Login with Google"}
+      {isRegister ? t("registerWithGoogle") : t("loginWithGoogle")}
     </Button>
   );
 };

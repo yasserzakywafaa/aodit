@@ -5,8 +5,10 @@ import { dataGridStyle } from "src/application/shared/themes";
 import { getDashboardAdminReportsDataGridConfig } from "./features/dataGridConfig";
 import { useDashboardAdminReportsContext } from "./store/Provider";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const DashboardAdminReports = () => {
+  const { t } = useTranslation("dashboard");
   const {
     store: {
       state: { isFetching, reports, paging },
@@ -14,7 +16,7 @@ const DashboardAdminReports = () => {
     manager: { setUp, handleGetReportsByPage },
   } = useDashboardAdminReportsContext();
 
-  const config = getDashboardAdminReportsDataGridConfig(reports);
+  const config = getDashboardAdminReportsDataGridConfig(reports, t);
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     const pageNumber = model.page + 1;
@@ -29,7 +31,7 @@ const DashboardAdminReports = () => {
   return (
     <Box>
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        Reports
+        {t("reports.title")}
       </Typography>
       <Typography
         variant="body1"
@@ -38,8 +40,8 @@ const DashboardAdminReports = () => {
           mb: 3
         }}>
         {paging.totalCount
-          ? `${paging.totalCount} total`
-          : "Manage all reports across users from here."}
+          ? t("totalCount", { count: paging.totalCount })
+          : t("reports.adminSubtitle")}
       </Typography>
       <Box sx={{ overflowX: "auto", position: "relative", width: "100%" }}>
         <DataGrid

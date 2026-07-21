@@ -28,6 +28,7 @@ import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useApplicationContext } from "src/application/store/Provider";
 import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePricing } from "./usePricing";
+import { useTranslation } from "react-i18next";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
@@ -37,6 +38,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 interface PricingTableProps {}
 
 const PricingTable: React.FC<PricingTableProps> = () => {
+  const { t } = useTranslation("page");
   usePaymentCatalog();
 
   const { plansForTable, getPrice, getCurrency } = usePricing();
@@ -69,10 +71,10 @@ const PricingTable: React.FC<PricingTableProps> = () => {
         }}
       >
         <Typography component="h2" variant="h4" color="primary">
-          Pricing
+          {t("pricing.title")}
         </Typography>
         <Typography variant="subtitle1" align="center" color="textSecondary">
-          We have a wide range of packages for you to choose from
+          {t("pricing.subtitle")}
         </Typography>
       </Box>
       <TableContainer
@@ -82,7 +84,7 @@ const PricingTable: React.FC<PricingTableProps> = () => {
           backgroundColor: "transparent",
         }}
       >
-        <Table sx={{ minWidth: 900 }} aria-label="pricing table">
+        <Table sx={{ minWidth: 900 }} aria-label={t("pricing.tableAriaLabel")}>
           <TableHead>
             <TableRow>
               <StyledTableCell
@@ -92,7 +94,7 @@ const PricingTable: React.FC<PricingTableProps> = () => {
                 }}
               >
                 <Typography component="h3" variant="subtitle1">
-                  Plans
+                  {t("pricing.plans")}
                 </Typography>
 
                 <Loyalty
@@ -166,7 +168,7 @@ const PricingTable: React.FC<PricingTableProps> = () => {
                           {getPrice(plan.product).monthly}
                         </Typography>
                         <Typography component="h4" variant="subtitle1">
-                          /month
+                          {t("pricing.perMonth")}
                         </Typography>
                       </>
                     ) : (

@@ -12,6 +12,7 @@ import {
 import { User, UserRole } from "src/shared/types/user";
 
 import { AdminPanelSettings as AdminPanelSettingsIcon } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 interface RoleSelectorProps {
   user: User | null;
@@ -20,6 +21,7 @@ interface RoleSelectorProps {
 }
 
 const RoleSelector = ({ user, value, onChange }: RoleSelectorProps) => {
+  const { t } = useTranslation("dashboard");
   if (!user) {
     return null;
   }
@@ -31,11 +33,11 @@ const RoleSelector = ({ user, value, onChange }: RoleSelectorProps) => {
   const getRoleLabel = (role: UserRole) => {
     switch (role) {
       case UserRole.super_admin:
-        return "Super Admin";
+        return t("admin.users.roleSuperAdmin");
       case UserRole.admin:
-        return "Admin";
+        return t("admin.users.roleAdmin");
       case UserRole.user:
-        return "User";
+        return t("admin.user.roleUser");
       default:
         return role;
     }
@@ -51,15 +53,15 @@ const RoleSelector = ({ user, value, onChange }: RoleSelectorProps) => {
             mb: 2
           }}>
           <AdminPanelSettingsIcon color="primary" sx={{ mr: 1 }} />
-          <Typography variant="h6">User Role</Typography>
+<Typography variant="h6">{t("admin.user.userRole")}</Typography>
         </Box>
         <FormControl fullWidth>
-          <InputLabel id="role-select-label">Role</InputLabel>
+<InputLabel id="role-select-label">{t("admin.user.role")}</InputLabel>
           <Select
             labelId="role-select-label"
             id="role-select"
             value={value}
-            label="Role"
+            label={t("admin.user.role")}
             onChange={handleRoleChange}
           >
             {Object.values(UserRole).map((role) => (
@@ -75,7 +77,7 @@ const RoleSelector = ({ user, value, onChange }: RoleSelectorProps) => {
             color: "text.secondary",
             mt: 1
           }}>
-          User's role to control their permissions and access level.
+{t("admin.user.roleHelp")}
         </Typography>
       </CardContent>
     </Card>

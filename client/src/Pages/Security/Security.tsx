@@ -26,32 +26,29 @@ import {
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const documentationItems = [
-  "Security Policy",
-  "Data Processing Agreement",
-  "Technical & Organisational Measures",
-  "Business Continuity Plan",
-  "Terms & Conditions",
-];
-
 const SecurityPage = () => {
+  const { t } = useTranslation(["page", "common"]);
   const navigate = useNavigate();
+  const documentationItems = t("security.docItems", {
+    returnObjects: true,
+  }) as string[];
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "On-Premise AI Evaluation Security",
-      "Security architecture and data handling model for aodit on-premise deployment in regulated fintechs and insurance companies.",
+      t("security.schemaTitle"),
+      t("security.schemaDescription"),
       routes.security,
     );
-  }, []);
+  }, [t]);
 
   useSchemaOrg(webPageSchema, "security-webpage-schema");
 
   return (
     <Page
-      title="On-Premise AI Evaluation for Fintechs and Insurance companies | aodit"
+      title={t("security.pageTitle")}
       className="security-page"
       isLoading={false}
     >
@@ -73,7 +70,7 @@ const SecurityPage = () => {
               color: "text.primary",
             }}
           >
-            On-Premise by Design
+            {t("security.title")}
           </Typography>
           <Typography
             sx={{
@@ -91,9 +88,7 @@ const SecurityPage = () => {
               }}>
               aodit
             </Typography>{" "}
-            is deployed fully within client infrastructure. No data leaves your
-            environment. SwissLI AG has no access to AI agent inputs, outputs,
-            or logs by default.
+            {t("security.intro")}
           </Typography>
 
           {/* Deployment flow */}
@@ -113,12 +108,12 @@ const SecurityPage = () => {
                     sx={{ fontSize: 28, color: secondaryColor, mb: 1 }}
                   />
                   <Typography sx={{ fontWeight: 600, color: "text.primary" }}>
-                    Your Infrastructure
+                    {t("security.yourInfra")}
                   </Typography>
                   <Typography variant="body2" sx={{
                     color: "text.secondary"
                   }}>
-                    On-premise / airgapped
+                    {t("security.onPremise")}
                   </Typography>
                 </Box>
               </Grid>
@@ -158,12 +153,12 @@ const SecurityPage = () => {
                       }}>
                       aodit
                     </Typography>{" "}
-                    Evaluation
+                    {t("security.evaluation")}
                   </Typography>
                   <Typography variant="body2" sx={{
                     color: "text.secondary"
                   }}>
-                    Runs inside your environment
+                    {t("security.runsInside")}
                   </Typography>
                 </Box>
               </Grid>
@@ -194,12 +189,12 @@ const SecurityPage = () => {
                     sx={{ fontSize: 28, color: secondaryColor, mb: 1 }}
                   />
                   <Typography sx={{ fontWeight: 600, color: "text.primary" }}>
-                    Results Stay In-House
+                    {t("security.resultsInHouse")}
                   </Typography>
                   <Typography variant="body2" sx={{
                     color: "text.secondary"
                   }}>
-                    No external data transfer
+                    {t("security.noTransfer")}
                   </Typography>
                 </Box>
               </Grid>
@@ -218,15 +213,10 @@ const SecurityPage = () => {
                   variant="h5"
                   sx={{ mb: 2, fontWeight: 600, color: "text.primary" }}
                 >
-                  Deployment architecture
+                  {t("security.deploymentArch")}
                 </Typography>
                 <List sx={{ listStyleType: "disc", pl: 3 }}>
-                  {[
-                    "On-premise deployment inside client infrastructure",
-                    "Airgapped operation supported",
-                    "No external data transfer",
-                    "No persistent storage outside client environment",
-                  ].map((item) => (
+                  {(t("security.archItems", { returnObjects: true }) as string[]).map((item) => (
                     <ListItem
                       key={item}
                       sx={{ display: "list-item", py: 0.25 }}
@@ -245,7 +235,7 @@ const SecurityPage = () => {
                     color: "text.primary",
                   }}
                 >
-                  Development and testing environments
+                  {t("security.devEnvs")}
                 </Typography>
                 <Typography
                   sx={{
@@ -260,10 +250,7 @@ const SecurityPage = () => {
                     }}>
                     aodit
                   </Typography>{" "}
-                  evaluation frameworks and adversarial scenarios are developed
-                  in controlled environments. No client data is ever used in
-                  development or testing. All client-specific evaluations are
-                  executed exclusively within client on-premise infrastructure.
+                  {t("security.devEnvsBody")}
                 </Typography>
 
                 <Typography
@@ -275,7 +262,7 @@ const SecurityPage = () => {
                     color: "text.primary",
                   }}
                 >
-                  Client-controlled access
+                  {t("security.clientAccess")}
                 </Typography>
                 <Typography
                   sx={{
@@ -283,16 +270,14 @@ const SecurityPage = () => {
                     mb: 1,
                     lineHeight: 1.7
                   }}>
-                  Where required, SwissLI AG may access systems via temporary
-                  API endpoints or secure tunneled connections.
+                  {t("security.clientAccessP1")}
                 </Typography>
                 <Typography
                   sx={{
                     color: "text.secondary",
                     lineHeight: 1.7
                   }}>
-                  All access is explicitly approved by the client, time-limited,
-                  logged, and auditable.
+                  {t("security.clientAccessP2")}
                 </Typography>
               </Paper>
             </Grid>
@@ -307,14 +292,9 @@ const SecurityPage = () => {
                   variant="h5"
                   sx={{ mb: 2, fontWeight: 600, color: "text.primary" }}
                 >
-                  Data handling principles
+                  {t("security.dataPrinciples")}
                 </Typography>
-                {[
-                  "SwissLI AG does not collect end-user data",
-                  "SwissLI AG does not store AI agent transcripts",
-                  "SwissLI AG does not train models on client data",
-                  "SwissLI AG does not access production outputs by default",
-                ].map((item) => (
+                {(t("security.dataItems", { returnObjects: true }) as string[]).map((item) => (
                   <Box
                     key={item}
                     sx={{
@@ -346,15 +326,9 @@ const SecurityPage = () => {
                   variant="h5"
                   sx={{ mb: 2, fontWeight: 600, color: "text.primary" }}
                 >
-                  Security controls
+                  {t("security.securityControls")}
                 </Typography>
-                {[
-                  "TLS 1.2+ encrypted communication",
-                  "Zero-trust architecture",
-                  "Role-based access control",
-                  "Audit logging of administrative actions",
-                  "Encrypted storage for internal systems",
-                ].map((item) => (
+                {(t("security.controlItems", { returnObjects: true }) as string[]).map((item) => (
                   <Box
                     key={item}
                     sx={{
@@ -398,15 +372,14 @@ const SecurityPage = () => {
                   variant="h5"
                   sx={{ mb: 1.5, fontWeight: 600, color: "text.primary" }}
                 >
-                  Swiss governance
+                  {t("security.swissGov")}
                 </Typography>
                 <Typography
                   sx={{
                     color: "text.secondary",
                     lineHeight: 1.7
                   }}>
-                  SwissLI AG is a Swiss company headquartered in Luzern and
-                  governed by Swiss law.{" "}
+                  {t("security.swissGovLead")}{" "}
                   <Typography
                     component="span"
                     sx={{
@@ -415,8 +388,7 @@ const SecurityPage = () => {
                     }}>
                     aodit
                   </Typography>{" "}
-                  is designed for Swiss banking secrecy and FINMA-regulated
-                  deployment expectations.
+                  {t("security.swissGovTail")}
                 </Typography>
               </Paper>
             </Grid>
@@ -427,14 +399,14 @@ const SecurityPage = () => {
                   variant="h5"
                   sx={{ mb: 1.5, fontWeight: 600, color: "text.primary" }}
                 >
-                  Documentation
+                  {t("security.documentation")}
                 </Typography>
                 <Typography
                   sx={{
                     color: "text.secondary",
                     mb: 2
                   }}>
-                  Available under NDA during vendor onboarding:
+                  {t("security.docIntro")}
                 </Typography>
                 {documentationItems.map((item) => (
                   <Box
@@ -464,14 +436,14 @@ const SecurityPage = () => {
                     endIcon={<ArrowForward />}
                     onClick={() => navigate(routes.contact)}
                   >
-                    Request Security Package
+                    {t("security.requestSecurityPackage")}
                   </Button>
                   <Button
                     variant="outlined"
                     endIcon={<ArrowForward />}
                     onClick={() => navigate(routes.demo)}
                   >
-                    Try Live Demo
+                    {t("common:footer.tryLiveDemo")}
                   </Button>
                 </Stack>
               </Paper>

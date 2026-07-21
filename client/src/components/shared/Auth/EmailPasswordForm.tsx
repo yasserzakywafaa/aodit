@@ -1,5 +1,6 @@
 import { Alert, Box, Button, TextField } from "@mui/material";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import END_POINTS from "src/application/shared/endpoints";
@@ -18,6 +19,7 @@ interface AuthResponse {
 }
 
 const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
+  const { t } = useTranslation("auth");
   const isRegister = mode === "register";
   const navigate = useNavigate();
   const {
@@ -56,7 +58,6 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
         user,
       });
 
-      // Persist to localStorage (matches existing auth pattern)
       localStorage.setItem(APP_CONSTANTS.LOCAL_STORAGE.AUTHENTICATED, "true");
       localStorage.setItem(
         APP_CONSTANTS.LOCAL_STORAGE.USER,
@@ -67,7 +68,7 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
     } catch (err: any) {
       const message =
         err.response?.data?.message ||
-        (isRegister ? "Registration failed." : "Login failed.");
+        (isRegister ? t("registrationFailed") : t("loginFailed"));
       setError(message);
     } finally {
       setIsSubmitting(false);
@@ -83,14 +84,15 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
         flexDirection: "column",
         gap: 2,
         width: "100%",
-        maxWidth: 360
-      }}>
+        maxWidth: 360,
+      }}
+    >
       {isRegister && (
         <>
           <TextField
             required
             fullWidth
-            label="First Name"
+            label={t("firstName")}
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             autoComplete="given-name"
@@ -98,7 +100,7 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
           />
           <TextField
             fullWidth
-            label="Last Name"
+            label={t("lastName")}
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             autoComplete="family-name"
@@ -110,7 +112,7 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
         required
         fullWidth
         type="email"
-        label="Email Address"
+        label={t("email")}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         autoComplete="email"
@@ -120,7 +122,7 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
         required
         fullWidth
         type="password"
-        label="Password"
+        label={t("password")}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         autoComplete={isRegister ? "new-password" : "current-password"}
@@ -140,11 +142,11 @@ const EmailPasswordForm: React.FC<EmailPasswordFormProps> = ({ mode }) => {
       >
         {isSubmitting
           ? isRegister
-            ? "Creating account…"
-            : "Signing in…"
+            ? t("creatingAccount")
+            : t("signingIn")
           : isRegister
-            ? "Create Account"
-            : "Login"}
+            ? t("createAccount")
+            : t("login")}
       </Button>
     </Box>
   );

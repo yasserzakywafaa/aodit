@@ -2,12 +2,14 @@ import { Box, Card, CardContent, Chip, Grid, Typography } from "@mui/material";
 import { User, UserStatus } from "src/shared/types/user";
 
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
+import { useTranslation } from "react-i18next";
 
 interface UserInfoCardProps {
   user: User | null;
 }
 
 const UserInfoCard = ({ user }: UserInfoCardProps) => {
+  const { t } = useTranslation("dashboard");
   if (!user) {
     return null;
   }
@@ -84,7 +86,7 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
               gap: 2
             }}>
               <Grid size={{ xs: 3, sm: 2 }}>
-                <Typography variant="body2">User ID:</Typography>
+<Typography variant="body2">{t("admin.user.userId")}</Typography>
               </Grid>
               <Grid size="auto">
                 <Typography variant="body2" sx={{
@@ -99,7 +101,7 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
               gap: 2
             }}>
               <Grid size={{ xs: 3, sm: 2 }}>
-                <Typography variant="body2">Created:</Typography>
+<Typography variant="body2">{t("admin.user.created")}</Typography>
               </Grid>
               <Grid size="auto">
                 <Typography variant="body2" sx={{
@@ -114,7 +116,7 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
               gap: 2
             }}>
               <Grid size={{ xs: 3, sm: 2 }}>
-                <Typography variant="body2">Last Login:</Typography>
+<Typography variant="body2">{t("admin.user.lastLogin")}</Typography>
               </Grid>
               <Grid size="auto">
                 <Typography variant="body2" sx={{
@@ -129,13 +131,13 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
               gap: 2
             }}>
               <Grid size={{ xs: 3, sm: 2 }}>
-                <Typography variant="body2">Subscription:</Typography>
+<Typography variant="body2">{t("admin.user.subscription")}</Typography>
               </Grid>
               <Grid size="auto">
                 <Typography variant="body2" sx={{
                   fontWeight: "bold"
                 }}>
-                  {user.subscription?.type || "N/A"}
+{user.subscription?.type || t("admin.user.notAvailable")}
                 </Typography>
               </Grid>
             </Grid>

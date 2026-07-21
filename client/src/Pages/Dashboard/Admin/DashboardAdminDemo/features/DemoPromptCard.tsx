@@ -1,8 +1,10 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 
 import { Description as DescriptionIcon } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 const DemoPromptCard = ({ systemPrompt }: { systemPrompt: string }) => {
+  const { t } = useTranslation("dashboard");
   return (
     <Card>
       <CardContent>
@@ -13,7 +15,7 @@ const DemoPromptCard = ({ systemPrompt }: { systemPrompt: string }) => {
             mb: 2
           }}>
           <DescriptionIcon color="primary" sx={{ mr: 1 }} />
-          <Typography variant="h6">System Prompt</Typography>
+<Typography variant="h6">{t("admin.demos.systemPrompt")}</Typography>
         </Box>
         <Box
           sx={(theme) => ({

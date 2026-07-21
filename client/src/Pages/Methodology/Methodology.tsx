@@ -18,26 +18,28 @@ import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const framework = getFrameworkDefinition(DEFAULT_FRAMEWORK_VERSION);
 
 const MethodologyPage = () => {
+  const { t } = useTranslation(["page", "common"]);
   const navigate = useNavigate();
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "AI Agent Testing Methodology",
-      "AODIT-6 methodology for independent AI agent behavioral evaluation across six dimensions and eight adversarial turns.",
+      t("methodology.schemaTitle"),
+      t("methodology.schemaDescription"),
       routes.methodology,
     );
-  }, []);
+  }, [t]);
 
   useSchemaOrg(webPageSchema, "methodology-webpage-schema");
 
   return (
     <Page
-      title="AI Agent Testing Methodology for Fintechs and Insurance companies | aodit"
+      title={t("methodology.pageTitle")}
       className="methodology-page"
       isLoading={false}
     >
@@ -62,7 +64,7 @@ const MethodologyPage = () => {
               textTransform: "uppercase",
             }}
           >
-            AODIT-6 behavioral evaluation framework
+            {t("methodology.eyebrow")}
           </Typography>
           <Typography
             variant="h2"
@@ -73,7 +75,7 @@ const MethodologyPage = () => {
               color: "text.primary",
             }}
           >
-            AI Agent Testing Methodology
+            {t("methodology.title")}
           </Typography>
           <Typography
             sx={{
@@ -91,10 +93,7 @@ const MethodologyPage = () => {
               }}>
               aodit
             </Typography>{" "}
-            evaluates how AI agents behave under stress, contradiction, and
-            adversarial pressure. The framework is designed for risk,
-            compliance, and audit teams that require independent evidence rather
-            than self-reported model performance.
+            {t("methodology.intro")}
           </Typography>
           <Paper
             variant="outlined"
@@ -112,16 +111,14 @@ const MethodologyPage = () => {
                 fontSize: 14,
               }}
             >
-              Who this is for
+              {t("methodology.whoForTitle")}
             </Typography>
             <Typography
               sx={{
                 color: "text.secondary",
                 fontSize: 14
               }}>
-              Risk teams, compliance officers, and audit functions who need
-              independent behavioral evidence rather than vendor-supplied
-              benchmarks.
+              {t("methodology.whoForBody")}
             </Typography>
           </Paper>
         </Container>
@@ -137,15 +134,14 @@ const MethodologyPage = () => {
               color: "text.primary",
             }}
           >
-            Six evaluation dimensions
+            {t("methodology.dimensionsTitle")}
           </Typography>
           <Typography
             sx={{
               color: "text.secondary",
               mb: 2
             }}>
-            Each dimension measures a distinct behavioral risk class using
-            structured multi-turn scenarios.
+            {t("methodology.dimensionsSubtitle")}
           </Typography>
           <Stack
             direction="row"
@@ -219,7 +215,7 @@ const MethodologyPage = () => {
               color: "text.primary",
             }}
           >
-            Eight-turn adversarial protocol
+            {t("methodology.protocolTitle")}
           </Typography>
           <Typography
             sx={{
@@ -227,8 +223,7 @@ const MethodologyPage = () => {
               mb: 4,
               maxWidth: 700
             }}>
-            Every evaluation runs an eight-turn sequence that increases pressure
-            progressively and then tests recovery.
+            {t("methodology.protocolSubtitle")}
           </Typography>
 
           <Box sx={{ display: "grid", gap: 0 }}>
@@ -315,7 +310,7 @@ const MethodologyPage = () => {
               color: "text.primary",
             }}
           >
-            Independent by design
+            {t("methodology.ctaTitle")}
           </Typography>
           <Typography
             sx={{
@@ -331,8 +326,7 @@ const MethodologyPage = () => {
               }}>
               aodit
             </Typography>{" "}
-            is an independent evaluation layer. It does not certify models,
-            replace governance frameworks, or access model weights.
+            {t("methodology.ctaBody")}
           </Typography>
           <Stack
             direction={{ xs: "column", sm: "row" }}
@@ -342,10 +336,10 @@ const MethodologyPage = () => {
             }}
           >
             <Button variant="contained" onClick={() => navigate(routes.contact)}>
-              Request Evaluation
+              {t("common:nav.requestEvaluation")}
             </Button>
             <Button variant="outlined" onClick={() => navigate(routes.demo)}>
-              Try Live Demo
+              {t("common:footer.tryLiveDemo")}
             </Button>
           </Stack>
         </Container>

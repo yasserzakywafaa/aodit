@@ -24,6 +24,7 @@ import {
 import { DemoTurnResult } from "src/shared/types/demoSession";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const scoreColor = (
   score: number,
@@ -33,13 +34,16 @@ const scoreColor = (
   return "error";
 };
 
-const scoreLabel = (score: number): string => {
+const scoreLabel = (
+  score: number,
+  t: (key: string) => string,
+): string => {
   const labels: Record<number, string> = {
-    1: "Critical",
-    2: "Weak",
-    3: "Acceptable",
-    4: "Strong",
-    5: "Excellent",
+    1: t("admin.demos.scoreLabels.critical"),
+    2: t("admin.demos.scoreLabels.weak"),
+    3: t("admin.demos.scoreLabels.acceptable"),
+    4: t("admin.demos.scoreLabels.strong"),
+    5: t("admin.demos.scoreLabels.excellent"),
   };
   return labels[score] ?? String(score);
 };
@@ -88,6 +92,7 @@ interface ReasoningDialogState {
 }
 
 const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
+  const { t } = useTranslation("dashboard");
   const [expandedTurns, setExpandedTurns] = useState<Set<number>>(
     () => new Set((turns ?? []).map((t) => t.turnIndex)),
   );
@@ -129,14 +134,14 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
             mb: 2
           }}>
           <ForumIcon color="primary" sx={{ mr: 1 }} />
-          <Typography variant="h6">Transcript</Typography>
+          <Typography variant="h6">{t("admin.demos.transcript")}</Typography>
         </Box>
 
         {!turns || turns.length === 0 ? (
           <Typography variant="body2" sx={{
             color: "text.secondary"
           }}>
-            No turns recorded for this demo.
+            {t("admin.demos.noTurns")}
           </Typography>
         ) : (
           <Box
@@ -191,7 +196,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                           fontWeight: 700,
                           flexShrink: 0
                         }}>
-                        Turn {turn.turnIndex}
+                        {t("admin.demos.turn", { index: turn.turnIndex })}
                       </Typography>
                       <Typography
                         variant="caption"
@@ -231,7 +236,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                         gap: 0.75
                       }}>
                       <Chip
-                        label={`${turn.score}/5 · ${scoreLabel(turn.score)}`}
+                        label={`${turn.score}/5 · ${scoreLabel(turn.score, t)}`}
                         color={scoreColor(turn.score)}
                         size="small"
                         sx={{
@@ -243,7 +248,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                         size="small"
                         variant="text"
                         startIcon={<InfoOutlined />}
-                        aria-label="View evaluation details"
+                        aria-label={t("admin.demos.viewEvaluationDetails")}
                         onClick={(e) => {
                           e.stopPropagation();
                           openReasoning(turn);
@@ -262,7 +267,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                           component="span"
                           sx={{ display: { xs: "none", sm: "inline" } }}
                         >
-                          Evaluation
+                          {t("admin.demos.evaluation")}
                         </Box>
                       </Button>
                     </Box>
@@ -277,7 +282,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                         }}>
                         <Chip
                           icon={<Bolt sx={{ fontSize: 16 }} />}
-                          label="Adversary"
+                          label={t("admin.demos.adversary")}
                           size="small"
                           color="error"
                           variant="outlined"
@@ -309,7 +314,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                         }}>
                         <Chip
                           icon={<SmartToy sx={{ fontSize: 16 }} />}
-                          label="Agent"
+                          label={t("admin.demos.agent")}
                           size="small"
                           color="primary"
                           variant="outlined"
@@ -368,7 +373,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                 lineHeight: 1.25,
                 width: "100%"
               }}>
-              Judge's Reasoning
+              {t("admin.demos.judgesReasoning")}
             </Typography>
             <Typography
               variant="caption"
@@ -376,7 +381,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                 color: "text.secondary",
                 whiteSpace: "nowrap"
               }}>
-              Turn {reasoningDialog.turnIndex}
+              {t("admin.demos.turn", { index: reasoningDialog.turnIndex })}
             </Typography>
           </Box>
           <Box
@@ -390,7 +395,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
             }}
           >
             <Chip
-              label={`${reasoningDialog.score}/5 · ${scoreLabel(reasoningDialog.score)}`}
+              label={`${reasoningDialog.score}/5 · ${scoreLabel(reasoningDialog.score, t)}`}
               color={scoreColor(reasoningDialog.score)}
               size="small"
               sx={{
@@ -404,7 +409,7 @@ const DemoTranscriptCard = ({ turns }: { turns: DemoTurnResult[] }) => {
                 setReasoningDialog((s) => ({ ...s, open: false }))
               }
               edge="end"
-              aria-label="Close"
+              aria-label={t("common:close")}
               sx={{ flexShrink: 0 }}
             >
               <Close fontSize="small" />

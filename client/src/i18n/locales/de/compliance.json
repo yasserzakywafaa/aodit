@@ -1,0 +1,63 @@
+{
+  "euAiAct": {
+    "pageTitle": "EU-KI-Verordnung | aodit",
+    "schemaTitle": "EU-KI-Verordnung",
+    "schemaDescription": "Überblick über Compliance-Themen der EU-KI-Verordnung einschließlich Risikoklassifizierung, technischer Dokumentation, Transparenzpflichten und Marktüberwachung.",
+    "title": "EU-KI-Verordnung",
+    "subtitle": "Europäischer Regulierungsrahmen für KI",
+    "intro": "Diese Seite skizziert zentrale Elemente der EU-KI-Verordnung, um Teams bei der Gestaltung von Kontrollen, der Erhebung von Nachweisen und der Vorbereitung auf Compliance-Arbeitsabläufe zu unterstützen.",
+    "focusAreas": "Schwerpunkte",
+    "items": [
+      {
+        "primary": "Risikobasierte Klassifizierung",
+        "secondary": "Identifizieren Sie verbotene, Hochrisiko- und begrenzte Risiko-Anwendungsfälle und wenden Sie die entsprechenden Pflichten an."
+      },
+      {
+        "primary": "Technische Dokumentation",
+        "secondary": "Erstellen Sie robuste Dokumentation, Protokolle und Rückverfolgbarkeitsartefakte für die aufsichtsrechtliche Prüfung."
+      },
+      {
+        "primary": "Transparenzanforderungen",
+        "secondary": "Stellen Sie klare nutzerseitige Offenlegungen bei der Interaktion mit KI-Systemen bereit."
+      },
+      {
+        "primary": "Marktüberwachung",
+        "secondary": "Verfolgen Sie Vorfälle, halten Sie die Meldebereitschaft aufrecht und bewerten Sie das Modellverhalten fortlaufend."
+      }
+    ]
+  },
+  "finma": {
+    "pageTitle": "FINMA KI-Leitfaden 08/2024 erklärt (Schweiz) | aodit",
+    "schemaTitle": "FINMA KI-Leitfaden 08/2024 erklärt (Schweiz)",
+    "schemaDescription": "Unabhängige verhaltensbezogene Kontrollschicht-Nachweise für FINMA-konforme KI-Tests, Überwachung und Risikoentscheidungen im Schweizer Finanzdienstleistungssektor.",
+    "eyebrow": "Regulatorische Ausrichtung",
+    "title": "FINMA KI-Leitfaden 08/2024",
+    "intro": "entspricht den Anforderungen der Schweizer Finanzmarktaufsicht an KI in regulierten Instituten.",
+    "introPrefix": "Wie",
+    "introSuffix": "den Anforderungen der Schweizer Finanzmarktaufsicht an KI in regulierten Instituten entspricht.",
+    "lifecycleTitlePrefix": "Wo",
+    "lifecycleTitleSuffix": "in den Lebenszyklus passt",
+    "published": "Veröffentlicht",
+    "audience": "Für CROs, Compliance-Beauftragte und Modellrisiko-Teams, die unabhängige KI-Testnachweise gegen FINMA-Anforderungen bewerten.",
+    "keyPrinciple": "Grundprinzip",
+    "lifecycleTitle": "Passt in den Lebenszyklus",
+    "phase": "Phase {{n}}",
+    "officialDoc": "Offizielles FINMA-Quelldokument",
+    "officialNote": "Verwenden Sie für Transparenz und Audit-Bereitschaft die offizielle FINMA-Mitteilung als primäre regulatorische Quelle.",
+    "downloadPdf": "Offizielles FINMA-PDF herunterladen",
+    "downloadSoon": "Download-Link folgt in Kürze",
+    "scorecardTitle": "FINMA-Leitfaden 08/2024 — Kontrollnachweis-Scorecard",
+    "scorecardIntro": "<strong>Stark</strong> bedeutet direkte verhaltensbezogene Nachweisabdeckung. <strong>Teilweise</strong> bedeutet nur unterstützende Nachweise. <strong>Nicht abgedeckt</strong> kennzeichnet eine bewusste Grenze.",
+    "otherStandards": "Weitere Standards",
+    "addedValue": "Mehrwert",
+    "riskIfNotUsed": "Risiko bei Nichtnutzung",
+    "disclaimer": "Haftungsausschluss",
+    "ctaTitle": "Unabhängige Nachweise für FINMA-konforme KI-Governance",
+    "ctaBody": "liefert verhaltensbezogene Stresstest-Nachweise, die Ihre interne Governance ergänzen — ohne standardmäßig auf Produktionssysteme zuzugreifen."
+  },
+  "levels": {
+    "strong": "Stark",
+    "partial": "Teilweise",
+    "notCovered": "Nicht abgedeckt"
+  }
+}

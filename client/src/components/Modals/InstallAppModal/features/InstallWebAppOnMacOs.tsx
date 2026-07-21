@@ -1,27 +1,41 @@
 import { IosShareOutlined } from "@mui/icons-material";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const InstallWebAppOnMacOs: React.FC = () => {
+  const { t } = useTranslation("page");
+
   return (
     <>
-      <Typography variant="body1" sx={{
-        textAlign: "center"
-      }}>
-        Install this app on your Mac and enjoy the native application
-        functionality.
+      <Typography
+        variant="body1"
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {t("installApp.macDescription")}
       </Typography>
       <br />
-      <Typography variant="body1" sx={{
-        textAlign: "center"
-      }}>
-        From
-        <span className="bold"> Safari </span> browser, <br />
-        simply tap the <IosShareOutlined color="primary" /> icon and then
+      <Typography
+        variant="body1"
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {t("installApp.fromBrowser")}
+        <span className="bold"> {t("installApp.macStep1")} </span>
+        {t("installApp.browserWord")}, <br />
+        {t("installApp.tapIconAndThen")}{" "}
+        <IosShareOutlined color="primary" /> {t("installApp.iconAndThen")}
         <br />
-        <Typography variant="button" color="primary" sx={{
-          textTransform: "capitalize"
-        }}>
-          "Add to Dock"
+        <Typography
+          variant="button"
+          color="primary"
+          sx={{
+            textTransform: "capitalize",
+          }}
+        >
+          "{t("installApp.macStep2")}"
         </Typography>
       </Typography>
     </>

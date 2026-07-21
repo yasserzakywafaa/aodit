@@ -7,8 +7,10 @@ import { routes } from "src/application/routes";
 import { useDashboardAgentsContext } from "./store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const DashboardAgents = () => {
+  const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
   const {
     store: {
@@ -17,7 +19,7 @@ const DashboardAgents = () => {
     manager: { setUp, handleGetAgentsByPage },
   } = useDashboardAgentsContext();
 
-  const config = getDashboardAgentsDataGridConfig(agents);
+  const config = getDashboardAgentsDataGridConfig(agents, t);
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     const pageNumber = model.page + 1;
@@ -38,7 +40,7 @@ const DashboardAgents = () => {
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Stack spacing={2}>
           <Typography variant="h4" component="h1" color="primary" gutterBottom>
-            Agents
+            {t("agents.title")}
           </Typography>
           <Typography
             variant="body1"
@@ -47,8 +49,8 @@ const DashboardAgents = () => {
               mb: 3
             }}>
             {paging.totalCount
-              ? `${paging.totalCount} total`
-              : "Manage AI agents and their human owners from here."}
+              ? t("agents.totalCount", { count: paging.totalCount })
+              : t("agents.subtitle")}
           </Typography>
         </Stack>
 
@@ -61,7 +63,7 @@ const DashboardAgents = () => {
             size="large"
             onClick={handleCreateAgentClick}
           >
-            Create Agent
+            {t("agents.createAgent")}
           </Button>
         </Box>
       </Box>

@@ -1,32 +1,44 @@
 import { InstallDesktopOutlined } from "@mui/icons-material";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
-const InstallWebAppOnMacOs: React.FC = () => {
+const InstallWebAppOnWindows: React.FC = () => {
+  const { t } = useTranslation("page");
+
   return (
     <>
-      <Typography variant="body1" sx={{
-        textAlign: "center"
-      }}>
-        Install this app on your Windows computer and enjoy the desktop
-        application functionality.
+      <Typography
+        variant="body1"
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {t("installApp.windowsDescription")}
       </Typography>
       <br />
-      <Typography variant="body1" sx={{
-        textAlign: "center"
-      }}>
-        From
-        <span className="bold"> Chrome </span> browser, at the top next to the
-        URL, <br />
-        simply click the <InstallDesktopOutlined color="primary" /> icon and
-        then{" "}
-        <Typography variant="button" color="primary" sx={{
-          textTransform: "capitalize"
-        }}>
-          "Install"
+      <Typography
+        variant="body1"
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {t("installApp.fromBrowser")}
+        <span className="bold"> {t("installApp.windowsStep1")} </span>
+        {t("installApp.browserWord")}, {t("installApp.windowsFromChrome")} <br />
+        {t("installApp.clickIconAndThen")}{" "}
+        <InstallDesktopOutlined color="primary" /> {t("installApp.iconAndThen")}{" "}
+        <Typography
+          variant="button"
+          color="primary"
+          sx={{
+            textTransform: "capitalize",
+          }}
+        >
+          "{t("installApp.windowsButton")}"
         </Typography>
       </Typography>
     </>
   );
 };
 
-export default InstallWebAppOnMacOs;
+export default InstallWebAppOnWindows;

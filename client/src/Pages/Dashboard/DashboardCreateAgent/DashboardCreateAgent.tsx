@@ -16,8 +16,10 @@ import { routes } from "src/application/routes";
 import { useDashboardCreateAgentContext } from "./store/Provider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 
 const DashboardCreateAgent = () => {
+  const { t } = useTranslation("agent");
   const navigate = useNavigate();
   const {
     store: {
@@ -86,7 +88,7 @@ const DashboardCreateAgent = () => {
     <Container sx={{ margin: "0" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography variant="h4" component="h1" color="primary" gutterBottom>
-          Create New Agent
+          {t("create.title")}
         </Typography>
       </Box>
       <Grid container spacing={3} sx={{ mt: 1 }}>
@@ -108,66 +110,66 @@ const DashboardCreateAgent = () => {
                     fontWeight: 600,
                     mb: 2
                   }}>
-                  Agent details
+                  {t("create.details")}
                 </Typography>
                 <TextField
-                  label="Agent Name"
+                  label={t("name")}
                   name="name"
                   value={agent.name ?? ""}
                   onChange={handleChange}
-                  placeholder="e.g. Banking Loan Advisor"
+                  placeholder={t("create.namePlaceholder")}
                   required
                   fullWidth
                   sx={{ mb: 2 }}
                 />
                 <TextField
-                  label="Description"
+                  label={t("description")}
                   name="description"
                   multiline
                   rows={3}
                   value={agent.description ?? ""}
                   onChange={handleChange}
-                  placeholder="Describe what this AI agent does"
+                  placeholder={t("create.descriptionPlaceholder")}
                   required
                   fullWidth
                   sx={{ mb: 2 }}
                 />
                 <TextField
-                  label="Intent"
+                  label={t("intent")}
                   name="intent"
                   multiline
                   rows={2}
                   value={agent.intent ?? ""}
                   onChange={handleChange}
-                  placeholder="What will this agent be used for? (e.g. Customer-facing loan advisory)"
+                  placeholder={t("create.intentPlaceholder")}
                   required
                   fullWidth
                   sx={{ mb: 2 }}
                 />
                 <TextField
-                  label="Owner (Human Responsible)"
+                  label={t("ownerLabel")}
                   name="ownerName"
                   value={agent.ownerName ?? ""}
                   onChange={handleChange}
-                  placeholder="e.g. Jane Smith"
+                  placeholder={t("create.ownerPlaceholder")}
                   required
                   fullWidth
                   sx={{ mb: 2 }}
                 />
                 <TextField
                   required
-                  label="Agent URL"
+                  label={t("agentUrl")}
                   name="agentUrl"
                   value={agent.agentUrl ?? ""}
                   onChange={handleChange}
-                  placeholder="https://your-agent.example.com/chat"
+                  placeholder={t("agentUrlPlaceholder")}
                   fullWidth
                   type="url"
                   error={!isValidUrl(agent.agentUrl)}
                   helperText={
                     !isValidUrl(agent.agentUrl)
-                      ? "Enter a valid https:// URL"
-                      : "Required for Agent-to-Agent evaluation mode. This will be used to probe the agent during evaluation."
+                      ? t("invalidHttpsUrl")
+                      : t("agentUrlHelp")
                   }
                 />
               </CardContent>
@@ -183,7 +185,7 @@ const DashboardCreateAgent = () => {
                       fontWeight: 600,
                       mb: 2
                     }}>
-                    Evaluator (Judge) Endpoint
+                    {t("evaluatorEndpoint")}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -191,54 +193,50 @@ const DashboardCreateAgent = () => {
                       color: "text.secondary",
                       mb: 2
                     }}>
-                    Required in on-prem / air-gapped deployments. The judge
-                    model must run on an OpenAI-compatible endpoint you
-                    control — no requests leave your network. For methodology
-                    reasons, the judge should be a different model (and
-                    ideally a different endpoint) than the agent under test.
+                    {t("evaluatorEndpointHelp")}
                   </Typography>
 
                   <TextField
                     required
-                    label="Evaluator URL"
+                    label={t("evaluatorUrl")}
                     name="evaluatorUrl"
                     value={agent.evaluatorUrl ?? ""}
                     onChange={handleChange}
-                    placeholder="http://10.0.0.5:1234/v1"
+                    placeholder={t("evaluatorUrlPlaceholder")}
                     fullWidth
                     type="url"
                     error={!isValidUrl(agent.evaluatorUrl)}
                     helperText={
                       !isValidUrl(agent.evaluatorUrl)
-                        ? "Enter a valid http(s):// URL"
-                        : "OpenAI-compatible /v1 base URL (e.g. LM Studio, Ollama, vLLM)."
+                        ? t("invalidHttpUrl")
+                        : t("evaluatorUrlHelp")
                     }
                     sx={{ mb: 2 }}
                   />
 
                   <TextField
-                    label="Evaluator API Key (optional)"
+                    label={t("evaluatorApiKey")}
                     name="evaluatorApiKey"
                     value={agent.evaluatorApiKey ?? ""}
                     onChange={handleChange}
-                    placeholder="leave blank for keyless local servers"
+                    placeholder={t("evaluatorApiKeyPlaceholder")}
                     fullWidth
                     type="password"
                     sx={{ mb: 2 }}
                   />
                   <TextField
                     required
-                    label="Default evaluator model"
+                    label={t("defaultEvaluatorModel")}
                     name="evaluatorModel"
                     value={agent.evaluatorModel ?? ""}
                     onChange={handleChange}
-                    placeholder="e.g. google/gemma-3-4b"
+                    placeholder={t("evaluatorModelPlaceholder")}
                     fullWidth
                     error={!agent.evaluatorModel?.trim()}
                     helperText={
                       !agent.evaluatorModel?.trim()
-                        ? "Required on-prem — enter the model id loaded on your evaluator endpoint."
-                        : "Used when a report does not specify its own judge model."
+                        ? t("evaluatorModelRequired")
+                        : t("evaluatorModelHelp")
                     }
                   />
                 </CardContent>
@@ -262,7 +260,7 @@ const DashboardCreateAgent = () => {
               }
               sx={{ mt: 3 }}
             >
-              Create Agent
+              {t("create.createAgent")}
             </Button>
           </Box>
         </Grid>
@@ -286,7 +284,7 @@ const DashboardCreateAgent = () => {
                 letterSpacing: "0.02em",
               }}
             >
-              FINMA Compliance
+              {t("create.finmaTitle")}
             </Typography>
             <Typography
               variant="body1"
@@ -296,18 +294,7 @@ const DashboardCreateAgent = () => {
                 mb: 2,
               }}
             >
-              Under Swiss FINMA regulations, every AI agent deployed in
-              regulated environments must have a designated human responsible
-              for its oversight. Creating an agent here registers it in the{" "}
-              <Typography
-                component="span"
-                sx={{
-                  fontSize: "inherit",
-                  color: "primary.main"
-                }}>
-                aodit
-              </Typography>{" "}
-              platform and allows you to attach it to reports for evaluation.
+              <Trans i18nKey="create.finmaBody" ns="agent" components={{ brand: <Typography component="span" sx={{ fontSize: "inherit", color: "primary.main" }} /> }} />
             </Typography>
             <Box
               sx={{
@@ -320,9 +307,7 @@ const DashboardCreateAgent = () => {
               }}
             >
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Each report must have an agent assigned before it can be run.
-                The agent's owner, intent, and description are recorded for
-                audit traceability.
+                {t("create.finmaTip")}
               </Typography>
             </Box>
           </Box>

@@ -7,8 +7,10 @@ import { CancelSubscriptionModal } from "src/components/Modals/CancelSubscriptio
 import { useCancelSubscriptionModalContext } from "src/components/Modals/CancelSubscriptionModal/store/Provider";
 import { useDashboardProfileContext } from "../store/Provider";
 import { usePricingModalContext } from "src/components/Modals/PricingModal/store/Provider";
+import { Trans, useTranslation } from "react-i18next";
 
 const SubscriptionSection = () => {
+  const { t } = useTranslation("dashboard");
   const {
     store: {
       state: {
@@ -50,11 +52,11 @@ const SubscriptionSection = () => {
       <CancelSubscriptionModal />
       <Grid size={{ xs: 12, md: 8 }} id="subscription">
       <Card elevation={3} sx={{ padding: 3 }}>
-        <Typography variant="h5">Subscription</Typography>
+<Typography variant="h5">{t("subscription.title")}</Typography>
         <Grid container spacing={2} sx={{ marginTop: 2 }}>
           <Grid size={{ xs: 6, md: 4 }}>
             <Typography variant="h6" component="p" className="text-underline">
-              Plan Type
+{t("subscription.planType")}
             </Typography>
             <span className="bold">{user.subscription.type}</span>
           </Grid>
@@ -68,7 +70,7 @@ const SubscriptionSection = () => {
                   component="p"
                   className="text-underline"
                 >
-                  Start Date
+{t("subscription.startDate")}
                 </Typography>
                 <span className="bold">
                   {new Date(user.subscription.startDate).toLocaleString(
@@ -86,7 +88,7 @@ const SubscriptionSection = () => {
                   component="p"
                   className="text-underline"
                 >
-                  End Date
+{t("subscription.endDate")}
                 </Typography>
                 <span className="bold">
                   {new Date(user.subscription.endDate).toLocaleString("en-GB", {
@@ -119,7 +121,7 @@ const SubscriptionSection = () => {
                   sx={{ marginTop: 1 }}
                   onClick={handleOnCancelSubscriptionClick}
                 >
-                  Cancel Subscription
+                  {t("subscription.cancelSubscription")}
                 </Button>
               </Grid>
             </>
@@ -133,7 +135,7 @@ const SubscriptionSection = () => {
                 // disabled={!!isCancelledButStillActive}
                 onClick={handleOnSubscribeClick}
               >
-                Upgrade
+                {t("subscription.upgrade")}
               </Button>
             </Grid>
           )}
@@ -146,7 +148,7 @@ const SubscriptionSection = () => {
                 sx={{ width: "fit-content" }}
                 icon={<AutoAwesomeOutlined />}
               >
-                {`You have consumed your maximum credit of ${user.subscription.maxProjectsAllowed} projects`}
+{t("subscription.maxCreditConsumed", { count: user.subscription.maxProjectsAllowed })}
               </Alert>
             </Grid>
           ) : (
@@ -157,11 +159,15 @@ const SubscriptionSection = () => {
                 sx={{ width: "fit-content" }}
                 icon={<AutoAwesomeOutlined />}
               >
-                You have <span className="bold">{projectsCounterLeft}</span>{" "}
-                projects left out of{" "}
-                <span className="bold">
-                  {user.subscription.maxProjectsAllowed}
-                </span>
+                <Trans
+                  i18nKey="subscription.projectsLeft"
+                  ns="dashboard"
+                  values={{
+                    left: projectsCounterLeft,
+                    max: user.subscription.maxProjectsAllowed,
+                  }}
+                  components={{ bold: <span className="bold" /> }}
+                />
               </Alert>
             </Grid>
           )}
@@ -173,14 +179,16 @@ const SubscriptionSection = () => {
                 variant="outlined"
                 icon={<HeartBrokenOutlined />}
               >
-                It is sad to see you go. Enjoy the subscription benefits until{" "}
-                <span className="bold">
-                  {new Date(
-                    subscription.current_period_end * 1000,
-                  ).toLocaleString("en-GB", {
-                    dateStyle: "short",
-                  })}
-                </span>
+                <Trans
+                  i18nKey="subscription.cancelledUntil"
+                  ns="dashboard"
+                  values={{
+                    date: new Date(
+                      subscription.current_period_end * 1000,
+                    ).toLocaleString("en-GB", { dateStyle: "short" }),
+                  }}
+                  components={{ bold: <span className="bold" /> }}
+                />
               </Alert>
             </Grid>
           )}

@@ -14,6 +14,7 @@ import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const BulletList = ({ items }: { items: string[] }) => (
@@ -57,6 +58,7 @@ const SectionHeading = ({
 );
 
 const PrivacyPolicyPage = () => {
+  const { t } = useTranslation("page");
   const navigate = useNavigate();
 
   const handleLinkClick =
@@ -68,18 +70,18 @@ const PrivacyPolicyPage = () => {
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
-      "Privacy Policy",
-      "Privacy Policy of Swiss Lab of Intelligence (SwissLI AG) describing how personal data is processed in connection with the aodit platform.",
+      t("legal.privacySchemaTitle"),
+      t("legal.privacySchemaDescription"),
       routes.privacyPolicy,
       new Date("03/01/2026"),
     );
-  }, []);
+  }, [t]);
 
   useSchemaOrg(webPageSchema, "privacy-policy-webpage-schema");
 
   return (
     <Page
-      title="Privacy Policy | aodit"
+      title={t("legal.privacyPageTitle")}
       className="privacy-policy-page"
       isLoading={false}
       noIndex
@@ -106,7 +108,7 @@ const PrivacyPolicyPage = () => {
               mb: 2,
             }}
           >
-            Legal
+            {t("legal.label")}
           </Typography>
           <Typography
             variant="h1"
@@ -117,15 +119,15 @@ const PrivacyPolicyPage = () => {
               color: "text.primary",
             }}
           >
-            Privacy Policy
+            {t("legal.privacyTitle")}
           </Typography>
           <Typography sx={{ fontSize: 15, color: "text.secondary", mb: 1 }}>
-            Last updated: March 2026
+            {t("legal.lastUpdated")}
           </Typography>
           <Typography sx={{ fontSize: 15, color: "text.secondary" }}>
-            Swiss Lab of Intelligence (SwissLI AG)
+            {t("legal.companyAddress")}
             <br />
-            Murbacherstrasse 19, 6003 Luzern, Switzerland
+            {t("legal.address")}
           </Typography>
         </Container>
       </Box>
@@ -133,7 +135,7 @@ const PrivacyPolicyPage = () => {
       <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 3, md: 0 } }}>
         <Container maxWidth="md">
           {/* 1. Controller */}
-          <SectionHeading number="1" title="Controller" />
+          <SectionHeading number="1" title={t("legal.privacyHeadings.1")} />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             Swiss Lab of Intelligence (&ldquo;SwissLI AG&rdquo;,
             &ldquo;we&rdquo;, &ldquo;us&rdquo;) is the controller of personal
@@ -146,7 +148,7 @@ const PrivacyPolicyPage = () => {
           </Typography>
 
           {/* 2. Scope of this Policy */}
-          <SectionHeading number="2" title="Scope of this Policy" />
+          <SectionHeading number="2" title={t("legal.privacyHeadings.2")} />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             This Privacy Policy describes how SwissLI AG processes personal data
             in relation to:
@@ -178,7 +180,7 @@ const PrivacyPolicyPage = () => {
           {/* 3. Core Principle */}
           <SectionHeading
             number="3"
-            title="Core Principle — Data Sovereignty"
+            title={t("legal.privacyHeadings.corePrinciple")}
           />
           <Typography sx={{ fontSize: 15, lineHeight: 1.75 }}>
             <Typography
@@ -204,7 +206,7 @@ const PrivacyPolicyPage = () => {
           </Typography>
 
           {/* 3A. No Data Processor Role */}
-          <SectionHeading number="3A" title="No Data Processor Role" />
+          <SectionHeading number="3A" title={t("legal.privacyHeadings.3A")} />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             SwissLI AG does not act as a data processor for client AI system
             data in the ordinary course of its services. Unless explicitly
@@ -223,7 +225,7 @@ const PrivacyPolicyPage = () => {
           </Typography>
 
           {/* 4. Access to Client Data */}
-          <SectionHeading number="4" title="Access to Client Data" />
+          <SectionHeading number="4" title={t("legal.privacyHeadings.4")} />
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             <Typography
               component="span"

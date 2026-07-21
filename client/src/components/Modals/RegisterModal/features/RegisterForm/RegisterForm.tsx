@@ -6,10 +6,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import { LockOutlined } from "@mui/icons-material";
 
 const RegisterForm = () => {
+  const { t } = useTranslation("auth");
+
   return (
     <Box
       sx={{
@@ -22,7 +25,7 @@ const RegisterForm = () => {
         <LockOutlined />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Create a new account
+        {t("modalRegisterHeading")}
       </Typography>
 
       <Box component="div" sx={{ mt: 1 }}>
@@ -34,7 +37,7 @@ const RegisterForm = () => {
               required
               fullWidth
               id="firstName"
-              label="First Name"
+              label={t("firstName")}
               autoFocus
             />
           </Grid>
@@ -44,7 +47,7 @@ const RegisterForm = () => {
               required
               fullWidth
               id="lastName"
-              label="Last Name"
+              label={t("lastName")}
               name="lastName"
               autoComplete="family-name"
             />
@@ -55,7 +58,7 @@ const RegisterForm = () => {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label={t("email")}
               name="email"
               autoComplete="email"
             />
@@ -66,19 +69,12 @@ const RegisterForm = () => {
               required
               fullWidth
               name="password"
-              label="Password"
+              label={t("password")}
               type="password"
               id="password"
               autoComplete="new-password"
             />
           </Grid>
-
-          {/* <Grid size={{ xs: 12 }}>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive inspiration, marketing promotions and updates via email."
-            />
-          </Grid> */}
         </Grid>
 
         <Button
@@ -87,13 +83,8 @@ const RegisterForm = () => {
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
         >
-          Register
+          {t("register")}
         </Button>
-        {/* <Grid container justifyContent="flex-end">
-          <Grid size={{ xs: 12 }}>
-            <Link to="#">Already have an account? Log in</Link>
-          </Grid>
-        </Grid> */}
       </Box>
     </Box>
   );

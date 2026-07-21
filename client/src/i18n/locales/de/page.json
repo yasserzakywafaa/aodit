@@ -1,0 +1,596 @@
+{
+  "cta": {
+    "requestEvaluation": "Bewertung anfordern",
+    "tryLiveDemo": "Live-Demo testen",
+    "getDemo": "Demo anfordern",
+    "contactUs": "Kontakt",
+    "getFullAccess": "Vollzugriff erhalten",
+    "requestSecurityPackage": "Sicherheitspaket anfordern",
+    "learnMore": "Mehr erfahren",
+    "home": "Startseite"
+  },
+  "breadcrumb": {
+    "home": "Startseite",
+    "contact": "Kontakt",
+    "pricing": "Preise"
+  },
+  "home": {
+    "global": {
+      "pageTitle": "KI-Kundenservice-Agent-Tests & Risikobewertung | aodit",
+      "metaDescription": "Testen Sie Ihren KI-Kundensupport-Agenten vor dem Launch. Erkennen Sie Richtlinienabweichungen, Erstattungsfehler und Eskalationsausfälle mit unabhängiger 8-Runden-Bewertung und auditfertigen Scores.",
+      "ogTitle": "KI-Kundenservice-Agent-Tests | aodit",
+      "ogDescription": "Unabhängige Bewertung für KI-Kundensupport-Agenten. Adversarielle Stresstests für Erstattungen, Richtlinien und Eskalationen — mit einsatzbereiten Nachweisen für CX- und Compliance-Teams.",
+      "hero": {
+        "titleLead": "Wird Ihr Kundensupport-KI",
+        "titleHighlight": "dem Druck standhalten?",
+        "subtitleLine1": "8-Runden-adversarielle Stresstests",
+        "subtitleLine2": "bevor Erstattungen, Richtlinien und Kundenvertrauen brechen",
+        "bullets": [
+          "Unautorisierte Erstattungen, Richtlinienabweichungen und schwache Identitätsprüfungen erkennen",
+          "Verärgerte Kunden, Grenzfälle und Eskalationsdruck simulieren",
+          "Einsatzurteile und Nachweise, auf die CX-, Trust-&-Safety- und Compliance-Teams reagieren können"
+        ]
+      },
+      "trustBlock": {
+        "title": "Ihre Kundengespräche bleiben Ihre",
+        "line1": "kann On-Premise oder in Ihrer kontrollierten Cloud laufen, ohne dass SwissLI AG standardmäßig auf Produktions-Chatprotokolle oder Kundendaten zugreift.",
+        "line2": "Prompts, Agentenantworten und Bewertungsartefakte bleiben unter Ihrer Governance und Zugriffskontrollen.",
+        "line3": "Entwickelt für Teams, die KI im Kundensupport, in Contact Centern und im digitalen CX einsetzen — vom Pilot bis zur Produktion."
+      },
+      "cta": {
+        "title": "Finden Sie, wo Ihr Support-Agent bricht — bevor es die Kunden tun.",
+        "subtitle": "Unabhängige Bewertung in 2–3 Wochen. Testen Sie jetzt die Live-Demo oder fordern Sie eine vollständige Bewertung an."
+      },
+      "schemaName": "KI-Kundenservice-Agent-Bewertung",
+      "schemaDescription": "Unabhängige verhaltensbezogene Bewertung für KI-Kundensupport-Agenten — Stresstests für Erstattungen, Richtlinien, Eskalationen und Vertrauensrisiken mit auditfertigen Nachweisen.",
+      "websiteSchemaDescription": "Unabhängige KI-Kundensupport-Agent-Bewertung — adversarielle Stresstests, Einsatzurteile und auditfertige Nachweise für CX- und Compliance-Teams.",
+      "regulatorySectionTitle": "Entwickelt für kundenorientierte KI unter Beobachtung",
+      "regulatorySectionBody1": "Verbraucherschutzregeln, die EU-KI-Verordnung und Unternehmensrisikorahmen erwarten zunehmend den Nachweis, dass kundenorientierte KI getestet wird — nicht nur nach Beschwerden überwacht.",
+      "regulatorySectionBody2": "Den meisten Support-Teams fehlen unabhängige Nachweise, wie ihr Agent reagiert, wenn Nutzer Ausnahmen, Erstattungen oder sensible Kontenänderungen fordern.",
+      "regulatorySectionBody3": "schließt diese Lücke mit strukturierten Stresstests — ohne Zugang zu Ihrer Live-Support-Warteschlange."
+    },
+    "swiss": {
+      "pageTitle": "KI-Agenten-Bewertung für Fintechs & Versicherer (FINMA & EU-KI-Verordnung) | aodit",
+      "metaDescription": "Unabhängige KI-Agenten-Bewertung für Fintechs und Versicherer in der Schweiz. On-Premise-Bereitstellung, FINMA-konforme Nachweise und kein Client-Datenzugriff standardmäßig.",
+      "ogTitle": "KI-Agenten-Bewertung für Fintechs und Versicherer | aodit",
+      "ogDescription": "Unabhängige KI-Agenten-Bewertung für regulierte Fintechs und Versicherer. On-Premise by Design und für FINMA-konforme Umgebungen entwickelt.",
+      "hero": {
+        "titleLead": "Wie verhält sich Ihr KI-Agent unter",
+        "titleHighlight": "Druck?",
+        "subtitleLine1": "Wir testen Ihren KI-Agenten",
+        "subtitleLine2": "bevor es die Regulatoren tun",
+        "bullets": [
+          "Unabhängige verhaltensbezogene Stresstests mit klaren Risikonachweisen",
+          "Adversarielle Szenarien, die auf reale Geschäftsabläufe abgebildet sind",
+          "Umsetzbare Erkenntnisse für Produkt-, Risiko- und Compliance-Teams"
+        ]
+      },
+      "trustBlock": {
+        "title": "Datengrenzen, die Sie verteidigen können",
+        "line1": "kann in kontrollierten Umgebungen bereitgestellt werden und erfordert nicht, dass SwissLI AG standardmäßig auf Ihre Client-Daten zugreift.",
+        "line2": "KI-Agenten-Prompts, Ausgaben und Bewertungsartefakte verbleiben unter Ihrer Governance und Zugriffskontrollen.",
+        "line3": "Entwickelt zur Unterstützung von Sicherheits-, Risiko- und Compliance-Teams in regulierten und nicht regulierten Branchen."
+      },
+      "cta": {
+        "title": "Wir testen Ihre KI, bevor es die Regulatoren tun.",
+        "subtitle": "Unabhängige Bewertung in 2–3 Wochen. Vollständig On-Premise."
+      },
+      "schemaName": "KI-Agenten-Bewertung für Fintechs & Versicherer",
+      "schemaDescription": "Unabhängige KI-Agenten-Bewertung für Fintechs und Versicherungsunternehmen mit On-Premise-Bereitstellung und keinem Client-Datenzugriff standardmäßig.",
+      "websiteSchemaDescription": "Unabhängige KI-Agenten-Bewertung für Fintechs und Versicherer, On-Premise in der Client-Infrastruktur bereitgestellt.",
+      "regulatorySectionTitle": "Entwickelt für FINMA-regulierte Umgebungen",
+      "regulatorySectionBody1": "FINMA-Leitfaden 08/2024 und die EU-KI-Verordnung verlangen von Instituten wirksame Governance, Tests und Überwachung von KI-Systemen.",
+      "regulatorySectionBody2": "Den meisten Instituten fehlt unabhängige Validierung, wie sich ihre KI unter Stress verhält.",
+      "regulatorySectionBody3": "liefert diese unabhängige Nachweisschicht."
+    }
+  },
+  "featuredReport": {
+    "global": {
+      "title": "Kundensupport-KI-Risikobericht 2026",
+      "subtitle": "AODIT hat führende Modelle bei Erstattungen, Richtlinien-Grenzfällen, verärgerten Eskalationen und Identitätsprüfungsausfällen getestet.",
+      "description": "Unabhängige Bewertung von KI-Kundensupport-Agenten unter adversariellem Druck — für CX-, Trust-&-Safety- und Compliance-Führungskräfte.",
+      "ctaLabel": "Executive Summary herunterladen",
+      "reportOfInterest": "Kundensupport-KI-Risikobewertung - Executive Summary",
+      "message": "Executive-Summary-Download-Lead-Magnet"
+    },
+    "swiss": {
+      "title": "Banking-KI-Risikobericht 2026",
+      "subtitle": "AODIT bewertete führende KI-Systeme in Multi-Turn-adversariellen Szenarien zu Kundeninteraktionen, Betrugsbearbeitung und Eskalationsverhalten.",
+      "description": "Unabhängige Bewertung des KI-Agentenverhaltens unter adversariellen Banking-Szenarien im Einklang mit FINMA-Erwartungen.",
+      "ctaLabel": "Executive Summary herunterladen",
+      "reportOfInterest": "Banking-KI-Risikobewertung - Executive Summary",
+      "message": "Executive-Summary-Download-Lead-Magnet"
+    }
+  },
+  "features": {
+    "euHostedAlt": "EU-gehostet (EU-KI-Verordnung Ready)",
+    "swissMadeAlt": "Swiss Made Software",
+    "lifecycleTitle": "passt in Ihren KI-Lebenszyklus",
+    "lifecyclePhase": "Phase",
+    "lifecycleRole": "Rolle",
+    "lifecycleRows": [
+      {
+        "phase": "Vor dem Einsatz",
+        "role": "Unabhängige Validierung"
+      },
+      {
+        "phase": "Nach Updates",
+        "role": "Erneut testen, um Verhaltensverschlechterung auszuschließen"
+      },
+      {
+        "phase": "Laufend",
+        "role": "Auditfertige Nachweise für Risiko und Compliance bereitstellen"
+      },
+      {
+        "phase": "Nach Vorfällen",
+        "role": "Analysieren, was schiefging und warum die KI sich falsch verhielt"
+      }
+    ],
+    "behavioralTitle": "Unabhängige verhaltensbezogene Tests unter Stress",
+    "behavioralBody1": "bewertet, wie KI-Agenten unter Druck, Widerspruch und adversariellen Eingaben reagieren.",
+    "behavioralBody2": "Jede Bewertung nutzt ein strukturiertes Multi-Turn-Protokoll, um reale Ausfallszenarien zu simulieren und entscheidungsreife Nachweise für Risiko-, Audit- und Compliance-Funktionen zu erzeugen.",
+    "scopeTitle": "Umfang und Grenzen",
+    "scopeIntro": "konzentriert sich derzeit auf unabhängige verhaltensbezogene Bewertung von KI-Agenten.",
+    "scopeDoesNot": "tut nicht:",
+    "scopeItems": [
+      "Regulatorische Zertifizierung bereitstellen",
+      "Interne Governance-Rahmen ersetzen",
+      "Auf Trainingsdaten oder Modellgewichte zugreifen",
+      "Zugang zu Live-Produktionssystemen erfordern"
+    ],
+    "scopeNote": "Überwachungs- und Echtzeit-Kontrollfunktionen können als zukünftige Produkterweiterungen eingeführt werden."
+  },
+  "aboutSection": {
+    "label": "Über Aodit",
+    "titleIndependent": "unabhängige",
+    "titleRest": "Institution für KI-Risikoklarheit",
+    "p1": "Aodit — der AI-Powered Agent Risk Index — erstellt unabhängige verhaltensbezogene Bewertungen für KI-Agenten in risikoreichen Finanz- und Unternehmensumgebungen.",
+    "p2": "Wir existieren, weil die Lücke zwischen KI-Fähigkeit und KI-Governance real, wachsend und folgenreich ist. Risikoverantwortliche und Compliance-Teams brauchen verständliche, rigorose, unabhängige Bewertungen — keine Anbieterbehauptungen.",
+    "p3": "Unsere Methodik orientiert sich an etablierten Kreditrating-Rahmen, angepasst an die spezifischen Ausfallmodi großer Sprachmodelle unter adversariellen Realbedingungen.",
+    "footer": "Zürich, Schweiz · Gegründet 2026 · Unabhängig · Nicht mit einem KI-Anbieter verbunden",
+    "stats": [
+      {
+        "num": "6",
+        "label": "Bewertungsdimensionen"
+      },
+      {
+        "num": "100",
+        "label": "Adversarielle Szenarien"
+      },
+      {
+        "num": "30",
+        "label": "Angriffskategorien"
+      },
+      {
+        "num": "8",
+        "label": "Adversarielle Runden"
+      }
+    ],
+    "coverageTitle": "Bewertungsabdeckung",
+    "coverage": [
+      {
+        "name": "Finanzdienstleistungen Banking",
+        "status": "Aktiv",
+        "active": true
+      },
+      {
+        "name": "Versicherung & Schadenfälle",
+        "status": "2026 Q3",
+        "active": false
+      },
+      {
+        "name": "Healthcare-Triage-Agenten",
+        "status": "2026 Q4",
+        "active": false
+      },
+      {
+        "name": "Rechts- & Compliance-Agenten",
+        "status": "2027",
+        "active": false
+      }
+    ]
+  },
+  "methodologySection": {
+    "label": "Bewertungsrahmen",
+    "title1": "AODIT-6-Methodik.",
+    "title2": "Sechs Dimensionen.",
+    "title3": "Dreißig Kategorien.",
+    "overview": "AODIT-6 bewertet KI-Verhalten über sechs Dimensionen und fünf Kategorien pro Dimension. Ergebnisse werden unabhängig auf einer 0,0–5,0-Skala bewertet und gewichtet zu einer Gesamtbewertung aggregiert.",
+    "protocolTitle": "8-Runden-adversarielles Protokoll",
+    "protocolBody": "Der Bewertungsprozess führt acht strukturierte adversarielle Runden unter adversariellem Druck aus, um Stabilität, Grenzbehandlung, Manipulationsresistenz und Erholung nach Stress zu bewerten."
+  },
+  "reportsSection": {
+    "eyebrow": "// VERÖFFENTLICHTE BERICHTE",
+    "title": "Fünf unabhängige Benchmarks",
+    "subtitle": "Jeder Bericht generiert automatisch adversarielle Szenarien, führt 8-Runden-Gespräche aus und bewertet Verhalten im AODIT-6-Rahmen.",
+    "getNotified": "BENACHRICHTIGUNG",
+    "customReport": "INDIVIDUELLER BERICHT",
+    "customDesc": "Ihre Branche. Ihre Szenarien. Enterprise-Preise.",
+    "cards": [
+      {
+        "number": "BERICHT 01 — LIVE",
+        "title": "Banking-KI-Risikobewertung 2026",
+        "desc": "Wie führende Frontier-Modelle unter Widerspruch, Druck und adversarieller Manipulation reagieren."
+      },
+      {
+        "number": "BERICHT 02 — DEMNÄCHST",
+        "title": "Trust-&-Deception-Benchmark",
+        "desc": "Welche KI-Modelle täuschen Selbstvertrauen vor? Der definitive Test für Halluzination, Bluff und falsche Gewissheit."
+      },
+      {
+        "number": "BERICHT 03 — DEMNÄCHST",
+        "title": "Jailbreak-Resistance-Benchmark",
+        "desc": "Wir führten 1.000 adversarielle Prompts aus. Wer bricht zuerst? Der definitive Sicherheits-Stresstest."
+      },
+      {
+        "number": "BERICHT 04 — DEMNÄCHST",
+        "title": "Banking-Agenten-Risikobewertungen",
+        "desc": "Gegen Schweizer Banking-Standards getestet. Zahlungsanweisungen, Betrugseskalation, AML-Ambiguität."
+      },
+      {
+        "number": "BERICHT 05 — DEMNÄCHST",
+        "title": "KI-Mitarbeiter-Stresstest",
+        "desc": "Widersprüchliche Manageranweisungen, Verantwortungsdruck, Ambiguität im großen Maßstab. Würden Sie diesem Mitarbeiter vertrauen?"
+      }
+    ]
+  },
+  "subscribe": {
+    "stayInformed": "Informiert bleiben",
+    "stayInformedTitle": "Informiert bleiben",
+    "titlePrefix": "Erhalten Sie",
+    "titleEmphasis": "Bewertungen",
+    "titleSuffix": "bei Veröffentlichung",
+    "subtitle": "Neue Berichte vierteljährlich. Kein Marketing. Kein Lärm. Nur für Risiko-, Compliance- und Governance-Profis.",
+    "emailPlaceholder": "your@email.com",
+    "subscribe": "Abonnieren",
+    "requesting": "Wird angefordert",
+    "institutional": "Für institutionelle Anfragen: info@aodit.ai",
+    "errors": {
+      "empty": "Bitte geben Sie Ihre E-Mail-Adresse ein",
+      "invalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut."
+    },
+    "success": "Sie stehen auf der Liste. Prüfen Sie Ihren Posteingang."
+  },
+  "contactSection": {
+    "eyebrow": "// BEWERTUNG ERHALTEN",
+    "title": "Bewerten Sie Ihren KI-Agenten",
+    "subtitle": "Erzählen Sie uns von Ihrem Agenten. Wir führen ihn durch den AODIT-6-Rahmen und liefern einen institutionellen Bewertungsbericht.",
+    "bullets": [
+      "Unabhängige Bewertung — keine Verbindung zu getesteten Modellen",
+      "Eingefrorene Transkripte — Methodik kann nicht manipuliert werden",
+      "Bericht innerhalb von 5 Werktagen geliefert"
+    ]
+  },
+  "downloadReport": {
+    "pdfComingSoon": "PDF folgt in Kürze",
+    "dialogTitle": "Geben Sie Ihre Daten ein, um die Executive Summary zu erhalten",
+    "fullName": "Vollständiger Name",
+    "company": "Unternehmen",
+    "workEmail": "Geschäftliche E-Mail",
+    "getSummary": "Executive Summary erhalten",
+    "submitting": "Wird gesendet…",
+    "success": "Vielen Dank — die Executive Summary wird geöffnet.",
+    "submitError": "Senden fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "validation": {
+      "nameRequired": "Vollständiger Name ist erforderlich",
+      "companyRequired": "Unternehmen ist erforderlich",
+      "emailRequired": "Geschäftliche E-Mail ist erforderlich",
+      "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein"
+    }
+  },
+  "complianceLogos": {
+    "title": "Regulatorische Standards und Compliance-Referenzen, mit denen wir uns ausrichten",
+    "subtitle": "Beginnend mit FINMA-Standards, mit weiteren Institutionen und Standards im Laufe der Zeit."
+  },
+  "contact": {
+    "pageTitle": "Kontakt | aodit",
+    "title": "Kontakt",
+    "intro": "Für Bewertungsanfragen, Sicherheitsdokumentationsanfragen (NDA erforderlich) oder allgemeine Fragen zu",
+    "responseTime": "Wir antworten in der Regel innerhalb eines Werktags.",
+    "form": {
+      "name": "Ihr Name",
+      "company": "Unternehmen",
+      "email": "Geschäftliche E-Mail",
+      "message": "Beschreiben Sie Ihren KI-Agenten oder Anwendungsfall",
+      "submit": "ANFRAGE SENDEN →",
+      "privacy": "Kein Spam. Ihre Daten werden nur zur Bearbeitung Ihrer Bewertungsanfrage verwendet."
+    }
+  },
+  "pricing": {
+    "pageTitle": "Preise | aodit",
+    "title": "Preise",
+    "subtitle": "Pläne für Teams mit unabhängigen KI-Agenten-Bewertungen",
+    "plans": "Pläne",
+    "popular": "Beliebt",
+    "perMonth": "/Monat",
+    "tableAriaLabel": "Preistabelle",
+    "breadcrumbHome": "Startseite",
+    "breadcrumbPricing": "Preise",
+    "cta": {
+      "createProjects": "Berichte erstellen",
+      "registerSubscribe": "Registrieren & Abonnieren",
+      "upgrade": "Upgrade",
+      "currentPlan": "Aktueller Plan"
+    },
+    "features": {
+      "freeTrial": "Kostenlose Testversion",
+      "saveTime": "Zeit bei der Berichtseinrichtung sparen",
+      "generateUpToFree_one": "Bis zu {{count}} Bewertungsbericht ausführen",
+      "generateUpToFree_other": "Bis zu {{count}} Bewertungsberichte ausführen",
+      "generateUpToMonthly_one": "Bis zu {{count}} Bewertungsbericht/Monat ausführen",
+      "generateUpToMonthly_other": "Bis zu {{count}} Bewertungsberichte/Monat ausführen",
+      "basicCustomization": "Grundlegende Szenariokonfiguration",
+      "publicProjects": "Berichte werden im Workspace geteilt",
+      "exportPdf": "Bewertungsberichte als PDF exportieren",
+      "limitedBrandVoice": "Begrenzte Agenten-Persona-Vorlagen",
+      "limitedCustomization": "Begrenzte Berichtsanpassung",
+      "publishWordpressGhost": "Webhook- & API-Integrationen",
+      "singleProjectCreation": "Einzelbericht-Erstellung",
+      "advancedCustomization": "Erweiterte Szenario- & Gewichtskonfiguration",
+      "privateProjects": "Private Berichte",
+      "topicsKeywordsRelated": "Branchenszenario-Bibliotheken",
+      "seoOptimizedContent": "Compliance-konforme Szenario-Vorlagen",
+      "apiAccess": "Zugang zur aodit API",
+      "campaignBulk": "Massen-Bewertungskampagnen",
+      "multiClientManagement": "Multi-Workspace-Verwaltung",
+      "enhancedBrandVoice": "Erweiterte Agenten-Persona-Vorlagen",
+      "customizableParameters": "Anpassbare Bewertungsparameter",
+      "highQualityInterlinking": "Benchmarking über Berichte hinweg",
+      "advancedCampaignAutomation": "Erweiterte Bewertungsautomatisierung",
+      "bulkGenerationScale": "Massen-Berichterstellung im großen Maßstab",
+      "multiClientWorkflows": "Multi-Workspace-Bewertungsworkflows",
+      "fullBrandVoice": "Vollständige Agenten-Persona-Anpassung",
+      "personalizedTopics": "Personalisierte Szenario-Empfehlungen",
+      "advancedCustomizableParameters": "Erweiterte anpassbare Bewertungsparameter",
+      "priorityGeneration": "Priorisierte Bewertungsläufe",
+      "automatedScheduling": "Automatisierte Berichtsplanung",
+      "fullApiAccess": "Vollständiger Zugang zur aodit API",
+      "enterpriseCampaignAutomation": "Enterprise-Bewertungsautomatisierung",
+      "unlimitedBulkGeneration": "Unbegrenzte Massen-Berichterstellung",
+      "advancedMultiClient": "Erweiterte Multi-Workspace-Verwaltung",
+      "scheduledCampaignExecution": "Geplante Bewertungsausführung"
+    },
+    "table": {
+      "rowSaveTime": "Zeit bei der Berichtseinrichtung sparen",
+      "rowNumberOfProjects": "Anzahl der Bewertungsberichte",
+      "rowProjectCustomization": "Berichtsanpassung",
+      "rowVisibility": "Berichtssichtbarkeit",
+      "rowExportPdf": "Berichte als PDF exportieren",
+      "rowBrandVoice": "Agenten-Persona-Vorlagen",
+      "rowCustomizableParameters": "Anpassbare Bewertungsparameter",
+      "rowInterlinking": "Benchmarking über Berichte hinweg",
+      "rowTopicsKeywords": "Szenario-Bibliothek-Empfehlungen",
+      "rowPriorityGeneration": "Priorisierte Bewertungsläufe",
+      "rowAutoPublish": "Webhook- & API-Integrationen",
+      "rowScheduling": "Automatisierte Berichtsplanung",
+      "rowApiAccess": "Zugang zur aodit API",
+      "valuePublic": "Geteilt",
+      "valuePrivate": "Privat",
+      "valueBasic": "Basis",
+      "valueLimited": "Begrenzt",
+      "valueFlexible": "Flexibel",
+      "valueRelaxed": "Entspannt",
+      "valueAdvanced": "Erweitert",
+      "valueEnhanced": "Verbessert",
+      "valueHighQuality": "Hochwertig",
+      "valueFull": "Vollständig"
+    }
+  },
+  "installApp": {
+    "fromBrowser": "Von",
+    "browserWord": "Browser",
+    "tapIconAndThen": "tippen Sie einfach auf das",
+    "clickIconAndThen": "klicken Sie einfach auf das",
+    "iconAndThen": "Symbol und dann",
+    "iosDescription": "Installieren Sie diese App auf Ihrem iPhone oder iPad und greifen Sie unterwegs auf aodit-Bewertungen zu.",
+    "iosStep1": "Safari",
+    "iosStep2": "Zum Home-Bildschirm",
+    "androidDescription": "Installieren Sie diese App auf Ihrem Gerät für schnellen Zugang zu Demos und Berichten.",
+    "androidButton": "App installieren",
+    "macDescription": "Installieren Sie diese App auf Ihrem Mac für nativen Desktop-Zugang zu aodit.",
+    "macStep1": "Safari",
+    "macStep2": "Zum Dock hinzufügen",
+    "windowsDescription": "Installieren Sie diese App auf Ihrem Windows-Computer für Desktop-Zugang zu aodit.",
+    "windowsStep1": "Chrome",
+    "windowsFromChrome": "oben neben der URL,",
+    "windowsButton": "Installieren"
+  },
+  "methodology": {
+    "pageTitle": "KI-Agenten-Testmethodik für Fintechs und Versicherungsunternehmen | aodit",
+    "schemaTitle": "KI-Agenten-Testmethodik",
+    "schemaDescription": "AODIT-6-Methodik für unabhängige verhaltensbezogene KI-Agenten-Bewertung über sechs Dimensionen und acht adversarielle Runden.",
+    "eyebrow": "AODIT-6 verhaltensbezogener Bewertungsrahmen",
+    "title": "KI-Agenten-Testmethodik",
+    "intro": "bewertet, wie KI-Agenten unter Stress, Widerspruch und adversariellem Druck reagieren. Der Rahmen ist für Risiko-, Compliance- und Audit-Teams konzipiert, die unabhängige Nachweise statt selbstberichteter Modellleistung benötigen.",
+    "whoForTitle": "Für wen dies gedacht ist",
+    "whoForBody": "Risiko-Teams, Compliance-Beauftragte und Audit-Funktionen, die unabhängige verhaltensbezogene Nachweise statt anbietergelieferter Benchmarks benötigen.",
+    "dimensionsTitle": "Sechs Bewertungsdimensionen",
+    "dimensionsSubtitle": "Jede Dimension misst eine eigenständige verhaltensbezogene Risikoklasse mit strukturierten Multi-Turn-Szenarien.",
+    "protocolTitle": "Acht-Runden-adversarielles Protokoll",
+    "protocolSubtitle": "Jede Bewertung führt eine Acht-Runden-Sequenz aus, die den Druck progressiv erhöht und dann die Erholung testet.",
+    "ctaTitle": "Unabhängig by Design",
+    "ctaBody": "ist eine unabhängige Bewertungsschicht. Sie zertifiziert keine Modelle, ersetzt keine Governance-Rahmen und greift nicht auf Modellgewichte zu."
+  },
+  "security": {
+    "pageTitle": "On-Premise-KI-Bewertung für Fintechs und Versicherungsunternehmen | aodit",
+    "schemaTitle": "On-Premise-KI-Bewertungssicherheit",
+    "schemaDescription": "Sicherheitsarchitektur und Datenverarbeitungsmodell für aodit On-Premise-Bereitstellung in regulierten Fintechs und Versicherungsunternehmen.",
+    "title": "On-Premise by Design",
+    "intro": "wird vollständig in der Client-Infrastruktur bereitgestellt. Keine Daten verlassen Ihre Umgebung. SwissLI AG hat standardmäßig keinen Zugang zu KI-Agenten-Eingaben, -Ausgaben oder -Protokollen.",
+    "yourInfra": "Ihre Infrastruktur",
+    "onPremise": "On-Premise / airgapped",
+    "evaluation": "Bewertung",
+    "runsInside": "Läuft in Ihrer Umgebung",
+    "resultsInHouse": "Ergebnisse bleiben intern",
+    "noTransfer": "Kein externer Datentransfer",
+    "deploymentArch": "Bereitstellungsarchitektur",
+    "archItems": [
+      "On-Premise-Bereitstellung in der Client-Infrastruktur",
+      "Air-Gap-Betrieb unterstützt",
+      "Kein externer Datentransfer",
+      "Keine persistente Speicherung außerhalb der Client-Umgebung"
+    ],
+    "devEnvs": "Entwicklungs- und Testumgebungen",
+    "devEnvsBody": "Bewertungsrahmen und adversarielle Szenarien werden in kontrollierten Umgebungen entwickelt. Client-Daten werden niemals in Entwicklung oder Tests verwendet. Alle kundenspezifischen Bewertungen werden ausschließlich in der On-Premise-Infrastruktur des Clients ausgeführt.",
+    "clientAccess": "Client-kontrollierter Zugang",
+    "clientAccessP1": "Wo erforderlich, kann SwissLI AG über temporäre API-Endpunkte oder sichere Tunnelverbindungen auf Systeme zugreifen.",
+    "clientAccessP2": "Jeder Zugang wird vom Client ausdrücklich genehmigt, ist zeitlich begrenzt, protokolliert und auditierbar.",
+    "dataPrinciples": "Grundsätze der Datenverarbeitung",
+    "dataItems": [
+      "SwissLI AG erhebt keine Endnutzerdaten",
+      "SwissLI AG speichert keine KI-Agenten-Transkripte",
+      "SwissLI AG trainiert keine Modelle mit Client-Daten",
+      "SwissLI AG greift standardmäßig nicht auf Produktionsausgaben zu"
+    ],
+    "securityControls": "Sicherheitskontrollen",
+    "controlItems": [
+      "TLS 1.2+ verschlüsselte Kommunikation",
+      "Zero-Trust-Architektur",
+      "Rollenbasierte Zugriffskontrolle",
+      "Audit-Protokollierung administrativer Aktionen",
+      "Verschlüsselte Speicherung für interne Systeme"
+    ],
+    "swissGov": "Schweizer Governance",
+    "swissGovLead": "SwissLI AG ist ein Schweizer Unternehmen mit Sitz in Luzern und unterliegt Schweizer Recht.",
+    "swissGovTail": "ist für Schweizer Bankgeheimnis und FINMA-regulierte Bereitstellungserwartungen konzipiert.",
+    "documentation": "Dokumentation",
+    "docIntro": "Verfügbar unter NDA während des Vendor-Onboardings:",
+    "requestSecurityPackage": "Sicherheitspaket anfordern",
+    "docItems": [
+      "Sicherheitsrichtlinie",
+      "Auftragsverarbeitungsvertrag",
+      "Technische & organisatorische Maßnahmen",
+      "Business-Continuity-Plan",
+      "Allgemeine Geschäftsbedingungen"
+    ]
+  },
+  "about": {
+    "pageTitle": "Über SwissLI AG | Unabhängige KI-Bewertung",
+    "schemaTitle": "Über SwissLI AG",
+    "schemaDescription": "Swiss Lab of Intelligence (SwissLI AG) ist ein Schweizer angewandtes KI-Labor mit Fokus auf sichere KI-Systembewertung für regulierte Umgebungen.",
+    "title": "Über SwissLI AG",
+    "p1": "Swiss Lab of Intelligence (SwissLI AG) ist ein 2021 gegründetes Schweizer angewandtes KI-Labor mit Sitz in Luzern. Das Labor konzentriert sich auf den Aufbau und die Bewertung von KI-Systemen mit starkem Fokus auf Realverhalten, Sicherheit und Systemleistung.",
+    "p2": "ist SwissLIs Plattform für unabhängige Bewertung von KI-Agenten in regulierten Umgebungen, einschließlich Banking, Fintech und Versicherung.",
+    "missionTitle": "Unsere Mission",
+    "missionBody": "Unabhängige verhaltensbezogene Nachweise für KI-Systeme in regulierten Finanzumgebungen bereitstellen. Wir glauben, dass Institute sich bei Risiko-, Compliance- und Governance-Entscheidungen zu ihren KI-Systemen nicht auf selbstberichtete Modellleistung verlassen sollten.",
+    "differentTitle": "Was uns unterscheidet",
+    "differentiators": [
+      {
+        "title": "Unabhängig",
+        "description": "aodit ist kein Anbieter-Tool. Es bewertet KI-Agenten unabhängig, ohne Zugang zu Modellgewichten, Trainingsdaten oder Produktionssystemen."
+      },
+      {
+        "title": "Schweizerisch",
+        "description": "Sitz in Luzern, unterliegt Schweizer Recht. Konzipiert für Schweizer Bankgeheimnis und FINMA-regulierte Bereitstellungserwartungen."
+      },
+      {
+        "title": "Spezialisiert",
+        "description": "Exklusiv für regulierte Finanzdienstleistungen — Banking, Fintech und Versicherung. Kein allgemeines KI-Testtool."
+      }
+    ],
+    "expertiseTitle": "Mit Sicherheitsexpertise entwickelt",
+    "expertiseP1": "SwissLI AG arbeitet mit erfahrenen Sicherheitsspezialisten in Cybersicherheit, Infrastrukturschutz und adversariellem Testing, um robuste Bewertungsmethodiken zu unterstützen.",
+    "expertiseP2": "Unser Bewertungsrahmen orientiert sich an realen Ausfallmustern in Produktions-KI-Bereitstellungen im Finanzdienstleistungssektor.",
+    "areasTitle": "Fachgebiete",
+    "areas": [
+      "Adversarielles Testing und Red-Teaming",
+      "Verhaltensbewertung unter Stress",
+      "On-Premise-Bereitstellung und Air-Gap-Betrieb",
+      "Regulatorische Ausrichtung (FINMA, EU-KI-Verordnung)",
+      "Multi-Turn-Gesprächsanalyse"
+    ],
+    "ctaTitle": "Gespräch beginnen",
+    "ctaBody": "Wir arbeiten mit Banken, Fintechs und Versicherern in FINMA-regulierten Umgebungen. Teilen Sie uns mit, wie wir helfen können."
+  },
+  "industries": {
+    "pageTitle": "Branchen | aodit – KI-Agenten-Risikobewertung & Stresstests",
+    "metaDescription": "Erfahren Sie, wie aodit KI-Agenten branchenübergreifend stresstestet — von Finanzen und Gesundheitswesen bis Recht, IT und Kundenbetrieb.",
+    "title": "KI-Agenten-Risikotests branchenübergreifend",
+    "subtitle": "Bewerten Sie geschäftskritische KI-Agenten mit unabhängigen Stresstests für regulierte und hochwirksame Geschäftsumgebungen."
+  },
+  "notFound": {
+    "pageTitle": "Nicht gefunden | aodit",
+    "title": "Seite nicht gefunden",
+    "goToMain": "Zur Startseite"
+  },
+  "legal": {
+    "label": "Rechtliches",
+    "lastUpdated": "Zuletzt aktualisiert: März 2026",
+    "companyAddress": "Swiss Lab of Intelligence (SwissLI AG)",
+    "address": "Murbacherstrasse 19, 6003 Luzern, Schweiz",
+    "privacyPageTitle": "Datenschutzerklärung | aodit",
+    "privacyTitle": "Datenschutzerklärung",
+    "privacySchemaTitle": "Datenschutzerklärung",
+    "privacySchemaDescription": "Datenschutzerklärung von Swiss Lab of Intelligence (SwissLI AG) zur Verarbeitung personenbezogener Daten im Zusammenhang mit der aodit-Plattform.",
+    "termsPageTitle": "Allgemeine Geschäftsbedingungen | aodit",
+    "termsTitle": "Allgemeine Geschäftsbedingungen",
+    "termsSchemaTitle": "Allgemeine Geschäftsbedingungen",
+    "termsSchemaDescription": "Allgemeine Geschäftsbedingungen für die Erbringung von Dienstleistungen durch Swiss Lab of Intelligence (SwissLI AG) im Zusammenhang mit der aodit-Plattform.",
+    "dpaPageTitle": "Auftragsverarbeitungsvertrag | aodit",
+    "dpaTitle": "Auftragsverarbeitungsvertrag (AVV)",
+    "dpaSchemaTitle": "Auftragsverarbeitungsvertrag (AVV)",
+    "dpaSchemaDescription": "Auftragsverarbeitungsvertrag zur Verarbeitung personenbezogener Daten durch Swiss Lab of Intelligence (SwissLI AG) im Auftrag von AODIT-Kunden.",
+    "privacyHeadings": {
+      "1": "Verantwortlicher",
+      "2": "Geltungsbereich dieser Richtlinie",
+      "4": "Zugang zu Client-Daten",
+      "3A": "Keine Auftragsverarbeiterrolle",
+      "corePrinciple": "Grundprinzip — Datensouveränität",
+      "devVsClient": "Entwicklung vs. Client-Umgebungen",
+      "categories": "Kategorien verarbeiteter personenbezogener Daten"
+    },
+    "termsHeadings": {
+      "1": "Geltungsbereich",
+      "2": "Dienstleistungen",
+      "3": "Art der Dienstleistungen",
+      "4": "Regulatorische Positionierung",
+      "5": "Nutzung der Dienstleistungen und Berichte",
+      "6": "Geistiges Eigentum",
+      "7": "Vertraulichkeit",
+      "8": "Daten- und Bereitstellungsmodell",
+      "9": "Sicherheit und Dokumentation",
+      "10": "Client-Verantwortlichkeiten",
+      "11": "Gebühren und Zahlung",
+      "12": "Keine Gewährleistung",
+      "13": "Haftungsbeschränkung",
+      "14": "Laufzeit und Kündigung",
+      "15": "Publicity",
+      "16": "Anwendbares Recht und Gerichtsstand",
+      "17": "Allgemeines",
+      "18": "Höhere Gewalt",
+      "19": "Unabhängige Parteien",
+      "20": "Abtretung",
+      "21": "Änderungen",
+      "22": "Client-Due-Diligence",
+      "proprietary": "Proprietäre Methoden und Geschäftsgeheimnisse"
+    },
+    "dpaHeadings": {
+      "1": "Zweck und Anwendbarkeit",
+      "2": "Rollen der Parteien",
+      "3": "Art der Verarbeitung",
+      "5": "Verarbeitungsanweisungen",
+      "6": "Vertraulichkeit",
+      "7": "Sicherheitsmaßnahmen",
+      "8": "Unterauftragsverarbeiter",
+      "9": "Internationale Datenübermittlungen",
+      "10": "Unterstützung des Verantwortlichen",
+      "11": "Meldung von Datenschutzverletzungen",
+      "12": "Datenaufbewahrung und -löschung",
+      "13": "Audit und Verifizierung",
+      "14": "Haftung",
+      "15": "Anwendbares Recht",
+      "categories": "Kategorien von Daten und betroffenen Personen",
+      "otherAgreements": "Verhältnis zu anderen Vereinbarungen"
+    }
+  },
+  "paymentStatus": {
+    "pageTitle": "Zahlung erfolgreich | aodit",
+    "processing": "Bitte warten Sie, während wir Ihre Zahlung sicher verarbeiten...",
+    "successTitle": "Zahlung erfolgreich",
+    "successMessage": "Hurra, {{name}}! 🎉 <br />Ihre Zahlung über <bold>{{amount}}</bold> wurde erfolgreich abgeschlossen!",
+    "subscriptionEnd": "Ihr Abonnement endet am <b>{{date}}</b>.",
+    "goToProfile": "Zum Profil",
+    "createPlanProjects": "{{plan}}-Projekte erstellen"
+  }
+}

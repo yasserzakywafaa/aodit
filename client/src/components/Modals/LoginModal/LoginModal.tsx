@@ -11,8 +11,10 @@ import { LoaderVariantEnum } from "src/shared/types/types";
 import PhoneAuth from "src/components/shared/SocialLogins/PhoneAuth";
 import SocialLogin from "./features/SocialLogin/SocialLogin";
 import { useLoginModalContext } from "./store/Provider";
+import { useTranslation } from "react-i18next";
 
 export const LoginModal = () => {
+  const { t } = useTranslation(["auth", "common"]);
   const {
     store: { state, handleIsFetching, handleToggleLoginModal },
   } = useLoginModalContext();
@@ -55,7 +57,7 @@ export const LoginModal = () => {
             <LockOpenOutlined color="primary" sx={{ m: 1 }} />
 
             <Typography component="h1" variant="h5">
-              Login to your account
+              {t("auth:modalLoginHeading")}
             </Typography>
           </Box>
 
@@ -83,7 +85,9 @@ export const LoginModal = () => {
                 <>
                   <SocialLogin authType="login" />
                   <PhoneAuth authType="login" onAuthSuccess={handleCloseModal} />
-                  <Divider sx={{ width: "100%", maxWidth: 360 }}>or</Divider>
+                  <Divider sx={{ width: "100%", maxWidth: 360 }}>
+                    {t("common:or")}
+                  </Divider>
                 </>
               )}
               <EmailPasswordForm mode="login" />
@@ -101,7 +105,7 @@ export const LoginModal = () => {
             startIcon={<Close />}
             onClick={handleCloseModal}
           >
-            Close
+            {t("common:close")}
           </Button>
         </DialogActions>
       </Dialog>

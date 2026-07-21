@@ -4,6 +4,7 @@ import { LinkedIn as LinkedInIcon } from "@mui/icons-material";
 import React from "react";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
+import { useTranslation } from "react-i18next";
 
 interface LinkedInAuthProps {
   authType?: "login" | "register";
@@ -15,6 +16,7 @@ const LinkedInAuth: React.FC<LinkedInAuthProps> = ({
   disabled = false,
 }) => {
   const isRegister = authType === "register";
+  const { t } = useTranslation("auth");
   const { store: loginStore } = useLoginModalContext();
   const { store: registerStore } = useRegisterModalContext();
 
@@ -41,7 +43,7 @@ const LinkedInAuth: React.FC<LinkedInAuthProps> = ({
       }}
     >
       <LinkedInIcon />
-      {isRegister ? "Register with LinkedIn" : "Login with LinkedIn"}
+      {isRegister ? t("registerWithLinkedIn") : t("loginWithLinkedIn")}
     </Button>
   );
 };

@@ -29,19 +29,20 @@ import {
 import { routes } from "src/application/routes";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const NAV_LINKS = [
-  { id: "home", label: "Home", route: routes.features },
-  { id: "industries", label: "Industries", route: null },
-  { id: "methodology", label: "Methodology", route: routes.methodology },
+  { id: "home", labelKey: "nav.home", route: routes.features },
+  { id: "industries", labelKey: "nav.industries", route: null },
+  { id: "methodology", labelKey: "nav.methodology", route: routes.methodology },
   {
     id: "compliance-finma",
-    label: "Compliance",
+    labelKey: "nav.compliance",
     route: routes.compliance.finma,
   },
-  { id: "security", label: "Security", route: routes.security },
-  { id: "about", label: "About", route: routes.about },
-  { id: "contact", label: "Contact", route: routes.contact },
+  { id: "security", labelKey: "nav.security", route: routes.security },
+  { id: "about", labelKey: "nav.about", route: routes.about },
+  { id: "contact", labelKey: "nav.contact", route: routes.contact },
 ] as const;
 
 interface ApplicationBarMobileViewParams {
@@ -66,6 +67,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
     setIsInstallAppDialogOpen,
     handleOnMenuItemClick,
   } = props;
+  const { t } = useTranslation("common");
   const [isIndustriesOpen, setIsIndustriesOpen] = useState(false);
   const [expandedCategoryId, setExpandedCategoryId] =
     useState<LandingPageCategoryId | null>(null);
@@ -159,7 +161,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                           <Typography variant="body2" sx={{
                             color: "text.primary"
                           }}>
-                            {item.label}
+                            {t(item.labelKey)}
                           </Typography>
                           {isIndustriesOpen ? (
                             <ExpandLessRounded fontSize="small" />
@@ -256,7 +258,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                                     fontSize: 13,
                                     fontWeight: 600
                                   }}>
-                                  View All Industries
+                                  {t("nav.viewAllIndustries")}
                                 </Typography>
                               </MenuItem>
                             </Box>
@@ -276,7 +278,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                       <Typography variant="body2" sx={{
                         color: "text.primary"
                       }}>
-                        {item.label}
+                        {t(item.labelKey)}
                       </Typography>
                     </MenuItem>
                   );
@@ -290,7 +292,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     fullWidth
                     onClick={handleOnMenuItemClickEvent("request-evaluation")}
                   >
-                    Request Evaluation
+                    {t("nav.requestEvaluation")}
                   </Button>
                   <Button
                     component="a"
@@ -300,7 +302,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     onClick={handleOnMenuItemClickEvent("demo")}
                     sx={{ mt: 1 }}
                   >
-                    Demo
+                    {t("nav.demo")}
                   </Button>
                 </Box>
               </MenuList>
@@ -319,7 +321,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                       color="secondary"
                       sx={{ mr: 1 }}
                     />
-                    <Typography variant="body1">Log in</Typography>
+                    <Typography variant="body1">{t("nav.login")}</Typography>
                   </MenuItem>))
                 )}
 
@@ -332,7 +334,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                         color="secondary"
                         sx={{ mr: 1 }}
                       />
-                      <Typography variant="body1">Register</Typography>
+                      <Typography variant="body1">{t("nav.register")}</Typography>
                     </MenuItem>
                   )}
 
@@ -341,7 +343,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     setIsInstallAppDialogOpen={setIsInstallAppDialogOpen}
                   >
                     <Typography variant="body1" sx={{ ml: 1 }}>
-                      Settings
+                      {t("settings.menu")}
                     </Typography>
                   </SettingsMenuButton>
                 </Box>

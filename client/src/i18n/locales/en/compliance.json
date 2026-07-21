@@ -1,0 +1,64 @@
+{
+  "euAiAct": {
+    "pageTitle": "EU AI Act | aodit",
+    "schemaTitle": "EU AI Act",
+    "schemaDescription": "Overview of EU AI Act compliance themes including risk classification, technical documentation, transparency obligations, and post-market monitoring.",
+    "title": "EU AI Act",
+    "subtitle": "European AI regulation framework",
+    "intro": "This page outlines key elements of the EU AI Act to help teams frame control design, evidence collection, and compliance-readiness workstreams.",
+    "focusAreas": "Focus Areas",
+    "items": [
+      {
+        "primary": "Risk-based classification",
+        "secondary": "Identify prohibited, high-risk, and limited-risk use cases and apply the correct obligations."
+      },
+      {
+        "primary": "Technical documentation",
+        "secondary": "Prepare robust documentation, logs, and traceability artifacts for regulatory scrutiny."
+      },
+      {
+        "primary": "Transparency requirements",
+        "secondary": "Provide clear user-facing disclosures when interacting with AI systems."
+      },
+      {
+        "primary": "Post-market monitoring",
+        "secondary": "Track incidents, maintain reporting readiness, and continuously evaluate model behavior."
+      }
+    ]
+  },
+  "finma": {
+    "pageTitle": "FINMA AI Guidance 08/2024 Explained (Switzerland) | aodit",
+    "schemaTitle": "FINMA AI Guidance 08/2024 Explained (Switzerland)",
+    "schemaDescription": "Independent behavioral control-layer evidence for FINMA-aligned AI testing, monitoring, and risk decisions in Swiss financial services.",
+    "eyebrow": "Regulatory Alignment",
+    "title": "FINMA AI Guidance 08/2024",
+    "intro": "maps to Swiss financial market supervision requirements for AI in regulated institutions.",
+    "introPrefix": "How",
+    "introSuffix": "maps to Swiss financial market supervision requirements for AI in regulated institutions.",
+    "lifecycleTitlePrefix": "Where",
+    "lifecycleTitleSuffix": "Fits in the Lifecycle",
+    "published": "Published",
+    "audience": "For CROs, compliance officers, and model risk teams evaluating independent AI testing evidence against FINMA requirements.",
+    "keyPrinciple": "Key Principle",
+    "lifecycleTitle": "Fits in the Lifecycle",
+    "phase": "Phase {{n}}",
+    "officialDoc": "Official FINMA Source Document",
+    "published": "Published",
+    "officialNote": "For transparency and audit-readiness, use the official FINMA notice as the primary regulatory source.",
+    "downloadPdf": "Download Official FINMA PDF",
+    "downloadSoon": "Download link coming soon",
+    "scorecardTitle": "FINMA Guidance 08/2024 — Control Evidence Scorecard",
+    "scorecardIntro": "<strong>Strong</strong> indicates direct behavioral evidence coverage. <strong>Partial</strong> indicates supporting evidence only. <strong>Not covered</strong> indicates an intentional boundary.",
+    "otherStandards": "Other Standards",
+    "addedValue": "Added Value",
+    "riskIfNotUsed": "Risk If Not Used",
+    "disclaimer": "Disclaimer",
+    "ctaTitle": "Independent evidence for FINMA-aligned AI governance",
+    "ctaBody": "provides behavioral stress-test evidence that complements your internal governance — without accessing production systems by default."
+  },
+  "levels": {
+    "strong": "Strong",
+    "partial": "Partial",
+    "notCovered": "Not covered"
+  }
+}

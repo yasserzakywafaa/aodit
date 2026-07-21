@@ -42,13 +42,14 @@ import { trackEvent } from "src/shared/utils/ga4";
 import swissMadeImg from "src/assets/images/swiss_made.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   type Region,
   createWebsiteSchema,
-  getHomeContent,
   getHreflangAlternates,
 } from "src/application/shared/regionContent";
+import { useRegionHomeContent } from "src/i18n/useRegionHomeContent";
 
 interface FeaturesPageProps {
   /**
@@ -67,6 +68,7 @@ const FeaturesPage = ({
   region = "global",
   landingContent,
 }: FeaturesPageProps = {}) => {
+  const { t } = useTranslation(["page", "common"]);
   const navigate = useNavigate();
   const {
     store: {
@@ -74,7 +76,7 @@ const FeaturesPage = ({
     },
   } = useApplicationContext();
 
-  const homeContent = getHomeContent(region);
+  const homeContent = useRegionHomeContent(region);
 
   const pageTitle = landingContent?.pageTitle ?? homeContent.pageTitle;
   const metaDescription =
@@ -85,7 +87,9 @@ const FeaturesPage = ({
   const schemaName = landingContent?.schemaName ?? homeContent.schemaName;
   const schemaDescription =
     landingContent?.schemaDescription ?? homeContent.schemaDescription;
-  const canonicalPath = landingContent?.slug ?? homeContent.canonicalPath;
+  const canonicalPath =
+    landingContent?.slug ??
+    (region === "swiss" ? routes.featuresCh : routes.features);
   const ctaTitle = landingContent?.cta.title ?? homeContent.cta.title;
   const ctaSubtitle = landingContent?.cta.subtitle ?? homeContent.cta.subtitle;
   const heroContent: HeroContent | undefined =
@@ -118,7 +122,7 @@ const FeaturesPage = ({
     [schemaName, schemaDescription, canonicalPath],
   );
   const breadcrumbSchema = useMemo(() => {
-    const crumbs = [{ name: "Home", url: routes.features }];
+    const crumbs = [{ name: t("breadcrumb.home"), url: routes.features }];
     if (landingContent) {
       crumbs.push({
         name: landingContent.breadcrumbLabel,
@@ -126,7 +130,7 @@ const FeaturesPage = ({
       });
     }
     return createBreadcrumbSchema(crumbs);
-  }, [landingContent]);
+  }, [landingContent, t]);
 
   useSchemaOrg(organizationSchema, `organization-schema-${schemaKeySuffix}`);
   useSchemaOrg(websiteSchema, `website-schema-${schemaKeySuffix}`);
@@ -229,13 +233,13 @@ const FeaturesPage = ({
               <Box
                 component="img"
                 src={euHostedImg}
-                alt="EU Hosted (EU AI Act Ready)"
+                alt={t("features.euHostedAlt")}
                 sx={{ maxWidth: "200px" }}
               />
               <Box
                 component="img"
                 src={swissMadeImg}
-                alt="Swiss Made Software"
+                alt={t("features.swissMadeAlt")}
                 sx={{ maxWidth: "200px" }}
               />
             </Stack>
@@ -249,7 +253,7 @@ const FeaturesPage = ({
           sourceLabel={
             landingContent?.breadcrumbLabel ??
             landingContent?.schemaName ??
-            "Home"
+            t("cta.home")
           }
         />
       </Box>
@@ -288,7 +292,7 @@ const FeaturesPage = ({
               }}>
               aodit
             </Typography>{" "}
-            fits in your AI lifecycle
+            {t("features.lifecycleTitle")}
           </Typography>
           <Paper variant="outlined" sx={{ overflow: "hidden" }}>
             <Table>
@@ -301,32 +305,19 @@ const FeaturesPage = ({
                   <TableCell
                     sx={{ fontWeight: 700, fontSize: 14, width: "30%" }}
                   >
-                    Phase
+                    {t("features.lifecyclePhase")}
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700, fontSize: 14 }}>
-                    Role
+                    {t("features.lifecycleRole")}
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {[
-                  {
-                    phase: "Before deployment",
-                    role: "Independent validation",
-                  },
-                  {
-                    phase: "After updates",
-                    role: "Test again to ensure behavior has not degraded",
-                  },
-                  {
-                    phase: "Ongoing",
-                    role: "Provide audit-ready evidence for risk and compliance",
-                  },
-                  {
-                    phase: "Post-incident",
-                    role: "Analyse what went wrong and why the AI behaved incorrectly",
-                  },
-                ].map(({ phase, role }, i) => (
+                {(
+                  t("features.lifecycleRows", {
+                    returnObjects: true,
+                  }) as { phase: string; role: string }[]
+                ).map(({ phase, role }, i) => (
                   <TableRow
                     key={phase}
                     sx={{
@@ -365,7 +356,7 @@ const FeaturesPage = ({
                 color: "text.primary",
               }}
             >
-              Independent behavioral testing under stress
+              {t("features.behavioralTitle")}
             </Typography>
             <Typography
               sx={{
@@ -381,17 +372,14 @@ const FeaturesPage = ({
                 }}>
                 aodit
               </Typography>{" "}
-              evaluates how AI agents behave under pressure, contradiction, and
-              adversarial input.
+              {t("features.behavioralBody1")}
             </Typography>
             <Typography
               sx={{
                 color: "text.secondary",
                 lineHeight: 1.75
               }}>
-              Each evaluation uses a structured multi-turn protocol to simulate
-              real-world failure scenarios and produce decision-ready evidence
-              for risk, audit, and compliance functions.
+              {t("features.behavioralBody2")}
             </Typography>
           </Box>
         </Container>
@@ -416,7 +404,7 @@ const FeaturesPage = ({
               color: "text.primary",
             }}
           >
-            Scope and boundaries
+            {t("features.scopeTitle")}
           </Typography>
           <Typography
             sx={{
@@ -432,7 +420,7 @@ const FeaturesPage = ({
               }}>
               aodit
             </Typography>{" "}
-            currently focuses on independent behavioral evaluation of AI agents.
+            {t("features.scopeIntro")}
           </Typography>
 
           <Paper variant="outlined" sx={{ p: 3, mb: 2.5 }}>
@@ -444,15 +432,10 @@ const FeaturesPage = ({
               }}>
                 aodit
               </Typography>{" "}
-              does not:
+              {t("features.scopeDoesNot")}
             </Typography>
             <List sx={{ listStyleType: "none", p: 0 }}>
-              {[
-                "Provide regulatory certification",
-                "Replace internal governance frameworks",
-                "Access training data or model weights",
-                "Require access to live production systems",
-              ].map((item) => (
+              {(t("features.scopeItems", { returnObjects: true }) as string[]).map((item) => (
                 <ListItem key={item} sx={{ py: 0.5, px: 0 }}>
                   <Chip
                     label={item}
@@ -477,8 +460,7 @@ const FeaturesPage = ({
               fontStyle: "italic",
               fontSize: 14
             }}>
-            Monitoring and real-time control capabilities may be introduced as
-            part of future product extensions.
+            {t("features.scopeNote")}
           </Typography>
         </Container>
       </Box>
@@ -584,7 +566,7 @@ const FeaturesPage = ({
               onClick={handleRequestEvaluationClick}
               sx={{ px: 5, py: 1.5 }}
             >
-              Request Evaluation
+              {t("common:nav.requestEvaluation")}
             </Button>
             <Button
               variant="outlined"
@@ -593,7 +575,7 @@ const FeaturesPage = ({
               onClick={handleTryLiveDemoClick}
               sx={{ px: 5, py: 1.5 }}
             >
-              Try Live Demo
+              {t("common:footer.tryLiveDemo")}
             </Button>
           </Stack>
         </Container>

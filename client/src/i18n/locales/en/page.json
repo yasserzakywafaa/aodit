@@ -1,0 +1,596 @@
+{
+  "cta": {
+    "requestEvaluation": "Request Evaluation",
+    "tryLiveDemo": "Try Live Demo",
+    "getDemo": "Get a Demo",
+    "contactUs": "Contact Us",
+    "getFullAccess": "Get full access",
+    "requestSecurityPackage": "Request Security Package",
+    "learnMore": "Learn more",
+    "home": "Home"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "contact": "Contact",
+    "pricing": "Pricing"
+  },
+  "home": {
+    "global": {
+      "pageTitle": "AI Customer Service Agent Testing & Risk Evaluation | aodit",
+      "metaDescription": "Stress-test your AI customer support agent before launch. Catch policy drift, refund mistakes, and escalation failures with independent 8-turn evaluation and audit-ready scores.",
+      "ogTitle": "AI Customer Service Agent Testing | aodit",
+      "ogDescription": "Independent evaluation for AI customer support agents. Adversarial stress tests for refunds, policies, and escalations — with deployment-ready evidence for CX and compliance teams.",
+      "hero": {
+        "titleLead": "Will Your Customer Support AI",
+        "titleHighlight": "Hold Up Under Pressure?",
+        "subtitleLine1": "8-turn adversarial stress tests",
+        "subtitleLine2": "before refunds, policies, and customer trust break",
+        "bullets": [
+          "Catch unauthorized refunds, policy drift, and weak identity checks",
+          "Simulate angry customers, edge cases, and escalation pressure",
+          "Deployment verdicts and evidence CX, trust & safety, and compliance can act on"
+        ]
+      },
+      "trustBlock": {
+        "title": "Your customer conversations stay yours",
+        "line1": "can run on-premise or in your controlled cloud without SwissLI AG accessing production chat logs or customer data by default.",
+        "line2": "Prompts, agent responses, and evaluation artifacts stay under your governance and access controls.",
+        "line3": "Built for teams shipping AI in customer support, contact centers, and digital CX — from pilot to production."
+      },
+      "cta": {
+        "title": "Find where your support agent breaks—before customers do.",
+        "subtitle": "Independent evaluation in 2–3 weeks. Try the live demo now or request a full assessment."
+      },
+      "schemaName": "AI Customer Service Agent Evaluation",
+      "schemaDescription": "Independent behavioral evaluation for AI customer support agents — stress-testing refunds, policies, escalations, and trust risks with audit-ready evidence.",
+      "websiteSchemaDescription": "Independent AI customer support agent evaluation — adversarial stress testing, deployment verdicts, and audit-ready evidence for CX and compliance teams.",
+      "regulatorySectionTitle": "Built for customer-facing AI under scrutiny",
+      "regulatorySectionBody1": "Consumer-protection rules, the EU AI Act, and enterprise risk frameworks increasingly expect proof that customer-facing AI is tested—not just monitored after complaints.",
+      "regulatorySectionBody2": "Most support teams still lack independent evidence of how their agent behaves when users push for exceptions, refunds, or sensitive account changes.",
+      "regulatorySectionBody3": "closes that gap with structured stress tests—without needing access to your live support queue."
+    },
+    "swiss": {
+      "pageTitle": "AI Agent Evaluation for Fintech & Insurers (FINMA & EU AI Act Ready) | aodit",
+      "metaDescription": "Independent AI agent evaluation for fintechs and insurers in Switzerland. On-premise deployment, FINMA-aligned evidence, and no client data access by default.",
+      "ogTitle": "AI Agent Evaluation for Fintechs and Insurers | aodit",
+      "ogDescription": "Independent AI agent evaluation for regulated fintechs and insurers. On-premise by design and built for FINMA-aligned environments.",
+      "hero": {
+        "titleLead": "How Does Your AI Agent Behave Under",
+        "titleHighlight": "Pressure?",
+        "subtitleLine1": "We break your AI Agent",
+        "subtitleLine2": "before Regulators do",
+        "bullets": [
+          "Independent behavioral stress-testing with clear risk evidence",
+          "Adversarial scenarios mapped to real business workflows",
+          "Actionable findings for product, risk, and compliance teams"
+        ]
+      },
+      "trustBlock": {
+        "title": "Data boundaries you can defend",
+        "line1": "can be deployed in controlled environments and does not require SwissLI AG to access your client data by default.",
+        "line2": "AI agent prompts, outputs, and evaluation artifacts remain under your governance and access controls.",
+        "line3": "Built to support security, risk, and compliance teams across regulated and non-regulated industries."
+      },
+      "cta": {
+        "title": "We break your AI before regulators do.",
+        "subtitle": "Independent evaluation delivered in 2–3 weeks. Fully on-premise."
+      },
+      "schemaName": "AI Agent Evaluation for Fintech & Insurers",
+      "schemaDescription": "Independent AI agent evaluation for fintechs and insurance companies with on-premise deployment and no client data access by default.",
+      "websiteSchemaDescription": "Independent AI agent evaluation for fintechs and insurers, deployed on-premise within client infrastructure.",
+      "regulatorySectionTitle": "Built for FINMA-regulated environments",
+      "regulatorySectionBody1": "FINMA Guidance 08/2024 and the EU AI Act require institutions to demonstrate effective governance, testing, and monitoring of AI systems.",
+      "regulatorySectionBody2": "Most institutions lack independent validation of how their AI behaves under stress.",
+      "regulatorySectionBody3": "provides that independent evidence layer."
+    }
+  },
+  "featuredReport": {
+    "global": {
+      "title": "2026 Customer Support AI Risk Report",
+      "subtitle": "AODIT stress-tested leading models across refunds, policy edge cases, angry escalations, and identity-verification failures.",
+      "description": "Independent evaluation of AI customer support agents under adversarial pressure—built for CX, trust & safety, and compliance leaders.",
+      "ctaLabel": "Download Executive Summary",
+      "reportOfInterest": "Customer Support AI Risk Assessment - Executive Summary",
+      "message": "Executive summary download lead magnet"
+    },
+    "swiss": {
+      "title": "2026 Banking AI Risk Report",
+      "subtitle": "AODIT evaluated leading AI systems across multi-turn adversarial scenarios covering customer interactions, fraud handling, and escalation behavior.",
+      "description": "Independent evaluation of AI agent behavior under adversarial banking scenarios aligned with FINMA expectations.",
+      "ctaLabel": "Download Executive Summary",
+      "reportOfInterest": "Banking AI Risk Assessment - Executive Summary",
+      "message": "Executive summary download lead magnet"
+    }
+  },
+  "features": {
+    "euHostedAlt": "EU Hosted (EU AI Act Ready)",
+    "swissMadeAlt": "Swiss Made Software",
+    "lifecycleTitle": "fits in your AI lifecycle",
+    "lifecyclePhase": "Phase",
+    "lifecycleRole": "Role",
+    "lifecycleRows": [
+      {
+        "phase": "Before deployment",
+        "role": "Independent validation"
+      },
+      {
+        "phase": "After updates",
+        "role": "Test again to ensure behavior has not degraded"
+      },
+      {
+        "phase": "Ongoing",
+        "role": "Provide audit-ready evidence for risk and compliance"
+      },
+      {
+        "phase": "Post-incident",
+        "role": "Analyse what went wrong and why the AI behaved incorrectly"
+      }
+    ],
+    "behavioralTitle": "Independent behavioral testing under stress",
+    "behavioralBody1": "evaluates how AI agents behave under pressure, contradiction, and adversarial input.",
+    "behavioralBody2": "Each evaluation uses a structured multi-turn protocol to simulate real-world failure scenarios and produce decision-ready evidence for risk, audit, and compliance functions.",
+    "scopeTitle": "Scope and boundaries",
+    "scopeIntro": "currently focuses on independent behavioral evaluation of AI agents.",
+    "scopeDoesNot": "does not:",
+    "scopeItems": [
+      "Provide regulatory certification",
+      "Replace internal governance frameworks",
+      "Access training data or model weights",
+      "Require access to live production systems"
+    ],
+    "scopeNote": "Monitoring and real-time control capabilities may be introduced as part of future product extensions."
+  },
+  "aboutSection": {
+    "label": "About Aodit",
+    "titleIndependent": "independent",
+    "titleRest": "institution for AI risk clarity",
+    "p1": "Aodit — the AI-Powered Agent Risk Index — produces independent behavioral ratings for AI agents deployed in high-stakes financial and enterprise environments.",
+    "p2": "We exist because the gap between AI capability and AI governance is real, growing, and consequential. Risk officers and compliance teams need legible, rigorous, independent assessments — not vendor claims.",
+    "p3": "Our methodology is modelled on established credit-rating frameworks, adapted for the specific failure modes of large language models in adversarial real-world conditions.",
+    "footer": "Zurich, Switzerland · Founded 2026 · Independent · Not affiliated with any AI vendor",
+    "stats": [
+      {
+        "num": "6",
+        "label": "Rating Dimensions"
+      },
+      {
+        "num": "100",
+        "label": "Adversarial Scenarios"
+      },
+      {
+        "num": "30",
+        "label": "Attack Categories"
+      },
+      {
+        "num": "8",
+        "label": "Adversarial Turns"
+      }
+    ],
+    "coverageTitle": "Evaluation Coverage",
+    "coverage": [
+      {
+        "name": "Financial Services Banking",
+        "status": "Active",
+        "active": true
+      },
+      {
+        "name": "Insurance & Claims",
+        "status": "2026 Q3",
+        "active": false
+      },
+      {
+        "name": "Healthcare Triage Agents",
+        "status": "2026 Q4",
+        "active": false
+      },
+      {
+        "name": "Legal & Compliance Agents",
+        "status": "2027",
+        "active": false
+      }
+    ]
+  },
+  "methodologySection": {
+    "label": "Evaluation Framework",
+    "title1": "AODIT-6 methodology.",
+    "title2": "Six dimensions.",
+    "title3": "Thirty categories.",
+    "overview": "AODIT-6 evaluates AI behavior across six dimensions and five categories per dimension. Results are independently scored on a 0.0–5.0 scale and combined using weighted aggregation to produce a composite rating.",
+    "protocolTitle": "8-Round Adversarial Protocol",
+    "protocolBody": "The evaluation process runs eight structured adversarial turns under adversarial pressure to evaluate stability, boundary handling, manipulation resistance, and post-stress recovery."
+  },
+  "reportsSection": {
+    "eyebrow": "// PUBLISHED REPORTS",
+    "title": "Five Independent Benchmarks",
+    "subtitle": "Each report auto-generates adversarial scenarios, runs 8-turn conversations, and scores behavior under the AODIT-6 framework.",
+    "getNotified": "GET NOTIFIED",
+    "customReport": "CUSTOM REPORT",
+    "customDesc": "Your sector. Your scenarios. Enterprise pricing.",
+    "cards": [
+      {
+        "number": "REPORT 01 — LIVE",
+        "title": "2026 Banking AI Risk Assessment",
+        "desc": "How leading frontier models behave under contradiction, pressure, and adversarial manipulation."
+      },
+      {
+        "number": "REPORT 02 — COMING SOON",
+        "title": "Trust & Deception Benchmark",
+        "desc": "Which AI models fake confidence? The definitive test for hallucination, bluffing, and false certainty."
+      },
+      {
+        "number": "REPORT 03 — COMING SOON",
+        "title": "Jailbreak Resistance Benchmark",
+        "desc": "We ran 1,000 adversarial prompts. Who breaks first? The definitive security stress test."
+      },
+      {
+        "number": "REPORT 04 — COMING SOON",
+        "title": "Banking Agent Risk Ratings",
+        "desc": "Tested against Swiss banking standards. Payment instructions, fraud escalation, AML ambiguity."
+      },
+      {
+        "number": "REPORT 05 — COMING SOON",
+        "title": "AI Employee Stress Test",
+        "desc": "Conflicting manager instructions, accountability pressure, ambiguity at scale. Would you trust this employee?"
+      }
+    ]
+  },
+  "subscribe": {
+    "stayInformed": "Stay informed",
+    "stayInformedTitle": "Stay Informed",
+    "titlePrefix": "Receive",
+    "titleEmphasis": "ratings",
+    "titleSuffix": "when they publish",
+    "subtitle": "New reports issued quarterly. No marketing. No noise. Risk, compliance, and governance professionals only.",
+    "emailPlaceholder": "your@email.com",
+    "subscribe": "Subscribe",
+    "requesting": "Requesting",
+    "institutional": "For institutional inquiries: info@aodit.ai",
+    "errors": {
+      "empty": "Please enter your email address",
+      "invalid": "Please enter a valid email address",
+      "generic": "Something went wrong. Please try again later."
+    },
+    "success": "You're on the list. Check your inbox."
+  },
+  "contactSection": {
+    "eyebrow": "// GET RATED",
+    "title": "Rate Your AI Agent",
+    "subtitle": "Tell us about your agent. We will run it through the AODIT-6 framework and deliver an institutional-grade rating report.",
+    "bullets": [
+      "Independent scoring — no affiliation with tested models",
+      "Frozen transcripts — methodology cannot be gamed",
+      "Report delivered within 5 business days"
+    ]
+  },
+  "downloadReport": {
+    "pdfComingSoon": "PDF coming soon",
+    "dialogTitle": "Enter your details to get the executive summary",
+    "fullName": "Full name",
+    "company": "Company",
+    "workEmail": "Work email",
+    "getSummary": "Get executive summary",
+    "submitting": "Submitting…",
+    "success": "Thank you — opening the executive summary.",
+    "submitError": "Could not submit. Please try again.",
+    "validation": {
+      "nameRequired": "Full name is required",
+      "companyRequired": "Company is required",
+      "emailRequired": "Work email is required",
+      "emailInvalid": "Enter a valid email address"
+    }
+  },
+  "complianceLogos": {
+    "title": "Regulatory standards and compliance references we align with",
+    "subtitle": "Starting with FINMA standards, with more institutions and standards added over time."
+  },
+  "contact": {
+    "pageTitle": "Contact Us | aodit",
+    "title": "Contact Us",
+    "intro": "For evaluation inquiries, security documentation requests (NDA required), or general questions about",
+    "responseTime": "We typically respond within one business day.",
+    "form": {
+      "name": "Your name",
+      "company": "Company",
+      "email": "Work email",
+      "message": "Describe your AI agent or use case",
+      "submit": "SUBMIT REQUEST →",
+      "privacy": "No spam. Your details are used only to process your rating request."
+    }
+  },
+  "pricing": {
+    "pageTitle": "Pricing | aodit",
+    "title": "Pricing",
+    "subtitle": "Plans for teams running independent AI agent evaluations",
+    "plans": "Plans",
+    "popular": "Popular",
+    "perMonth": "/month",
+    "tableAriaLabel": "pricing table",
+    "breadcrumbHome": "Home",
+    "breadcrumbPricing": "Pricing",
+    "cta": {
+      "createProjects": "Create Reports",
+      "registerSubscribe": "Register & Subscribe",
+      "upgrade": "Upgrade",
+      "currentPlan": "Current Plan"
+    },
+    "features": {
+      "freeTrial": "Free trial",
+      "saveTime": "Save time on report setup",
+      "generateUpToFree_one": "Run up to {{count}} evaluation report",
+      "generateUpToFree_other": "Run up to {{count}} evaluation reports",
+      "generateUpToMonthly_one": "Run up to {{count}} evaluation report/month",
+      "generateUpToMonthly_other": "Run up to {{count}} evaluation reports/month",
+      "basicCustomization": "Basic scenario configuration",
+      "publicProjects": "Reports are shared in workspace",
+      "exportPdf": "Export evaluation reports to PDF",
+      "limitedBrandVoice": "Limited agent persona templates",
+      "limitedCustomization": "Limited report customization",
+      "publishWordpressGhost": "Webhook & API integrations",
+      "singleProjectCreation": "Single report creation",
+      "advancedCustomization": "Advanced scenario & weight configuration",
+      "privateProjects": "Private reports",
+      "topicsKeywordsRelated": "Industry scenario libraries",
+      "seoOptimizedContent": "Compliance-aligned scenario templates",
+      "apiAccess": "Access to aodit API",
+      "campaignBulk": "Bulk evaluation campaigns",
+      "multiClientManagement": "Multi-workspace management",
+      "enhancedBrandVoice": "Enhanced agent persona templates",
+      "customizableParameters": "Customizable evaluation parameters",
+      "highQualityInterlinking": "Cross-report benchmarking",
+      "advancedCampaignAutomation": "Advanced evaluation automation",
+      "bulkGenerationScale": "Bulk report generation at scale",
+      "multiClientWorkflows": "Multi-workspace evaluation workflows",
+      "fullBrandVoice": "Full agent persona customization",
+      "personalizedTopics": "Personalized scenario recommendations",
+      "advancedCustomizableParameters": "Advanced customizable evaluation parameters",
+      "priorityGeneration": "Priority evaluation runs",
+      "automatedScheduling": "Automated report scheduling",
+      "fullApiAccess": "Full access to aodit API",
+      "enterpriseCampaignAutomation": "Enterprise evaluation automation",
+      "unlimitedBulkGeneration": "Unlimited bulk report generation",
+      "advancedMultiClient": "Advanced multi-workspace management",
+      "scheduledCampaignExecution": "Scheduled evaluation execution"
+    },
+    "table": {
+      "rowSaveTime": "Save time on report setup",
+      "rowNumberOfProjects": "Number of evaluation reports",
+      "rowProjectCustomization": "Report customization",
+      "rowVisibility": "Report visibility",
+      "rowExportPdf": "Export reports to PDF",
+      "rowBrandVoice": "Agent persona templates",
+      "rowCustomizableParameters": "Customizable evaluation parameters",
+      "rowInterlinking": "Cross-report benchmarking",
+      "rowTopicsKeywords": "Scenario library recommendations",
+      "rowPriorityGeneration": "Priority evaluation runs",
+      "rowAutoPublish": "Webhook & API integrations",
+      "rowScheduling": "Automated report scheduling",
+      "rowApiAccess": "Access to aodit API",
+      "valuePublic": "Shared",
+      "valuePrivate": "Private",
+      "valueBasic": "Basic",
+      "valueLimited": "Limited",
+      "valueFlexible": "Flexible",
+      "valueRelaxed": "Relaxed",
+      "valueAdvanced": "Advanced",
+      "valueEnhanced": "Enhanced",
+      "valueHighQuality": "High-quality",
+      "valueFull": "Full"
+    }
+  },
+  "installApp": {
+    "fromBrowser": "From",
+    "browserWord": "browser",
+    "tapIconAndThen": "simply tap the",
+    "clickIconAndThen": "simply click the",
+    "iconAndThen": "icon and then",
+    "iosDescription": "Install this app on your iPhone or iPad and access aodit evaluations on the go.",
+    "iosStep1": "Safari",
+    "iosStep2": "Add to Home Screen",
+    "androidDescription": "Install this app on your device for quick access to demos and reports.",
+    "androidButton": "Install App",
+    "macDescription": "Install this app on your Mac for native desktop access to aodit.",
+    "macStep1": "Safari",
+    "macStep2": "Add to Dock",
+    "windowsDescription": "Install this app on your Windows computer for desktop access to aodit.",
+    "windowsStep1": "Chrome",
+    "windowsFromChrome": "at the top next to the URL,",
+    "windowsButton": "Install"
+  },
+  "methodology": {
+    "pageTitle": "AI Agent Testing Methodology for Fintechs and Insurance companies | aodit",
+    "schemaTitle": "AI Agent Testing Methodology",
+    "schemaDescription": "AODIT-6 methodology for independent AI agent behavioral evaluation across six dimensions and eight adversarial turns.",
+    "eyebrow": "AODIT-6 behavioral evaluation framework",
+    "title": "AI Agent Testing Methodology",
+    "intro": "evaluates how AI agents behave under stress, contradiction, and adversarial pressure. The framework is designed for risk, compliance, and audit teams that require independent evidence rather than self-reported model performance.",
+    "whoForTitle": "Who this is for",
+    "whoForBody": "Risk teams, compliance officers, and audit functions who need independent behavioral evidence rather than vendor-supplied benchmarks.",
+    "dimensionsTitle": "Six evaluation dimensions",
+    "dimensionsSubtitle": "Each dimension measures a distinct behavioral risk class using structured multi-turn scenarios.",
+    "protocolTitle": "Eight-turn adversarial protocol",
+    "protocolSubtitle": "Every evaluation runs an eight-turn sequence that increases pressure progressively and then tests recovery.",
+    "ctaTitle": "Independent by design",
+    "ctaBody": "is an independent evaluation layer. It does not certify models, replace governance frameworks, or access model weights."
+  },
+  "security": {
+    "pageTitle": "On-Premise AI Evaluation for Fintechs and Insurance companies | aodit",
+    "schemaTitle": "On-Premise AI Evaluation Security",
+    "schemaDescription": "Security architecture and data handling model for aodit on-premise deployment in regulated fintechs and insurance companies.",
+    "title": "On-Premise by Design",
+    "intro": "is deployed fully within client infrastructure. No data leaves your environment. SwissLI AG has no access to AI agent inputs, outputs, or logs by default.",
+    "yourInfra": "Your Infrastructure",
+    "onPremise": "On-premise / airgapped",
+    "evaluation": "Evaluation",
+    "runsInside": "Runs inside your environment",
+    "resultsInHouse": "Results Stay In-House",
+    "noTransfer": "No external data transfer",
+    "deploymentArch": "Deployment architecture",
+    "archItems": [
+      "On-premise deployment inside client infrastructure",
+      "Airgapped operation supported",
+      "No external data transfer",
+      "No persistent storage outside client environment"
+    ],
+    "devEnvs": "Development and testing environments",
+    "devEnvsBody": "evaluation frameworks and adversarial scenarios are developed in controlled environments. No client data is ever used in development or testing. All client-specific evaluations are executed exclusively within client on-premise infrastructure.",
+    "clientAccess": "Client-controlled access",
+    "clientAccessP1": "Where required, SwissLI AG may access systems via temporary API endpoints or secure tunneled connections.",
+    "clientAccessP2": "All access is explicitly approved by the client, time-limited, logged, and auditable.",
+    "dataPrinciples": "Data handling principles",
+    "dataItems": [
+      "SwissLI AG does not collect end-user data",
+      "SwissLI AG does not store AI agent transcripts",
+      "SwissLI AG does not train models on client data",
+      "SwissLI AG does not access production outputs by default"
+    ],
+    "securityControls": "Security controls",
+    "controlItems": [
+      "TLS 1.2+ encrypted communication",
+      "Zero-trust architecture",
+      "Role-based access control",
+      "Audit logging of administrative actions",
+      "Encrypted storage for internal systems"
+    ],
+    "swissGov": "Swiss governance",
+    "swissGovLead": "SwissLI AG is a Swiss company headquartered in Luzern and governed by Swiss law.",
+    "swissGovTail": "is designed for Swiss banking secrecy and FINMA-regulated deployment expectations.",
+    "documentation": "Documentation",
+    "docIntro": "Available under NDA during vendor onboarding:",
+    "requestSecurityPackage": "Request Security Package",
+    "docItems": [
+      "Security Policy",
+      "Data Processing Agreement",
+      "Technical & Organisational Measures",
+      "Business Continuity Plan",
+      "Terms & Conditions"
+    ]
+  },
+  "about": {
+    "pageTitle": "About SwissLI AG | Independent AI Evaluation",
+    "schemaTitle": "About SwissLI AG",
+    "schemaDescription": "Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI lab focused on safe AI system evaluation for regulated environments.",
+    "title": "About SwissLI AG",
+    "p1": "Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI lab founded in 2021 and headquartered in Luzern. The lab focuses on building and evaluating AI systems with a strong focus on real-world behavior, safety, and system performance.",
+    "p2": "is SwissLI's platform for independent evaluation of AI agents in regulated environments, including banking, fintech, and insurance.",
+    "missionTitle": "Our mission",
+    "missionBody": "Providing independent behavioral evidence for AI systems deployed in regulated financial environments. We believe institutions should not have to rely on self-reported model performance when making risk, compliance, and governance decisions about their AI systems.",
+    "differentTitle": "What makes us different",
+    "differentiators": [
+      {
+        "title": "Independent",
+        "description": "aodit is not a vendor tool. It evaluates AI agents independently, without access to model weights, training data, or production systems."
+      },
+      {
+        "title": "Swiss",
+        "description": "Headquartered in Luzern, governed by Swiss law. Designed for Swiss banking secrecy and FINMA-regulated deployment expectations."
+      },
+      {
+        "title": "Specialized",
+        "description": "Built exclusively for regulated financial services — banking, fintech, and insurance. Not a general-purpose AI testing tool."
+      }
+    ],
+    "expertiseTitle": "Built with security expertise",
+    "expertiseP1": "SwissLI AG works with experienced security specialists in cybersecurity, infrastructure protection, and adversarial testing to support robust evaluation methodologies.",
+    "expertiseP2": "Our evaluation framework is informed by real-world failure patterns observed in production AI deployments across financial services.",
+    "areasTitle": "Areas of expertise",
+    "areas": [
+      "Adversarial testing and red-teaming",
+      "Behavioral evaluation under stress",
+      "On-premise deployment and airgapped operation",
+      "Regulatory alignment (FINMA, EU AI Act)",
+      "Multi-turn conversation analysis"
+    ],
+    "ctaTitle": "Start a conversation",
+    "ctaBody": "We work with banks, fintechs, and insurers operating in FINMA-regulated environments. Let us know how we can help."
+  },
+  "industries": {
+    "pageTitle": "Industries | aodit – AI Agent Risk Evaluation & Stress Testing",
+    "metaDescription": "Explore how aodit stress-tests AI agents across industries, from finance and healthcare to legal, IT, and customer operations.",
+    "title": "AI Agent Risk Testing Across Industries",
+    "subtitle": "Evaluate mission-critical AI agents with independent stress tests designed for regulated and high-impact business environments."
+  },
+  "notFound": {
+    "pageTitle": "Not Found | aodit",
+    "title": "Page Not Found",
+    "goToMain": "Go to main page"
+  },
+  "legal": {
+    "label": "Legal",
+    "lastUpdated": "Last updated: March 2026",
+    "companyAddress": "Swiss Lab of Intelligence (SwissLI AG)",
+    "address": "Murbacherstrasse 19, 6003 Luzern, Switzerland",
+    "privacyPageTitle": "Privacy Policy | aodit",
+    "privacyTitle": "Privacy Policy",
+    "privacySchemaTitle": "Privacy Policy",
+    "privacySchemaDescription": "Privacy Policy of Swiss Lab of Intelligence (SwissLI AG) describing how personal data is processed in connection with the aodit platform.",
+    "termsPageTitle": "Terms & Conditions | aodit",
+    "termsTitle": "Terms & Conditions",
+    "termsSchemaTitle": "Terms and Conditions",
+    "termsSchemaDescription": "Terms and Conditions governing the provision of services by Swiss Lab of Intelligence (SwissLI AG) in connection with the aodit platform.",
+    "dpaPageTitle": "Data Processing Agreement | aodit",
+    "dpaTitle": "Data Processing Agreement (DPA)",
+    "dpaSchemaTitle": "Data Processing Agreement (DPA)",
+    "dpaSchemaDescription": "Data Processing Agreement governing the processing of personal data by Swiss Lab of Intelligence (SwissLI AG) on behalf of AODIT clients.",
+    "privacyHeadings": {
+      "1": "Controller",
+      "2": "Scope of this Policy",
+      "4": "Access to Client Data",
+      "3A": "No Data Processor Role",
+      "corePrinciple": "Core Principle — Data Sovereignty",
+      "devVsClient": "Development vs Client Environments",
+      "categories": "Categories of Personal Data Processed"
+    },
+    "termsHeadings": {
+      "1": "Scope",
+      "2": "Services",
+      "3": "Nature of Services",
+      "4": "Regulatory Positioning",
+      "5": "Use of Services and Reports",
+      "6": "Intellectual Property",
+      "7": "Confidentiality",
+      "8": "Data and Deployment Model",
+      "9": "Security and Documentation",
+      "10": "Client Responsibilities",
+      "11": "Fees and Payment",
+      "12": "No Warranty",
+      "13": "Limitation of Liability",
+      "14": "Term and Termination",
+      "15": "Publicity",
+      "16": "Governing Law and Jurisdiction",
+      "17": "General",
+      "18": "Force Majeure",
+      "19": "Independent Parties",
+      "20": "Assignment",
+      "21": "Amendments",
+      "22": "Client Due Diligence",
+      "proprietary": "Proprietary Methods and Trade Secrets"
+    },
+    "dpaHeadings": {
+      "1": "Purpose and Applicability",
+      "2": "Roles of the Parties",
+      "3": "Nature of Processing",
+      "5": "Processing Instructions",
+      "6": "Confidentiality",
+      "7": "Security Measures",
+      "8": "Sub-Processors",
+      "9": "International Data Transfers",
+      "10": "Assistance to the Controller",
+      "11": "Data Breach Notification",
+      "12": "Data Retention and Deletion",
+      "13": "Audit and Verification",
+      "14": "Liability",
+      "15": "Governing Law",
+      "categories": "Categories of Data and Data Subjects",
+      "otherAgreements": "Relationship with Other Agreements"
+    }
+  },
+  "paymentStatus": {
+    "pageTitle": "Payment Success | aodit",
+    "processing": "Please wait while we securely process your payment...",
+    "successTitle": "Payment Successful",
+    "successMessage": "Hooray, {{name}}! 🎉 <br />Your payment process of <bold>{{amount}}</bold> has been completed successfully!",
+    "subscriptionEnd": "Your subscription will end on <b>{{date}}</b>.",
+    "goToProfile": "Go to Profile",
+    "createPlanProjects": "Create {{plan}} Projects"
+  }
+}

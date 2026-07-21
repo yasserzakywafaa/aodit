@@ -1,0 +1,92 @@
+{
+  "close": "إغلاق",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "or": "أو",
+  "emailSentSuccess": "تم إرسال البريد الإلكتروني بنجاح",
+  "noResults": "لا توجد نتائج",
+  "loggedOut": "تم تسجيل الخروج",
+  "nav": {
+    "features": "الميزات",
+    "howItWorks": "كيف يعمل",
+    "pricing": "الأسعار",
+    "contact": "اتصل بنا",
+    "register": "التسجيل",
+    "login": "تسجيل الدخول",
+    "createProject": "إنشاء مشروع",
+    "home": "الرئيسية",
+    "industries": "القطاعات",
+    "methodology": "المنهجية",
+    "compliance": "الامتثال",
+    "security": "الأمان",
+    "about": "حول",
+    "requestEvaluation": "طلب تقييم",
+    "demo": "عرض توضيحي",
+    "viewAllIndustries": "عرض جميع القطاعات"
+  },
+  "settings": {
+    "menu": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل الخروج",
+    "theme": "المظهر",
+    "themeToggle": "زر تبديل المظهر",
+    "install": "تثبيت",
+    "refreshApp": "تحديث التطبيق"
+  },
+  "badges": {
+    "basic": "أساسي",
+    "essential": "أساسي+",
+    "premium": "مميز"
+  },
+  "compliance": {
+    "finmaLabel": "إرشادات FINMA للذكاء الاصطناعي",
+    "finmaDescription": "الإشراف السويسري على الأسواق المالية",
+    "finmaGuidance": "إرشادات FINMA"
+  },
+  "footer": {
+    "product": "المنتج",
+    "compliance": "الامتثال",
+    "company": "الشركة",
+    "legal": "قانوني",
+    "region": "المنطقة",
+    "industries": "القطاعات",
+    "methodology": "المنهجية",
+    "security": "الأمان",
+    "tryLiveDemo": "جرب العرض التوضيحي المباشر",
+    "finmaGuidance": "إرشادات FINMA",
+    "about": "حول",
+    "contact": "اتصل",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsAndConditions": "الشروط والأحكام",
+    "dataProcessingAgreement": "اتفاقية معالجة البيانات",
+    "regionGlobal": "عالمي (الإنجليزية)",
+    "regionSwitzerland": "سويسرا",
+    "disclaimer": "<brand>aodit</brand> إطار تقييم مستقل للذكاء الاصطناعي. SwissLI AG غير تابعة لـ FINMA أو أي جهة تنظيمية. نتائج التقييم استشارية ولا تشكل موافقة تنظيمية أو مشورة قانونية. © 2026 Swiss Lab of Intelligence (SwissLI AG)"
+  },
+  "cookiePolicy": {
+    "message": "بمتابعة استخدام هذا الموقع، فإنك توافق على استخدامنا لملفات تعريف الارتباط لتحسين تجربتك وتحليل حركة المرور. راجع <privacyLink>سياسة الخصوصية</privacyLink> لمزيد من المعلومات.",
+    "ok": "موافق"
+  },
+  "save": "حفظ",
+  "viewEdit": "عرض/تعديل",
+  "view": "عرض",
+  "block": "حظر",
+  "unblock": "إلغاء الحظر",
+  "creating": "جارٍ الإنشاء…",
+  "updating": "جارٍ التحديث...",
+  "stopping": "جارٍ الإيقاف…",
+  "stop": "إيقاف",
+  "notAvailable": "غير متاح",
+  "at": "في",
+  "totalCount_one": "{{count}} إجمالي",
+  "totalCount_other": "{{count}} إجمالي",
+  "cannotUndo": "لا يمكن التراجع عن هذا الإجراء.",
+  "cta": {
+    "requestEvaluation": "طلب تقييم",
+    "tryLiveDemo": "جرب العرض التوضيحي",
+    "getDemo": "احصل على عرض",
+    "contactUs": "اتصل بنا",
+    "cancel": "إلغاء"
+  }
+}

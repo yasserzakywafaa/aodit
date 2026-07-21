@@ -15,8 +15,10 @@ import Typography from "@mui/material/Typography";
 import { alpha } from "@mui/material/styles";
 import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePricing } from "./usePricing";
+import { useTranslation } from "react-i18next";
 
 export const Pricing = () => {
+  const { t } = useTranslation("page");
   usePaymentCatalog();
 
   const { plans, prices, getPrice, getCurrency } = usePricing();
@@ -41,7 +43,7 @@ export const Pricing = () => {
         }}
       >
         <Typography component="h2" variant="h4" color="primary">
-          Pricing
+          {t("pricing.title")}
         </Typography>
       </Box>
       <Grid
@@ -130,7 +132,7 @@ export const Pricing = () => {
                           {getPrice(plan.product).monthly}
                         </Typography>
                         <Typography component="h4" variant="h6">
-                          /month
+                          {t("pricing.perMonth")}
                         </Typography>
                       </>
                     ) : (

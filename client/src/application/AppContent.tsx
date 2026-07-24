@@ -307,11 +307,10 @@ const AppContent = () => {
 
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
+            <CookiePolicy />
           </LocaleProvider>
         </BrowserRouter>
       )}
-
-      <CookiePolicy />
     </ThemeProvider>
   );
 };

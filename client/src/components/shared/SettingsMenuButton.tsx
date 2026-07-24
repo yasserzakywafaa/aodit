@@ -16,6 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { SupportedLang } from "@yasserzakywafaa/client-core";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectBrowserType } from "@yasserzakywafaa/client-core/web";
+import { useLocaleContext } from "@yasserzakywafaa/client-core/web/i18n";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 
@@ -33,6 +34,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
     manager: { handleToggleThemeMode, handleUpdateUserInfoInApplication },
   } = useApplicationContext();
   const { isInStandaloneMode } = useDetectBrowserType();
+  const { changeLocale } = useLocaleContext();
   const muiTheme = useTheme();
   const [element, setElement] = React.useState<null | HTMLElement>(null);
 
@@ -53,6 +55,7 @@ const SettingsMenuButton = (props: SettingsMenuButtonProps) => {
   };
 
   const handleOnLanguageChange = async (lang: SupportedLang) => {
+    changeLocale(lang);
     const user = auth.user;
     if (user) {
       await handleUpdateUserInfoInApplication({

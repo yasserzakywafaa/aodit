@@ -15,8 +15,9 @@ import ProfileAvatar from "./ProfileAvatar";
 import { User } from "src/shared/types/user";
 import axios from "axios";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useApplicationContext } from "src/application/store/Provider";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 interface UserAccountMenuButtonProps {
@@ -26,6 +27,8 @@ interface UserAccountMenuButtonProps {
 const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
+  const location = useLocation();
+  const localizedPath = useLocalizedPath();
   const {
     manager: { handleSetAuthInfo },
   } = useApplicationContext();
@@ -78,7 +81,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
       content: t("loggedOut"),
     });
 
-    navigate(routes.features);
+    navigate(localizedPath(routes.features));
   };
 
   const buttonHoverStylePrimary = {

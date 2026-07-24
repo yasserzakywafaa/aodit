@@ -31,6 +31,7 @@ import { useApplicationContext } from "src/application/store/Provider";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 
 // ---------------------------------------------------------------------------
 // Sub-components
@@ -110,6 +111,7 @@ const HowItWorksStep = ({
 const DemoPage = () => {
   const { t } = useTranslation("demo");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: { themeMode },
@@ -128,6 +130,10 @@ const DemoPage = () => {
     <Page
       title={t("page.pageTitle")}
       className="demo-page"
+      seo={{
+        description: t("page.subtitle"),
+        segment: routes.demo,
+      }}
     >
       {/* ================================================================== */}
       {/* HERO                                                                */}
@@ -330,7 +336,7 @@ const DemoPage = () => {
             <Button
               variant="contained"
               endIcon={<NavigateNext />}
-              onClick={() => navigate(routes.contact)}
+              onClick={() => navigate(localizedPath(routes.contact))}
               sx={{ whiteSpace: "nowrap", flexShrink: 0 }}
             >
               {t("page.getFullAccess")}

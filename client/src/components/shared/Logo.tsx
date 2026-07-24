@@ -2,7 +2,8 @@ import * as React from "react";
 
 import AoditLogo from "src/assets/images/aodit_logo.webp";
 import { routes } from "src/application/routes";
-import { useNavigate } from "react-router-dom";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export interface LogoProps {
   variant?: LogoVariant;
@@ -20,6 +21,8 @@ export type LogoVariant = "small" | "full";
 
 const Logo = (props: LogoProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const localizedPath = useLocalizedPath();
   const {
     variant = "full",
     component = LogoComponentEnum.IMAGE,
@@ -31,7 +34,11 @@ const Logo = (props: LogoProps) => {
     if (onClick) {
       onClick();
     } else if (component === LogoComponentEnum.ANCHOR) {
-      navigate(routes.features);
+      navigate(
+        location.pathname === routes.featuresCh
+          ? routes.featuresCh
+          : localizedPath(routes.features),
+      );
     }
   };
 

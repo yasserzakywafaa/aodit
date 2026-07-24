@@ -18,6 +18,7 @@ import { routes } from "src/application/routes";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 
 export interface HeroContent {
   titleLead: string;
@@ -40,13 +41,14 @@ interface HeroProps {
 const Hero = ({ content }: HeroProps) => {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const resolved = content;
   const handleRequestEvaluationClick = () => {
     trackEvent("cta_click", {
       cta: "request_evaluation",
       location: "hero",
     });
-    navigate(routes.contact);
+    navigate(localizedPath(routes.contact));
   };
 
   const handleTryLiveDemoClick = () => {
@@ -54,7 +56,7 @@ const Hero = ({ content }: HeroProps) => {
       cta: "try_live_demo",
       location: "hero",
     });
-    navigate(routes.demo);
+    navigate(localizedPath(routes.demo));
   };
 
   return (

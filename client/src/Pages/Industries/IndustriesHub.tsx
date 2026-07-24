@@ -22,17 +22,17 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect } from "react";
 import {
   LANDING_PAGE_CATEGORIES,
   LANDING_PAGES,
   type LandingPageCategoryId,
 } from "src/application/shared/landingPages";
-import { routes } from "src/application/routes";
+import { routes, toPublicSegment } from "src/application/routes";
 import Page from "src/components/shared/Page/Page";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 
 const CATEGORY_ICON_MAP: Record<LandingPageCategoryId, typeof BusinessRounded> =
   {
@@ -65,23 +65,17 @@ const toShortDescription = (description: string): string => {
 const IndustriesHub = () => {
   const { t } = useTranslation("page");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    let descriptionMeta = document.querySelector(
-      "meta[name='description']",
-    ) as HTMLMetaElement | null;
-
-    if (!descriptionMeta) {
-      descriptionMeta = document.createElement("meta");
-      descriptionMeta.setAttribute("name", "description");
-      document.head.appendChild(descriptionMeta);
-    }
-
-    descriptionMeta.setAttribute("content", t("industries.metaDescription"));
-  }, [t]);
+  const localizedPath = useLocalizedPath();
 
   return (
-    <Page title={t("industries.pageTitle")} className="industries-hub-page">
+    <Page
+      title={t("industries.pageTitle")}
+      className="industries-hub-page"
+      seo={{
+        description: t("industries.metaDescription"),
+        segment: routes.industries,
+      }}
+    >
       <Box
         component="section"
         sx={{
@@ -123,7 +117,7 @@ const IndustriesHub = () => {
                   cta: "industries_get_demo",
                   location: "industries_hub",
                 });
-                navigate(routes.demo);
+                navigate(localizedPath(routes.demo));
               }}
               sx={{ px: 4, py: 1.4 }}
             >
@@ -230,7 +224,7 @@ const IndustriesHub = () => {
                           location: "industries_hub_card",
                           target: page.slug,
                         });
-                        navigate(page.slug);
+                        navigate(localizedPath(toPublicSegment(page.slug)));
                       }}
                       sx={{ px: 0.5 }}
                     >

@@ -11,6 +11,7 @@ import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -58,22 +59,23 @@ const SectionHeading = ({
 const DataProcessingAgreementPage = () => {
   const { t } = useTranslation("page");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const handleLinkClick =
     (route: string) =>
     (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       event.preventDefault();
-      navigate(route);
+      navigate(localizedPath(route));
     };
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       t("legal.dpaSchemaTitle"),
       t("legal.dpaSchemaDescription"),
-      routes.dataProcessingAgreement,
+      localizedPath(routes.dataProcessingAgreement),
       new Date("03/01/2026"),
     );
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(webPageSchema, "dpa-webpage-schema");
 
@@ -82,6 +84,11 @@ const DataProcessingAgreementPage = () => {
       title={t("legal.dpaPageTitle")}
       className="dpa-page"
       isLoading={false}
+      noIndex
+      seo={{
+        description: t("legal.dpaSchemaDescription"),
+        segment: routes.dataProcessingAgreement,
+      }}
     >
       {/* Hero */}
       <Box
@@ -441,7 +448,7 @@ const DataProcessingAgreementPage = () => {
           <Typography paragraph sx={{ fontSize: 15, lineHeight: 1.75 }}>
             Liability is governed by the applicable agreement (e.g.{" "}
             <Link
-              href={routes.termsAndConditions}
+              href={localizedPath(routes.termsAndConditions)}
               onClick={handleLinkClick(routes.termsAndConditions)}
             >
               Terms &amp; Conditions
@@ -492,7 +499,7 @@ const DataProcessingAgreementPage = () => {
               you can contact us by visiting our{" "}
               <Link
                 component="a"
-                href={routes.contact}
+                href={localizedPath(routes.contact)}
                 onClick={handleLinkClick(routes.contact)}
               >
                 contact page

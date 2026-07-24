@@ -1,102 +1,61 @@
-import { defineConfig, loadEnv } from "vite";
-import { prerenderPaths, routes } from "./src/application/routes";
+import { Plugin, defineConfig, loadEnv } from "vite";
 
-import { LANDING_PAGES } from "./src/application/shared/landingPages";
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "path";
 import prerender from "vite-plugin-prerender";
+import { prerenderPaths, sitemapPaths } from "./src/application/routes";
 import react from "@vitejs/plugin-react";
 
 const require = createRequire(import.meta.url);
 const { sanitizePrerenderedHtml } = require("./scripts/sanitize-prerender-html.js");
 
-const SITEMAP_OUTPUT_PATH = path.join(__dirname, "public/sitemaps/sitemap.xml");
-const SITEMAP_DEFAULT_PRIORITY = "0.7";
-
-function normalizeRoute(route: string): string {
-  if (!route.startsWith("/")) {
-    return `/${route}`;
-  }
-  return route;
-}
+const resolveAppUrl = (env: Record<string, string>): string => {
+  const isDev =
+    env.REACT_APP_ENV === "local" || env.REACT_APP_ENV === "development";
+  return isDev ? "https://dev.aodit.ai" : "https://www.aodit.ai";
+};
 
 function hreflangLink(hreflang: string, href: string): string {
   return `    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${href}" />`;
 }
 
-function toSitemapUrlNode(
-  baseUrl: string,
-  route: string,
-  lastmod: string,
-  priority: string,
-  extraLines: string[] = [],
-): string {
-  return [
-    "  <url>",
-    `    <loc>${baseUrl}${route}</loc>`,
-    ...extraLines,
-    `    <lastmod>${lastmod}</lastmod>`,
-    `    <priority>${priority}</priority>`,
-    "  </url>",
-  ].join("\n");
+function sitemapPlugin(siteUrl: string): Plugin {
+  const origin = siteUrl.replace(/\/$/, "");
+
+  return {
+    name: "generate-sitemap",
+    apply: "build",
+    closeBundle() {
+      const lastmod = new Date().toISOString();
+      const homeHreflang = [
+        hreflangLink("en", `${origin}/en`),
+        hreflangLink("en-CH", `${origin}/ch`),
+        hreflangLink("x-default", `${origin}/en`),
+      ];
+
+      const urls = sitemapPaths
+        .map((pathname) => {
+          const priority =
+            pathname === "/en" || pathname === "/ch" ? "1.0" : "0.7";
+          const extra =
+            pathname === "/en" || pathname === "/ch" ? homeHreflang : [];
+          const extraLines = extra.length ? [`\n${extra.join("\n")}`] : [];
+          return `  <url>\n    <loc>${origin}${pathname}</loc>${extraLines.join("")}\n    <lastmod>${lastmod}</lastmod>\n    <priority>${priority}</priority>\n  </url>`;
+        })
+        .join("\n");
+
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
+
+      const outputPath = path.join(__dirname, "dist", "sitemap.xml");
+      fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+      fs.writeFileSync(outputPath, xml, "utf8");
+
+      console.log(`[sitemap] Wrote ${sitemapPaths.length} URLs to ${outputPath}`);
+    },
+  };
 }
 
-function writeSitemap(baseUrl: string): void {
-  const nowIsoDate = new Date().toISOString();
-  const staticRoutes: string[] = [
-    routes.features,
-    routes.featuresCh,
-    routes.industries,
-    routes.demo,
-    routes.methodology,
-    routes.security,
-    routes.about,
-    routes.pricing,
-    routes.compliance.finma,
-    routes.compliance.euAiAct,
-    routes.contact,
-  ];
-
-  const industryRoutes = LANDING_PAGES.map((page) => page.slug);
-  const allRoutes = Array.from(
-    new Set([...staticRoutes, ...industryRoutes].map(normalizeRoute)),
-  );
-
-  const homeHreflang = [
-    hreflangLink("en", `${baseUrl}${routes.features}`),
-    hreflangLink("en-CH", `${baseUrl}${routes.featuresCh}`),
-    hreflangLink("x-default", `${baseUrl}${routes.features}`),
-  ];
-
-  const nodes = allRoutes.map((route) => {
-    const priority =
-      route === routes.features || route === routes.featuresCh
-        ? "1.0"
-        : SITEMAP_DEFAULT_PRIORITY;
-    const hreflang =
-      route === routes.features || route === routes.featuresCh
-        ? homeHreflang
-        : [];
-    return toSitemapUrlNode(baseUrl, route, nowIsoDate, priority, hreflang);
-  });
-
-  const xml = [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
-    ...nodes,
-    "</urlset>",
-    "",
-  ].join("\n");
-
-  fs.mkdirSync(path.dirname(SITEMAP_OUTPUT_PATH), { recursive: true });
-  fs.writeFileSync(SITEMAP_OUTPUT_PATH, xml, "utf8");
-}
-
-/**
- * vite-plugin-prerender depends on puppeteer@1.x; we override puppeteer to
- * puppeteer-core@24 (package.json resolutions) so Node 22+ can drive Chrome over CDP.
- */
 function resolveLocalChromeExecutable(): string {
   const fromEnv = process.env.PUPPETEER_EXECUTABLE_PATH;
   if (fromEnv && fs.existsSync(fromEnv)) {
@@ -125,7 +84,7 @@ function resolveLocalChromeExecutable(): string {
   }
 
   throw new Error(
-    `[prerender] No Chrome/Chromium found for ${process.platform}. Install Google Chrome or set PUPPETEER_EXECUTABLE_PATH. Checked: ${candidates.join(", ")}`,
+    `[prerender] No Chrome/Chromium found for ${process.platform}. Install Google Chrome or set PUPPETEER_EXECUTABLE_PATH.`,
   );
 }
 
@@ -156,19 +115,17 @@ async function getPuppeteerOptions(): Promise<Record<string, unknown>> {
   };
 }
 
-// https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "REACT_APP_");
   const puppeteerOptions = await getPuppeteerOptions();
-  const sitemapBaseUrl = "https://www.aodit.ai";
-
-  writeSitemap(sitemapBaseUrl);
+  const siteUrl = resolveAppUrl(env);
 
   return {
     plugins: [
       react({
         jsxImportSource: "@emotion/react",
       }),
+      sitemapPlugin(siteUrl),
       prerender({
         staticDir: path.join(__dirname, "dist"),
         routes: prerenderPaths,
@@ -176,18 +133,33 @@ export default defineConfig(async ({ mode }) => {
           viewport: { width: 1280, height: 800 },
           renderAfterTime: 5000,
           maxConcurrentRoutes: 1,
-          skipThirdPartyRequests: true, // blocks js.stripe.com, GA, etc.
+          skipThirdPartyRequests: true,
           inject: { isPrerendering: true },
           ...puppeteerOptions,
         }),
         postProcess(renderedRoute) {
-          // Puppeteer resolves URLs against the local server, baking
-          // "http://localhost:<port>" into src/href attributes. Strip it
-          // so the HTML uses root-relative paths that work on any host.
           renderedRoute.html = renderedRoute.html.replace(
             /http:\/\/localhost:\d+\//g,
             "/",
           );
+
+          const localeMatch = renderedRoute.route.match(/^\/([a-z]{2})(?:\/|$)/);
+          if (localeMatch) {
+            const locale = localeMatch[1];
+            const dir = locale === "ar" ? "rtl" : "ltr";
+            renderedRoute.html = renderedRoute.html.replace(
+              /<html lang="[^"]*">/,
+              `<html lang="${locale}" dir="${dir}">`,
+            );
+          }
+
+          if (renderedRoute.route === "/ch") {
+            renderedRoute.html = renderedRoute.html.replace(
+              /<html lang="[^"]*">/,
+              `<html lang="en-CH" dir="ltr">`,
+            );
+          }
+
           renderedRoute.html = sanitizePrerenderedHtml(renderedRoute.html);
           return renderedRoute;
         },

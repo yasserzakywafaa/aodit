@@ -26,7 +26,8 @@ import {
   type LandingPageCategoryId,
   getLandingPagesGrouped,
 } from "src/application/shared/landingPages";
-import { routes } from "src/application/routes";
+import { routes, toPublicSegment } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -72,6 +73,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
   const [expandedCategoryId, setExpandedCategoryId] =
     useState<LandingPageCategoryId | null>(null);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const landingGroups = getLandingPagesGrouped();
 
   const handleOnMenuItemClickEvent =
@@ -92,7 +94,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
       setIsIndustriesOpen(false);
       setExpandedCategoryId(null);
       handleSetDrawer(false)();
-      navigate(slug);
+      navigate(localizedPath(toPublicSegment(slug)));
     };
 
   const handleViewAllIndustriesClick = (
@@ -102,7 +104,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
     setIsIndustriesOpen(false);
     setExpandedCategoryId(null);
     handleSetDrawer(false)();
-    navigate(routes.industries);
+    navigate(localizedPath(routes.industries));
   };
 
   return (
@@ -247,7 +249,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                             >
                               <MenuItem
                                 component="a"
-                                href={routes.industries}
+                                href={localizedPath(routes.industries)}
                                 onClick={handleViewAllIndustriesClick}
                                 sx={{ py: 0.75 }}
                               >
@@ -272,7 +274,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                     <MenuItem
                       key={item.id}
                       component="a"
-                      href={item.route ?? undefined}
+                      href={item.route ? localizedPath(item.route) : undefined}
                       onClick={handleOnMenuItemClickEvent(item.id)}
                     >
                       <Typography variant="body2" sx={{
@@ -287,7 +289,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                 <Box sx={{ mt: 2, px: 2 }}>
                   <Button
                     component="a"
-                    href={routes.contact}
+                    href={localizedPath(routes.contact)}
                     variant="contained"
                     fullWidth
                     onClick={handleOnMenuItemClickEvent("request-evaluation")}
@@ -296,7 +298,7 @@ const ApplicationBarMobileView = (props: ApplicationBarMobileViewParams) => {
                   </Button>
                   <Button
                     component="a"
-                    href={routes.demo}
+                    href={localizedPath(routes.demo)}
                     variant="outlined"
                     fullWidth
                     onClick={handleOnMenuItemClickEvent("demo")}

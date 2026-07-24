@@ -122,7 +122,7 @@ export const HOME_CONTENT: Record<Region, HomePageContent> = {
       "Most support teams still lack independent evidence of how their agent behaves when users push for exceptions, refunds, or sensitive account changes.",
     regulatorySectionBody3:
       "closes that gap with structured stress tests—without needing access to your live support queue.",
-    canonicalPath: routes.features,
+    canonicalPath: "/en",
   },
 };
 
@@ -234,9 +234,9 @@ export const getHomeContent = (region: Region): HomePageContent =>
 export const getHreflangAlternates = (
   baseUrl: string,
 ): { hreflang: string; href: string }[] => [
-  { hreflang: "en", href: `${baseUrl}${routes.features}` },
+  { hreflang: "en", href: `${baseUrl}/en` },
   { hreflang: "en-CH", href: `${baseUrl}${routes.featuresCh}` },
-  { hreflang: "x-default", href: `${baseUrl}${routes.features}` },
+  { hreflang: "x-default", href: `${baseUrl}/en` },
 ];
 
 export const createWebsiteSchema = (region: Region): object => {

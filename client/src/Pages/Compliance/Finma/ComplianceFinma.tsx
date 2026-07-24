@@ -42,6 +42,7 @@ import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
 import finmaLogo from "src/assets/images/finma_logo.png";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -79,6 +80,7 @@ const tableHeaderSx = {
 const ComplianceFinmaPage = () => {
   const { t } = useTranslation(["compliance", "common"]);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const hasOfficialPdfLink = Boolean(FINMA_OFFICIAL_NOTICE.downloadUrl?.trim());
@@ -87,9 +89,9 @@ const ComplianceFinmaPage = () => {
     return createWebPageSchema(
       t("finma.schemaTitle"),
       t("finma.schemaDescription"),
-      routes.compliance.finma,
+      localizedPath(routes.compliance.finma),
     );
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(webPageSchema, "compliance-finma-webpage-schema");
 
@@ -98,6 +100,10 @@ const ComplianceFinmaPage = () => {
       title={t("finma.pageTitle")}
       className="compliance-finma-page"
       isLoading={false}
+      seo={{
+        description: t("finma.schemaDescription"),
+        segment: routes.compliance.finma,
+      }}
     >
       {/* ===== HERO ===== */}
       <Box
@@ -809,7 +815,7 @@ const ComplianceFinmaPage = () => {
               variant="contained"
               size="large"
               endIcon={<ArrowForward />}
-              onClick={() => navigate(routes.contact)}
+              onClick={() => navigate(localizedPath(routes.contact))}
               sx={{ px: 4, py: 1.2 }}
             >
               {t("common:nav.requestEvaluation")}
@@ -818,7 +824,7 @@ const ComplianceFinmaPage = () => {
               variant="outlined"
               size="large"
               endIcon={<ArrowForward />}
-              onClick={() => navigate(routes.demo)}
+              onClick={() => navigate(localizedPath(routes.demo))}
               sx={{ px: 4, py: 1.2 }}
             >
               {t("common:footer.tryLiveDemo")}

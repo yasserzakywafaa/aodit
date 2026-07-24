@@ -1,7 +1,199 @@
 {
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/industries",
+      "destination": "/en/industries",
+      "permanent": true
+    },
+    {
+      "source": "/demo",
+      "destination": "/en/demo",
+      "permanent": true
+    },
+    {
+      "source": "/ai-agent-testing-methodology",
+      "destination": "/en/ai-agent-testing-methodology",
+      "permanent": true
+    },
+    {
+      "source": "/security-on-premise-ai",
+      "destination": "/en/security-on-premise-ai",
+      "permanent": true
+    },
+    {
+      "source": "/about-swissli",
+      "destination": "/en/about-swissli",
+      "permanent": true
+    },
+    {
+      "source": "/pricing",
+      "destination": "/en/pricing",
+      "permanent": true
+    },
+    {
+      "source": "/compliance/finma-ai-guidance-switzerland",
+      "destination": "/en/compliance/finma-ai-guidance-switzerland",
+      "permanent": true
+    },
+    {
+      "source": "/compliance/eu-ai-act-europe",
+      "destination": "/en/compliance/eu-ai-act-europe",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/en/contact",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/en/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/en/terms-and-conditions",
+      "permanent": true
+    },
+    {
+      "source": "/data-processing-agreement",
+      "destination": "/en/data-processing-agreement",
+      "permanent": true
+    },
+    {
+      "source": "/industries/customer-service-agent",
+      "destination": "/en/industries/customer-service-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/ecommerce-shopping-concierge",
+      "destination": "/en/industries/ecommerce-shopping-concierge",
+      "permanent": true
+    },
+    {
+      "source": "/industries/returns-refunds-agent",
+      "destination": "/en/industries/returns-refunds-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/live-chat-escalation-agent",
+      "destination": "/en/industries/live-chat-escalation-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/ai-sdr-outbound-agent",
+      "destination": "/en/industries/ai-sdr-outbound-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/lead-qualification-agent",
+      "destination": "/en/industries/lead-qualification-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/crm-automation-agent",
+      "destination": "/en/industries/crm-automation-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/sales-call-analysis-agent",
+      "destination": "/en/industries/sales-call-analysis-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/ai-coding-agent",
+      "destination": "/en/industries/ai-coding-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/it-helpdesk-agent",
+      "destination": "/en/industries/it-helpdesk-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/devops-automation-agent",
+      "destination": "/en/industries/devops-automation-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/cybersecurity-threat-agent",
+      "destination": "/en/industries/cybersecurity-threat-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/invoice-processing-agent",
+      "destination": "/en/industries/invoice-processing-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/expense-auditing-agent",
+      "destination": "/en/industries/expense-auditing-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/financial-forecasting-agent",
+      "destination": "/en/industries/financial-forecasting-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/procurement-supply-chain-agent",
+      "destination": "/en/industries/procurement-supply-chain-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/recruitment-screening-agent",
+      "destination": "/en/industries/recruitment-screening-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/employee-onboarding-agent",
+      "destination": "/en/industries/employee-onboarding-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/hr-policy-payroll-agent",
+      "destination": "/en/industries/hr-policy-payroll-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/patient-intake-triage-agent",
+      "destination": "/en/industries/patient-intake-triage-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/clinical-documentation-agent",
+      "destination": "/en/industries/clinical-documentation-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/prior-authorization-agent",
+      "destination": "/en/industries/prior-authorization-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/contract-review-agent",
+      "destination": "/en/industries/contract-review-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/regulatory-compliance-agent",
+      "destination": "/en/industries/regulatory-compliance-agent",
+      "permanent": true
+    },
+    {
+      "source": "/industries/content-seo-agent",
+      "destination": "/en/industries/content-seo-agent",
+      "permanent": true
+    }
+  ],
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }

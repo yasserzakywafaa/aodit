@@ -17,6 +17,7 @@ import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -26,14 +27,15 @@ const framework = getFrameworkDefinition(DEFAULT_FRAMEWORK_VERSION);
 const MethodologyPage = () => {
   const { t } = useTranslation(["page", "common"]);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       t("methodology.schemaTitle"),
       t("methodology.schemaDescription"),
-      routes.methodology,
+      localizedPath(routes.methodology),
     );
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(webPageSchema, "methodology-webpage-schema");
 
@@ -42,6 +44,10 @@ const MethodologyPage = () => {
       title={t("methodology.pageTitle")}
       className="methodology-page"
       isLoading={false}
+      seo={{
+        description: t("methodology.schemaDescription"),
+        segment: routes.methodology,
+      }}
     >
       {/* ===== HERO ===== */}
       <Box
@@ -335,10 +341,10 @@ const MethodologyPage = () => {
               justifyContent: "center"
             }}
           >
-            <Button variant="contained" onClick={() => navigate(routes.contact)}>
+            <Button variant="contained" onClick={() => navigate(localizedPath(routes.contact))}>
               {t("common:nav.requestEvaluation")}
             </Button>
-            <Button variant="outlined" onClick={() => navigate(routes.demo)}>
+            <Button variant="outlined" onClick={() => navigate(localizedPath(routes.demo))}>
               {t("common:footer.tryLiveDemo")}
             </Button>
           </Stack>

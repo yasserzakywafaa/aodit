@@ -4,6 +4,7 @@ import { useState } from "react";
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { routes } from "src/application/routes";
 import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
+import { Link as RouterLink } from "react-router-dom";
 
 const CONSENT_KEY = APP_CONSTANTS.LOCAL_STORAGE.COOKIE_CONSENT;
 
@@ -54,7 +55,12 @@ const CookiePolicy = () => {
             i18nKey="cookiePolicy.message"
             components={{
               privacyLink: (
-                <MuiLink href={localizedPath(routes.privacyPolicy)} underline="hover" />
+                <MuiLink
+                  component={RouterLink}
+                  to={localizedPath(routes.privacyPolicy)}
+                  underline="hover"
+                  sx={{ color: "primary.main" }}
+                />
               ),
             }}
           />

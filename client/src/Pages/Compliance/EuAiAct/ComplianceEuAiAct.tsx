@@ -3,11 +3,13 @@ import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 const ComplianceEuAiActPage = () => {
   const { t } = useTranslation("compliance");
+  const localizedPath = useLocalizedPath();
   const items = t("euAiAct.items", { returnObjects: true }) as {
     primary: string;
     secondary: string;
@@ -17,9 +19,9 @@ const ComplianceEuAiActPage = () => {
     return createWebPageSchema(
       t("euAiAct.schemaTitle"),
       t("euAiAct.schemaDescription"),
-      routes.compliance.euAiAct,
+      localizedPath(routes.compliance.euAiAct),
     );
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(webPageSchema, "compliance-eu-ai-act-webpage-schema");
 
@@ -28,6 +30,10 @@ const ComplianceEuAiActPage = () => {
       title={t("euAiAct.pageTitle")}
       className="compliance-eu-ai-act-page"
       isLoading={false}
+      seo={{
+        description: t("euAiAct.schemaDescription"),
+        segment: routes.compliance.euAiAct,
+      }}
     >
       <Container sx={{ mt: 3, pb: 6 }}>
         <Typography variant="h4" gutterBottom>

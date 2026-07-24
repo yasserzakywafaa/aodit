@@ -25,6 +25,7 @@ import {
 
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 const SecurityPage = () => {
   const { t } = useTranslation(["page", "common"]);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const documentationItems = t("security.docItems", {
     returnObjects: true,
   }) as string[];
@@ -40,9 +42,9 @@ const SecurityPage = () => {
     return createWebPageSchema(
       t("security.schemaTitle"),
       t("security.schemaDescription"),
-      routes.security,
+      localizedPath(routes.security),
     );
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(webPageSchema, "security-webpage-schema");
 
@@ -51,6 +53,10 @@ const SecurityPage = () => {
       title={t("security.pageTitle")}
       className="security-page"
       isLoading={false}
+      seo={{
+        description: t("security.schemaDescription"),
+        segment: routes.security,
+      }}
     >
       {/* ===== HERO ===== */}
       <Box
@@ -434,14 +440,14 @@ const SecurityPage = () => {
                   <Button
                     variant="contained"
                     endIcon={<ArrowForward />}
-                    onClick={() => navigate(routes.contact)}
+                    onClick={() => navigate(localizedPath(routes.contact))}
                   >
                     {t("security.requestSecurityPackage")}
                   </Button>
                   <Button
                     variant="outlined"
                     endIcon={<ArrowForward />}
-                    onClick={() => navigate(routes.demo)}
+                    onClick={() => navigate(localizedPath(routes.demo))}
                   >
                     {t("common:footer.tryLiveDemo")}
                   </Button>

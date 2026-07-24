@@ -11,6 +11,7 @@ import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -58,22 +59,23 @@ const SectionHeading = ({
 const TermsAndConditions = () => {
   const { t } = useTranslation("page");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const handleLinkClick =
     (route: string) =>
     (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       event.preventDefault();
-      navigate(route);
+      navigate(localizedPath(route));
     };
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       t("legal.termsSchemaTitle"),
       t("legal.termsSchemaDescription"),
-      routes.termsAndConditions,
+      localizedPath(routes.termsAndConditions),
       new Date("03/01/2026"),
     );
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(webPageSchema, "terms-and-conditions-webpage-schema");
 
@@ -83,6 +85,10 @@ const TermsAndConditions = () => {
       className="terms-and-conditions-page"
       isLoading={false}
       noIndex
+      seo={{
+        description: t("legal.termsSchemaDescription"),
+        segment: routes.termsAndConditions,
+      }}
     >
       {/* Hero */}
       <Box
@@ -571,7 +577,7 @@ const TermsAndConditions = () => {
               visiting our{" "}
               <Link
                 component="a"
-                href={routes.contact}
+                href={localizedPath(routes.contact)}
                 onClick={handleLinkClick(routes.contact)}
               >
                 contact page

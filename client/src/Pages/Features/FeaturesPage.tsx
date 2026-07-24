@@ -37,13 +37,14 @@ import Page from "src/components/shared/Page/Page";
 import { alpha } from "@mui/material/styles";
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import euHostedImg from "src/assets/images/eu_hosted.webp";
-import { routes } from "src/application/routes";
+import { routes, toPublicSegment } from "src/application/routes";
 import { trackEvent } from "src/shared/utils/ga4";
 import swissMadeImg from "src/assets/images/swiss_made.webp";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import {
   type Region,
   createWebsiteSchema,
@@ -70,6 +71,7 @@ const FeaturesPage = ({
 }: FeaturesPageProps = {}) => {
   const { t } = useTranslation(["page", "common"]);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: { isFetching },
@@ -88,8 +90,22 @@ const FeaturesPage = ({
   const schemaDescription =
     landingContent?.schemaDescription ?? homeContent.schemaDescription;
   const canonicalPath =
-    landingContent?.slug ??
-    (region === "swiss" ? routes.featuresCh : routes.features);
+    landingContent
+      ? localizedPath(toPublicSegment(landingContent.slug))
+      : region === "swiss"
+        ? routes.featuresCh
+        : localizedPath(routes.features);
+
+  const seoSegment = landingContent
+    ? toPublicSegment(landingContent.slug)
+    : region === "swiss"
+      ? undefined
+      : routes.features;
+
+  const pageSeo =
+    seoSegment !== undefined
+      ? { description: metaDescription, segment: seoSegment }
+      : undefined;
   const ctaTitle = landingContent?.cta.title ?? homeContent.cta.title;
   const ctaSubtitle = landingContent?.cta.subtitle ?? homeContent.cta.subtitle;
   const heroContent: HeroContent | undefined =
@@ -122,15 +138,17 @@ const FeaturesPage = ({
     [schemaName, schemaDescription, canonicalPath],
   );
   const breadcrumbSchema = useMemo(() => {
-    const crumbs = [{ name: t("breadcrumb.home"), url: routes.features }];
+    const crumbs = [
+      { name: t("breadcrumb.home"), url: localizedPath(routes.features) },
+    ];
     if (landingContent) {
       crumbs.push({
         name: landingContent.breadcrumbLabel,
-        url: landingContent.slug,
+        url: localizedPath(toPublicSegment(landingContent.slug)),
       });
     }
     return createBreadcrumbSchema(crumbs);
-  }, [landingContent, t]);
+  }, [landingContent, t, localizedPath]);
 
   useSchemaOrg(organizationSchema, `organization-schema-${schemaKeySuffix}`);
   useSchemaOrg(websiteSchema, `website-schema-${schemaKeySuffix}`);
@@ -146,7 +164,7 @@ const FeaturesPage = ({
       cta: "request_evaluation",
       location: ctaLocation,
     });
-    navigate(routes.contact);
+    navigate(localizedPath(routes.contact));
   };
 
   const handleTryLiveDemoClick = () => {
@@ -154,7 +172,7 @@ const FeaturesPage = ({
       cta: "try_live_demo",
       location: ctaLocation,
     });
-    navigate(routes.demo);
+    navigate(localizedPath(routes.demo));
   };
 
   return (
@@ -164,6 +182,7 @@ const FeaturesPage = ({
       ogTitle={ogTitle}
       ogDescription={ogDescription}
       hreflangAlternates={hreflangAlternates}
+      seo={pageSeo}
       className="features-page"
       isLoading={isFetching}
     >

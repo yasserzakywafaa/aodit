@@ -18,6 +18,7 @@ import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 const AboutPage = () => {
   const { t } = useTranslation(["page", "common"]);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const differentiators = t("about.differentiators", {
     returnObjects: true,
   }) as { title: string; description: string }[];
@@ -34,9 +36,9 @@ const AboutPage = () => {
     return createWebPageSchema(
       t("about.schemaTitle"),
       t("about.schemaDescription"),
-      routes.about,
+      localizedPath(routes.about),
     );
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(webPageSchema, "about-webpage-schema");
 
@@ -45,7 +47,10 @@ const AboutPage = () => {
       title={t("about.pageTitle")}
       className="about-page"
       isLoading={false}
-      noIndex
+      seo={{
+        description: t("about.schemaDescription"),
+        segment: routes.about,
+      }}
     >
       {/* ===== HERO ===== */}
       <Box
@@ -278,14 +283,14 @@ const AboutPage = () => {
             <Button
               variant="contained"
               endIcon={<ArrowForward />}
-              onClick={() => navigate(routes.contact)}
+              onClick={() => navigate(localizedPath(routes.contact))}
             >
               {t("common:nav.contact")}
             </Button>
             <Button
               variant="outlined"
               endIcon={<ArrowForward />}
-              onClick={() => navigate(routes.demo)}
+              onClick={() => navigate(localizedPath(routes.demo))}
             >
               {t("common:footer.tryLiveDemo")}
             </Button>

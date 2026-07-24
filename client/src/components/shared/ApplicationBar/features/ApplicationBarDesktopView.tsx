@@ -10,6 +10,7 @@ import SettingsMenuButton from "../../SettingsMenuButton";
 import { User } from "src/shared/types/user";
 import UserAccountMenuButton from "../../UserAccountButton";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useTranslation } from "react-i18next";
 
 const NAV_LINKS = [
@@ -43,6 +44,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
     handleOnMenuItemClick,
   } = props;
   const { t } = useTranslation("common");
+  const localizedPath = useLocalizedPath();
 
   const buttonHoverStyleSecondary = {
     "&:hover": {
@@ -86,7 +88,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
                   <Button
                     key={item.id}
                     component="a"
-                    href={item.route ?? undefined}
+                    href={item.route ? localizedPath(item.route) : undefined}
                     sx={{ color: "text.primary", fontSize: 14 }}
                     variant="text"
                     onClick={handleOnMenuItemClickEvent(item.id)}
@@ -150,7 +152,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
               <Button
                 component="a"
-                href={routes.contact}
+                href={localizedPath(routes.contact)}
                 variant="contained"
                 size="small"
                 onClick={handleOnMenuItemClickEvent("request-evaluation")}
@@ -160,7 +162,7 @@ const ApplicationBarDesktopView = (props: ApplicationBarDesktopViewParams) => {
               </Button>
               <Button
                 component="a"
-                href={routes.demo}
+                href={localizedPath(routes.demo)}
                 variant="outlined"
                 size="small"
                 onClick={handleOnMenuItemClickEvent("demo")}

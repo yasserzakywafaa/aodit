@@ -30,6 +30,7 @@ import DeleteAccountDialog from "./features/DeleteAccountDialog";
 import SubscriptionSection from "./features/Subscription";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useDashboardProfileContext } from "./store/Provider";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
 import { useNavigate } from "react-router-dom";
@@ -57,6 +58,7 @@ const TabPanel = ({ children, value, index }: TabPanelProps) => {
 const DashboardProfilePage = () => {
   const { t } = useTranslation(["dashboard", "common"]);
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const { store } = useApplicationContext();
   const [activeTab, setActiveTab] = useState(0);
   const [isDeleteAccountDialogOpen, setIsDeleteAccountDialogOpen] =
@@ -474,7 +476,7 @@ warningMessage={t("dashboard:profile.deleteWarning")}
           const deleted = await handleDeleteAccount(confirmationPhrase);
           if (deleted) {
             setIsDeleteAccountDialogOpen(false);
-            navigate(routes.features);
+            navigate(localizedPath(routes.features));
           }
         }}
       />

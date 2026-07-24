@@ -1,36 +1,58 @@
-import { landingPagesRoutes } from "./shared/landingPages";
+import { getPrerenderPaths } from "@yasserzakywafaa/client-core/web/i18n";
+
+import {
+  LANDING_PAGES,
+  landingPagesRoutes,
+} from "./shared/landingPages";
+
+/** Strip leading slashes for locale route segments and prerender lists. */
+export const toPublicSegment = (pathOrSegment: string): string =>
+  pathOrSegment.replace(/^\/+|\/+$/g, "");
+
+const landingPageSegments = LANDING_PAGES.map((page) =>
+  toPublicSegment(page.slug),
+);
+
+/**
+ * Public marketing pages as URL segments (no locale, no leading slash).
+ * Build navigable paths with localizedPath()/useLocalizedPath().
+ */
+const publicPages = {
+  features: "",
+  industries: "industries",
+  demo: "demo",
+  methodology: "ai-agent-testing-methodology",
+  security: "security-on-premise-ai",
+  about: "about-swissli",
+  pricing: "pricing",
+  contact: "contact",
+  privacyPolicy: "privacy-policy",
+  termsAndConditions: "terms-and-conditions",
+  dataProcessingAgreement: "data-processing-agreement",
+} as const;
+
+const complianceSegments = {
+  finma: "compliance/finma-ai-guidance-switzerland",
+  euAiAct: "compliance/eu-ai-act-europe",
+} as const;
+
+export type PublicPageSegment =
+  | (typeof publicPages)[keyof typeof publicPages]
+  | (typeof complianceSegments)[keyof typeof complianceSegments]
+  | (typeof landingPageSegments)[number];
 
 export const routes = {
-  ...landingPagesRoutes,
-  features: `/`,
-  featuresCh: `/ch`,
-  industries: `/industries`,
-  demo: `/demo`,
-  methodology: `/ai-agent-testing-methodology`,
-  security: `/security-on-premise-ai`,
-  about: `/about-swissli`,
-  pricing: `/pricing`,
-  compliance: {
-    // Keep legacy paths available for compatibility during migration.
-    finma: `/compliance/finma-ai-guidance-switzerland`,
-    euAiAct: `/compliance/eu-ai-act-europe`,
-  },
-  contact: `/contact`,
-  privacyPolicy: `/privacy-policy`,
-  termsAndConditions: `/terms-and-conditions`,
-  dataProcessingAgreement: `/data-processing-agreement`,
-  // Auth
+  /** Root path redirects to the active locale via LocaleRedirect. */
+  root: "/",
+  /** Swiss marketing home (flat, not locale-prefixed). */
+  featuresCh: "/ch",
+  ...publicPages,
+  compliance: complianceSegments,
+  landingPages: landingPagesRoutes,
   auth: {
     login: "/login",
     register: "/register",
   },
-
-  // Industry / use-case SEO landing pages
-  // Mirrors the spread above so callers can use either routes.<key>
-  // or routes.landingPages.<key>.
-  landingPages: landingPagesRoutes,
-
-  // Dashboard (Admin)
   dashboard: {
     base: "/dashboard",
     user: {
@@ -86,9 +108,15 @@ export const routes = {
   },
 };
 
-export const prerenderPaths: string[] = [
+export const ALL_PUBLIC_SEGMENTS: PublicPageSegment[] = [
+  ...Object.values(publicPages),
+  ...Object.values(complianceSegments),
+  ...landingPageSegments,
+];
+
+/** Indexed in sitemap + hreflang (excludes legal/DPA). */
+export const INDEXABLE_SEGMENTS: PublicPageSegment[] = [
   routes.features,
-  routes.featuresCh,
   routes.industries,
   routes.demo,
   routes.methodology,
@@ -98,11 +126,20 @@ export const prerenderPaths: string[] = [
   routes.compliance.finma,
   routes.compliance.euAiAct,
   routes.contact,
-  routes.privacyPolicy,
-  routes.termsAndConditions,
-  routes.dataProcessingAgreement,
-  routes.auth.login,
-  routes.auth.register,
-  // Industry / use-case SEO landing pages
-  ...Object.values(landingPagesRoutes),
+  ...landingPageSegments,
+];
+
+const localePrerenderPaths = getPrerenderPaths(ALL_PUBLIC_SEGMENTS);
+const localeSitemapPaths = getPrerenderPaths(INDEXABLE_SEGMENTS);
+
+/** Prerender locale marketing pages + flat Swiss home once. */
+export const prerenderPaths: string[] = [
+  ...localePrerenderPaths,
+  routes.featuresCh,
+];
+
+/** Sitemap URLs (locale indexable + flat /ch). */
+export const sitemapPaths: string[] = [
+  ...localeSitemapPaths,
+  routes.featuresCh,
 ];

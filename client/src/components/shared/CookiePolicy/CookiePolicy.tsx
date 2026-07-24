@@ -3,11 +3,13 @@ import { Trans, useTranslation } from "react-i18next";
 import { useState } from "react";
 import APP_CONSTANTS from "src/application/shared/app_constants";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 
 const CONSENT_KEY = APP_CONSTANTS.LOCAL_STORAGE.COOKIE_CONSENT;
 
 const CookiePolicy = () => {
   const { t } = useTranslation("common");
+  const localizedPath = useLocalizedPath();
   const [visible, setVisible] = useState(
     () => !localStorage.getItem(CONSENT_KEY),
   );
@@ -52,7 +54,7 @@ const CookiePolicy = () => {
             i18nKey="cookiePolicy.message"
             components={{
               privacyLink: (
-                <MuiLink href={routes.privacyPolicy} underline="hover" />
+                <MuiLink href={localizedPath(routes.privacyPolicy)} underline="hover" />
               ),
             }}
           />

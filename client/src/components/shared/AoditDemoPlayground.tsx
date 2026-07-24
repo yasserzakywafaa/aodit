@@ -49,6 +49,7 @@ import axios from "axios";
 import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useTranslation } from "react-i18next";
 
@@ -379,6 +380,7 @@ const ReasoningDialog: React.FC<ReasoningDialogProps> = ({
 
 const DemoCompletionUpsell: React.FC = () => {
   const { t } = useTranslation("demo");
+  const localizedPath = useLocalizedPath();
   return (
   <Card
     component="section"
@@ -450,7 +452,7 @@ const DemoCompletionUpsell: React.FC = () => {
         variant="contained"
         size="small"
         component={RouterLink}
-        to={routes.contact}
+        to={localizedPath(routes.contact)}
         sx={{ width: { xs: "100%", sm: "auto" } }}
       >
         {t("playground.requestFullReport")}

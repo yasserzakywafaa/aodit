@@ -12,6 +12,7 @@ import { scrollToSection } from "@yasserzakywafaa/client-core/web";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useDetectScroll, useDeviceSize } from "@yasserzakywafaa/client-core/web";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useLoginModalContext } from "src/components/Modals/LoginModal/store/Provider";
 import { useRegisterModalContext } from "src/components/Modals/RegisterModal/store/Provider";
 import { useState } from "react";
@@ -35,6 +36,7 @@ const ApplicationBar = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const localizedPath = useLocalizedPath();
   const { isDesktop } = useDeviceSize();
   const { isScrolledFromTop } = useDetectScroll();
 
@@ -54,14 +56,16 @@ const ApplicationBar = () => {
 
   const isAppBarVisible = true;
   const pagesMatch: PagesMatch = {
-    isFeaturesPage: !!useMatch(routes.features),
-    isContactPage: !!useMatch(routes.contact),
-    isMethodologyPage: !!useMatch(routes.methodology),
-    isFinmaPage: !!useMatch(routes.compliance.finma),
-    isSecurityPage: !!useMatch(routes.security),
-    isAboutPage: !!useMatch(routes.about),
-    isPrivacyPolicy: !!useMatch(routes.privacyPolicy),
-    isTermsOfService: !!useMatch(routes.termsAndConditions),
+    isFeaturesPage:
+      !!useMatch({ path: "/:locale", end: true }) ||
+      location.pathname === routes.featuresCh,
+    isContactPage: !!useMatch(`/:locale/${routes.contact}`),
+    isMethodologyPage: !!useMatch(`/:locale/${routes.methodology}`),
+    isFinmaPage: !!useMatch(`/:locale/${routes.compliance.finma}`),
+    isSecurityPage: !!useMatch(`/:locale/${routes.security}`),
+    isAboutPage: !!useMatch(`/:locale/${routes.about}`),
+    isPrivacyPolicy: !!useMatch(`/:locale/${routes.privacyPolicy}`),
+    isTermsOfService: !!useMatch(`/:locale/${routes.termsAndConditions}`),
     isDashboardPage: location.pathname.startsWith(routes.dashboard.base),
   };
 
@@ -77,31 +81,35 @@ const ApplicationBar = () => {
 
     switch (sectionId) {
       case "home":
-        navigate(routes.features);
+        navigate(
+          location.pathname === routes.featuresCh
+            ? routes.featuresCh
+            : localizedPath(routes.features),
+        );
         break;
       case "methodology":
-        navigate(routes.methodology);
+        navigate(localizedPath(routes.methodology));
         break;
       case "security":
-        navigate(routes.security);
+        navigate(localizedPath(routes.security));
         break;
       case "about":
-        navigate(routes.about);
+        navigate(localizedPath(routes.about));
         break;
       case "compliance-finma":
-        navigate(routes.compliance.finma);
+        navigate(localizedPath(routes.compliance.finma));
         break;
       case "compliance-eu-ai-act":
-        navigate(routes.compliance.euAiAct);
+        navigate(localizedPath(routes.compliance.euAiAct));
         break;
       case "contact":
-        navigate(routes.contact);
+        navigate(localizedPath(routes.contact));
         break;
       case "demo":
-        navigate(routes.demo);
+        navigate(localizedPath(routes.demo));
         break;
       case "request-evaluation":
-        navigate(routes.contact);
+        navigate(localizedPath(routes.contact));
         break;
       case "install":
         setIsInstallAppDialogOpen(true);

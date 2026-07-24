@@ -13,6 +13,7 @@ import { createWebPageSchema, useSchemaOrg } from "src/shared/utils/schemaOrg";
 import Page from "src/components/shared/Page/Page";
 import { primaryColor } from "src/application/shared/themes";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -60,22 +61,23 @@ const SectionHeading = ({
 const PrivacyPolicyPage = () => {
   const { t } = useTranslation("page");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const handleLinkClick =
     (route: string) =>
     (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       event.preventDefault();
-      navigate(route);
+      navigate(localizedPath(route));
     };
 
   const webPageSchema = useMemo(() => {
     return createWebPageSchema(
       t("legal.privacySchemaTitle"),
       t("legal.privacySchemaDescription"),
-      routes.privacyPolicy,
+      localizedPath(routes.privacyPolicy),
       new Date("03/01/2026"),
     );
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(webPageSchema, "privacy-policy-webpage-schema");
 
@@ -85,6 +87,10 @@ const PrivacyPolicyPage = () => {
       className="privacy-policy-page"
       isLoading={false}
       noIndex
+      seo={{
+        description: t("legal.privacySchemaDescription"),
+        segment: routes.privacyPolicy,
+      }}
     >
       {/* Hero */}
       <Box
@@ -622,7 +628,7 @@ const PrivacyPolicyPage = () => {
             This Privacy Policy may be updated from time to time. The latest
             version is available at:{" "}
             <Link
-              href={routes.privacyPolicy}
+              href={localizedPath(routes.privacyPolicy)}
               onClick={handleLinkClick(routes.privacyPolicy)}
             >
               www.aodit.ai/privacy

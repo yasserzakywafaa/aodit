@@ -5,13 +5,15 @@ import { Box, Button, Typography } from "@mui/material";
 import { EarbudsOutlined } from "@mui/icons-material";
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const NotFoundPage = () => {
   const { t } = useTranslation("page");
   const navigate = useNavigate();
-  const handleOnClick = () => navigate(routes.features);
+  const localizedPath = useLocalizedPath();
+  const handleOnClick = () => navigate(localizedPath(routes.features));
 
   return (
     <Box component="div" className="not-found-page">

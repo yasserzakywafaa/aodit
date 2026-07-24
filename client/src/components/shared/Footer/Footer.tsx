@@ -16,37 +16,46 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { Trans, useTranslation } from "react-i18next";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useState } from "react";
 
 const FOOTER_SECTIONS_GLOBAL = [
   {
     titleKey: "footer.product",
     links: [
-      { labelKey: "footer.industries", href: routes.industries },
-      { labelKey: "footer.methodology", href: routes.methodology },
-      { labelKey: "footer.security", href: routes.security },
-      { labelKey: "footer.tryLiveDemo", href: routes.demo },
+      { labelKey: "footer.industries", segment: routes.industries },
+      { labelKey: "footer.methodology", segment: routes.methodology },
+      { labelKey: "footer.security", segment: routes.security },
+      { labelKey: "footer.tryLiveDemo", segment: routes.demo },
     ],
   },
   {
     titleKey: "footer.compliance",
-    links: [{ labelKey: "footer.finmaGuidance", href: routes.compliance.finma }],
+    links: [
+      {
+        labelKey: "footer.finmaGuidance",
+        segment: routes.compliance.finma,
+      },
+    ],
   },
   {
     titleKey: "footer.company",
     links: [
-      { labelKey: "footer.about", href: routes.about },
-      { labelKey: "footer.contact", href: routes.contact },
+      { labelKey: "footer.about", segment: routes.about },
+      { labelKey: "footer.contact", segment: routes.contact },
     ],
   },
   {
     titleKey: "footer.legal",
     links: [
-      { labelKey: "footer.privacyPolicy", href: routes.privacyPolicy },
-      { labelKey: "footer.termsAndConditions", href: routes.termsAndConditions },
+      { labelKey: "footer.privacyPolicy", segment: routes.privacyPolicy },
+      {
+        labelKey: "footer.termsAndConditions",
+        segment: routes.termsAndConditions,
+      },
       {
         labelKey: "footer.dataProcessingAgreement",
-        href: routes.dataProcessingAgreement,
+        segment: routes.dataProcessingAgreement,
       },
     ],
   },
@@ -56,6 +65,7 @@ const Footer = () => {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const location = useLocation();
+  const localizedPath = useLocalizedPath();
   const region = getEffectiveRegion(location.pathname, location.search);
   const [regionAnchor, setRegionAnchor] = useState<null | HTMLElement>(null);
 
@@ -71,7 +81,7 @@ const Footer = () => {
       navigate(routes.featuresCh);
       return;
     }
-    navigate(routes.features);
+    navigate(localizedPath(routes.features));
   };
 
   const linkStyle = {
@@ -146,7 +156,9 @@ const Footer = () => {
                 >
                   {t(titleKey)}
                 </Typography>
-                {links.map(({ labelKey, href }) => (
+                {links.map(({ labelKey, segment }) => {
+                  const href = localizedPath(segment);
+                  return (
                   <Link
                     key={labelKey}
                     href={href}
@@ -155,7 +167,8 @@ const Footer = () => {
                   >
                     {t(labelKey)}
                   </Link>
-                ))}
+                  );
+                })}
               </Box>
             ))}
 

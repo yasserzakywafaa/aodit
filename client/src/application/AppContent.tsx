@@ -1,7 +1,7 @@
 import "./App.scss";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { darkTheme, getThemedTheme } from "./shared/themes";
+import { getThemedTheme } from "./shared/themes";
 import { lazy, useEffect } from "react";
 
 import APP_CONSTANTS from "./shared/app_constants";
@@ -17,10 +17,20 @@ import NotFoundPage from "../Pages/NotFound/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import { ThemeProvider } from "@mui/material/styles";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
-import { routes } from "./routes";
+import {
+  ALL_PUBLIC_SEGMENTS,
+  routes,
+  toPublicSegment,
+} from "./routes";
 import { useApplicationContext } from "./store/Provider";
 import { useDeviceSize } from "@yasserzakywafaa/client-core/web";
-import { useAppDirection } from "@yasserzakywafaa/client-core/web/i18n";
+import {
+  LocaleLayout,
+  LocaleProvider,
+  LocaleRedirect,
+  useAppDirection,
+} from "@yasserzakywafaa/client-core/web/i18n";
+import i18n from "src/i18n/init";
 
 const FeaturesPage = lazy(() => import("../Pages/Features/FeaturesPage"));
 const FeaturesHomeRoute = lazy(
@@ -66,7 +76,6 @@ const ComplianceEuAiActPage = lazy(
   () => import("../Pages/Compliance/EuAiAct/ComplianceEuAiAct"),
 );
 
-// Dashboard Layout and Pages
 const DashboardLayout = lazy(
   () => import("./layouts/DashboardLayout/DashboardLayout"),
 );
@@ -98,7 +107,6 @@ const DashboardLiveFeedPage = lazy(
   () => import("../Pages/Dashboard/DashboardReportRun/DashboardReportRun"),
 );
 
-// Dashboard Layout and Pages
 const DashboardAdminUsersPage = lazy(
   () =>
     import("../Pages/Dashboard/Admin/DashboardAdminUsers/DashboardAdminUsers"),
@@ -130,13 +138,14 @@ const AppContent = () => {
   } = useApplicationContext();
   const { isDesktop } = useDeviceSize();
   const direction = useAppDirection();
+  const theme = getThemedTheme(state.themeMode, direction);
 
   useEffect(() => {
     handleInitialAuthentication();
   }, []);
 
   return (
-    <ThemeProvider theme={getThemedTheme(state.themeMode, direction)}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       {isDesktop && <CustomCursor />}
 
@@ -146,158 +155,159 @@ const AppContent = () => {
 
       {!state.isFetchingUserInfo && (
         <BrowserRouter>
-          <Ga4PageView />
-          <Ga4ScrollDepth />
-          <Routes>
-            {/* Auth Routes */}
-            <Route path={routes.auth.login} element={<LoginPage />} />
-            {!APP_CONSTANTS.IS_PROD && (
-              <Route path={routes.auth.register} element={<RegisterPage />} />
-            )}
+          <LocaleProvider publicSegments={ALL_PUBLIC_SEGMENTS} i18n={i18n}>
+            <Ga4PageView />
+            <Ga4ScrollDepth />
+            <Routes>
+              <Route path={routes.root} element={<LocaleRedirect />} />
 
-            {/* Public Routes */}
-            <Route
-              index
-              path={routes.features}
-              element={<FeaturesHomeRoute />}
-            />
-            <Route
-              path={routes.featuresCh}
-              element={<FeaturesPage region="swiss" />}
-            />
-            <Route path={routes.industries} element={<IndustriesHubPage />} />
-
-            {/* Industry / use-case SEO landing pages */}
-            {LANDING_PAGES.map((landingPage) => (
-              <Route
-                key={landingPage.key}
-                path={landingPage.slug}
-                element={<IndustryLandingPage content={landingPage} />}
-              />
-            ))}
-
-            <Route path={routes.demo} element={<DemoPage />} />
-            <Route path={routes.methodology} element={<MethodologyPage />} />
-            <Route path={routes.security} element={<SecurityPage />} />
-            <Route path={routes.about} element={<AboutPage />} />
-            <Route
-              path={routes.compliance.finma}
-              element={<ComplianceFinmaPage />}
-            />
-            <Route
-              path={routes.compliance.euAiAct}
-              element={<ComplianceEuAiActPage />}
-            />
-            <Route path={routes.pricing} element={<PricingPage />} />
-            <Route path={routes.contact} element={<ContactPage />} />
-            <Route
-              path={routes.privacyPolicy}
-              element={<PrivacyPolicyPage />}
-            />
-            <Route
-              path={routes.termsAndConditions}
-              element={<TermsAndConditionsPage />}
-            />
-            <Route
-              path={routes.dataProcessingAgreement}
-              element={<DataProcessingAgreementPage />}
-            />
-
-            <Route
-              path={routes.dashboard.base}
-              element={
-                <ProtectedRoute>
-                  <DashboardLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<DashboardPage />} />
+              {/* Flat routes — outside /:locale (auth, Swiss home, app) */}
+              <Route path={routes.auth.login} element={<LoginPage />} />
+              {!APP_CONSTANTS.IS_PROD && (
+                <Route path={routes.auth.register} element={<RegisterPage />} />
+              )}
 
               <Route
-                path={routes.dashboard.reports.base}
-                element={<DashboardReportsPage />}
+                path={routes.featuresCh}
+                element={<FeaturesPage region="swiss" />}
               />
 
               <Route
-                path={routes.dashboard.reports.reportById(":reportId")}
-                element={<DashboardReportPage />}
-              />
+                path={routes.dashboard.base}
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<DashboardPage />} />
 
-              <Route
-                path={routes.dashboard.reports.reportLiveFeed(":reportId")}
-                element={<DashboardLiveFeedPage />}
-              />
+                <Route
+                  path={routes.dashboard.reports.base}
+                  element={<DashboardReportsPage />}
+                />
 
-              <Route
-                path={routes.dashboard.reports.create}
-                element={<DashboardCreateReportPage />}
-              />
+                <Route
+                  path={routes.dashboard.reports.reportById(":reportId")}
+                  element={<DashboardReportPage />}
+                />
 
-              <Route
-                path={routes.dashboard.agents.base}
-                element={<DashboardAgentsPage />}
-              />
+                <Route
+                  path={routes.dashboard.reports.reportLiveFeed(":reportId")}
+                  element={<DashboardLiveFeedPage />}
+                />
 
-              <Route
-                path={routes.dashboard.agents.agentById(":agentId")}
-                element={<DashboardAgentPage />}
-              />
+                <Route
+                  path={routes.dashboard.reports.create}
+                  element={<DashboardCreateReportPage />}
+                />
 
-              <Route
-                path={routes.dashboard.agents.create}
-                element={<DashboardCreateAgentPage />}
-              />
+                <Route
+                  path={routes.dashboard.agents.base}
+                  element={<DashboardAgentsPage />}
+                />
 
-              <Route
-                path={routes.dashboard.user.profile}
-                element={<MyProfilePage />}
-              />
+                <Route
+                  path={routes.dashboard.agents.agentById(":agentId")}
+                  element={<DashboardAgentPage />}
+                />
 
-              <Route
-                path={routes.dashboard.billing.paymentStatus(":sessionId")}
-                element={<PaymentStatusPage />}
-              />
+                <Route
+                  path={routes.dashboard.agents.create}
+                  element={<DashboardCreateAgentPage />}
+                />
 
-              {state.auth.isAuthenticated &&
-                !!state.auth.user &&
-                hasAdminRights(state.auth.user) && (
-                  <>
-                    <Route
-                      path={routes.dashboard.admin.users.base}
-                      element={<DashboardAdminUsersPage />}
-                    />
+                <Route
+                  path={routes.dashboard.user.profile}
+                  element={<MyProfilePage />}
+                />
 
-                    <Route
-                      path={routes.dashboard.user.userById(":userId")}
-                      element={<DashboardAdminUserPage />}
-                    />
+                <Route
+                  path={routes.dashboard.billing.paymentStatus(":sessionId")}
+                  element={<PaymentStatusPage />}
+                />
 
-                    <Route
-                      path={routes.dashboard.admin.agents.base}
-                      element={<DashboardAdminAgentsPage />}
-                    />
+                {state.auth.isAuthenticated &&
+                  !!state.auth.user &&
+                  hasAdminRights(state.auth.user) && (
+                    <>
+                      <Route
+                        path={routes.dashboard.admin.users.base}
+                        element={<DashboardAdminUsersPage />}
+                      />
 
-                    <Route
-                      path={routes.dashboard.admin.reports.base}
-                      element={<DashboardAdminReportsPage />}
-                    />
+                      <Route
+                        path={routes.dashboard.user.userById(":userId")}
+                        element={<DashboardAdminUserPage />}
+                      />
 
-                    <Route
-                      path={routes.dashboard.admin.demos.base}
-                      element={<DashboardAdminDemosPage />}
-                    />
+                      <Route
+                        path={routes.dashboard.admin.agents.base}
+                        element={<DashboardAdminAgentsPage />}
+                      />
 
-                    <Route
-                      path={routes.dashboard.admin.demos.demoById(":demoId")}
-                      element={<DashboardAdminDemoPage />}
-                    />
-                  </>
-                )}
-            </Route>
+                      <Route
+                        path={routes.dashboard.admin.reports.base}
+                        element={<DashboardAdminReportsPage />}
+                      />
 
-            {/* Fallback route for 404 errors */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+                      <Route
+                        path={routes.dashboard.admin.demos.base}
+                        element={<DashboardAdminDemosPage />}
+                      />
+
+                      <Route
+                        path={routes.dashboard.admin.demos.demoById(":demoId")}
+                        element={<DashboardAdminDemoPage />}
+                      />
+                    </>
+                  )}
+              </Route>
+
+              <Route path="/:locale" element={<LocaleLayout i18n={i18n} />}>
+                <Route index element={<FeaturesHomeRoute />} />
+                <Route path={routes.industries} element={<IndustriesHubPage />} />
+
+                {LANDING_PAGES.map((landingPage) => (
+                  <Route
+                    key={landingPage.key}
+                    path={toPublicSegment(landingPage.slug)}
+                    element={<IndustryLandingPage content={landingPage} />}
+                  />
+                ))}
+
+                <Route path={routes.demo} element={<DemoPage />} />
+                <Route path={routes.methodology} element={<MethodologyPage />} />
+                <Route path={routes.security} element={<SecurityPage />} />
+                <Route path={routes.about} element={<AboutPage />} />
+                <Route
+                  path={routes.compliance.finma}
+                  element={<ComplianceFinmaPage />}
+                />
+                <Route
+                  path={routes.compliance.euAiAct}
+                  element={<ComplianceEuAiActPage />}
+                />
+                <Route path={routes.pricing} element={<PricingPage />} />
+                <Route path={routes.contact} element={<ContactPage />} />
+                <Route
+                  path={routes.privacyPolicy}
+                  element={<PrivacyPolicyPage />}
+                />
+                <Route
+                  path={routes.termsAndConditions}
+                  element={<TermsAndConditionsPage />}
+                />
+                <Route
+                  path={routes.dataProcessingAgreement}
+                  element={<DataProcessingAgreementPage />}
+                />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
+
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </LocaleProvider>
         </BrowserRouter>
       )}
 

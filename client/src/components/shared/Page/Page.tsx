@@ -20,6 +20,7 @@ import ScrollToTopButton from "../ScrollToTopButton";
 import classNames from "classnames";
 import { routes } from "src/application/routes";
 import { scrollToTop } from "@yasserzakywafaa/client-core/web";
+import { PageSeoConfig, usePageSeo } from "@yasserzakywafaa/client-core/web/seo";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useApplicationContext } from "src/application/store/Provider";
 
@@ -34,6 +35,8 @@ export interface PageProps {
   ogTitle?: string;
   ogDescription?: string;
   hreflangAlternates?: HreflangAlternate[];
+  /** Indexable public pages: canonical + hreflang via client-core. */
+  seo?: PageSeoConfig;
   id?: string;
   className?: string;
   isLoading?: boolean;
@@ -51,6 +54,7 @@ const Page = (params: PageProps) => {
     ogTitle,
     ogDescription,
     hreflangAlternates,
+    seo,
     style,
     children,
     isLoading,
@@ -72,7 +76,6 @@ const Page = (params: PageProps) => {
   const authStatus = searchParams.get("authStatus");
   const provider = searchParams.get("provider");
   const userId = searchParams.get("userId");
-  // const hasCallback = sessionStorage.getItem("oauthCallback");
 
   const isPageLoading = isLoading || isFetching;
   const pageClassNames = classNames({
@@ -81,16 +84,12 @@ const Page = (params: PageProps) => {
   });
 
   const handleAuthSuccess = async () => {
-    console.log("🔐 GoogleAuth: OAuth successful, executing callback");
-
     if (!userId) {
       throw new Error("User ID is required");
     }
 
-    // Set authentication state immediately - cookies are already set by server
     localStorage.setItem(APP_CONSTANTS.LOCAL_STORAGE.AUTHENTICATED, "true");
 
-    // Fetch user info using the authenticated endpoint (which uses cookies)
     try {
       const fetchedUser = await handleFetchUserInfo(userId);
       handleSetAuthInfo({
@@ -104,19 +103,16 @@ const Page = (params: PageProps) => {
       navigate(routes.dashboard.base);
     } catch (error) {
       console.error("❌ Failed to fetch user info after OAuth:", error);
-      // Still set authenticated state but with null user
       handleSetAuthInfo({
         isAuthenticated: true,
         user: null,
       });
     }
 
-    // Clean up
     window.history.replaceState({}, "", window.location.pathname);
   };
 
   useEffect(() => {
-    // Update page color
     localStorage.setItem(
       APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
       themeMode,
@@ -143,9 +139,9 @@ const Page = (params: PageProps) => {
 
   useEffect(() => {
     if (location.hash) {
-      const id = location.hash.replace("#", "");
+      const hashId = location.hash.replace("#", "");
       setTimeout(() => {
-        const element = document.getElementById(id);
+        const element = document.getElementById(hashId);
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
         }
@@ -153,26 +149,16 @@ const Page = (params: PageProps) => {
     }
   }, [location.hash]);
 
-  useEffect(() => {
-    document.title = title;
-  }, [title]);
+  usePageSeo({
+    title,
+    noIndex,
+    seo,
+    getAppUrl: () => APP_CONSTANTS.APP_URL,
+  });
 
   useEffect(() => {
-    let robotsMeta = document.querySelector(
-      "meta[name='robots']",
-    ) as HTMLMetaElement | null;
-    if (!robotsMeta) {
-      robotsMeta = document.createElement("meta");
-      robotsMeta.setAttribute("name", "robots");
-      document.head.appendChild(robotsMeta);
-    }
-    robotsMeta.setAttribute(
-      "content",
-      noIndex ? "noindex, follow" : "index, follow",
-    );
-  }, [noIndex]);
+    if (seo) return;
 
-  useEffect(() => {
     const baseUrl = APP_CONSTANTS.APP_URL || window.location.origin;
     const canonicalUrl = `${baseUrl}${location.pathname}`;
 
@@ -189,11 +175,12 @@ const Page = (params: PageProps) => {
     if (ogUrlMeta) {
       ogUrlMeta.setAttribute("content", canonicalUrl);
     }
-  }, [location.pathname]);
+  }, [location.pathname, seo]);
 
   useEffect(() => {
+    if (seo) return;
+
     const setMetaContent = (
-      selector: string,
       attribute: "name" | "property",
       attrValue: string,
       content: string | undefined,
@@ -210,9 +197,13 @@ const Page = (params: PageProps) => {
       el.setAttribute("content", content);
     };
 
-    setMetaContent("", "name", "description", description);
-    setMetaContent("", "property", "og:title", ogTitle ?? title);
-    setMetaContent("", "property", "og:description", ogDescription ?? description);
+    setMetaContent("name", "description", description);
+    setMetaContent("property", "og:title", ogTitle ?? title);
+    setMetaContent(
+      "property",
+      "og:description",
+      ogDescription ?? description,
+    );
 
     const twitterTitle = document.querySelector(
       "meta[name='twitter:title']",
@@ -227,7 +218,7 @@ const Page = (params: PageProps) => {
     if (twitterDesc && (ogDescription ?? description)) {
       twitterDesc.setAttribute("content", ogDescription ?? description ?? "");
     }
-  }, [title, description, ogTitle, ogDescription]);
+  }, [title, description, ogTitle, ogDescription, seo]);
 
   useEffect(() => {
     const existing = document.querySelectorAll(
@@ -254,7 +245,6 @@ const Page = (params: PageProps) => {
   }, [hreflangAlternates]);
 
   useEffect(() => {
-    // Prevent scrolling while page is loading
     const htmlNode = document.getElementsByTagName("html")[0];
     if (isPageLoading) htmlNode.style.overflow = "hidden";
     else htmlNode.removeAttribute("style");
@@ -271,13 +261,7 @@ const Page = (params: PageProps) => {
         }}
       />
 
-      <Container
-        // maxWidth={false}
-        id={id}
-        style={style}
-        className={pageClassNames}
-        {...containerProps}
-      >
+      <Container id={id} style={style} className={pageClassNames} {...containerProps}>
         <Notification />
 
         <ApplicationBar />

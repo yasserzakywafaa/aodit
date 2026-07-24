@@ -3,6 +3,7 @@ import { ExpandMoreRounded } from "@mui/icons-material";
 import { Box, Button, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import SwissFlag from "src/assets/images/switzerland_flag.png";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { getEffectiveRegion } from "src/application/shared/regionContent";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -19,6 +20,7 @@ const COMPLIANCE_ITEMS = [
 const ComplianceDropdown = () => {
   const { t } = useTranslation("common");
   const location = useLocation();
+  const localizedPath = useLocalizedPath();
   const region = getEffectiveRegion(location.pathname, location.search);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -69,7 +71,7 @@ const ComplianceDropdown = () => {
           <MenuItem
             key={item.to}
             component="a"
-            href={item.to}
+            href={localizedPath(item.to)}
             divider={index < COMPLIANCE_ITEMS.length - 1}
             onClick={handleItemClick}
           >

@@ -1,7 +1,7 @@
 import { next, rewrite } from "@vercel/functions";
 
 export const config = {
-  matcher: ["/", "/ch"],
+  matcher: ["/", "/en", "/ch"],
 };
 
 const REGION_COOKIE = "aodit-region";
@@ -48,19 +48,21 @@ export default function middleware(req: Request) {
   const target = resolveTarget(country, cookies[REGION_COOKIE], explicit);
 
   const headers = new Headers();
-  const secure =
-    url.protocol === "https:" ? "; Secure" : "";
+  const secure = url.protocol === "https:" ? "; Secure" : "";
   headers.append(
     "set-cookie",
     `${REGION_COOKIE}=${target}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`,
   );
 
-  if (url.pathname === "/" && target === "ch") {
+  if (
+    (url.pathname === "/" || url.pathname === "/en") &&
+    target === "ch"
+  ) {
     return rewrite(new URL("/ch", url), { headers });
   }
 
   if (url.pathname === "/ch" && target === "global") {
-    return rewrite(new URL("/", url), { headers });
+    return rewrite(new URL("/en", url), { headers });
   }
 
   return next({ headers });

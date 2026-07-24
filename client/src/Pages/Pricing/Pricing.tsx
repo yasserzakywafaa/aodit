@@ -11,6 +11,7 @@ import PricingTable from "src/components/shared/Pricing/PricingTable";
 import { getCurrencyCode } from "@yasserzakywafaa/client-core";
 import { routes } from "src/application/routes";
 import { useDeviceSize } from "@yasserzakywafaa/client-core/web";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { usePaymentContext } from "src/components/shared/Payment/store/Provider";
@@ -19,6 +20,7 @@ import { usePricingContext } from "./store/Provider";
 
 const PricingPage = () => {
   const { t } = useTranslation("page");
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: { isFetching },
@@ -68,11 +70,11 @@ const PricingPage = () => {
   // Generate Breadcrumb schema
   const breadcrumbSchema = useMemo(() => {
     const breadcrumbs = [
-      { name: t("breadcrumb.home"), url: routes.features },
-      { name: t("breadcrumb.pricing"), url: routes.pricing },
+      { name: t("breadcrumb.home"), url: localizedPath(routes.features) },
+      { name: t("breadcrumb.pricing"), url: localizedPath(routes.pricing) },
     ];
     return createBreadcrumbSchema(breadcrumbs);
-  }, [t]);
+  }, [t, localizedPath]);
 
   // Inject Schema.org structured data
   useSchemaOrg(productListSchema, "product-list-schema");
@@ -83,6 +85,10 @@ const PricingPage = () => {
       title={t("pricing.pageTitle")}
       className="pricing-page"
       isLoading={isFetching}
+      seo={{
+        description: t("pricing.subtitle"),
+        segment: routes.pricing,
+      }}
     >
       <Container
         className="pricing-container"

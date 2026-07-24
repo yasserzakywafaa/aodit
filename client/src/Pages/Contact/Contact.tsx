@@ -12,12 +12,14 @@ import ContactForm from "./features/ContactForm";
 import ContactMap from "./features/ContactMap";
 import Page from "src/components/shared/Page/Page";
 import { routes } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useContactContext } from "./store/Provider";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 const ContactPage = () => {
   const { t } = useTranslation("page");
+  const localizedPath = useLocalizedPath();
   const {
     store: {
       state: { isFetching },
@@ -33,11 +35,11 @@ const ContactPage = () => {
 
   const breadcrumbSchema = useMemo(() => {
     const breadcrumbs = [
-      { name: t("breadcrumb.home"), url: routes.features },
-      { name: t("breadcrumb.contact"), url: routes.contact },
+      { name: t("breadcrumb.home"), url: localizedPath(routes.features) },
+      { name: t("breadcrumb.contact"), url: localizedPath(routes.contact) },
     ];
     return createBreadcrumbSchema(breadcrumbs);
-  }, [t]);
+  }, [t, localizedPath]);
 
   useSchemaOrg(contactPageSchema, "contact-page-schema");
   useSchemaOrg(organizationSchema, "contact-organization-schema");
@@ -48,6 +50,10 @@ const ContactPage = () => {
       title={t("contact.pageTitle")}
       className="contact-page"
       isLoading={isFetching}
+      seo={{
+        description: t("contact.intro"),
+        segment: routes.contact,
+      }}
     >
       <Container className="contact-container" sx={{ pt: 6, pb: 6 }}>
         <Typography

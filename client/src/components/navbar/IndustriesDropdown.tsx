@@ -15,7 +15,8 @@ import {
   type LandingPageCategoryId,
   getLandingPagesGrouped,
 } from "src/application/shared/landingPages";
-import { routes } from "src/application/routes";
+import { routes, toPublicSegment } from "src/application/routes";
+import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -24,6 +25,7 @@ import { useTranslation } from "react-i18next";
 const IndustriesDropdown = () => {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const groups = getLandingPagesGrouped();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -52,12 +54,12 @@ const IndustriesDropdown = () => {
 
   const handlePageClick = (slug: string) => () => {
     handleClose();
-    navigate(slug);
+    navigate(localizedPath(toPublicSegment(slug)));
   };
 
   const handleViewAllIndustries = () => {
     handleClose();
-    navigate(routes.industries);
+    navigate(localizedPath(routes.industries));
   };
 
   return (

@@ -1,7 +1,7 @@
 # https://www.robotstxt.org/robotstxt.html
 
 # Sitemap location
-Sitemap: https://www.aodit.ai/sitemaps/sitemap.xml
+Sitemap: https://www.aodit.ai/sitemap.xml
 
 # Block specific robots from accessing certain parts
 User-agent: BadBot

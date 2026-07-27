@@ -46,9 +46,9 @@ const CONFIG = {
   ENCRYPTION_SALT: process.env.ENCRYPTION_SALT,
 
   // Paths
-  FRONTEND_DEV_PATH: path.resolve("../client/public"),
+  FRONTEND_DEV_PATH: path.resolve("../web/public"),
   FRONTEND_BUILD_PATH:
-    process.env.FRONTEND_BUILD_PATH || path.resolve("../client/dist"),
+    process.env.FRONTEND_BUILD_PATH || path.resolve("../web/dist"),
   SERVE_STATIC_CONTENT: process.env.SERVE_STATIC_CONTENT,
 
   // GitLab
@@ -62,7 +62,7 @@ const CONFIG = {
     UPDATE_URL: (projectId: string) =>
       `https://gitlab.com/api/v4/projects/${projectId}/repository/commits`,
     SITEMAP_PATH: (sitemapFileName: string) =>
-      `client/public/sitemaps/${sitemapFileName}`,
+      `web/public/sitemaps/${sitemapFileName}`,
   },
 
   // Google Service Account

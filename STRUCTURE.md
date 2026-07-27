@@ -1,7 +1,7 @@
 # Project Folder Structure
 
     aodit
-    │── client
+    │── web
     │   ├── build/
     │   ├── node_modules/
     │   ├── public/

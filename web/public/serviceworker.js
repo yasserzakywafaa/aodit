@@ -1,5 +1,5 @@
 const _this = this;
-const version = "20260709-142329"; // Increment this on every deploy
+const version = "20260727-074237"; // Increment this on every deploy
 const host = _this.location.origin;
 const CACHE_NAME = `aodit-v${version}`;
 const urlsToCache = ["/", "/settings", "/index.html"];

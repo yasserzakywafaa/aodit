@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Builds ar/de/fr locale files from en source + translation overrides.
- * Run: node client/src/i18n/tools/build-translations.mjs
+ * Run: node web/src/i18n/tools/build-translations.mjs
  */
 import fs from "fs";
 import path from "path";

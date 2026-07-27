@@ -115,13 +115,13 @@ If no description is provided (legacy reports), it falls back to "General purpos
 ### Report
 
 - **What:** One "campaign" of evaluations.
-- **Where:** `server/src/models/types/report.ts`, `client/src/shared/types/report.ts`.
+- **Where:** `server/src/models/types/report.ts`, `web/src/shared/types/report.ts`.
 - **Key fields:** `_id`, `name`, `description` (required — used as sector context for prompts), `status` (draft → running → completed/failed), `reportType`, `frameworkVersion` (`aodit_v1` or `aodit_v2`), `userId`, `agentId` (linked agent — required before running), `modelsToTest` (string[]), `modelsToEvaluate` (string[] — judge model: friendly label from the evaluator registry or a **direct model id** for on-prem/local LLM), `scenariosPerDimension` (number), `dimensionWeights` (Record), `createdAt`, `updatedAt`.
 
 ### Agent
 
 - **What:** A registered AI agent with a designated human owner (FINMA compliance). Each report must have an agent assigned before it can run.
-- **Where:** `server/src/models/types/agent.ts`, `client/src/shared/types/agent.ts`.
+- **Where:** `server/src/models/types/agent.ts`, `web/src/shared/types/agent.ts`.
 - **Key fields:** `_id`, `name`, `description`, `intent` (business purpose), `ownerName` (human responsible), `userId` (creator), `status` (active | inactive), `createdAt`, `updatedAt`.
 - **Relationship:** Report has optional `agentId` field. The "RUN REPORT" button is disabled until an agent is selected. Agent detail page lists all reports attached to it.
 
@@ -134,7 +134,7 @@ If no description is provided (legacy reports), it falls back to "General purpos
 ### ReportRun
 
 - **What:** Result of one full run of a report for a single model.
-- **Where:** `server/src/models/types/reportRun.ts`, `client/src/shared/types/reportRun.ts`.
+- **Where:** `server/src/models/types/reportRun.ts`, `web/src/shared/types/reportRun.ts`.
 - **Key fields:** `_id`, `reportId`, `frameworkVersion`, `batchId`, `modelName`, `status` (pending | running | completed | failed), `dimensionScores`, `compositeScore`, `rating`, `calibrationGap`, `outlook`, `deploymentVerdict`, `scenarioResults` (IDs), `progress` (0–100), `currentStep`, `totalScenarios`, `completedScenarios`, `feedItems` (FeedItem[]), `startedAt`, `completedAt`.
 
 ### ScenarioResult
@@ -146,14 +146,14 @@ If no description is provided (legacy reports), it falls back to "General purpos
 ### FeedItem
 
 - **What:** A single live-feed entry shown on the Live Feed page.
-- **Where:** `server/src/models/types/reportRun.ts`, `client/src/shared/types/reportRun.ts`.
+- **Where:** `server/src/models/types/reportRun.ts`, `web/src/shared/types/reportRun.ts`.
 - **Key fields:** `id` (#001), `dim`, `model`, `turn`, `text`, `score`, `type` (pass | warn | fail).
 
 ### Framework versioning (dimensions/categories)
 
 - **What:** Versioned methodology definitions used by both legacy and new reports.
 - **Where:**
-  - Client: `client/src/shared/constants/aoditFramework.ts`
+  - Client: `web/src/shared/constants/aoditFramework.ts`
   - Server: `server/src/services/reports/frameworkRegistry.ts`
 - **Versions:**
   - `aodit_v1` (AODIT-5): 5 dimensions, 25 categories
@@ -187,7 +187,7 @@ If no description is provided (legacy reports), it falls back to "General purpos
 
 Full constants and labels:
 
-- Client: `client/src/shared/constants/aoditFramework.ts`
+- Client: `web/src/shared/constants/aoditFramework.ts`
 - Server: `server/src/services/reports/frameworkRegistry.ts`
 
 ---
@@ -229,7 +229,7 @@ The **8-turn engine stays fixed** (same internal turn types). Scenario diversity
 |             | Z4          | Stress Persistence         | 4         |
 |             | Z5          | Degraded Synthesis         | 4         |
 
-**Category constants:** `client/src/shared/constants/aoditFramework.ts` → `DIMENSION_CATEGORIES`.
+**Category constants:** `web/src/shared/constants/aoditFramework.ts` → `DIMENSION_CATEGORIES`.
 
 ### Severity system
 
@@ -300,21 +300,21 @@ The client uses **Vite** (migrated from Create React App) with **vite-plugin-pre
 
 At build time, Puppeteer renders the public/marketing routes into static HTML files; `/` · `/ai-agent-testing-methodology`, etc.
 
-Each route gets its own `index.html` in the build output (e.g. `dist/contact/index.html`). Vercel's `routes` config (`client/vercel.json`) serves these static files first; any route without a matching file falls back to the SPA `index.html` (for dashboard, auth pages, etc.).
+Each route gets its own `index.html` in the build output (e.g. `dist/contact/index.html`). Vercel's `routes` config (`web/vercel.json`) serves these static files first; any route without a matching file falls back to the SPA `index.html` (for dashboard, auth pages, etc.).
 
-The entry point (`client/src/index.tsx`) uses a hybrid hydration strategy: `hydrateRoot` when pre-rendered HTML is present, `createRoot` otherwise.
+The entry point (`web/src/index.tsx`) uses a hybrid hydration strategy: `hydrateRoot` when pre-rendered HTML is present, `createRoot` otherwise.
 
-Key files: `client/vite.config.ts`, `client/index.html`, `client/vercel.json`.
+Key files: `web/vite.config.ts`, `web/index.html`, `web/vercel.json`.
 
 ---
 
 ### Layout
 
-`client/src/application/layouts/DashboardLayout/` — sidebar with Overview, Reports, Admin (Users, Reports).
+`web/src/application/layouts/DashboardLayout/` — sidebar with Overview, Reports, Admin (Users, Reports).
 
 ### Routes
 
-`client/src/application/routes.ts`:
+`web/src/application/routes.ts`:
 
 - `dashboard.reports.base` — reports list
 - `dashboard.reports.create` — create report form
@@ -335,7 +335,7 @@ Key files: `client/vite.config.ts`, `client/index.html`, `client/vercel.json`.
 The report config page (`DashboardReport`) offers two evaluation modes via tabs:
 
 - **"Evaluate Your Agent"** (`evaluationMode: "agent"`) — available to **all users**.
-- **"Benchmark Frontier Models"** (`evaluationMode: "benchmark"`) — available to **admins only** (`hasAdminRights` from `client/src/shared/utils/getUserRoles.ts`).
+- **"Benchmark Frontier Models"** (`evaluationMode: "benchmark"`) — available to **admins only** (`hasAdminRights` from `web/src/shared/utils/getUserRoles.ts`).
 
 **Behavior:**
 
@@ -361,7 +361,7 @@ The report config page (`DashboardReport`) offers two evaluation modes via tabs:
 
 ### Client endpoints
 
-`client/src/application/shared/endpoints.ts` — `DASHBOARD.REPORTS` includes `LAUNCH_REPORT(reportId)`, `GET_REPORT_RUNS(reportId)`, `GET_RUN_STATUS(reportId)`.
+`web/src/application/shared/endpoints.ts` — `DASHBOARD.REPORTS` includes `LAUNCH_REPORT(reportId)`, `GET_REPORT_RUNS(reportId)`, `GET_RUN_STATUS(reportId)`.
 
 ---
 
@@ -370,12 +370,12 @@ The report config page (`DashboardReport`) offers two evaluation modes via tabs:
 | What                                          | Where                                                     |
 | --------------------------------------------- | --------------------------------------------------------- |
 | Report type (server)                          | `server/src/models/types/report.ts`                       |
-| Report type (client)                          | `client/src/shared/types/report.ts`                       |
+| Report type (client)                          | `web/src/shared/types/report.ts`                       |
 | ReportRun type (server)                       | `server/src/models/types/reportRun.ts`                    |
-| ReportRun type (client)                       | `client/src/shared/types/reportRun.ts`                    |
+| ReportRun type (client)                       | `web/src/shared/types/reportRun.ts`                    |
 | ScenarioResult type                           | `server/src/models/types/scenarioResult.ts`               |
 | Scenario type                                 | `server/src/models/types/scenario.ts`                     |
-| Framework constants (v1/v2)                   | `client/src/shared/constants/aoditFramework.ts`           |
+| Framework constants (v1/v2)                   | `web/src/shared/constants/aoditFramework.ts`           |
 | Model registry                                | `server/src/services/reports/modelRegistry.ts`            |
 | Prompt templates                              | `server/src/services/reports/prompts.ts`                  |
 | Scoring & aggregation                         | `server/src/services/reports/scoring.ts`                  |
@@ -386,23 +386,23 @@ The report config page (`DashboardReport`) offers two evaluation modes via tabs:
 | Dashboard controller                          | `server/src/controllers/DashboardController.ts`           |
 | Dashboard routes                              | `server/src/routes/dashboardRoutes.ts`                    |
 | API endpoints (server)                        | `server/src/models/endpoints.ts`                          |
-| API endpoints (client)                        | `client/src/application/shared/endpoints.ts`              |
-| Reports list page                             | `client/src/Pages/Dashboard/DashboardReports/`            |
-| Report detail page                            | `client/src/Pages/Dashboard/DashboardReport/`             |
-| Live Feed page                                | `client/src/Pages/Dashboard/DashboardReportRun/`          |
-| Create report page                            | `client/src/Pages/Dashboard/DashboardCreateReport/`       |
+| API endpoints (client)                        | `web/src/application/shared/endpoints.ts`              |
+| Reports list page                             | `web/src/Pages/Dashboard/DashboardReports/`            |
+| Report detail page                            | `web/src/Pages/Dashboard/DashboardReport/`             |
+| Live Feed page                                | `web/src/Pages/Dashboard/DashboardReportRun/`          |
+| Create report page                            | `web/src/Pages/Dashboard/DashboardCreateReport/`       |
 | DB collections & indexes                      | `server/src/models/mongoDb/index.ts`                      |
 | OpenRouter client                             | `server/src/utils/openRouterClient.ts`                    |
-| App routes                                    | `client/src/application/routes.ts`                        |
-| App content (route tree)                      | `client/src/application/AppContent.tsx`                   |
+| App routes                                    | `web/src/application/routes.ts`                        |
+| App content (route tree)                      | `web/src/application/AppContent.tsx`                   |
 | Agent type (server)                           | `server/src/models/types/agent.ts`                        |
-| Agent type (client)                           | `client/src/shared/types/agent.ts`                        |
+| Agent type (client)                           | `web/src/shared/types/agent.ts`                        |
 | Agent CRUD service                            | `server/src/services/agentService.ts`                     |
-| Agents list page                              | `client/src/Pages/Dashboard/DashboardAgents/`             |
-| Agent detail page                             | `client/src/Pages/Dashboard/DashboardAgent/`              |
-| Create agent page                             | `client/src/Pages/Dashboard/DashboardCreateAgent/`        |
-| Admin agents page                             | `client/src/Pages/Dashboard/Admin/DashboardAdminAgents/`  |
-| Admin reports page                            | `client/src/Pages/Dashboard/Admin/DashboardAdminReports/` |
+| Agents list page                              | `web/src/Pages/Dashboard/DashboardAgents/`             |
+| Agent detail page                             | `web/src/Pages/Dashboard/DashboardAgent/`              |
+| Create agent page                             | `web/src/Pages/Dashboard/DashboardCreateAgent/`        |
+| Admin agents page                             | `web/src/Pages/Dashboard/Admin/DashboardAdminAgents/`  |
+| Admin reports page                            | `web/src/Pages/Dashboard/Admin/DashboardAdminReports/` |
 
 ---
 

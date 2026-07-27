@@ -6,5 +6,5 @@ aodit is an AI agent evaluation platform that stress-tests models across structu
 
 ## Quick Start
 
-- **Client**: `cd client && yarn install && yarn start`
+- **Client**: `cd web && yarn install && yarn start`
 - **Server**: `cd server && yarn install && yarn start:watch`

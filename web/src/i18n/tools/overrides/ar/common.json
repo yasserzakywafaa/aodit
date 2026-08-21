@@ -5,6 +5,7 @@
   "or": "أو",
   "emailSentSuccess": "تم إرسال البريد الإلكتروني بنجاح",
   "noResults": "لا توجد نتائج",
+  "account": "الحساب",
   "loggedOut": "تم تسجيل الخروج",
   "nav": {
     "features": "الميزات",
@@ -30,6 +31,9 @@
     "dashboard": "لوحة التحكم",
     "logout": "تسجيل الخروج",
     "theme": "المظهر",
+    "themeSystem": "النظام",
+    "themeLight": "فاتح",
+    "themeDark": "داكن",
     "themeToggle": "زر تبديل المظهر",
     "install": "تثبيت",
     "refreshApp": "تحديث التطبيق"

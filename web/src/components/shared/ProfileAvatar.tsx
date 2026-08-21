@@ -1,8 +1,10 @@
 import { Avatar, Badge } from "@mui/material";
+import { PersonOutlined } from "@mui/icons-material";
 
 import { AvatarSquareStyle } from "src/application/shared/themes";
 import { User } from "src/shared/types/user";
 import { VerifiedBadge } from "./Badges/VerifiedBadge";
+import { getUserAvatarInitials } from "src/shared/utils/getUserDisplayName";
 
 export interface ProfileAvatarProps {
   user: User;
@@ -14,6 +16,8 @@ const ProfileAvatar = (props: ProfileAvatarProps) => {
   const { user, avatarSize, verifiedBadgeSize } = props;
 
   if (!user) return <></>;
+
+  const initials = getUserAvatarInitials(user);
 
   return (
     <Badge
@@ -43,8 +47,11 @@ const ProfileAvatar = (props: ProfileAvatarProps) => {
             height: avatarSize?.height,
           }}
         >
-          {(user.name.givenName && user.name.givenName.charAt(0)) || ""}
-          {(user.name.familyName && user.name.familyName.charAt(0)) || ""}
+          {initials || (
+            <PersonOutlined
+              sx={{ fontSize: Math.max(14, (avatarSize?.width ?? 24) * 0.55) }}
+            />
+          )}
         </Avatar>
       )}
     </Badge>

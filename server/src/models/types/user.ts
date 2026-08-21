@@ -101,7 +101,7 @@ export interface UserPaymentHistory {
 }
 
 export interface UserPreferences {
-  theme: "light" | "dark";
+  theme: "light" | "dark" | "system";
   notifications: boolean;
   languagePreference?: string;
 }

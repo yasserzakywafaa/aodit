@@ -3,13 +3,34 @@ import {
   Authentication,
   TrackingInfo,
   getApplicationInitialState,
-  getThemePreference,
+  resolveThemePreferenceForUser,
 } from "./state";
 import { black, white } from "../shared/themes";
 
 import APP_CONSTANTS from "../shared/app_constants";
+import type { ThemePreference } from "@yasserzakywafaa/client-core";
 import { SubscriptionPlanEnum } from "src/shared/types/user";
 import { useState } from "react";
+
+export const applyThemeToDOM = (theme: "light" | "dark") => {
+  const themeColorMetaTag = document.getElementById("theme-color");
+
+  document.documentElement.style.colorScheme = theme;
+
+  switch (theme) {
+    case "light":
+      themeColorMetaTag && themeColorMetaTag.setAttribute("content", white);
+      document.body.classList.remove(APP_CONSTANTS.APP_THEME_CLASS.DARK);
+      document.body.classList.add(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
+      break;
+
+    case "dark":
+      themeColorMetaTag && themeColorMetaTag.setAttribute("content", black);
+      document.body.classList.remove(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
+      document.body.classList.add(APP_CONSTANTS.APP_THEME_CLASS.DARK);
+      break;
+  }
+};
 
 export interface ApplicationStore {
   state: ApplicationInitialState;
@@ -18,13 +39,13 @@ export interface ApplicationStore {
   setPreviousUrl: (previousUrl: string) => void;
   setTrackingInfo: (trackingInfo: TrackingInfo) => void;
   handleIsFetchingUserInfo: (isFetchingUserInfo: boolean) => void;
-  toggleThemeMode: () => void;
+  setThemePreference: (themePreference: ThemePreference) => void;
   updateAuthInfo: (authInfo?: Authentication) => void;
 }
 
 const useApplicationStore = (): ApplicationStore => {
   const [state, setState] = useState<ApplicationInitialState>(
-    getApplicationInitialState()
+    getApplicationInitialState(),
   );
 
   const updateState = (newState: ApplicationInitialState) => {
@@ -59,50 +80,25 @@ const useApplicationStore = (): ApplicationStore => {
     }));
   };
 
-  const applyThemeToDOM = (theme: "light" | "dark") => {
-    const themeColorMetaTag = document.getElementById("theme-color");
-
-    switch (theme) {
-      case "light":
-        themeColorMetaTag && themeColorMetaTag.setAttribute("content", white);
-        document.body.classList.remove(APP_CONSTANTS.APP_THEME_CLASS.DARK);
-        document.body.classList.add(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
-        break;
-
-      case "dark":
-        themeColorMetaTag && themeColorMetaTag.setAttribute("content", black);
-        document.body.classList.remove(APP_CONSTANTS.APP_THEME_CLASS.LIGHT);
-        document.body.classList.add(APP_CONSTANTS.APP_THEME_CLASS.DARK);
-        break;
-    }
-  };
-
-  const toggleThemeMode = () => {
-    let appTheme = state.themeMode;
-
-    setState((prev) => {
-      appTheme = prev.themeMode === "dark" ? "light" : "dark";
-      return {
-        ...prev,
-        themeMode: appTheme,
-      };
-    });
+  const setThemePreference = (themePreference: ThemePreference) => {
+    setState((prev) => ({
+      ...prev,
+      themePreference,
+    }));
 
     localStorage.setItem(
       APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
-      appTheme
+      themePreference,
     );
-
-    applyThemeToDOM(appTheme);
   };
 
   const updateAuthInfo = (authInfo?: Authentication) => {
     if (authInfo) {
-      const userTheme = getThemePreference(authInfo.user);
+      const themePreference = resolveThemePreferenceForUser(authInfo.user);
 
       setState((prev) => ({
         ...prev,
-        themeMode: userTheme,
+        themePreference,
         auth: {
           isAuthenticated: authInfo.isAuthenticated,
           user: authInfo.user,
@@ -122,8 +118,6 @@ const useApplicationStore = (): ApplicationStore => {
             authInfo.user?.subscription.type === SubscriptionPlanEnum.Premium,
         },
       }));
-
-      applyThemeToDOM(userTheme);
     } else {
       const {
         AUTHENTICATED: IS_AUTHENTICATION,
@@ -134,11 +128,11 @@ const useApplicationStore = (): ApplicationStore => {
       const storedUser = localStorage.getItem(USER) ?? null;
       const parsedUser = storedUser ? JSON.parse(storedUser) : null;
       const storedIsAuthenticated = localStorage.getItem(IS_AUTHENTICATION);
-      const userTheme = getThemePreference(parsedUser);
+      const themePreference = resolveThemePreferenceForUser(parsedUser);
 
       setState((prev) => ({
         ...prev,
-        themeMode: userTheme,
+        themePreference,
         auth: {
           token: storedToken,
           isAuthenticated: storedIsAuthenticated === "true" ? true : false,
@@ -159,9 +153,6 @@ const useApplicationStore = (): ApplicationStore => {
             parsedUser?.subscription.type === SubscriptionPlanEnum.Premium,
         },
       }));
-
-      // Apply theme to DOM
-      applyThemeToDOM(userTheme);
     }
   };
 
@@ -172,7 +163,7 @@ const useApplicationStore = (): ApplicationStore => {
     setPreviousUrl,
     setTrackingInfo,
     handleIsFetchingUserInfo,
-    toggleThemeMode,
+    setThemePreference,
     updateAuthInfo,
   };
 };

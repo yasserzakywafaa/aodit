@@ -19,6 +19,7 @@ import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useApplicationContext } from "src/application/store/Provider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { getUserDisplayName } from "src/shared/utils/getUserDisplayName";
 
 interface UserAccountMenuButtonProps {
   user: User;
@@ -39,9 +40,7 @@ const UserAccountMenuButton = (props: UserAccountMenuButtonProps) => {
 
   if (!user) return;
 
-  const userFullName = `${user.name.givenName} ${user.name.familyName.charAt(
-    0,
-  )}.`;
+  const userFullName = getUserDisplayName(user, t("account"));
 
   const isOpen = Boolean(element);
 

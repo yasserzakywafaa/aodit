@@ -22,6 +22,7 @@ import { routes } from "src/application/routes";
 import { scrollToTop } from "@yasserzakywafaa/client-core/web";
 import { PageSeoConfig, usePageSeo } from "@yasserzakywafaa/client-core/web/seo";
 import { trackEvent } from "src/shared/utils/ga4";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { useApplicationContext } from "src/application/store/Provider";
 
 export interface HreflangAlternate {
@@ -64,11 +65,12 @@ const Page = (params: PageProps) => {
   } = params;
   const {
     store: {
-      state: { isFetching, themeMode },
+      state: { isFetching, themePreference },
       setPreviousUrl,
     },
     manager: { handleFetchUserInfo, handleSetAuthInfo },
   } = useApplicationContext();
+  const resolvedThemeMode = useAppResolvedThemeMode();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -115,13 +117,13 @@ const Page = (params: PageProps) => {
   useEffect(() => {
     localStorage.setItem(
       APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
-      themeMode,
+      themePreference,
     );
     const themeColorMetaTag = document.getElementById("theme-color");
     themeColorMetaTag &&
       themeColorMetaTag.setAttribute(
         "content",
-        themeMode === "dark" ? black : white,
+        resolvedThemeMode === "dark" ? black : white,
       );
 
     if (!location.hash) scrollToTop();
@@ -129,7 +131,7 @@ const Page = (params: PageProps) => {
     return () => {
       setPreviousUrl(location.pathname);
     };
-  }, [themeMode, location.pathname]);
+  }, [themePreference, resolvedThemeMode, location.pathname]);
 
   useEffect(() => {
     if (authStatus && provider && userId) {
@@ -247,7 +249,7 @@ const Page = (params: PageProps) => {
   useEffect(() => {
     const htmlNode = document.getElementsByTagName("html")[0];
     if (isPageLoading) htmlNode.style.overflow = "hidden";
-    else htmlNode.removeAttribute("style");
+    else htmlNode.style.overflow = "";
   }, [isPageLoading]);
 
   return (
@@ -255,7 +257,7 @@ const Page = (params: PageProps) => {
       <div
         style={{
           background:
-            themeMode === "dark"
+            resolvedThemeMode === "dark"
               ? darkTheme.palette.background.default
               : lightTheme.palette.background.default,
         }}

@@ -22,7 +22,9 @@ import {
   routes,
   toPublicSegment,
 } from "./routes";
+import { useAppResolvedThemeMode } from "./hooks/useAppResolvedThemeMode";
 import { useApplicationContext } from "./store/Provider";
+import { applyThemeToDOM } from "./store/store";
 import { useDeviceSize } from "@yasserzakywafaa/client-core/web";
 import {
   LocaleLayout,
@@ -138,11 +140,16 @@ const AppContent = () => {
   } = useApplicationContext();
   const { isDesktop } = useDeviceSize();
   const direction = useAppDirection();
-  const theme = getThemedTheme(state.themeMode, direction);
+  const resolvedThemeMode = useAppResolvedThemeMode();
+  const theme = getThemedTheme(resolvedThemeMode, direction);
 
   useEffect(() => {
     handleInitialAuthentication();
   }, []);
+
+  useEffect(() => {
+    applyThemeToDOM(resolvedThemeMode);
+  }, [resolvedThemeMode]);
 
   return (
     <ThemeProvider theme={theme}>

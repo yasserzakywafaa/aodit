@@ -3,9 +3,7 @@ import "./DashboardProfile.scss";
 import {
   ArticleOutlined,
   DeleteOutlined,
-  ModeNightOutlined,
   VisibilityOutlined,
-  WbSunnyOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -16,7 +14,6 @@ import {
   Chip,
   Container,
   Grid,
-  Switch,
   Tab,
   Tabs,
   Typography,
@@ -24,12 +21,13 @@ import {
 import { User, UserStatus } from "src/shared/types/user";
 import { useEffect, useState } from "react";
 
-import { AvatarSquareStyle } from "src/application/shared/themes";
+import { AvatarSquareStyle, primaryColor } from "src/application/shared/themes";
 import ProfileAvatar from "src/components/shared/ProfileAvatar";
 import DeleteAccountDialog from "./features/DeleteAccountDialog";
 import SubscriptionSection from "./features/Subscription";
 import { routes } from "src/application/routes";
 import { useApplicationContext } from "src/application/store/Provider";
+import { ThemeSwitcher } from "@yasserzakywafaa/client-core/web";
 import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
 import { useDashboardProfileContext } from "./store/Provider";
 import { hasAdminRights } from "src/shared/utils/getUserRoles";
@@ -59,7 +57,7 @@ const DashboardProfilePage = () => {
   const { t } = useTranslation(["dashboard", "common"]);
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
-  const { store } = useApplicationContext();
+  const { store, manager: { handleThemePreferenceChange } } = useApplicationContext();
   const [activeTab, setActiveTab] = useState(0);
   const [isDeleteAccountDialogOpen, setIsDeleteAccountDialogOpen] =
     useState(false);
@@ -70,7 +68,6 @@ const DashboardProfilePage = () => {
     },
     manager: {
       handleGetSubscriptionDetails,
-      handleUpdateUserInfo,
       handleDeleteAccount,
     },
   } = useDashboardProfileContext();
@@ -78,22 +75,13 @@ const DashboardProfilePage = () => {
   const { state } = store;
   const {
     auth,
-    themeMode,
+    themePreference,
     auth: { isAuthenticated, user },
   } = state;
 
   if (!user) return null;
 
   const showDeleteAccount = !hasAdminRights(user);
-
-  const handleOnDarkModeSwitchChange = async () => {
-    await handleUpdateUserInfo({
-      preferences: {
-        ...user.preferences,
-        theme: themeMode === "dark" ? "light" : "dark",
-      },
-    });
-  };
 
   const getStatusColor = (status: UserStatus) => {
     switch (status) {
@@ -323,61 +311,29 @@ const DashboardProfilePage = () => {
                 </Grid>
 
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <Typography variant="h6" className="text-underline">
-{t("dashboard:profile.appearance")}
-                  </Typography>
                   <Box
-                    onClick={handleOnDarkModeSwitchChange}
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 1,
-                      cursor: "pointer"
-                    }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1
-                      }}>
-                      <WbSunnyOutlined
-                        fontSize="small"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
-                      <Typography variant="body2" sx={{
-                        color: "text.secondary"
-                      }}>
-{t("dashboard:profile.themeLight")}
-                      </Typography>
-                    </Box>
-
-                    <Switch
-                      size="medium"
-                      value="dark-mode"
-                      checked={
-                        (user.preferences?.theme || themeMode) === "dark"
-                      }
-                      onChange={undefined}
+                      justifyContent: "space-between",
+                      gap: 1.5,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      component="p"
+                      className="text-underline"
+                      sx={{ mb: 0 }}
+                    >
+                      {t("dashboard:profile.appearance")}
+                    </Typography>
+                    <ThemeSwitcher
+                      showLabel={false}
+                      value={themePreference}
+                      onChange={handleThemePreferenceChange}
+                      accentColor={primaryColor}
                     />
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1
-                      }}>
-                      <Typography variant="body2" sx={{
-                        color: "text.secondary"
-                      }}>
-{t("dashboard:profile.themeDark")}
-                      </Typography>
-                      <ModeNightOutlined
-                        fontSize="small"
-                        color="secondary"
-                        sx={{ mr: 1 }}
-                      />
-                    </Box>
                   </Box>
                 </Grid>
 

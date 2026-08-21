@@ -1,14 +1,15 @@
 import {
   Authentication,
   getApplicationInitialState,
-  getThemePreference,
+  resolveThemePreferenceForUser,
 } from "./state";
 import axios, { AxiosResponse } from "axios";
 import i18n from "src/i18n/init";
 
 import APP_CONSTANTS from "../shared/app_constants";
+import type { ThemePreference } from "@yasserzakywafaa/client-core";
 import { syncI18nWithUser } from "@yasserzakywafaa/client-core";
-import { ApplicationStore } from "./store";
+import { ApplicationStore, applyThemeToDOM } from "./store";
 import END_POINTS from "../shared/endpoints";
 import { User } from "src/shared/types/user";
 import { getClientIdFromGoogleAnalyticsCookie } from "@yasserzakywafaa/client-core/web";
@@ -16,7 +17,7 @@ import { getLocalStorageAuthItems } from "src/shared/utils/localstorage";
 
 export interface ApplicationManager {
   handleIsFetching: (isFetching: boolean) => void;
-  handleToggleThemeMode: () => void;
+  handleThemePreferenceChange: (preference: ThemePreference) => Promise<void>;
   handleSetAuthInfo: (authInfo: Authentication) => void;
   handleFetchUserInfo: (userId: string) => Promise<User | null>;
   handleInitialAuthentication: () => Promise<void>;
@@ -32,14 +33,14 @@ export const useApplicationManager = (
     store.handleIsFetching(isFetching);
   };
 
-  const handleToggleThemeMode = async () => {
-    store.toggleThemeMode();
+  const handleThemePreferenceChange = async (preference: ThemePreference) => {
+    store.setThemePreference(preference);
 
     if (store.state.auth.isAuthenticated && store.state.auth.user) {
       await handleUpdateUserInfoInApplication({
         preferences: {
           ...store.state.auth.user.preferences,
-          theme: store.state.themeMode === "dark" ? "light" : "dark",
+          theme: preference,
         },
       });
     }
@@ -78,17 +79,15 @@ export const useApplicationManager = (
 
     syncI18nWithUser(i18n, storedAuthInfo.user ?? undefined);
 
-    // Apply initial theme (will be updated if user is authenticated)
-    const initialTheme = getThemePreference(storedAuthInfo.user);
-    document.body.classList.remove(
-      APP_CONSTANTS.APP_THEME_CLASS.DARK,
-      APP_CONSTANTS.APP_THEME_CLASS.LIGHT,
-    );
-    document.body.classList.add(
-      initialTheme === "dark"
-        ? APP_CONSTANTS.APP_THEME_CLASS.DARK
-        : APP_CONSTANTS.APP_THEME_CLASS.LIGHT,
-    );
+    const initialPreference = resolveThemePreferenceForUser(storedAuthInfo.user);
+    store.setThemePreference(initialPreference);
+    const initialTheme =
+      initialPreference === "system"
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+        : initialPreference;
+    applyThemeToDOM(initialTheme);
 
     // Check if localStorage says NOT authenticated
     // This prevents the fetch loop after logout
@@ -170,7 +169,7 @@ export const useApplicationManager = (
 
   return {
     handleIsFetching,
-    handleToggleThemeMode,
+    handleThemePreferenceChange,
     handleSetAuthInfo,
     handleFetchUserInfo,
     handleInitialAuthentication,

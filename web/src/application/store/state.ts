@@ -1,11 +1,15 @@
 import APP_CONSTANTS from "../shared/app_constants";
-import { PaletteMode } from "@mui/material";
+import {
+  getInitialThemePreference,
+  getThemePreferenceFromUser,
+  type ThemePreference,
+} from "@yasserzakywafaa/client-core";
 import { User } from "src/shared/types/user";
 
 export interface ApplicationInitialState {
   isFetching: boolean;
   isFetchingUserInfo: boolean;
-  themeMode: PaletteMode;
+  themePreference: ThemePreference;
   auth: Authentication;
   previousUrl: string;
   trackingInfo: TrackingInfo;
@@ -32,37 +36,30 @@ export interface Authentication {
 
 export type AuthenticateUser = User;
 
-/**
- * Gets the theme preference, prioritizing user preferences over localStorage
- * @param user - Optional user object to check for theme preference
- * @returns The theme mode ("light" or "dark")
- */
-export const getThemePreference = (user?: User | null): PaletteMode => {
-  // First, check user preferences if user is available
-  if (user?.preferences?.theme) {
-    return user.preferences.theme as PaletteMode;
-  }
-
-  // Fall back to localStorage
-  const storedTheme = localStorage.getItem(
-    APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
-  ) as PaletteMode;
-
-  // Default to "light" if nothing is found
-  return storedTheme || "dark";
+const themePreferenceConfig = {
+  storageKey: APP_CONSTANTS.DESIGN.LOCAL_STORAGE_APP_THEME,
 };
 
+export const resolveThemePreferenceForUser = (
+  user?: User | null,
+): ThemePreference => {
+  return (
+    getThemePreferenceFromUser(user) ??
+    getInitialThemePreference(user, themePreferenceConfig)
+  );
+};
+
+/** @deprecated Use resolveThemePreferenceForUser */
+export const getThemePreference = resolveThemePreferenceForUser;
+
 export const getApplicationInitialState = (): ApplicationInitialState => {
-  // Check if there's a user in localStorage first
   const storedUser = localStorage.getItem(APP_CONSTANTS.LOCAL_STORAGE.USER);
   const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-
-  const appThemMode = getThemePreference(parsedUser);
 
   return {
     isFetching: false,
     isFetchingUserInfo: true,
-    themeMode: appThemMode,
+    themePreference: resolveThemePreferenceForUser(parsedUser),
     previousUrl: "",
     auth: {
       user: null,

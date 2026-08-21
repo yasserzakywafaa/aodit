@@ -5,6 +5,7 @@
   "or": "or",
   "emailSentSuccess": "Email sent successfully",
   "noResults": "No Results Found",
+  "account": "Account",
   "loggedOut": "Logged out",
   "nav": {
     "features": "Features",
@@ -30,6 +31,9 @@
     "dashboard": "Dashboard",
     "logout": "Logout",
     "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
     "themeToggle": "Theme toggle button",
     "install": "Install",
     "refreshApp": "Refresh App"

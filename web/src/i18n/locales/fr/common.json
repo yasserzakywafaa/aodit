@@ -5,6 +5,7 @@
   "or": "ou",
   "emailSentSuccess": "E-mail envoyé avec succès",
   "noResults": "Aucun résultat trouvé",
+  "account": "Compte",
   "loggedOut": "Déconnecté",
   "nav": {
     "features": "Fonctionnalités",
@@ -30,6 +31,9 @@
     "dashboard": "Tableau de bord",
     "logout": "Déconnexion",
     "theme": "Thème",
+    "themeSystem": "Système",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
     "themeToggle": "Bouton de changement de thème",
     "install": "Installer",
     "refreshApp": "Actualiser l'application"

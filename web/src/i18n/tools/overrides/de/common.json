@@ -5,6 +5,7 @@
   "or": "oder",
   "emailSentSuccess": "E-Mail erfolgreich gesendet",
   "noResults": "Keine Ergebnisse gefunden",
+  "account": "Konto",
   "loggedOut": "Abgemeldet",
   "nav": {
     "features": "Funktionen",
@@ -30,6 +31,9 @@
     "dashboard": "Dashboard",
     "logout": "Abmelden",
     "theme": "Design",
+    "themeSystem": "System",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
     "themeToggle": "Design umschalten",
     "install": "Installieren",
     "refreshApp": "App aktualisieren"

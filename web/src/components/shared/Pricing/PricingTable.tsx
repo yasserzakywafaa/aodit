@@ -25,7 +25,7 @@ import {
 } from "src/application/shared/themes";
 
 import { SubscriptionPlanEnum } from "src/shared/types/user";
-import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { usePaymentCatalog } from "../Payment/usePaymentCatalog";
 import { usePricing } from "./usePricing";
 import { useTranslation } from "react-i18next";
@@ -43,13 +43,9 @@ const PricingTable: React.FC<PricingTableProps> = () => {
 
   const { plansForTable, getPrice, getCurrency } = usePricing();
   const tableFeatures = Object.keys(plansForTable[0].features);
-  const {
-    store: {
-      state: { themeMode },
-    },
-  } = useApplicationContext();
+  const resolvedThemeMode = useAppResolvedThemeMode();
   const tableBgColorOpaque =
-    themeMode === "light" ? primaryColorOpaqueTen : primaryColorOpaqueThirty;
+    resolvedThemeMode === "light" ? primaryColorOpaqueTen : primaryColorOpaqueThirty;
 
   return (
     <Container

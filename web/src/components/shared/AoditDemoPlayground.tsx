@@ -50,7 +50,7 @@ import { pdf } from "@react-pdf/renderer";
 import { routes } from "src/application/routes";
 import { trackEvent } from "src/shared/utils/ga4";
 import { useLocalizedPath } from "@yasserzakywafaa/client-core/web/i18n";
-import { useApplicationContext } from "src/application/store/Provider";
+import { useAppResolvedThemeMode } from "src/application/hooks/useAppResolvedThemeMode";
 import { useTranslation } from "react-i18next";
 
 interface TurnResult {
@@ -517,13 +517,9 @@ const AoditDemoPlayground: React.FC<AoditDemoPlaygroundProps> = ({
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hasHydratedRef = useRef(false);
 
-  const {
-    store: {
-      state: { themeMode },
-    },
-  } = useApplicationContext();
+  const resolvedThemeMode = useAppResolvedThemeMode();
 
-  const isDark = themeMode === "dark";
+  const isDark = resolvedThemeMode === "dark";
 
   useEffect(() => {
     hasHydratedRef.current = false;

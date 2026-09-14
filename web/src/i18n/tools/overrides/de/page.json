@@ -466,10 +466,10 @@
     ]
   },
   "about": {
-    "pageTitle": "Über SwissLI AG | Unabhängige KI-Bewertung",
-    "schemaTitle": "Über SwissLI AG",
+    "pageTitle": "Über uns | Unabhängige KI-Bewertung",
+    "schemaTitle": "Über uns",
     "schemaDescription": "Swiss Lab of Intelligence (SwissLI AG) ist ein Schweizer angewandtes KI-Labor mit Fokus auf sichere KI-Systembewertung für regulierte Umgebungen.",
-    "title": "Über SwissLI AG",
+    "title": "Über uns",
     "p1": "Swiss Lab of Intelligence (SwissLI AG) ist ein 2021 gegründetes Schweizer angewandtes KI-Labor mit Sitz in Luzern. Das Labor konzentriert sich auf den Aufbau und die Bewertung von KI-Systemen mit starkem Fokus auf Realverhalten, Sicherheit und Systemleistung.",
     "p2": "ist SwissLIs Plattform für unabhängige Bewertung von KI-Agenten in regulierten Umgebungen, einschließlich Banking, Fintech und Versicherung.",
     "missionTitle": "Unsere Mission",

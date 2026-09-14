@@ -466,10 +466,10 @@
     ]
   },
   "about": {
-    "pageTitle": "About SwissLI AG | Independent AI Evaluation",
-    "schemaTitle": "About SwissLI AG",
+    "pageTitle": "About us | Independent AI Evaluation",
+    "schemaTitle": "About us",
     "schemaDescription": "Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI lab focused on safe AI system evaluation for regulated environments.",
-    "title": "About SwissLI AG",
+    "title": "About us",
     "p1": "Swiss Lab of Intelligence (SwissLI AG) is a Swiss-based applied AI lab founded in 2021 and headquartered in Luzern. The lab focuses on building and evaluating AI systems with a strong focus on real-world behavior, safety, and system performance.",
     "p2": "is SwissLI's platform for independent evaluation of AI agents in regulated environments, including banking, fintech, and insurance.",
     "missionTitle": "Our mission",

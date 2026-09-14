@@ -23,7 +23,32 @@
     },
     {
       "source": "/about-swissli",
-      "destination": "/en/about-swissli",
+      "destination": "/en/about-us",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/en/about-us",
+      "permanent": true
+    },
+    {
+      "source": "/en/about-swissli",
+      "destination": "/en/about-us",
+      "permanent": true
+    },
+    {
+      "source": "/de/about-swissli",
+      "destination": "/de/about-us",
+      "permanent": true
+    },
+    {
+      "source": "/fr/about-swissli",
+      "destination": "/fr/about-us",
+      "permanent": true
+    },
+    {
+      "source": "/ar/about-swissli",
+      "destination": "/ar/about-us",
       "permanent": true
     },
     {

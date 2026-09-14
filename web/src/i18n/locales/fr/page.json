@@ -466,10 +466,10 @@
     ]
   },
   "about": {
-    "pageTitle": "À propos de SwissLI AG | Évaluation IA indépendante",
-    "schemaTitle": "À propos de SwissLI AG",
+    "pageTitle": "À propos | Évaluation IA indépendante",
+    "schemaTitle": "À propos",
     "schemaDescription": "Swiss Lab of Intelligence (SwissLI AG) est un laboratoire d'IA appliquée suisse axé sur l'évaluation sécurisée des systèmes d'IA pour environnements réglementés.",
-    "title": "À propos de SwissLI AG",
+    "title": "À propos",
     "p1": "Swiss Lab of Intelligence (SwissLI AG) est un laboratoire d'IA appliquée suisse fondé en 2021 et basé à Lucerne. Le laboratoire se concentre sur la construction et l'évaluation de systèmes d'IA avec un fort accent sur le comportement réel, la sécurité et les performances système.",
     "p2": "est la plateforme SwissLI pour l'évaluation indépendante d'agents IA dans des environnements réglementés, notamment banque, fintech et assurance.",
     "missionTitle": "Notre mission",

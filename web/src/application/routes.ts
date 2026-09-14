@@ -23,7 +23,7 @@ const publicPages = {
   demo: "demo",
   methodology: "ai-agent-testing-methodology",
   security: "security-on-premise-ai",
-  about: "about-swissli",
+  about: "about-us",
   pricing: "pricing",
   contact: "contact",
   privacyPolicy: "privacy-policy",
